@@ -17,23 +17,10 @@ danger      A color for displaying error messages
   :root {
     --color-primary: 163 230 53; /* lime-400 */
     --color-primary-100: 190 242 100; /* lime-300 */
-    --color-secondary: 243 244 246; /* gray-100 */
-    --color-secondary-100: 229 231 235; /* gray-200 */
-    --color-body: 17 24 39; /* gray-900 */
-    --color-background: 255 255 255; /* white */
-    --color-highlight: 255 255 255; /* white */
-    --color-muted: 229 231 235; /* gray-200 */
-    --color-accent: 107 114 128; /* gray-500 */
-    --color-danger: 252 165 165; /* red-300 */
-    --color-danger-100: 254 205 211; /* red-200 */
-  }
-  :root.dark {
-    --color-primary: 163 230 53; /* lime-400 */
-    --color-primary-100: 190 242 100; /* lime-300 */
     --color-secondary: 75 85 99; /* gray-600 */
     --color-secondary-100: 107 114 128; /* gray-500 */
     --color-body: 255 255 255; /* white */
-    --color-background: 0 0 0; /* black */
+    --color-background: 29 29 29; /* black */
     --color-highlight: 55 65 81; /* gray-700 */
     --color-muted: 75 85 99; /* gray-600 */
     --color-accent: 156 163 175; /* gray-400 */
@@ -55,23 +42,32 @@ danger      A color for displaying error messages
 }
 
 body {
+  /* display: flex; */
+  /* place-items: center; */
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
   min-height: 100vh;
-  @apply bg-background text-body;
+  background: linear-gradient(#03001e, #1d2671, #c33764);
+  @apply text-body;
 }
 
 #app {
-  max-width: 1280px;
+  max-width: 640px;
   margin: 0 auto;
-  padding: 2rem;
+  @apply px-8;
 }
 
 /* Fonts */
+h1 {
+  @apply text-2xl md:text-4xl text-body font-bold;
+}
+h1 .impact {
+  @apply font-extrabold text-transparent text-3xl md:text-5xl bg-clip-text bg-gradient-to-r from-amber-600 to-amber-700;
+}
 h3 {
-  @apply lg:text-xl text-body font-semibold;
+  @apply text-xl md:text-2xl text-body font-semibold;
+}
+h4 {
+  @apply text-base md:text-xl text-body font-normal;
 }
 
 /* Input */

@@ -15,7 +15,14 @@
   const buttonVariants = cva(["font-bold"], {
     variants: {
       intent: {
-        primary: ["text-body", "bg-primary", "hover:bg-primary-100"],
+        primary: [
+          "text-body",
+          "font-bold",
+          "bg-transparent",
+          "border-2",
+          "border-white",
+          "hover:bg-black",
+        ],
         secondary: ["text-body", "bg-secondary", "hover:bg-secondary-100"],
         danger: ["text-body", "bg-danger", "hover:bg-danger-100"],
       },

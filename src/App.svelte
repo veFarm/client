@@ -177,38 +177,43 @@
 </script>
 
 <Layout>
-  <!-- <h3 class="text-center">
-    Greeter.sol says: &ldquo;{greet}&rdquo;
-  </h3>
-
-  <form
-    class="flex flex-col space-y-3 my-8"
-    on:submit|preventDefault={handleSubmit}
+  <div
+    id="container"
+    class="flex flex-col justify-center space-y-8 h-full pt-8 md:pt-12"
   >
-    <input
-      type="text"
-      id="greeting"
-      bind:value={newGreeting}
-      placeholder="Enter a new greeting..."
-      required
-      disabled={!$wallet.isConnected || $wallet.chainId != chain.chainId}
-    /> -->
+    <h1 class="text-center">
+      Swap <span class="impact">VTHO </span>for
+      <span class="impact">VET</span>
+      periodically.
+    </h1>
+    <h4 class="text-center">
+      Allow Cirkl smart contract to spend your VTHO in exchange for VET at the
+      best possible rate.
+    </h4>
 
-  <!-- {#if $wallet.isConnected && $wallet.chainId !== chain.chainId} -->
-  <!-- <Button intent="danger" on:click={handleSwitch}>Wrong network</Button> -->
-  <!-- {:else if $wallet.isConnected} -->
-  {#if $wallet.isConnected}
-    <Button intent="primary" {disabled} on:click={handleApprove}>
-      Allow Expo to spend your VTHO
-    </Button>
-  {:else}
-    <ConnectWalletButton intent="primary" />
-  {/if}
+    {#if $wallet.isConnected}
+      <Button
+        intent="primary"
+        class="mx-auto"
+        {disabled}
+        on:click={handleApprove}
+      >
+        Allow Cirkl to spend your VTHO
+      </Button>
+    {:else}
+      <ConnectWalletButton intent="primary" />
+    {/if}
 
-  {#if error != null && error.length > 0}
-    <p class="text-danger">{error}</p>
-  {/if}
-  <!-- </form> -->
+    {#if error != null && error.length > 0}
+      <p class="text-danger">{error}</p>
+    {/if}
 
-  <p class="text-center">Chain: {chain.name}</p>
+    <p class="text-center">Chain: {chain.name}</p>
+  </div>
 </Layout>
+
+<style>
+  #container {
+    margin-top: 72px;
+  }
+</style>
