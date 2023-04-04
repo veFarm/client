@@ -9,6 +9,7 @@
 <nav
   class="
     fixed top-0 left-0 h-16 w-full z-20
+    bg-background border-b border-muted
     px-2 sm:px-4 py-2
     flex flex-wrap items-center justify-between
   "
@@ -18,7 +19,7 @@
   </a>
 
   <div class="flex items-center space-x-3">
-    <!-- <DarkMode /> -->
+    <DarkMode />
 
     {#if $wallet.account == null}
       <!-- <ConnectWalletButton size="small" /> -->
@@ -30,6 +31,6 @@
 
 <style>
   nav {
-    background-color: #03001e;
+    height: var(--header-height);
   }
 </style>

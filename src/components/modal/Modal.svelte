@@ -52,9 +52,9 @@
   >
     <!-- Header -->
     <div class="flex items-center px-6 py-4">
-      <h3 class="flex-1 text-center ml-6">
+      <h4 class="flex-1 text-center ml-6">
         <slot name="header" />
-      </h3>
+      </h4>
 
       <button
         class="hover:bg-secondary-100 rounded-full p-1"

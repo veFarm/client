@@ -85,7 +85,7 @@ function createStore() {
   };
 }
 
-export const metamask = createStore();
+export const sync2 = createStore();
 
 // if (injected?.isMetaMask) {
 //   // Connect account on landing or reload

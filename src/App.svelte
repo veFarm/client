@@ -5,6 +5,7 @@
   import { wallet } from "@/stores/wallet";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
+  import { Input } from "@/components/input";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { chain } from "./config";
 
@@ -24,6 +25,8 @@
   let newGreeting = "";
   let disabled = false;
   let error = "";
+  let vthoTarget: number;
+  let vthoLeft: number = 10;
 
   async function handleApprove(): Promise<void> {
     if (VTHO_CONTRACT_ADDRESS == null) {
@@ -177,31 +180,37 @@
 </script>
 
 <Layout>
-  <div
-    id="container"
-    class="flex flex-col justify-center space-y-8 h-full pt-8 md:pt-12"
+  <form
+    class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
   >
-    <h1 class="text-center">
-      Swap <span class="impact">VTHO </span>for
-      <span class="impact">VET</span>
-      periodically.
-    </h1>
-    <h4 class="text-center">
-      Allow Cirkl smart contract to spend your VTHO in exchange for VET at the
-      best rate possible.
-    </h4>
-
+    <Input
+      type="number"
+      id="vtho_target"
+      label="Swap VTHO for VET whenever my balance reaches"
+      bind:value={vthoTarget}
+    >
+      <svelte:fragment slot="sufix">VTHO</svelte:fragment>
+    </Input>
+    <Input
+      type="number"
+      id="vtho_left"
+      label="keeping in my wallet"
+      bind:value={vthoLeft}
+    >
+      <svelte:fragment slot="sufix">VTHO</svelte:fragment>
+    </Input>
     {#if $wallet.isConnected}
       <Button
         intent="primary"
         class="mx-auto"
         {disabled}
+        fullWidth
         on:click={handleApprove}
       >
-        Allow Cirkl to spend your VTHO
+        Approve
       </Button>
     {:else}
-      <ConnectWalletButton intent="primary" />
+      <ConnectWalletButton intent="primary" fullWidth />
     {/if}
 
     {#if error != null && error.length > 0}
@@ -209,11 +218,5 @@
     {/if}
 
     <p class="text-center">Chain: {chain.name}</p>
-  </div>
+  </form>
 </Layout>
-
-<style>
-  #container {
-    margin-top: 72px;
-  }
-</style>

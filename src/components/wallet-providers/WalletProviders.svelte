@@ -1,11 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import type { WalletId } from "@/typings/types";
-  import MetamaskIcon from "@/assets/Metamask.svg";
-  import CoinbaseIcon from "@/assets/Coinbase.svg";
-  import OperaWalletIcon from "@/assets/OperaWallet.svg";
-  import WalletConnectIcon from "@/assets/WalletConnect.svg";
-  import FormaticIcon from "@/assets/Formatic.svg";
+  import Sync2Icon from "@/assets/Sync2.svg";
+  import VeWorldIcon from "@/assets/VeWorld.svg";
   import { Button } from "@/components/button";
 
   export let disabled = false;
@@ -15,11 +12,8 @@
     label: string;
     icon: string;
   }[] = [
-    { id: "metamask", label: "MetaMask", icon: MetamaskIcon },
-    { id: "coinbase_wallet", label: "Coinbase Wallet", icon: CoinbaseIcon },
-    { id: "opera_wallet", label: "Opera Wallet", icon: OperaWalletIcon },
-    { id: "wallet_connect", label: "WalletConnect", icon: WalletConnectIcon },
-    { id: "formatic", label: "Formatic", icon: FormaticIcon },
+    { id: "sync2", label: "Sync2", icon: Sync2Icon },
+    { id: "ve_world", label: "VeWorld", icon: VeWorldIcon },
   ];
 
   const dispatch = createEventDispatcher();

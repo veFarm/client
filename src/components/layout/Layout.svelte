@@ -6,8 +6,14 @@
 
 <Header />
 
-<main>
+<main class="px-4">
   <slot />
 
   <WalletModal />
 </main>
+
+<style>
+  main {
+    padding-top: var(--header-height);
+  }
+</style>

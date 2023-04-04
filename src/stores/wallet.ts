@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 // import type { Web3Provider } from "@ethersproject/providers";
 import type { WalletId } from "@/typings/types";
-import { metamask } from "@/stores/metamask";
+import { sync2 } from "@/stores/sync2";
 
 type State = {
   // provider: Web3Provider | undefined;
@@ -30,7 +30,7 @@ function createStore() {
   let connectedWalletId: WalletId | undefined;
 
   // Update wallet store based on MetaMask store changes.
-  metamask.subscribe(async (data) => {
+  sync2.subscribe(async (data) => {
     // No data present means MetaMask got disconnected.
     if (
       // ethers == null ||
@@ -73,7 +73,7 @@ function createStore() {
         //   ethers = (await import("ethers")).ethers;
         // }
 
-        if (walletId != "metamask") {
+        if (walletId !== "sync2") {
           update((s) => ({
             ...s,
             loading: false,
@@ -82,9 +82,9 @@ function createStore() {
           return;
         }
 
-        if (walletId === "metamask") {
-          await metamask.connect();
-          connectedWalletId = "metamask";
+        if (walletId === "sync2") {
+          await sync2.connect();
+          connectedWalletId = "sync2";
         }
       } catch (error) {
         update((s) => ({
@@ -96,8 +96,8 @@ function createStore() {
       }
     },
     disconnect: function (): void {
-      if (connectedWalletId === "metamask") {
-        metamask.disconnect();
+      if (connectedWalletId === "sync2") {
+        sync2.disconnect();
       }
     },
     // switchChain: async function (chainId: number): Promise<void> {
