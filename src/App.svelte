@@ -188,7 +188,7 @@
     </h1>
     <h4 class="text-center">
       Allow Cirkl smart contract to spend your VTHO in exchange for VET at the
-      best possible rate.
+      best rate possible.
     </h4>
 
     {#if $wallet.isConnected}
