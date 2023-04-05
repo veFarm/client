@@ -185,16 +185,8 @@
   >
     <Input
       type="number"
-      id="vtho_target"
-      label="Swap VTHO for VET whenever my balance reaches"
-      bind:value={vthoTarget}
-    >
-      <svelte:fragment slot="sufix">VTHO</svelte:fragment>
-    </Input>
-    <Input
-      type="number"
       id="vtho_left"
-      label="keeping in my wallet"
+      label="Automatically swap VTHO for VET leaving in my wallet"
       bind:value={vthoLeft}
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>

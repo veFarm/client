@@ -18,7 +18,9 @@
       class="bg-gray-50 border border-gray-300 text-body text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       {...$$restProps}
     />
-    <div class="absolute top-2.5 right-8 bg-gray-200 px-1 rounded-sm">
+    <div
+      class="absolute top-2.5 right-8 bg-gray-200 dark:bg-gray-800 px-1.5 rounded-sm"
+    >
       <slot name="sufix" />
     </div>
   </div>
