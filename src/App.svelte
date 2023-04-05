@@ -183,10 +183,11 @@
   <form
     class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
   >
+    <h2 class="underline">Swap VTHO for VET</h2>
     <Input
       type="number"
       id="vtho_left"
-      label="Automatically swap VTHO for VET leaving in my wallet"
+      label="Amount to be left in wallet"
       bind:value={vthoLeft}
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>
@@ -215,6 +216,6 @@
   <div
     class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
   >
-    <h2>Past Trades</h2>
+    <h2 class="underline">Past Trades</h2>
   </div>
 </Layout>

@@ -10,7 +10,7 @@
   export let id: string;
 </script>
 
-<label for={id} class="text-body">
+<label for={id} class="text-body text-sm">
   {label}
   <div class="relative">
     <input
