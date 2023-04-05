@@ -211,4 +211,10 @@
 
     <p class="text-center">Chain: {chain.name}</p>
   </form>
+
+  <div
+    class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
+  >
+    <h2>Past Trades</h2>
+  </div>
 </Layout>
