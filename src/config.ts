@@ -1,7 +1,9 @@
 const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
 // const INFURA_API_KEY = import.meta.env.VITE_INFURA_API_KEY;
 
-if (CHAIN_ID == null) throw new Error("Missing env var VITE_CHAIN_ID");
+if (CHAIN_ID == null) {
+  throw new Error("Missing env var VITE_CHAIN_ID");
+}
 
 /**
  * JavaScript CAIP-2 representation object.
@@ -10,7 +12,7 @@ if (CHAIN_ID == null) throw new Error("Missing env var VITE_CHAIN_ID");
 export type ChainData = {
   name: string;
   chain: string;
-  network: string;
+  network: "main" | "test";
   rpc: string[];
   faucets: string[];
   nativeCurrency: {
