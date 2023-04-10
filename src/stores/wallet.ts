@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
-// import type { Web3Provider } from "@ethersproject/providers";
 import type { WalletId } from "@/typings/types";
+// import { ConnexService } from "@/blockchain/connex-service";
 import { sync2 } from "@/stores/sync2";
 
 type State = {
@@ -13,7 +13,7 @@ type State = {
 };
 
 // TODO
-// let ethers: any;
+// let connex: any;
 
 const initialState: State = {
   // provider: undefined,
@@ -68,7 +68,7 @@ function createStore() {
       update((s) => ({ ...s, loading: true, error: undefined }));
 
       try {
-        // Lazy load ethers
+        // Lazy load connex
         // if (ethers == null) {
         //   ethers = (await import("ethers")).ethers;
         // }

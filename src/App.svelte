@@ -9,7 +9,7 @@
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
-  import { chain } from "./config";
+  import { chain, VTHO_TOTAL_SUPPLY } from "./config";
 
   // const VTHO_CONTRACT_ADDRESS = import.meta.env.VITE_VTHO_CONTRACT_ADDRESS;
   const TRADER_CONTRACT_ADDRESS = import.meta.env.VITE_TRADER_CONTRACT_ADDRESS;
@@ -33,10 +33,7 @@
   let vthoTarget: number;
   let vthoLeft: number = 10;
 
-  /**
-   * Give Trader allowance to spend VTHO user's tokens.
-   */
-  async function handleApprove(): Promise<void> {
+  async function getAllowance(): Promise<string | undefined> {
     disabled = true;
 
     try {
@@ -48,24 +45,58 @@
       const connexService = new ConnexService({ noExtension: true });
       const vtho = new VTHO(connexService);
 
-      const totalSupply = await vtho.totalSupply();
+      const allowance = await vtho.allowance({
+        owner: $wallet.account,
+        spender: TRADER_CONTRACT_ADDRESS,
+      });
+
+      return allowance.decoded[0] as string;
+    } catch (_error: any) {
+      error = _error?.message || "Unknown error occurred.";
+    } finally {
+      disabled = false;
+    }
+  }
+
+  /**
+   * Give/revoke Trader allowance to spend VTHO.
+   */
+  async function handleApprove({
+    amount,
+    comment,
+  }: {
+    amount: string;
+    comment: string;
+  }): Promise<void> {
+    disabled = true;
+
+    try {
+      if ($wallet.account == null) {
+        throw new Error("Wallet is not connected");
+      }
+
+      // TODO: pass current wallet config
+      const connexService = new ConnexService({ noExtension: true });
+      const vtho = new VTHO(connexService);
+
+      // const totalSupply = await vtho.totalSupply();
+      // console.log({ totalSupply });
 
       const clause = vtho.approve({
         spender: TRADER_CONTRACT_ADDRESS,
-        amount: totalSupply.decoded[0],
+        amount,
       });
 
       const tx = await connexService.signTx({
         clauses: [clause],
         signer: $wallet.account,
-        comment:
-          "Allow our smart contract to spend your VTHO in exchange for VET.",
+        comment,
       });
       console.log({ tx });
 
       const receipt = await connexService.waitForTx({ txID: tx.txid });
-    } catch (error: any) {
-      error = error?.message || "Something went wrong";
+    } catch (_error: any) {
+      error = _error?.message || "Unknown error occurred.";
     } finally {
       disabled = false;
     }
@@ -143,7 +174,13 @@
         class="mx-auto"
         {disabled}
         fullWidth
-        on:click={handleApprove}
+        on:click={() => {
+          handleApprove({
+            amount: VTHO_TOTAL_SUPPLY,
+            comment:
+              "Allow our smart contract to spend your VTHO in exchange for VET.",
+          });
+        }}
       >
         Approve
       </Button>

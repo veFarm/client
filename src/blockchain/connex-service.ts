@@ -18,9 +18,9 @@ export class ConnexService {
 
   /**
    * Loop over connex.thor.account.methods to get an object
-   * containing all methods in the given ABI.
+   * containing all methods for the given ABI.
    * @param abi Smart contract's ABI.
-   * @param address Smart contract's address/
+   * @param address Smart contract's address.
    * @returns Methods object.
    */
   getMethods({

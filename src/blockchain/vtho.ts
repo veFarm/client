@@ -8,6 +8,9 @@ if (VTHO_CONTRACT_ADDRESS == null) {
   throw new Error("Missing env var VTHO_CONTRACT_ADDRESS");
 }
 
+/**
+ * Interface to interact with the VTHO ABI.
+ */
 export class VTHO {
   private readonly methods: Record<string, Connex.Thor.Account.Method> = {};
 
@@ -29,8 +32,18 @@ export class VTHO {
     amount,
   }: {
     spender: Address;
-    amount: any; // TODO: amount should either be string or BN.
+    amount: string;
   }): Connex.VM.Clause {
     return this.methods.approve.asClause(spender, amount);
+  }
+
+  async allowance({
+    owner,
+    spender,
+  }: {
+    owner: Address;
+    spender: Address;
+  }): Promise<Connex.VM.Output & Connex.Thor.Account.WithDecoded> {
+    return this.methods.allowance.call(owner, spender);
   }
 }

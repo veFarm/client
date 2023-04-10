@@ -161,3 +161,5 @@ export const CHAINS: Record<100009 | 100010, ChainData> = {
 // };
 
 export const chain = CHAINS[CHAIN_ID];
+
+export const VTHO_TOTAL_SUPPLY = "37805720913750000000000000000";
