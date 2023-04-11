@@ -1,10 +1,10 @@
 import { writable } from "svelte/store";
 import type { WalletId } from "@/typings/types";
-// import { ConnexService } from "@/blockchain/connex-service";
+import type { ConnexService } from "@/blockchain/connex-service";
 import { sync2 } from "@/stores/sync2";
 
 type State = {
-  // provider: Web3Provider | undefined;
+  connexService: ConnexService | undefined;
   loading: boolean;
   error: string | undefined;
   isConnected: boolean;
@@ -16,7 +16,7 @@ type State = {
 // let connex: any;
 
 const initialState: State = {
-  // provider: undefined,
+  connexService: undefined,
   loading: false,
   error: undefined,
   isConnected: false,
@@ -29,25 +29,19 @@ function createStore() {
 
   let connectedWalletId: WalletId | undefined;
 
-  // Update wallet store based on MetaMask store changes.
+  // Update wallet store based on Sync2 store changes.
   sync2.subscribe(async (data) => {
-    // No data present means MetaMask got disconnected.
-    if (
-      // ethers == null ||
-      data == null
-    ) {
+    // No data present means Sync2 got disconnected.
+    if (data == null) {
       set({ ...initialState });
       connectedWalletId = undefined;
       return;
     }
 
-    // MetaMask is connected.
+    // Sync2 is connected.
     try {
-      // const provider = new ethers.providers.Web3Provider(data.injected);
-      // const network = await provider.getNetwork();
-
       set({
-        // provider,
+        connexService: data.connexService,
         loading: false,
         error: undefined,
         isConnected: true,
@@ -68,11 +62,6 @@ function createStore() {
       update((s) => ({ ...s, loading: true, error: undefined }));
 
       try {
-        // Lazy load connex
-        // if (ethers == null) {
-        //   ethers = (await import("ethers")).ethers;
-        // }
-
         if (walletId !== "sync2") {
           update((s) => ({
             ...s,

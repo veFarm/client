@@ -1,4 +1,5 @@
 import { Connex, Options } from "@vechain/connex";
+import type { Certificate } from "thor-devkit";
 import type { AbiItem } from "@/typings/types";
 import { chain } from "@/config";
 
@@ -100,5 +101,27 @@ export class ConnexService {
         return receipt;
       }
     }
+  }
+
+  /**
+   * Sign certificate to prove account's ownership.
+   * @param message Message to be displayed when signing the certificate.
+   * @returns Signed certificate.
+   */
+  async signCert(message: Connex.Vendor.CertMessage): Promise<Certificate> {
+    const certResponse = await this.connex.vendor
+      .sign("cert", message)
+      .request();
+
+    const cert: Certificate = {
+      purpose: message.purpose,
+      payload: message.payload,
+      domain: certResponse.annex.domain,
+      timestamp: certResponse.annex.timestamp,
+      signer: certResponse.annex.signer,
+      signature: certResponse.signature,
+    };
+
+    return cert;
   }
 }

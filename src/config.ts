@@ -162,4 +162,6 @@ export const CHAINS: Record<100009 | 100010, ChainData> = {
 
 export const chain = CHAINS[CHAIN_ID];
 
+// TODO: check this value
+// OR export const MAX_UINT256 = new Big(2).pow(256).sub(1);
 export const VTHO_TOTAL_SUPPLY = "37805720913750000000000000000";

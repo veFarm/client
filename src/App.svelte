@@ -19,38 +19,33 @@
   }
 
   // TODO: either do this or call totalSupply
-  // export const MAX_UINT256 = new Big(2).pow(256).sub(1);
 
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
-  // TODO
-  // let ethers: any;
-  // let Greeter: any;
-  let greet = "";
-  let newGreeting = "";
   let disabled = false;
   let error = "";
-  let vthoTarget: number;
+  let allowed = false;
   let vthoLeft: number = 10;
 
-  async function getAllowance(): Promise<string | undefined> {
-    disabled = true;
-
+  /**
+   * Get Trader's contract allowance.
+   */
+  async function getAllowance(): Promise<void> {
     try {
-      if ($wallet.account == null) {
-        throw new Error("Wallet is not connected");
+      disabled = true;
+
+      if ($wallet.connexService == null || $wallet.account == null) {
+        throw new Error("Wallet is not connected.");
       }
 
-      // TODO: pass current wallet config
-      const connexService = new ConnexService({ noExtension: true });
-      const vtho = new VTHO(connexService);
+      const vtho = new VTHO($wallet.connexService);
 
       const allowance = await vtho.allowance({
         owner: $wallet.account,
         spender: TRADER_CONTRACT_ADDRESS,
       });
 
-      return allowance.decoded[0] as string;
+      allowed = allowance.decoded[0] !== "0";
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
     } finally {
@@ -59,7 +54,7 @@
   }
 
   /**
-   * Give/revoke Trader allowance to spend VTHO.
+   * Approve/revoke Trader's allowance to spend VTHO.
    */
   async function handleApprove({
     amount,
@@ -68,33 +63,28 @@
     amount: string;
     comment: string;
   }): Promise<void> {
-    disabled = true;
-
     try {
-      if ($wallet.account == null) {
-        throw new Error("Wallet is not connected");
+      disabled = true;
+
+      if ($wallet.connexService == null || $wallet.account == null) {
+        throw new Error("Wallet is not connected.");
       }
 
-      // TODO: pass current wallet config
-      const connexService = new ConnexService({ noExtension: true });
-      const vtho = new VTHO(connexService);
-
-      // const totalSupply = await vtho.totalSupply();
-      // console.log({ totalSupply });
+      const vtho = new VTHO($wallet.connexService);
 
       const clause = vtho.approve({
         spender: TRADER_CONTRACT_ADDRESS,
         amount,
       });
 
-      const tx = await connexService.signTx({
+      const tx = await $wallet.connexService.signTx({
         clauses: [clause],
         signer: $wallet.account,
         comment,
       });
       console.log({ tx });
 
-      const receipt = await connexService.waitForTx({ txID: tx.txid });
+      const receipt = await $wallet.connexService.waitForTx({ txID: tx.txid });
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
     } finally {
@@ -102,57 +92,9 @@
     }
   }
 
-  // async function getGreeting() {
-  //   if (ethers == null) return;
-
-  //   error = "";
-
-  //   try {
-  //     const provider = new ethers.providers.JsonRpcProvider(chain.rpc[0]);
-  //     const greeter = new Greeter(provider);
-
-  //     greet = await greeter.greet_();
-  //   } catch (error_: any) {
-  //     error = error_?.message || "Something went wrong when querying greeting";
-  //   }
-  // }
-
-  // async function handleSubmit() {
-  //   if ($wallet.provider == null || Greeter == null) return;
-
-  //   disabled = true;
-  //   error = "";
-
-  //   try {
-  //     const signer = $wallet.provider.getSigner();
-  //     const greeter = new Greeter(signer);
-
-  //     await greeter.setGreeting_(newGreeting);
-  //     await getGreeting();
-  //   } catch (error_: any) {
-  //     error =
-  //       error_?.message || "Something went wrong when setting a new greeting";
-  //   } finally {
-  //     disabled = false;
-  //   }
-  // }
-
-  // async function handleSwitch() {
-  //   error = "";
-
-  //   try {
-  //     await wallet.switchChain(chain.chainId);
-  //   } catch (error_: any) {
-  //     error = error_?.message || "Something went wrong when switching chains";
-  //   }
-  // }
-
-  // onMount(async () => {
-  //   // Lazy load ethers
-  //   ethers = (await import("ethers")).ethers;
-  //   Greeter = (await import("@/contracts/greeter")).Greeter;
-  //   await getGreeting();
-  // });
+  onMount(async () => {
+    await getAllowance();
+  });
 </script>
 
 <Layout>

@@ -1,15 +1,13 @@
 import { writable } from "svelte/store";
-import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
-// import type { ExternalProvider } from "@ethersproject/providers";
+import { ConnexService } from "@/blockchain/connex-service";
 
 // const injected = window.ethereum;
 
-// https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider
 function createStore() {
   const { subscribe, set } = writable<
     | {
-        connex: Connex;
+        connexService: ConnexService;
         account: Address;
       }
     | undefined
@@ -17,56 +15,28 @@ function createStore() {
 
   return {
     subscribe,
+    // TODO: pass walletName as arg. Where
+    // walletName === sync2 -> noExtension === true
+    // wallletName === veworld -> noExtension === false
     connect: async function (): Promise<void> {
-      // if (!injected?.isMetaMask) {
-      //   throw new Error("MetaMask is not installed.");
-      // }
-
-      // const accounts = (await injected.request({
-      //   method: "eth_requestAccounts",
-      // })) as Address[];
-
-      // if (accounts.length === 0) {
-      //   throw new Error("No accounts found.");
-      // }
-
-      const connex = new Connex({
-        node: "https://testnet.veblocks.net/",
-        network: "test",
-        noExtension: true,
-      });
+      const connexService = new ConnexService({ noExtension: true });
 
       const message: Connex.Vendor.CertMessage = {
         purpose: "identification",
         payload: {
           type: "text",
-          content: "Sign a certificate to prove your identity",
+          content: "Sign a certificate to prove your identity.",
         },
       };
 
-      const certResponse = await connex.vendor.sign("cert", message).request();
+      const cert = await connexService.signCert(message);
 
-      const cert: Certificate = {
-        purpose: message.purpose,
-        payload: message.payload,
-        domain: certResponse.annex.domain,
-        timestamp: certResponse.annex.timestamp,
-        signer: certResponse.annex.signer,
-        signature: certResponse.signature,
-      };
-
-      console.log("Signed cert", cert);
+      // This should throw if cert isn't valid.
       Certificate.verify(cert);
-      console.log("Cert verified");
-
-      // const clientDetails = client.thor.block().get();
-      // setWalletClient(clientDetails);
-
-      // const account = await connex.thor.account(accountAddress).get()
 
       set({
-        connex,
-        account: certResponse.annex.signer as Address,
+        connexService,
+        account: cert.signer as Address,
       });
     },
     disconnect: function () {
