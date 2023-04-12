@@ -26,7 +26,11 @@
         true: ["w-full"],
       },
       disabled: {
-        true: ["cursor-not-allowed", "bg-secondary-100"],
+        true: [
+          "cursor-not-allowed",
+          "bg-secondary-100",
+          "hover:bg-secondary-100",
+        ],
       },
     },
   });

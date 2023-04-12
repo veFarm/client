@@ -25,7 +25,7 @@
   $: error = $wallet.error;
 
   $: {
-    if ($wallet.isConnected) {
+    if ($wallet.connected) {
       handleClose();
     }
   }

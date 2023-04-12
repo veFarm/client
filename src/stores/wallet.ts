@@ -7,7 +7,7 @@ type State = {
   connexService: ConnexService | undefined;
   loading: boolean;
   error: string | undefined;
-  isConnected: boolean;
+  connected: boolean;
   account: Address | undefined;
   // chainId: number | undefined;
 };
@@ -19,7 +19,7 @@ const initialState: State = {
   connexService: undefined,
   loading: false,
   error: undefined,
-  isConnected: false,
+  connected: false,
   account: undefined,
   // chainId: undefined,
 };
@@ -44,7 +44,7 @@ function createStore() {
         connexService: data.connexService,
         loading: false,
         error: undefined,
-        isConnected: true,
+        connected: true,
         account: data.account,
         // chainId: network.chainId,
       });

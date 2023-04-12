@@ -21,10 +21,9 @@ export class VTHO {
     });
   }
 
-  async totalSupply(): Promise<
-    Connex.VM.Output & Connex.Thor.Account.WithDecoded
-  > {
-    return this.methods.totalSupply.call();
+  async totalSupply(): Promise<string> {
+    const totalSupply = await this.methods.totalSupply.call();
+    return totalSupply.decoded[0];
   }
 
   approve({
@@ -43,7 +42,8 @@ export class VTHO {
   }: {
     owner: Address;
     spender: Address;
-  }): Promise<Connex.VM.Output & Connex.Thor.Account.WithDecoded> {
-    return this.methods.allowance.call(owner, spender);
+  }): Promise<string> {
+    const allowance = await this.methods.allowance.call(owner, spender);
+    return allowance.decoded[0];
   }
 }

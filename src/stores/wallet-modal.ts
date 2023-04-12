@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 
 /**
- * @summary Keeps track of wallet modal open/close state.
+ * Keeps track of wallet modal open/close state.
  */
 function createStore() {
   const { subscribe, set } = writable<{ isOpen: boolean }>({ isOpen: false });

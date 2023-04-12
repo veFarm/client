@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  // import { Connex } from "@vechain/connex";
-  import { ConnexService } from "@/blockchain/connex-service";
   import { VTHO } from "@/blockchain/vtho";
   // import Big from "big.js";
   import { wallet } from "@/stores/wallet";
@@ -11,41 +8,36 @@
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { chain, VTHO_TOTAL_SUPPLY } from "./config";
 
-  // const VTHO_CONTRACT_ADDRESS = import.meta.env.VITE_VTHO_CONTRACT_ADDRESS;
   const TRADER_CONTRACT_ADDRESS = import.meta.env.VITE_TRADER_CONTRACT_ADDRESS;
 
   if (TRADER_CONTRACT_ADDRESS == null) {
     throw new Error("Missing env var TRADER_CONTRACT_ADDRESS");
   }
 
-  // TODO: either do this or call totalSupply
-
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
   let disabled = false;
   let error = "";
-  let allowed = false;
-  let vthoLeft: number = 10;
+  let allowance = "0";
+  let vthoLeft = 10; // TODO: this needs to be formated to BN
 
   /**
    * Get Trader's contract allowance.
    */
   async function getAllowance(): Promise<void> {
-    try {
-      disabled = true;
+    disabled = true;
 
+    try {
       if ($wallet.connexService == null || $wallet.account == null) {
         throw new Error("Wallet is not connected.");
       }
 
       const vtho = new VTHO($wallet.connexService);
 
-      const allowance = await vtho.allowance({
+      allowance = await vtho.allowance({
         owner: $wallet.account,
         spender: TRADER_CONTRACT_ADDRESS,
       });
-
-      allowed = allowance.decoded[0] !== "0";
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
     } finally {
@@ -63,9 +55,9 @@
     amount: string;
     comment: string;
   }): Promise<void> {
-    try {
-      disabled = true;
+    disabled = true;
 
+    try {
       if ($wallet.connexService == null || $wallet.account == null) {
         throw new Error("Wallet is not connected.");
       }
@@ -82,9 +74,10 @@
         signer: $wallet.account,
         comment,
       });
-      console.log({ tx });
 
       const receipt = await $wallet.connexService.waitForTx({ txID: tx.txid });
+
+      await getAllowance();
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
     } finally {
@@ -92,9 +85,11 @@
     }
   }
 
-  onMount(async () => {
-    await getAllowance();
-  });
+  $: {
+    if ($wallet.connected) {
+      getAllowance();
+    }
+  }
 </script>
 
 <Layout>
@@ -106,26 +101,45 @@
       type="number"
       id="vtho_left"
       label="Amount to be kept in wallet"
+      {disabled}
       bind:value={vthoLeft}
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>
     </Input>
-    {#if $wallet.isConnected}
-      <Button
-        intent="primary"
-        class="mx-auto"
-        {disabled}
-        fullWidth
-        on:click={() => {
-          handleApprove({
-            amount: VTHO_TOTAL_SUPPLY,
-            comment:
-              "Allow our smart contract to spend your VTHO in exchange for VET.",
-          });
-        }}
-      >
-        Approve
-      </Button>
+    {#if $wallet.connected}
+      {#if allowance === "0"}
+        <Button
+          intent="primary"
+          class="mx-auto"
+          {disabled}
+          fullWidth
+          on:click={() => {
+            handleApprove({
+              amount: VTHO_TOTAL_SUPPLY,
+              comment:
+                "Allow our smart contract to spend your VTHO in exchange for VET.",
+            });
+          }}
+        >
+          Approve
+        </Button>
+      {:else}
+        <Button
+          intent="danger"
+          class="mx-auto"
+          {disabled}
+          fullWidth
+          on:click={() => {
+            handleApprove({
+              amount: "0",
+              comment:
+                "Our smart contract will no longer be able to spend your VTHO in exchange for VET.",
+            });
+          }}
+        >
+          Revoke
+        </Button>
+      {/if}
     {:else}
       <ConnectWalletButton intent="primary" fullWidth />
     {/if}
