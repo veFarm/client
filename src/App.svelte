@@ -110,7 +110,6 @@
       {#if allowance === "0"}
         <Button
           intent="primary"
-          class="mx-auto"
           {disabled}
           fullWidth
           on:click={() => {
@@ -126,7 +125,6 @@
       {:else}
         <Button
           intent="danger"
-          class="mx-auto"
           {disabled}
           fullWidth
           on:click={() => {
