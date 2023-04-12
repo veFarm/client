@@ -1,6 +1,6 @@
 import type { ConnexService } from "@/blockchain/connex-service";
 import type { AbiItem } from "@/typings/types";
-import * as artifact from "@/artifacts/contracts/VTHO.sol/VTHO.json";
+import * as artifact from "@/abis/VTHO.json";
 
 const VTHO_CONTRACT_ADDRESS = import.meta.env.VITE_VTHO_CONTRACT_ADDRESS;
 
