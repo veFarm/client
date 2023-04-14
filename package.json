@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@vechain/connex": "^2.0.14",
+    "bignumber.js": "^9.1.1",
     "class-variance-authority": "^0.4.0",
     "thor-devkit": "^2.0.7"
   }

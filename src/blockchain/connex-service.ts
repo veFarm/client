@@ -1,5 +1,6 @@
 import { Connex, Options } from "@vechain/connex";
 import type { Certificate } from "thor-devkit";
+import BigNumber from "bignumber.js";
 import type { AbiItem } from "@/typings/types";
 import { chain } from "@/config";
 
@@ -20,8 +21,8 @@ export class ConnexService {
   /**
    * Loop over connex.thor.account.methods to get an object
    * containing all methods for the given ABI.
-   * @param abi Smart contract's ABI.
-   * @param address Smart contract's address.
+   * @param abi ABI of the smart contract.
+   * @param address Address of the smart contract.
    * @returns Methods object.
    */
   getMethods({
@@ -108,7 +109,11 @@ export class ConnexService {
    * @param message Message to be displayed when signing the certificate.
    * @returns Signed certificate.
    */
-  async signCert(message: Connex.Vendor.CertMessage): Promise<Certificate> {
+  async signCert({
+    message,
+  }: {
+    message: Connex.Vendor.CertMessage;
+  }): Promise<Certificate> {
     const certResponse = await this.connex.vendor
       .sign("cert", message)
       .request();
@@ -123,5 +128,28 @@ export class ConnexService {
     };
 
     return cert;
+  }
+
+  /**
+   * Fetch VET and VTHO account balance.
+   * @param account Account to be checked.
+   * @returns Object containing (VET) `balance` and (VTHO) `energy`.
+   */
+  async getBalance({
+    account,
+  }: {
+    account: Address;
+  }): Promise<{ balance: string; energy: string }> {
+    const balances = await this.connex.thor.account(account).get();
+    return {
+      balance: BigNumber(balances.balance)
+        .dividedBy(BigNumber("1e18"))
+        .toFixed(2)
+        .toString(),
+      energy: BigNumber(balances.energy)
+        .dividedBy(BigNumber("1e18"))
+        .toFixed(2)
+        .toString(),
+    };
   }
 }

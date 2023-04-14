@@ -19,7 +19,33 @@
   let disabled = false;
   let error = "";
   let allowance = "0";
+  let balance: string | undefined = undefined;
+  let energy: string | undefined = undefined;
   let vthoLeft = 10; // TODO: this needs to be formated to BN
+
+  /**
+   * Get Trader's contract allowance.
+   */
+  async function getBalance(): Promise<void> {
+    disabled = true;
+
+    try {
+      if ($wallet.connexService == null || $wallet.account == null) {
+        throw new Error("Wallet is not connected.");
+      }
+
+      const balances = await $wallet.connexService.getBalance({
+        account: $wallet.account,
+      });
+
+      balance = balances.balance;
+      energy = balances.energy;
+    } catch (_error: any) {
+      error = _error?.message || "Unknown error occurred.";
+    } finally {
+      disabled = false;
+    }
+  }
 
   /**
    * Get Trader's contract allowance.
@@ -87,6 +113,7 @@
 
   $: {
     if ($wallet.connected) {
+      getBalance();
       getAllowance();
     }
   }
@@ -97,6 +124,12 @@
     class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
   >
     <h2 class="underline">Swap VTHO for VET automatically</h2>
+    {#if balance != null}
+      <p>VET: {balance}</p>
+    {/if}
+    {#if energy != null}
+      <p>VTHO: {energy}</p>
+    {/if}
     <Input
       type="number"
       id="vtho_left"

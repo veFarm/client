@@ -21,11 +21,31 @@ export class VTHO {
     });
   }
 
+  /**
+   * Returns the total VTHO supply.
+   */
   async totalSupply(): Promise<string> {
     const totalSupply = await this.methods.totalSupply.call();
     return totalSupply.decoded[0];
   }
 
+  /**
+   * Returns the account balance in VTHO for the given address.
+   * @param account Account whose balance needs to be checked.
+   * @returns VTHO balance.
+   */
+  async balanceOf({ account }: { account: Address }): Promise<string> {
+    const balanceOf = await this.methods.balanceOf.call(account);
+    return balanceOf.decoded[0];
+  }
+
+  /**
+   * Allows `spender` to withdraw from your account multiple times, up to the given `amount`.
+   * If this function is called again it overwrites the current allowance with `amount`.
+   * @param spender Account to be granted approval.
+   * @param amount Amount of tokens to be approved for transfer.
+   * @returns Approve clause.
+   */
   approve({
     spender,
     amount,
@@ -36,6 +56,11 @@ export class VTHO {
     return this.methods.approve.asClause(spender, amount);
   }
 
+  /**
+   * Returns the amount which `spender` is still allowed to withdraw from `owner`.
+   * @param owner Account owner of the tokens.
+   * @param spender Account that has been given allowance to spend the tokens.
+   */
   async allowance({
     owner,
     spender,

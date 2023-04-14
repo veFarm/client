@@ -29,7 +29,7 @@ function createStore() {
         },
       };
 
-      const cert = await connexService.signCert(message);
+      const cert = await connexService.signCert({ message });
 
       // This should throw if cert isn't valid.
       Certificate.verify(cert);
