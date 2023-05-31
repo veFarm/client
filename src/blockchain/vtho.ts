@@ -12,7 +12,7 @@ if (VTHO_CONTRACT_ADDRESS == null) {
  * Interface to interact with the VTHO ABI.
  */
 export class VTHO {
-  private readonly methods: Record<string, Connex.Thor.Account.Method> = {};
+  private readonly methods: Record<string, Connex.Thor.Account.Method>;
 
   constructor(private readonly connexService: ConnexService) {
     this.methods = this.connexService.getMethods({

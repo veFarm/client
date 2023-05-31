@@ -123,14 +123,29 @@
   <form
     class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
   >
-    <h2 class="underline">Swap VTHO for VET automatically</h2>
-    {#if balance != null}
-      <p>VET: {balance}</p>
+    <p>
+      To help you earn the most profit, please connect your wallet so we can
+      calculate the best strategy to swap VTHO for VET based on your balance.
+    </p>
+    {#if !$wallet.connected}
+      <ConnectWalletButton intent="primary" fullWidth />
+    {:else}
+      <Button intent="primary" disabled fullWidth>Connect wallet</Button>
     {/if}
-    {#if energy != null}
-      <p>VTHO: {energy}</p>
-    {/if}
-    <Input
+
+    {#if $wallet.connected}
+      <p class="underline">Current balance:</p>
+      <p>
+        VET: {balance}
+        <br />
+        VTHO: {energy}
+      </p>
+      <p>
+        According to your current balance, it is recommended that you exchange
+        VTHO-VET every 13 days. Allow our smart contract to handle this task for
+        you automatically.
+      </p>
+      <!-- <Input
       type="number"
       id="vtho_left"
       label="Amount to be kept in wallet"
@@ -138,8 +153,7 @@
       bind:value={vthoLeft}
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>
-    </Input>
-    {#if $wallet.connected}
+    </Input> -->
       {#if allowance === "0"}
         <Button
           intent="primary"
@@ -171,8 +185,6 @@
           Revoke
         </Button>
       {/if}
-    {:else}
-      <ConnectWalletButton intent="primary" fullWidth />
     {/if}
 
     {#if error != null && error.length > 0}
@@ -186,5 +198,6 @@
     class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
   >
     <h2 class="underline">Past Trades</h2>
+    <p>You don&apos;t have any past trades</p>
   </div>
 </Layout>
