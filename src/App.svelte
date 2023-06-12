@@ -1,30 +1,34 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { VTHO } from "@/blockchain/vtho";
   // import Big from "big.js";
   import { wallet } from "@/stores/wallet";
+  import { getEnvVars } from "@/utils/get-env-vars";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { chain, VTHO_TOTAL_SUPPLY } from "./config";
 
-  const TRADER_CONTRACT_ADDRESS = import.meta.env.VITE_TRADER_CONTRACT_ADDRESS;
-
-  if (TRADER_CONTRACT_ADDRESS == null) {
-    throw new Error("Missing env var TRADER_CONTRACT_ADDRESS");
-  }
+  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
+  /** Form status. */
   let disabled = false;
+  /** Error message if any. */
   let error = "";
+  /** Allowance given by the account to the Trader contract. */
   let allowance = "0";
+  /** Account's VET balance. */
   let balance: string | undefined = undefined;
+  /** Account's VTHO balance. */
   let energy: string | undefined = undefined;
+  /** VTHO left in the account after the swap. */
   let vthoLeft = 10; // TODO: this needs to be formated to BN
 
   /**
-   * Get Trader's contract allowance.
+   * Get account balance.
    */
   async function getBalance(): Promise<void> {
     disabled = true;
@@ -48,7 +52,7 @@
   }
 
   /**
-   * Get Trader's contract allowance.
+   * Fetch allowance given by the account to the Trader contract.
    */
   async function getAllowance(): Promise<void> {
     disabled = true;

@@ -1,12 +1,9 @@
 import type { ConnexService } from "@/blockchain/connex-service";
 import type { AbiItem } from "@/typings/types";
 import * as artifact from "@/abis/VTHO.json";
+import { getEnvVars } from "@/utils/get-env-vars";
 
-const VTHO_CONTRACT_ADDRESS = import.meta.env.VITE_VTHO_CONTRACT_ADDRESS;
-
-if (VTHO_CONTRACT_ADDRESS == null) {
-  throw new Error("Missing env var VTHO_CONTRACT_ADDRESS");
-}
+const { VTHO_CONTRACT_ADDRESS } = getEnvVars()
 
 /**
  * Interface to interact with the VTHO ABI.

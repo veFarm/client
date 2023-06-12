@@ -1,9 +1,6 @@
-const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
-// const INFURA_API_KEY = import.meta.env.VITE_INFURA_API_KEY;
+import { getEnvVars } from "@/utils/get-env-vars";
 
-if (CHAIN_ID == null) {
-  throw new Error("Missing env var VITE_CHAIN_ID");
-}
+const { CHAIN_ID } = getEnvVars()
 
 /**
  * JavaScript CAIP-2 representation object.
