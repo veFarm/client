@@ -10,8 +10,14 @@
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { chain, VTHO_TOTAL_SUPPLY } from "./config";
 
-  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
+  const { TRADER_CONTRACT_ADDRESS, GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
 
+  export type SwapDoc = {
+    account: Address;
+    amountIn: string;
+    amountOut: string;
+    txId: string;
+  };
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
   /** Form status. */
@@ -24,8 +30,13 @@
   let balance: string | undefined = undefined;
   /** Account's VTHO balance. */
   let energy: string | undefined = undefined;
-  /** VTHO left in the account after the swap. */
+  /** VTHO balance left after the swap. */
   let vthoLeft = 10; // TODO: this needs to be formated to BN
+  /**
+   * Swap transactions performed by the Trader contract
+   * in behalf of the current logged in account.
+   */
+  let swapTxs: SwapDoc[] = [];
 
   /**
    * Get account balance.
@@ -75,6 +86,21 @@
     }
   }
 
+  async function getAccountSwaps() {
+    try {
+      if ($wallet.connexService == null || $wallet.account == null) {
+        throw new Error("Wallet is not connected.");
+      }
+
+      const response = await fetch(
+        `${GET_ACCOUNT_SWAPS_ENDPOINT}?account=${$wallet.account}`
+      );
+      swapTxs = await response.json();
+    } catch (_error: any) {
+      error = _error?.message || "Unknown error occurred.";
+    }
+  }
+
   /**
    * Approve/revoke Trader's allowance to spend VTHO.
    */
@@ -119,6 +145,7 @@
     if ($wallet.connected) {
       getBalance();
       getAllowance();
+      getAccountSwaps();
     }
   }
 </script>
@@ -202,6 +229,12 @@
     class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
   >
     <h2 class="underline">Past Trades</h2>
-    <p>You don&apos;t have any past trades</p>
+    {#if swapTxs == null || swapTxs.length === 0}
+      <p>You don&apos;t have any past trades</p>
+    {:else}
+      {#each swapTxs as swap}
+        <p>{JSON.stringify(swap)}</p>
+      {/each}
+    {/if}
   </div>
 </Layout>
