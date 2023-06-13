@@ -22,7 +22,7 @@ export type ChainData = {
   chainId: number;
   networkId: number;
   icon?: string;
-  explorers?: {
+  explorers: {
     name: string;
     url: string;
     icon?: string;

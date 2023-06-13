@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import type { SwapDoc } from "@/typings/types";
   import { VTHO } from "@/blockchain/vtho";
   // import Big from "big.js";
   import { wallet } from "@/stores/wallet";
@@ -7,17 +7,12 @@
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
+  import { SwapTx } from "@/components/swap-tx";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { chain, VTHO_TOTAL_SUPPLY } from "./config";
 
   const { TRADER_CONTRACT_ADDRESS, GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
 
-  export type SwapDoc = {
-    account: Address;
-    amountIn: string;
-    amountOut: string;
-    txId: string;
-  };
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
   /** Form status. */
@@ -225,16 +220,18 @@
     <p class="text-center">Chain: {chain.name}</p>
   </form>
 
-  <div
-    class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
-  >
-    <h2 class="underline">Past Trades</h2>
-    {#if swapTxs == null || swapTxs.length === 0}
-      <p>You don&apos;t have any past trades</p>
-    {:else}
-      {#each swapTxs as swap}
-        <p>{JSON.stringify(swap)}</p>
-      {/each}
-    {/if}
-  </div>
+  {#if $wallet.connected}
+    <div
+      class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background my-8"
+    >
+      <h2 class="underline">Past Trades</h2>
+      {#if swapTxs == null || swapTxs.length === 0}
+        <p>You don&apos;t have any past trades</p>
+      {:else}
+        {#each swapTxs as swap}
+          <SwapTx tx={swap} />
+        {/each}
+      {/if}
+    </div>
+  {/if}
 </Layout>

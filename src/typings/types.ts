@@ -35,3 +35,10 @@ export type AbiOutput = {
   components?: AbiOutput[];
   internalType?: string;
 };
+
+export type SwapDoc = {
+  account: Address;
+  amountIn: string;
+  amountOut: string;
+  txId: string;
+};
