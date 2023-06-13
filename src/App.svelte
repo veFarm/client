@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { SwapDoc } from "@/typings/types";
   import { VTHO } from "@/blockchain/vtho";
-  // import Big from "big.js";
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { Layout } from "@/components/layout";
