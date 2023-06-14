@@ -1,16 +1,15 @@
 <script lang="ts">
-  import type { SwapDoc } from "@/typings/types";
   import { VTHO } from "@/blockchain/vtho";
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
-  import { SwapTx } from "@/components/swap-tx";
+  import { SwapsHistory } from "@/components/swaps-history";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { chain, VTHO_TOTAL_SUPPLY } from "./config";
 
-  const { TRADER_CONTRACT_ADDRESS, GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
+  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
@@ -25,12 +24,7 @@
   /** Account's VTHO balance. */
   let energy: string | undefined = undefined;
   /** VTHO balance left after the swap. */
-  let vthoLeft = 10; // TODO: this needs to be formated to BN
-  /**
-   * Swap transactions performed by the Trader contract
-   * in behalf of the current logged in account.
-   */
-  let swapTxs: SwapDoc[] = [];
+  // let vthoLeft = 10; // TODO: this needs to be formated to BN
 
   /**
    * Get account balance.
@@ -80,31 +74,10 @@
     }
   }
 
-  async function getAccountSwaps() {
-    try {
-      if ($wallet.connexService == null || $wallet.account == null) {
-        throw new Error("Wallet is not connected.");
-      }
-
-      const response = await fetch(
-        `${GET_ACCOUNT_SWAPS_ENDPOINT}?account=${$wallet.account}`
-      );
-      swapTxs = await response.json();
-    } catch (_error: any) {
-      error = _error?.message || "Unknown error occurred.";
-    }
-  }
-
   /**
    * Approve/revoke Trader's allowance to spend VTHO.
    */
-  async function handleApprove({
-    amount,
-    comment,
-  }: {
-    amount: string;
-    comment: string;
-  }): Promise<void> {
+  async function handleApprove(amount: string, comment: string): Promise<void> {
     disabled = true;
 
     try {
@@ -125,7 +98,7 @@
         comment,
       });
 
-      const receipt = await $wallet.connexService.waitForTx({ txID: tx.txid });
+      await $wallet.connexService.waitForTx({ txID: tx.txid });
 
       await getAllowance();
     } catch (_error: any) {
@@ -139,7 +112,6 @@
     if ($wallet.connected) {
       getBalance();
       getAllowance();
-      getAccountSwaps();
     }
   }
 </script>
@@ -186,11 +158,10 @@
           {disabled}
           fullWidth
           on:click={() => {
-            handleApprove({
-              amount: VTHO_TOTAL_SUPPLY,
-              comment:
-                "Allow our smart contract to spend your VTHO in exchange for VET.",
-            });
+            handleApprove(
+              VTHO_TOTAL_SUPPLY,
+              "Allow our smart contract to spend your VTHO in exchange for VET."
+            );
           }}
         >
           Approve
@@ -201,11 +172,10 @@
           {disabled}
           fullWidth
           on:click={() => {
-            handleApprove({
-              amount: "0",
-              comment:
-                "Our smart contract will no longer be able to spend your VTHO in exchange for VET.",
-            });
+            handleApprove(
+              "0",
+              "Our smart contract will no longer be able to spend your VTHO in exchange for VET."
+            );
           }}
         >
           Revoke
@@ -220,18 +190,5 @@
     <p class="text-center">Chain: {chain.name}</p>
   </form>
 
-  {#if $wallet.connected}
-    <div
-      class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background my-8"
-    >
-      <h2 class="underline">Past Trades</h2>
-      {#if swapTxs == null || swapTxs.length === 0}
-        <p>You don&apos;t have any past trades</p>
-      {:else}
-        {#each swapTxs as swap}
-          <SwapTx tx={swap} />
-        {/each}
-      {/if}
-    </div>
-  {/if}
+  <SwapsHistory />
 </Layout>
