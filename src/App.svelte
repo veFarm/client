@@ -165,10 +165,11 @@
         <br />
         VTHO: {energy}
       </p>
+      <p class="underline">Strategy:</p>
       <p>
-        According to your current balance, it is recommended that you exchange
-        VTHO-VET every 13 days. Allow our smart contract to handle this task for
-        you automatically.
+        The protocol will swap VTHO for VET whenever your VTHO balance reaches 5
+        VTHO or more. Will swap 5 VTHO every 5 minutes until your balance is
+        below the target amount.
       </p>
       <!-- <Input
       type="number"
