@@ -1,10 +1,11 @@
 import { writable } from "svelte/store";
+import type { Connex } from "@vechain/connex";
 import type { WalletId } from "@/typings/types";
-import type { ConnexService } from "@/blockchain/connex-service";
+// import type { ConnexUtils } from "@/blockchain/connex-utils";
 import { sync2 } from "@/stores/sync2";
 
 type State = {
-  connexService: ConnexService | undefined;
+  connex: Connex | undefined;
   loading: boolean;
   error: string | undefined;
   connected: boolean;
@@ -12,11 +13,8 @@ type State = {
   // chainId: number | undefined;
 };
 
-// TODO
-// let connex: any;
-
 const initialState: State = {
-  connexService: undefined,
+  connex: undefined,
   loading: false,
   error: undefined,
   connected: false,
@@ -41,7 +39,7 @@ function createStore() {
     // Sync2 is connected.
     try {
       set({
-        connexService: data.connexService,
+        connex: data.connex,
         loading: false,
         error: undefined,
         connected: true,

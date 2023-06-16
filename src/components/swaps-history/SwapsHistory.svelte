@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { SwapDoc } from "@/typings/types";
+  import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { formatUnits } from "@/utils/format-units";
@@ -17,13 +18,14 @@
 
   async function getAccountSwaps() {
     try {
-      if ($wallet.connexService == null || $wallet.account == null) {
+      if ($wallet.account == null) {
         throw new Error("Wallet is not connected.");
       }
 
       const response = await fetch(
         `${GET_ACCOUNT_SWAPS_ENDPOINT}?account=${$wallet.account}`
       );
+
       swapTxs = await response.json();
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
@@ -52,6 +54,7 @@
           amountIn={formatUnits(tx.amountIn, 18, 3)}
           amountOut={formatUnits(tx.amountOut, 18, 5)}
           txId={tx.txId}
+          explorerUrl={chain.explorers[0].url}
         />
       {/each}
     {/if}

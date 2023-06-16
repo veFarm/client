@@ -1,18 +1,25 @@
 <script lang="ts">
-  import { VTHO } from "@/blockchain/vtho";
+  import type { Contract } from "@/blockchain/connex-utils";
+  import type { AbiItem } from "@/typings/types";
+  import { ConnexUtils } from "@/blockchain/connex-utils";
+  import * as vthoArtifact from "@/abis/VTHO.json";
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
-  import { Input } from "@/components/input";
+  // import { Input } from "@/components/input";
   import { SwapsHistory } from "@/components/swaps-history";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
-  import { chain, VTHO_TOTAL_SUPPLY } from "./config";
+  import { chain, VTHO_TOTAL_SUPPLY } from "@/config";
 
-  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
+  const { VTHO_CONTRACT_ADDRESS, TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
+  /** Connex utils instance. */
+  let connexUtils: ConnexUtils | undefined;
+  /** Reference to the VTHO contract. */
+  let vtho: Contract | undefined;
   /** Form status. */
   let disabled = false;
   /** Error message if any. */
@@ -27,19 +34,17 @@
   // let vthoLeft = 10; // TODO: this needs to be formated to BN
 
   /**
-   * Get account balance.
+   * Fetch account balance from the vechain ledger.
    */
   async function getBalance(): Promise<void> {
     disabled = true;
 
     try {
-      if ($wallet.connexService == null || $wallet.account == null) {
+      if (connexUtils == null || $wallet.account == null) {
         throw new Error("Wallet is not connected.");
       }
 
-      const balances = await $wallet.connexService.getBalance({
-        account: $wallet.account,
-      });
+      const balances = await connexUtils.getBalance($wallet.account);
 
       balance = balances.balance;
       energy = balances.energy;
@@ -57,15 +62,12 @@
     disabled = true;
 
     try {
-      if ($wallet.connexService == null || $wallet.account == null) {
+      if (vtho == null || $wallet.account == null) {
         throw new Error("Wallet is not connected.");
       }
 
-      const vtho = new VTHO($wallet.connexService);
-
-      allowance = await vtho.allowance({
-        owner: $wallet.account,
-        spender: TRADER_CONTRACT_ADDRESS,
+      allowance = await vtho.methods.constant.allowance({
+        args: [$wallet.account, TRADER_CONTRACT_ADDRESS],
       });
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
@@ -77,29 +79,23 @@
   /**
    * Approve/revoke Trader's allowance to spend VTHO.
    */
-  async function handleApprove(amount: string, comment: string): Promise<void> {
+  async function handleAllowance(
+    amount: string,
+    comment: string
+  ): Promise<void> {
     disabled = true;
 
     try {
-      if ($wallet.connexService == null || $wallet.account == null) {
+      if (connexUtils == null || vtho == null) {
         throw new Error("Wallet is not connected.");
       }
 
-      const vtho = new VTHO($wallet.connexService);
-
-      const clause = vtho.approve({
-        spender: TRADER_CONTRACT_ADDRESS,
-        amount,
-      });
-
-      const tx = await $wallet.connexService.signTx({
-        clauses: [clause],
-        signer: $wallet.account,
+      const response = await vtho.methods.signed.approve({
+        args: [TRADER_CONTRACT_ADDRESS, amount],
         comment,
       });
 
-      await $wallet.connexService.waitForTx({ txID: tx.txid });
-
+      await connexUtils.waitForReceipt(response.txid);
       await getAllowance();
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
@@ -109,7 +105,14 @@
   }
 
   $: {
-    if ($wallet.connected) {
+    if ($wallet.connex != null) {
+      connexUtils = new ConnexUtils($wallet.connex);
+
+      vtho = connexUtils.getContract(
+        vthoArtifact.abi as AbiItem[],
+        VTHO_CONTRACT_ADDRESS
+      );
+
       getBalance();
       getAllowance();
     }
@@ -158,7 +161,7 @@
           {disabled}
           fullWidth
           on:click={() => {
-            handleApprove(
+            handleAllowance(
               VTHO_TOTAL_SUPPLY,
               "Allow our smart contract to spend your VTHO in exchange for VET."
             );
@@ -172,7 +175,7 @@
           {disabled}
           fullWidth
           on:click={() => {
-            handleApprove(
+            handleAllowance(
               "0",
               "Our smart contract will no longer be able to spend your VTHO in exchange for VET."
             );

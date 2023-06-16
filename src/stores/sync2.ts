@@ -1,13 +1,13 @@
 import { writable } from "svelte/store";
+import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
-import { ConnexService } from "@/blockchain/connex-service";
-
-// const injected = window.ethereum;
+import { ConnexUtils } from "@/blockchain/connex-utils";
+import { chain } from "@/config"
 
 function createStore() {
   const { subscribe, set } = writable<
     | {
-        connexService: ConnexService;
+        connex: Connex;
         account: Address;
       }
     | undefined
@@ -17,9 +17,15 @@ function createStore() {
     subscribe,
     // TODO: pass walletName as arg. Where
     // walletName === sync2 -> noExtension === true
-    // wallletName === veworld -> noExtension === false
+    // walletName === veworld -> noExtension === false
     connect: async function (): Promise<void> {
-      const connexService = new ConnexService({ noExtension: true });
+      const connex = new Connex({
+        node: chain.rpc[0],
+        network: chain.network,
+        noExtension: true,
+      });
+
+      const connexUtils = new ConnexUtils(connex);
 
       const message: Connex.Vendor.CertMessage = {
         purpose: "identification",
@@ -29,13 +35,13 @@ function createStore() {
         },
       };
 
-      const cert = await connexService.signCert({ message });
+      const cert = await connexUtils.signCert(message);
 
       // This should throw if cert isn't valid.
       Certificate.verify(cert);
 
       set({
-        connexService,
+        connex,
         account: cert.signer as Address,
       });
     },
