@@ -80,8 +80,7 @@
    * Approve/revoke Trader's allowance to spend VTHO.
    */
   async function handleAllowance(
-    amount: string,
-    comment: string
+    allowanceType: "approve" | "revoke"
   ): Promise<void> {
     disabled = true;
 
@@ -89,6 +88,21 @@
       if (connexUtils == null || vtho == null) {
         throw new Error("Wallet is not connected.");
       }
+
+      const actions = {
+        approve: {
+          amount: VTHO_TOTAL_SUPPLY,
+          comment:
+            "Allow our smart contract to spend your VTHO in exchange for VET.",
+        },
+        revoke: {
+          amount: "0",
+          comment:
+            "Our smart contract will no longer be able to spend your VTHO in exchange for VET.",
+        },
+      };
+
+      const { amount, comment } = actions[allowanceType];
 
       const response = await vtho.methods.signed.approve({
         args: [TRADER_CONTRACT_ADDRESS, amount],
@@ -161,10 +175,7 @@
           {disabled}
           fullWidth
           on:click={() => {
-            handleAllowance(
-              VTHO_TOTAL_SUPPLY,
-              "Allow our smart contract to spend your VTHO in exchange for VET."
-            );
+            handleAllowance("approve");
           }}
         >
           Approve
@@ -175,10 +186,7 @@
           {disabled}
           fullWidth
           on:click={() => {
-            handleAllowance(
-              "0",
-              "Our smart contract will no longer be able to spend your VTHO in exchange for VET."
-            );
+            handleAllowance("revoke");
           }}
         >
           Revoke
