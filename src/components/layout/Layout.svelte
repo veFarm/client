@@ -6,7 +6,7 @@
 
 <Header />
 
-<main class="px-2">
+<main class="px-2 md:px-4">
   <slot />
 
   <WalletModal />

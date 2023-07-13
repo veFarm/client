@@ -134,33 +134,55 @@
 </script>
 
 <Layout>
-  <form
-    class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background mt-8"
-  >
-    <p>
-      To help you earn the most profit, please connect your wallet so we can
-      calculate the best strategy to swap VTHO for VET based on your balance.
-    </p>
-    {#if !$wallet.connected}
-      <ConnectWalletButton intent="primary" fullWidth />
-    {:else}
-      <Button intent="primary" disabled fullWidth>Connect wallet</Button>
-    {/if}
+  <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+    <div class="space-y-4">
+      <h1
+        class="font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-green-400 to-lime-400"
+      >
+        Automatic VTHO to VET swaps using optimized strategies.
+      </h1>
+      <p class="text-gray-400">
+        Allow our smart contract to spend your VTHO in exchange for VET,
+        automatically. Don&apos;t worry about finding the best exchange rate or
+        the best time to trade!
+      </p>
+      <!-- <h1 class="sm:text-center">Motivation</h1> -->
+      <p class="text-gray-400">
+        VTHO is a token on VeChain, which is generated automatically when you
+        hold VET. Then, one way to increase your VET balance is by exchanging
+        earned VTHO tokens for VET on a regular basis. By doing so, you will
+        generate more VTHO which can then be traded for even more VET, and the
+        cycle continues.
+      </p>
+    </div>
+    <form
+      class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-white text-black"
+    >
+      {#if !$wallet.connected}
+        <p>
+          To help you earn the most profit, please connect your wallet so we can
+          calculate the best strategy to swap VTHO for VET based on your
+          balance.
+        </p>
+        <ConnectWalletButton intent="primary" fullWidth />
+        <!-- {:else}
+        <Button intent="primary" disabled fullWidth>Connect wallet</Button> -->
+      {/if}
 
-    {#if $wallet.connected}
-      <p class="underline">Current balance:</p>
-      <p>
-        VET: {balance}
-        <br />
-        VTHO: {energy}
-      </p>
-      <p class="underline">Strategy:</p>
-      <p>
-        The protocol will swap VTHO for VET whenever your VTHO balance reaches 5
-        VTHO or more. Will swap 5 VTHO every 5 minutes until your balance is
-        below the target amount.
-      </p>
-      <!-- <Input
+      {#if $wallet.connected}
+        <p class="underline">Current balance:</p>
+        <p>
+          VET: {balance}
+          <br />
+          VTHO: {energy}
+        </p>
+        <p class="underline">Strategy:</p>
+        <p>
+          The protocol will swap VTHO for VET whenever your VTHO balance reaches
+          5 VTHO or more. Will swap 5 VTHO every 5 minutes until your balance is
+          below the target amount.
+        </p>
+        <!-- <Input
       type="number"
       id="vtho_left"
       label="Amount to be kept in wallet"
@@ -169,37 +191,38 @@
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>
     </Input> -->
-      {#if allowance === "0"}
-        <Button
-          intent="primary"
-          {disabled}
-          fullWidth
-          on:click={() => {
-            handleAllowance("approve");
-          }}
-        >
-          Approve
-        </Button>
-      {:else}
-        <Button
-          intent="danger"
-          {disabled}
-          fullWidth
-          on:click={() => {
-            handleAllowance("revoke");
-          }}
-        >
-          Revoke
-        </Button>
+        {#if allowance === "0"}
+          <Button
+            intent="primary"
+            {disabled}
+            fullWidth
+            on:click={() => {
+              handleAllowance("approve");
+            }}
+          >
+            Approve
+          </Button>
+        {:else}
+          <Button
+            intent="danger"
+            {disabled}
+            fullWidth
+            on:click={() => {
+              handleAllowance("revoke");
+            }}
+          >
+            Revoke
+          </Button>
+        {/if}
       {/if}
-    {/if}
 
-    {#if error != null && error.length > 0}
-      <p class="text-danger">{error}</p>
-    {/if}
+      {#if error != null && error.length > 0}
+        <p class="text-danger">{error}</p>
+      {/if}
 
-    <p class="text-center">Chain: {chain.name}</p>
-  </form>
+      <p class="text-center">Chain: {chain.name}</p>
+    </form>
+  </div>
 
   <SwapsHistory />
 </Layout>
