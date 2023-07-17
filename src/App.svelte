@@ -7,6 +7,7 @@
   import { getEnvVars } from "@/utils/get-env-vars";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
+  import { StatItem } from "@/components/stat-item";
   // import { Input } from "@/components/input";
   import { SwapsHistory } from "@/components/swaps-history";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
@@ -134,35 +135,40 @@
 </script>
 
 <Layout>
-  <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-    <div class="space-y-4">
-      <h1
-        class="font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-green-400 to-lime-400"
-      >
-        Automatic VTHO to VET swaps using optimized strategies.
-      </h1>
-      <p class="text-gray-400">
+  <div
+    class="flex flex-col space-y-8 md:flex-row md:items-center md:space-y-0 md:space-x-4"
+  >
+    <div class="basis-1/2">
+      <h1>Swap VTHO for VET automatically.</h1>
+      <p class="text-gray-300 mt-4">
         Allow our smart contract to spend your VTHO in exchange for VET,
         automatically. Don&apos;t worry about finding the best exchange rate or
-        the best time to trade!
+        the best time to trade.
       </p>
-      <!-- <h1 class="sm:text-center">Motivation</h1> -->
-      <p class="text-gray-400">
+      <!-- <p class="text-gray-400">
         VTHO is a token on VeChain, which is generated automatically when you
-        hold VET. Then, one way to increase your VET balance is by exchanging
-        earned VTHO tokens for VET on a regular basis. By doing so, you will
-        generate more VTHO which can then be traded for even more VET, and the
-        cycle continues.
-      </p>
+        hold VET. Therefore, one way to increase your VET balance is by
+        exchanging earned VTHO tokens for VET on a regular basis. By doing so,
+        you will generate more VTHO which can then be traded for even more VET,
+        and the cycle continues.
+      </p> -->
+      <!-- <div class="px-4 py-8 mx-auto w-full md:px-24 lg:px-8 lg:py-16"> -->
+      <div
+        class="mt-8 max-w-3xl mx-auto grid grid-cols-3 row-gap-8 md:grid-cols-3"
+      >
+        <StatItem value="3.2K" label="Trades" />
+        <StatItem value="13.8K" label="VET volume" />
+        <StatItem value="486" label="Users" />
+      </div>
+      <!-- </div> -->
     </div>
     <form
-      class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-white text-black"
+      class="basis-1/2 flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-white text-black"
     >
       {#if !$wallet.connected}
         <p>
-          To help you earn the most profit, please connect your wallet so we can
-          calculate the best strategy to swap VTHO for VET based on your
-          balance.
+          Connect your wallet to calculate the best strategy to swap VTHO for
+          VET based on your balance.
         </p>
         <ConnectWalletButton intent="primary" fullWidth />
         <!-- {:else}
@@ -172,9 +178,9 @@
       {#if $wallet.connected}
         <p class="underline">Current balance:</p>
         <p>
-          VET: {balance}
+          {balance} VET
           <br />
-          VTHO: {energy}
+          {energy} VTHO
         </p>
         <p class="underline">Strategy:</p>
         <p>
