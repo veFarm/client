@@ -40,10 +40,8 @@
 </script>
 
 {#if $wallet.connected}
-  <div
-    class="flex flex-col space-y-4 border border-accent rounded-lg px-6 py-4 bg-background my-8"
-  >
-    <h2 class="underline">Past Trades</h2>
+  <div class="flex flex-col space-y-4">
+    <h2>Past Trades</h2>
     {#if error != null && error.length > 0}
       <p class="text-danger">{error}</p>
     {:else if swapTxs == null || swapTxs.length === 0}

@@ -24,7 +24,7 @@ danger      A color for displaying error messages
     --color-body: 255 255 255; /* white */
     --color-background: 24 28 31; /*  */
     --color-highlight: 55 65 81; /* gray-700 */
-    --color-muted: 75 85 99; /* gray-600 */
+    --color-muted: 55 65 81; /* gray-700 */
     --color-accent: 156 163 175; /* gray-400 */
     --color-danger: 239 68 68; /* red-500 */
     --color-danger-100: 251 113 133; /* red-400 */
@@ -51,12 +51,14 @@ body {
 #app {
   max-width: var(--app-width);
   margin: 0 auto;
-  padding-top: var(--header-height);
 }
 
 /* Fonts */
 h1 {
   @apply text-3xl lg:text-4xl xl:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-green-400 to-lime-400;
+}
+h2 {
+  @apply text-2xl md:text-3xl text-body font-semibold;
 }
 h3 {
   @apply text-xl md:text-2xl text-body font-semibold;

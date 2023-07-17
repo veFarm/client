@@ -2,7 +2,6 @@
   import { wallet } from "@/stores/wallet";
   import { shortenAddress } from "@/utils/shorten-address";
   // import SvelteLogo from "@/assets/Svelte.svg";
-  // import { DarkMode } from "@/components/dark-mode";
   // import { ConnectWalletButton } from "@/components/connect-wallet-button";
 </script>
 
@@ -20,8 +19,6 @@
   </a>
 
   <div class="flex items-center space-x-3">
-    <!-- <DarkMode /> -->
-
     {#if $wallet.account == null}
       <!-- <ConnectWalletButton size="small" /> -->
     {:else}
