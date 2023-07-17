@@ -23,9 +23,9 @@ danger      A color for displaying error messages
     --color-secondary-100: 107 114 128; /* gray-500 */
     --color-body: 255 255 255; /* white */
     --color-background: 24 28 31; /*  */
-    --color-highlight: 55 65 81; /* gray-700 */
+    --color-highlight: 248 250 252; /* slate-50 */
     --color-muted: 55 65 81; /* gray-700 */
-    --color-accent: 156 163 175; /* gray-400 */
+    --color-accent: 75 85 99; /* gray-600 */
     --color-danger: 239 68 68; /* red-500 */
     --color-danger-100: 251 113 133; /* red-400 */
   }

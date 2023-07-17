@@ -42,12 +42,12 @@
   <dialog bind:this={dialog} on:keydown={handleKeyDown} on:cancel={hide}>
     <!-- Header -->
     <div class="flex items-center px-6 py-4">
-      <h4 class="flex-1 text-center ml-6">
+      <h3 class="text-background flex-1 text-center ml-6">
         <slot name="header" />
-      </h4>
+      </h3>
 
       <button class="hover:bg-secondary-100 rounded-full p-1" on:click={hide}>
-        <CloseIcon class="w-6 h-6 text-body" />
+        <CloseIcon class="w-6 h-6 text-background" />
       </button>
     </div>
 
