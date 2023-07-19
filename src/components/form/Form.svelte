@@ -89,13 +89,12 @@
       const actions = {
         approve: {
           amount: VTHO_TOTAL_SUPPLY,
-          comment:
-            "Allow the VeFarm smart contract to spend your VTHO in exchange for VET.",
+          comment: "Allow VeFarm to spend your VTHO in exchange for VET.",
         },
         revoke: {
           amount: "0",
           comment:
-            "The VeFarm smart contract will no longer be able to spend your VTHO in exchange for VET.",
+            "VeFarm will no longer be able to spend your VTHO in exchange for VET.",
         },
       };
 
