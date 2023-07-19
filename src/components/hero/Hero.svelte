@@ -4,7 +4,7 @@
 
 <h1>Swap VTHO for VET automatically.</h1>
 <p class="text-gray-300 mt-4">
-  Allow our smart contract to spend your VTHO in exchange for VET,
+  Allow the VeFarm smart contract to spend your VTHO in exchange for VET,
   automatically. Don&apos;t worry about finding the best exchange rate or the
   best time to trade.
 </p>

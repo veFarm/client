@@ -6,7 +6,7 @@
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { Button } from "@/components/button";
-  // import { Input } from "@/components/input";
+  import { Input } from "@/components/input";
   import { VTHO_TOTAL_SUPPLY } from "@/config";
 
   const { VTHO_CONTRACT_ADDRESS, TRADER_CONTRACT_ADDRESS } = getEnvVars();
@@ -28,7 +28,7 @@
   /** Account's VTHO balance. */
   let energy: string | undefined = undefined;
   /** VTHO balance left after the swap. */
-  // let vthoLeft = 10; // TODO: this needs to be formated to BN
+  let vthoLeft = 10; // TODO: this needs to be formated to BN
 
   /**
    * Fetch account balance from the vechain ledger.
@@ -90,12 +90,12 @@
         approve: {
           amount: VTHO_TOTAL_SUPPLY,
           comment:
-            "Allow our smart contract to spend your VTHO in exchange for VET.",
+            "Allow the VeFarm smart contract to spend your VTHO in exchange for VET.",
         },
         revoke: {
           amount: "0",
           comment:
-            "Our smart contract will no longer be able to spend your VTHO in exchange for VET.",
+            "The VeFarm smart contract will no longer be able to spend your VTHO in exchange for VET.",
         },
       };
 
@@ -131,27 +131,32 @@
 </script>
 
 <form class="flex flex-col space-y-4">
-  <p class="underline">Current balance:</p>
+  <p class="underline">Balance:</p>
   <p>
     {balance} VET
     <br />
     {energy} VTHO
   </p>
+  {#if allowance === "0"}
+    <Input
+      type="number"
+      id="vtho_left"
+      label="Minimum balance to be retained after the swap"
+      {disabled}
+      bind:value={vthoLeft}
+    >
+      <svelte:fragment slot="sufix">VTHO</svelte:fragment>
+    </Input>
+  {:else}
+    <p class="underline">Minimum balance to be retained after the swap:</p>
+    <p>{vthoLeft} VTHO</p>
+  {/if}
   <p class="underline">Strategy:</p>
   <p>
     The protocol will swap VTHO for VET whenever your VTHO balance reaches 5
     VTHO or more. Will swap 5 VTHO every 5 minutes until your balance is below
     the target amount.
   </p>
-  <!-- <Input
-      type="number"
-      id="vtho_left"
-      label="Amount to be kept in wallet"
-      {disabled}
-      bind:value={vthoLeft}
-    >
-      <svelte:fragment slot="sufix">VTHO</svelte:fragment>
-    </Input> -->
   {#if allowance === "0"}
     <Button
       intent="primary"
