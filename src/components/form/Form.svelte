@@ -53,6 +53,13 @@
   }
 
   /**
+   * Reset field errors
+   */
+  function clearFieldErrors(fieldName: string): void {
+    errors[fieldName] = [];
+  }
+
+  /**
    * Validate input fields.
    */
   function validateFields(
@@ -224,6 +231,9 @@
       disabled={disabled || !$wallet.connected}
       error={errors.targetAmount[0]}
       bind:value={targetAmount}
+      on:input={() => {
+        clearFieldErrors("targetAmount");
+      }}
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>
     </Input>
@@ -239,6 +249,9 @@
       disabled={disabled || !$wallet.connected}
       error={errors.amountLeft[0]}
       bind:value={amountLeft}
+      on:input={() => {
+        clearFieldErrors("amountLeft");
+      }}
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>
     </Input>

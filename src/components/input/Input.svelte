@@ -22,6 +22,7 @@
       class="bg-gray-50 border border-gray-300 text-background text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 disabled:bg-gray-200"
       {...$$restProps}
       bind:value
+      on:input
     />
     <div class="absolute top-2.5 right-2 bg-gray-200 px-1.5 rounded-sm">
       <slot name="sufix" />

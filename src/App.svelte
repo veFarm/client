@@ -14,7 +14,7 @@
     <div
       class="
       flex flex-col space-y-8
-      md:flex-row md:items-center md:space-y-0 md:space-x-8
+      md:flex-row md:space-y-0 md:space-x-8
     "
     >
       <div class="basis-1/2">
