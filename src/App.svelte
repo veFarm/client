@@ -23,15 +23,7 @@
       <div
         class="basis-1/2 border border-accent rounded-lg px-6 py-4 bg-white text-black"
       >
-        {#if !$wallet.connected}
-          <p class="mb-4">
-            Connect your wallet to calculate the best strategy to swap VTHO for
-            VET based on your balance.
-          </p>
-          <ConnectWalletButton intent="primary" fullWidth />
-        {:else}
-          <Form />
-        {/if}
+        <Form />
         <p class="text-center mt-4">Chain: {chain.name}</p>
       </div>
     </div>
@@ -43,3 +35,13 @@
     <SwapsHistory />
   </div>
 </Layout>
+
+<!-- {#if !$wallet.connected}
+          <p class="mb-4">
+            Connect your wallet to calculate the best strategy to swap VTHO for
+            VET based on your balance.
+          </p>
+          <ConnectWalletButton intent="primary" fullWidth />
+        {:else}
+          <Form />
+        {/if} -->

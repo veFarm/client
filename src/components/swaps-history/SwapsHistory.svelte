@@ -32,6 +32,7 @@
     }
   }
 
+  // TODO: refetch account swaps every x mins.
   $: {
     if ($wallet.connected) {
       getAccountSwaps();

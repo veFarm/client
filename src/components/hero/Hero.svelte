@@ -4,10 +4,11 @@
 
 <h1>Swap VTHO for VET automatically.</h1>
 <p class="text-gray-300 mt-4">
-  Allow the VeFarm smart contract to spend your VTHO in exchange for VET,
-  automatically. Don&apos;t worry about finding the best exchange rate or the
-  best time to trade.
+  Allow our smart contract to spend your VTHO in exchange for VET,
+  automatically. Set your targets and we&apos;ll do the rest.
 </p>
+<!-- Don&apos;t worry about finding the best exchange rate or the
+  best time to trade. -->
 <!-- <p class="text-gray-400">
   VTHO is a token on VeChain, which is generated automatically when you
   hold VET. Therefore, one way to increase your VET balance is by
