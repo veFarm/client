@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Button } from "@/components/button";
-  import { Modal } from ".";
+  import { Modal } from "../";
 
   let isOpen = false;
 

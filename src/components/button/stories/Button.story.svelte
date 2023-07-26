@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { ComponentProps } from "svelte";
-  import { Button } from ".";
+  import { Button } from "../";
 
   type $$Props = ComponentProps<Button>;
 </script>
