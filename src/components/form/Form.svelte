@@ -38,9 +38,11 @@
   /** Account's VTHO balance. */
   let energy: string | undefined = undefined;
   /** VTHO amount to initiate a swap. */
-  let targetAmount: string;
+  let targetAmount = "500";
   /** VTHO balance to be retained after the swap. */
-  let amountLeft: string; // TODO: this needs to be formated to BN
+  let amountLeft = "10"; // TODO: this needs to be formated to BN
+  /** Alert message open status. */
+  let showAlert = true;
 
   /**
    * Reset errors object.
@@ -55,7 +57,7 @@
   /**
    * Reset field errors
    */
-  function clearFieldErrors(fieldName: string): void {
+  function clearFieldErrors(fieldName: ErrorFields): void {
     errors[fieldName] = [];
   }
 
@@ -76,8 +78,6 @@
     // Sanitize inputs
     const _targetAmount = targetAmount != null && targetAmount.trim();
     const _amountLeft = amountLeft != null && amountLeft.trim();
-
-    console.log({ targetAmount, amountLeft });
 
     if (!_targetAmount) {
       _errors.targetAmount.push("Target amount is required.");
@@ -148,6 +148,7 @@
     allowanceType: "approve" | "revoke"
   ): Promise<void> {
     disabled = true;
+    showAlert = false;
 
     try {
       if (connexUtils == null || vtho == null) {
@@ -166,6 +167,7 @@
         return;
       }
 
+      showAlert = true;
       // TODO: store targetAmount and amountLeft and convert to BigNumber
 
       const actions = {
@@ -217,17 +219,19 @@
 </script>
 
 <form on:submit|preventDefault class="flex flex-col space-y-4">
-  {#if $wallet.connected}
+  <!-- {#if $wallet.connected}
     <p class="text-sm text-center md:text-base">
       Balance: {energy}&nbsp;VTHO - {balance}&nbsp;VET
     </p>
     <Divider />
-  {/if}
+  {/if} -->
   {#if allowance === "0"}
     <Input
       type="text"
       id="targetAmount"
       label="Swap VTHO for VET when balance reaches"
+      placeholder="0.0"
+      subtext={`Balance: ${energy}`}
       disabled={disabled || !$wallet.connected}
       error={errors.targetAmount[0]}
       bind:value={targetAmount}
@@ -246,6 +250,7 @@
       type="text"
       id="amountLeft"
       label="Minimum balance to keep after swap"
+      placeholder="0.0"
       disabled={disabled || !$wallet.connected}
       error={errors.amountLeft[0]}
       bind:value={amountLeft}
@@ -260,11 +265,11 @@
     <p>{amountLeft} VTHO</p>
   {/if}
 
-  {#if targetAmount != null && targetAmount.length > 0 && amountLeft != null && amountLeft.length > 0 && errors.targetAmount.length + errors.amountLeft.length === 0}
-    <p>
-      We will swap VTHO for VET when your account balance reaches {targetAmount}
-      VTHO leaving {amountLeft} VTHO in your wallet. Keep in mind that a swap transaction
-      costs aproximately 3 VTHO.
+  {#if showAlert}
+    <p class="text-accent">
+      We&apos;ll swap VTHO for VET when your balance reaches {targetAmount}
+      VTHO, leaving {amountLeft} VTHO in your wallet. Keep in mind that every swap
+      will cost you 3 VTHO aproximately.
     </p>
   {/if}
 
