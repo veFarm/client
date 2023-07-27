@@ -25,7 +25,7 @@
   <div class="relative">
     <input
       {id}
-      class="bg-white border {hasError
+      class="bg-gray-50 border {hasError
         ? 'border-danger'
         : 'border-gray-300'} text-background text-xl font-medium rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-5 pb-7 disabled:bg-gray-100"
       {...$$restProps}
