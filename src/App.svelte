@@ -5,7 +5,6 @@
   import { Hero } from "@/components/hero";
   import { Form } from "@/components/form";
   import { SwapsHistory } from "@/components/swaps-history";
-  import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { chain } from "@/config";
 </script>
 
