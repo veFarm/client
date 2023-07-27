@@ -15,8 +15,18 @@
     variants: {
       intent: {
         primary: ["text-black", "bg-primary", "hover:bg-primary-100"],
-        secondary: ["text-body", "bg-secondary", "hover:bg-secondary-100"],
-        danger: ["text-body", "bg-danger", "hover:bg-danger-100"],
+        secondary: [
+          "text-background",
+          "bg-secondary",
+          "hover:bg-secondary-100",
+        ],
+        danger: [
+          "text-danger",
+          "bg-body",
+          "border-2",
+          "border-danger",
+          "hover:border-danger-100",
+        ],
       },
       size: {
         small: ["text-sm", "p-2", "rounded-lg"],
@@ -29,6 +39,7 @@
         true: [
           "cursor-not-allowed",
           "bg-secondary-100",
+          "text-accent",
           "hover:bg-secondary-100",
         ],
       },

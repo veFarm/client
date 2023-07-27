@@ -219,12 +219,6 @@
 </script>
 
 <form on:submit|preventDefault class="flex flex-col space-y-4">
-  <!-- {#if $wallet.connected}
-    <p class="text-sm text-center md:text-base">
-      Balance: {energy}&nbsp;VTHO - {balance}&nbsp;VET
-    </p>
-    <Divider />
-  {/if} -->
   {#if allowance === "0"}
     <Input
       type="text"
@@ -241,9 +235,6 @@
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>
     </Input>
-  {:else}
-    <p class="underline">Target amount to trigger a swap:</p>
-    <p>{targetAmount} VTHO</p>
   {/if}
   {#if allowance === "0"}
     <Input
@@ -260,16 +251,15 @@
     >
       <svelte:fragment slot="sufix">VTHO</svelte:fragment>
     </Input>
-  {:else}
-    <p class="underline">Minimum balance to be retained after the swap:</p>
-    <p>{amountLeft} VTHO</p>
   {/if}
 
   {#if showAlert}
     <p class="text-accent">
-      We&apos;ll swap VTHO for VET when your balance reaches {targetAmount}
-      VTHO, leaving {amountLeft} VTHO in your wallet. Keep in mind that every swap
-      will cost you 3 VTHO aproximately.
+      We&apos;ll swap VTHO for VET when your balance reaches <b
+        >{targetAmount}
+        VTHO</b
+      >, leaving <b>{amountLeft} VTHO</b> in your wallet. Keep in mind that
+      every swap will cost you <b>3 VTHO</b> aproximately.
     </p>
   {/if}
 

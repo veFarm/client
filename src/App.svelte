@@ -13,11 +13,11 @@
   <div class="flex flex-col space-y-8 md:space-y-16">
     <div
       class="
-      flex flex-col space-y-8
+      flex flex-col items-center space-y-8
       md:flex-row md:space-y-0 md:space-x-8
     "
     >
-      <div class="basis-1/2">
+      <div class="basis-1/2 self-start">
         <Hero />
       </div>
       <div
