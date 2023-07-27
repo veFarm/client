@@ -223,7 +223,7 @@
     <Input
       type="text"
       id="targetAmount"
-      label="Swap VTHO for VET when balance reaches"
+      label="Swap VTHO for VET when my balance reaches"
       placeholder="0.0"
       subtext={`Balance: ${energy}`}
       disabled={disabled || !$wallet.connected}
@@ -240,7 +240,7 @@
     <Input
       type="text"
       id="amountLeft"
-      label="Minimum balance to keep after swap"
+      label="Keeping in my wallet"
       placeholder="0.0"
       disabled={disabled || !$wallet.connected}
       error={errors.amountLeft[0]}
@@ -253,7 +253,7 @@
     </Input>
   {/if}
 
-  {#if showAlert}
+  <!-- {#if showAlert}
     <p class="text-accent">
       We&apos;ll swap VTHO for VET when your balance reaches <b
         >{targetAmount}
@@ -261,7 +261,7 @@
       >, leaving <b>{amountLeft} VTHO</b> in your wallet. Keep in mind that
       every swap will cost you <b>3 VTHO</b> aproximately.
     </p>
-  {/if}
+  {/if} -->
 
   {#if !$wallet.connected}
     <ConnectWalletButton intent="primary" fullWidth />
