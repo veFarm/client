@@ -5,6 +5,7 @@
     id: string;
     label?: string;
     value: any;
+    currency?: string;
     error?: string;
     subtext?: string;
   };
@@ -12,6 +13,7 @@
   export let id: string;
   export let label = "";
   export let value: any;
+  export let currency = "";
   export let error = "";
   export let subtext = "";
 
@@ -32,11 +34,13 @@
       bind:value
       on:input
     />
-    <div
-      class="absolute top-5 right-2 text-lg font-medium bg-gray-200 px-1.5 rounded-sm"
-    >
-      <slot name="sufix" />
-    </div>
+    {#if currency.length > 0}
+      <div
+        class="absolute top-5 right-2 text-lg font-medium bg-gray-200 px-1.5 rounded-sm"
+      >
+        {currency}
+      </div>
+    {/if}
     {#if subtext.length > 0}
       <div class="absolute bottom-1 right-2 text-sm text-accent px-1.5">
         {subtext}

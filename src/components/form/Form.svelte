@@ -225,6 +225,7 @@
       id="targetAmount"
       label="Swap VTHO for VET when my balance reaches"
       placeholder="0.0"
+      currency="VTHO"
       subtext={`Balance: ${energy || "0.0"}`}
       disabled={disabled || !$wallet.connected}
       error={errors.targetAmount[0]}
@@ -232,9 +233,7 @@
       on:input={() => {
         clearFieldErrors("targetAmount");
       }}
-    >
-      <svelte:fragment slot="sufix">VTHO</svelte:fragment>
-    </Input>
+    />
   {/if}
   {#if allowance === "0"}
     <Input
@@ -242,15 +241,14 @@
       id="amountLeft"
       label="Keeping in my wallet"
       placeholder="0.0"
+      currency="VTHO"
       disabled={disabled || !$wallet.connected}
       error={errors.amountLeft[0]}
       bind:value={amountLeft}
       on:input={() => {
         clearFieldErrors("amountLeft");
       }}
-    >
-      <svelte:fragment slot="sufix">VTHO</svelte:fragment>
-    </Input>
+    />
   {/if}
 
   <!-- {#if showAlert}
