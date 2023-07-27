@@ -225,7 +225,7 @@
       id="targetAmount"
       label="Swap VTHO for VET when my balance reaches"
       placeholder="0.0"
-      subtext={`Balance: ${energy}`}
+      subtext={`Balance: ${energy || "0.0"}`}
       disabled={disabled || !$wallet.connected}
       error={errors.targetAmount[0]}
       bind:value={targetAmount}
@@ -262,6 +262,13 @@
       every swap will cost you <b>3 VTHO</b> aproximately.
     </p>
   {/if} -->
+  <p>
+    Minimum Received
+    <br />
+    Fees
+    <br />
+    Next Trade
+  </p>
 
   {#if !$wallet.connected}
     <ConnectWalletButton intent="primary" fullWidth />
