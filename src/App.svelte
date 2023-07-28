@@ -34,13 +34,3 @@
     <SwapsHistory />
   </div>
 </Layout>
-
-<!-- {#if !$wallet.connected}
-          <p class="mb-4">
-            Connect your wallet to calculate the best strategy to swap VTHO for
-            VET based on your balance.
-          </p>
-          <ConnectWalletButton intent="primary" fullWidth />
-        {:else}
-          <Form />
-        {/if} -->

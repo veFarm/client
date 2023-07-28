@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "format": "prettier --write  --plugin prettier-plugin-svelte ."
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.1.1",
@@ -36,6 +37,7 @@
     "postcss-load-config": "^4.0.1",
     "prettier": "^3.0.0",
     "prettier-plugin-svelte": "^3.0.3",
+    "prettier-plugin-tailwindcss": "^0.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^7.1.1",

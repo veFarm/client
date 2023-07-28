@@ -7,31 +7,34 @@ const meta = {
   title: "components/SwapTx",
   component: SwapTx,
   tags: ["autodocs"],
-  // argTypes: {
-  //   backgroundColor: { control: "color" },
-  //   size: {
-  //     control: { type: "select" },
-  //     options: ["small", "medium", "large"],
-  //   },
-  // },
+  parameters: {
+    // More on how to position stories at: https://storybook.js.org/docs/svelte/configure/story-layout
+    layout: 'fullscreen',
+  },
 } satisfies Meta<SwapTx>;
 
 export default meta;
-
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SwapTx>;
 
 // More on writing stories with args: https://storybook.js.org/docs/7.0/svelte/writing-stories/args
-export const Primary: Story = {
-  render: (args) => ({
-    Component: SwapTx,
-    props: args,
-  }),
-  args: {
-    amountIn: "490",
-    amountOut: "23.45",
-    txId: "0x123",
-    explorerUrl: "https://some.url",
-  },
+export const Default: Story = {
+  render: () => <SwapTx
+    amountIn= "490"
+    amountOut= "23.45"
+    txId= "0x123"
+    explorerUrl= "https://some.url"
+  />
+  // render: (args) => ({
+  //   Component: SwapTxStory,
+  //   props: args,
+  // }),
+  // render: (args) => <SwapTx {...args} />,
+  // args: {
+  //   amountIn: "490",
+  //   amountOut: "23.45",
+  //   txId: "0x123",
+  //   explorerUrl: "https://some.url",
+  // },
 };
 
 // export const Secondary: Story = {
