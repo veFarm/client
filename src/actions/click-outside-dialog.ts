@@ -5,7 +5,7 @@ type Attributes = {
 };
 
 export function clickOutsideDialog(
-  node: HTMLElement
+  node: HTMLElement,
 ): ActionReturn<any, Attributes> {
   const handleClick = (event: MouseEvent) => {
     if (node === event.target) {

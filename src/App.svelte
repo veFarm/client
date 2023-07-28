@@ -5,7 +5,6 @@
   import { Hero } from "@/components/hero";
   import { Form } from "@/components/form";
   import { SwapsHistory } from "@/components/swaps-history";
-  import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { chain } from "@/config";
 </script>
 
@@ -35,13 +34,3 @@
     <SwapsHistory />
   </div>
 </Layout>
-
-<!-- {#if !$wallet.connected}
-          <p class="mb-4">
-            Connect your wallet to calculate the best strategy to swap VTHO for
-            VET based on your balance.
-          </p>
-          <ConnectWalletButton intent="primary" fullWidth />
-        {:else}
-          <Form />
-        {/if} -->

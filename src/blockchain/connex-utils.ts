@@ -5,12 +5,20 @@ import type { AbiItem } from "@/typings/types";
 
 export type Contract = {
   methods: {
-    constant: Record<string, ({args}: {args: any[]}) => Promise<any>>,
-    signed: Record<string, ({comment, args}:{comment: string, args: any[]}) =>
-      Promise<Connex.Vendor.TxResponse>>,
-  }
-  events: Record<string, Connex.Thor.Account.Event>
-}
+    constant: Record<string, ({ args }: { args: any[] }) => Promise<any>>;
+    signed: Record<
+      string,
+      ({
+        comment,
+        args,
+      }: {
+        comment: string;
+        args: any[];
+      }) => Promise<Connex.Vendor.TxResponse>
+    >;
+  };
+  events: Record<string, Connex.Thor.Account.Event>;
+};
 
 /**
  * Utility functions built around the connex library.
@@ -32,10 +40,12 @@ export class ConnexUtils {
   private defineConstant(
     address: Address,
     method: AbiItem,
-  ): ({args}:{args: any[]}) => Promise<any> {
-    return async ({args}:{args: any[]}) => {
-      const res =
-        await this.connex.thor.account(address).method(method).call(...args);
+  ): ({ args }: { args: any[] }) => Promise<any> {
+    return async ({ args }: { args: any[] }) => {
+      const res = await this.connex.thor
+        .account(address)
+        .method(method)
+        .call(...args);
       return res.decoded[0];
     };
   }
@@ -49,17 +59,20 @@ export class ConnexUtils {
   private defineSignedRequest(
     address: Address,
     method: AbiItem,
-  ): ({comment, args}: {comment: string, args: any[]}) => Promise<Connex.Vendor.TxResponse> {
-    return async ({comment, args}: {comment: string, args: any[]}) => {
+  ): ({
+    comment,
+    args,
+  }: {
+    comment: string;
+    args: any[];
+  }) => Promise<Connex.Vendor.TxResponse> {
+    return async ({ comment, args }: { comment: string; args: any[] }) => {
       const clause = this.connex.thor
         .account(address)
         .method(method)
         .asClause(...args);
 
-      return this.connex.vendor
-      .sign("tx", [clause])
-      .comment(comment)
-      .request();
+      return this.connex.vendor.sign("tx", [clause]).comment(comment).request();
     };
   }
 
@@ -72,22 +85,27 @@ export class ConnexUtils {
    */
   getContract(abi: AbiItem[], address: Address): Contract {
     const contract: Contract = {
-      methods: {constant: {}, signed: {}},
+      methods: { constant: {}, signed: {} },
       events: {},
     };
 
     for (const item of abi) {
       if (item.name != null && item.type === "function") {
         if (item.stateMutability === "view") {
-          contract.methods.constant[item.name] =
-            this.defineConstant(address, item);
+          contract.methods.constant[item.name] = this.defineConstant(
+            address,
+            item,
+          );
         } else {
-          contract.methods.signed[item.name] =
-            this.defineSignedRequest(address, item);
+          contract.methods.signed[item.name] = this.defineSignedRequest(
+            address,
+            item,
+          );
         }
       } else if (item.name != null && item.type === "event") {
-        contract.events[item.name] =
-          this.connex.thor.account(address).event(item);
+        contract.events[item.name] = this.connex.thor
+          .account(address)
+          .event(item);
       }
     }
     return contract;
@@ -98,24 +116,22 @@ export class ConnexUtils {
    * @param {string} message Message to be displayed when signing the certificate.
    * @return Signed certificate.
    */
-     async signCert(
-      message: Connex.Vendor.CertMessage
-    ): Promise<Certificate> {
-      const certResponse = await this.connex.vendor
-        .sign("cert", message)
-        .request();
+  async signCert(message: Connex.Vendor.CertMessage): Promise<Certificate> {
+    const certResponse = await this.connex.vendor
+      .sign("cert", message)
+      .request();
 
-      const cert: Certificate = {
-        purpose: message.purpose,
-        payload: message.payload,
-        domain: certResponse.annex.domain,
-        timestamp: certResponse.annex.timestamp,
-        signer: certResponse.annex.signer,
-        signature: certResponse.signature,
-      };
+    const cert: Certificate = {
+      purpose: message.purpose,
+      payload: message.payload,
+      domain: certResponse.annex.domain,
+      timestamp: certResponse.annex.timestamp,
+      signer: certResponse.annex.signer,
+      signature: certResponse.signature,
+    };
 
-      return cert;
-    }
+    return cert;
+  }
 
   /**
    * Requests a signature for a transaction made of a given set of clauses.
@@ -129,12 +145,14 @@ export class ConnexUtils {
     signer: Address,
     comment = "Sign transaction",
   ): Promise<Connex.Vendor.TxResponse> {
-    return this.connex.vendor
-      .sign("tx", clauses)
-      .signer(signer)
-      // .link("https://connex.vecha.in/{txid}") // User will be back to the app by the url https://connex.vecha.in/0xffff....
-      .comment(comment)
-      .request()
+    return (
+      this.connex.vendor
+        .sign("tx", clauses)
+        .signer(signer)
+        // .link("https://connex.vecha.in/{txid}") // User will be back to the app by the url https://connex.vecha.in/0xffff....
+        .comment(comment)
+        .request()
+    );
   }
 
   /**
@@ -189,33 +207,25 @@ export class ConnexUtils {
    * @param {string} txId Transaction id.
    * @return {Promise<Connex.Thor.Transaction>} Transaction.
    */
-  async getTransaction(
-    txId: string,
-  ): Promise<Connex.Thor.Transaction | null> {
+  async getTransaction(txId: string): Promise<Connex.Thor.Transaction | null> {
     return this.connex.thor.transaction(txId).get();
   }
 
-    /**
+  /**
    * Fetch VET and VTHO account balance.
    * @param {Address} account Account to be checked.
    * @return VET and VTHO account balance.
    */
-     async getBalance(
-      account: Address,
-    ): Promise<{ balance: string; energy: string }> {
-      const balances = await this.connex.thor.account(account).get();
+  async getBalance(
+    account: Address,
+  ): Promise<{ balance: string; energy: string }> {
+    const balances = await this.connex.thor.account(account).get();
 
-      return {
-        balance: bn(balances.balance)
-          .dividedBy(bn("1e18"))
-          .toFixed(2)
-          .toString(),
-        energy: bn(balances.energy)
-          .dividedBy(bn("1e18"))
-          .toFixed(2)
-          .toString(),
-      };
-    }
+    return {
+      balance: bn(balances.balance).dividedBy(bn("1e18")).toFixed(2).toString(),
+      energy: bn(balances.energy).dividedBy(bn("1e18")).toFixed(2).toString(),
+    };
+  }
 }
 
 // export class ConnexService {

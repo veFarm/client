@@ -23,7 +23,7 @@
       }
 
       const response = await fetch(
-        `${GET_ACCOUNT_SWAPS_ENDPOINT}?account=${$wallet.account}`
+        `${GET_ACCOUNT_SWAPS_ENDPOINT}?account=${$wallet.account}`,
       );
 
       swapTxs = await response.json();
