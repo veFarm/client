@@ -20,6 +20,7 @@
     "@storybook/addon-interactions": "^7.1.1",
     "@storybook/addon-links": "^7.1.1",
     "@storybook/addon-mdx-gfm": "^7.1.1",
+    "@storybook/addon-svelte-csf": "^3.0.4",
     "@storybook/blocks": "^7.1.1",
     "@storybook/svelte": "^7.1.1",
     "@storybook/svelte-vite": "^7.1.1",
