@@ -66,7 +66,7 @@
    */
   function validateFields(
     targetAmount: string | undefined,
-    amountLeft: string | undefined
+    amountLeft: string | undefined,
   ): Errors {
     // Initialize errors
     const _errors: Errors = {
@@ -145,7 +145,7 @@
    * Approve/revoke Trader's allowance to spend VTHO.
    */
   async function handleAllowance(
-    allowanceType: "approve" | "revoke"
+    allowanceType: "approve" | "revoke",
   ): Promise<void> {
     disabled = true;
     showAlert = false;
@@ -204,7 +204,7 @@
 
       vtho = connexUtils.getContract(
         vthoArtifact.abi as AbiItem[],
-        VTHO_CONTRACT_ADDRESS
+        VTHO_CONTRACT_ADDRESS,
       );
 
       getBalance();

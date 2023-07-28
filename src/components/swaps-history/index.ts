@@ -1,1 +1,1 @@
-export {default as SwapsHistory} from "./SwapsHistory.svelte"
+export { default as SwapsHistory } from "./SwapsHistory.svelte";

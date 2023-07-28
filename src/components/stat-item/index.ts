@@ -1,1 +1,1 @@
-export { default as StatItem } from "./StatItem.svelte"
+export { default as StatItem } from "./StatItem.svelte";

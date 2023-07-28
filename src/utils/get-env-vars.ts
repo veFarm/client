@@ -11,7 +11,8 @@ export function getEnvVars() {
   const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
   const VTHO_CONTRACT_ADDRESS = import.meta.env.VITE_VTHO_CONTRACT_ADDRESS;
   const TRADER_CONTRACT_ADDRESS = import.meta.env.VITE_TRADER_CONTRACT_ADDRESS;
-  const GET_ACCOUNT_SWAPS_ENDPOINT = import.meta.env.VITE_GET_ACCOUNT_SWAPS_ENDPOINT;
+  const GET_ACCOUNT_SWAPS_ENDPOINT = import.meta.env
+    .VITE_GET_ACCOUNT_SWAPS_ENDPOINT;
 
   if (CHAIN_ID == null) {
     throw new Error("Missing env var CHAIN_ID");

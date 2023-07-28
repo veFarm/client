@@ -1,1 +1,1 @@
-export { default as SwapTx } from "./SwapTx.svelte"
+export { default as SwapTx } from "./SwapTx.svelte";

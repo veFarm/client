@@ -1,6 +1,6 @@
 import { getEnvVars } from "@/utils/get-env-vars";
 
-const { CHAIN_ID } = getEnvVars()
+const { CHAIN_ID } = getEnvVars();
 
 /**
  * JavaScript CAIP-2 representation object.

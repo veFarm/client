@@ -24,7 +24,7 @@ module.exports = {
    */
   async viteFinal(config, { configType }) {
     const { config: userConfig } = await loadConfigFromFile(
-      resolve(__dirname, "../vite.config.ts")
+      resolve(__dirname, "../vite.config.ts"),
     );
 
     return mergeConfig(config, {
