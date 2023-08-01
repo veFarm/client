@@ -38,10 +38,10 @@
       disabled: {
         true: [
           "cursor-not-allowed",
-          "bg-secondary-100",
+          "bg-disabled",
           "border-none",
           "text-accent",
-          "hover:bg-secondary-100",
+          "hover:bg-disabled",
         ],
       },
     },

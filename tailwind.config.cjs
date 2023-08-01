@@ -15,6 +15,7 @@ module.exports = {
         accent: "rgb(var(--color-accent) / <alpha-value>)",
         danger: "rgb(var(--color-danger) / <alpha-value>)",
         "danger-100": "rgb(var(--color-danger-100) / <alpha-value>)",
+        disabled: "rgb(var(--color-disabled) / <alpha-value>)",
       },
     },
   },
