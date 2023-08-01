@@ -23,13 +23,13 @@
 <Story
   name="Currency"
   args={{
-    currency: "VTHO"
+    currency: "VTHO",
   }}
 />
 
 <Story
   name="Subtext"
   args={{
-    subtext: "Balance: 123.45"
+    subtext: "Balance: 123.45",
   }}
 />

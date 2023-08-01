@@ -10,7 +10,6 @@
   import { Input } from "@/components/input";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { VTHO_TOTAL_SUPPLY } from "@/config";
-  import Divider from "../divider/Divider.svelte";
 
   const { VTHO_CONTRACT_ADDRESS, TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
@@ -260,7 +259,7 @@
       every swap will cost you <b>3 VTHO</b> aproximately.
     </p>
   {/if} -->
-  <p>
+  <p class="text-background">
     Minimum Received
     <br />
     Fees
