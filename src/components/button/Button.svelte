@@ -17,16 +17,18 @@
         primary: [
           "text-black",
           "bg-primary",
-          "hover:bg-primary-100",
           "border",
-          "border-lime-500", // TODO: add to palette
+          "border-lime-400", // TODO: add to palette
+          "hover:bg-primary-100",
+          "hover:border-primary",
         ],
         secondary: [
           "text-background",
           "bg-secondary",
-          "hover:bg-secondary-100",
           "border",
-          "border-violet-500", // TODO: add to palette
+          "border-violet-400", // TODO: add to palette
+          "hover:bg-secondary-100",
+          "hover:border-secondary",
         ],
         danger: [
           "text-danger",
@@ -53,6 +55,7 @@
           "text-accent",
           "hover:bg-disabled",
           "hover:text-accent",
+          "hover:border-gray-400"
         ],
       },
     },

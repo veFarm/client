@@ -19,10 +19,10 @@ danger      A color for displaying error messages
   :root {
     --header-height: 72px;
     --app-width: 1200px;
-    --color-primary: 163 230 53; /* lime-400 */
-    --color-primary-100: 190 242 100; /* lime-300 */
-    --color-secondary: 167 139 250; /* violet-400 */
-    --color-secondary-100: 196 181 253; /* violet-300 */
+    --color-primary: 190 242 100; /* lime-300 */
+    --color-primary-100: 217 249 157; /* lime-200 */
+    --color-secondary: 196 181 253; /* violet-300 */
+    --color-secondary-100: 221 214 254; /* violet-200 */
     --color-body: 255 255 255; /* white */
     --color-background: 24 28 31; /*  */
     --color-highlight: 248 250 252; /* slate-50 */
