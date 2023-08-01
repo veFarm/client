@@ -5,7 +5,7 @@
   export let explorerUrl: string;
 </script>
 
-<div class="bg-accent border border-muted rounded-md p-4">
+<div class="bg-accent border border-muted rounded-md px-4 py-3">
   <p>
     {amountIn} VTHO ➡ {amountOut} VET
     <br />
