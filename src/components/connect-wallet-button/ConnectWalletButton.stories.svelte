@@ -6,5 +6,5 @@
 <Meta title="components/ConnectWalletButton" component={ConnectWalletButton} />
 
 <Story name="Default">
-    <ConnectWalletButton intent="primary" />
+  <ConnectWalletButton intent="primary" />
 </Story>

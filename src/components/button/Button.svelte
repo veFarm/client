@@ -16,17 +16,17 @@
       intent: {
         primary: [
           "text-black",
-           "bg-primary",
-            "hover:bg-primary-100",
-             "border",
-              "border-lime-500", // TODO: add to palette
-            ],
+          "bg-primary",
+          "hover:bg-primary-100",
+          "border",
+          "border-lime-500", // TODO: add to palette
+        ],
         secondary: [
           "text-background",
           "bg-secondary",
           "hover:bg-secondary-100",
-             "border",
-              "border-violet-500", // TODO: add to palette
+          "border",
+          "border-violet-500", // TODO: add to palette
         ],
         danger: [
           "text-danger",
@@ -35,7 +35,7 @@
           "border-danger",
           "hover:border-danger-100",
           "hover:bg-danger",
-          "hover:text-body"
+          "hover:text-body",
         ],
       },
       size: {
