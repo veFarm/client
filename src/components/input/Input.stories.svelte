@@ -19,3 +19,17 @@
     error: "I'm the error message",
   }}
 />
+
+<Story
+  name="Currency"
+  args={{
+    currency: "VTHO"
+  }}
+/>
+
+<Story
+  name="Subtext"
+  args={{
+    subtext: "Balance: 123.45"
+  }}
+/>
