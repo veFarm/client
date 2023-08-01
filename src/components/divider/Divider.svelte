@@ -1,1 +1,1 @@
-<div class="border-b border-muted" />
+<hr class="border-b border-muted" />

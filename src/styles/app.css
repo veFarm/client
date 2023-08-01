@@ -29,7 +29,7 @@ danger      A color for displaying error messages
     --color-accent: 75 85 99; /* gray-600 */
     --color-danger: 239 68 68; /* red-500 */
     --color-danger-100: 251 113 133; /* red-400 */
-    --color-disabled: 209 213 219 /* gray-300 */
+    --color-disabled: 209 213 219 /* gray-300 */;
   }
 }
 
