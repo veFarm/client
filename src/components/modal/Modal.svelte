@@ -46,12 +46,12 @@
         <slot name="header" />
       </h3>
 
-      <button class="hover:bg-backdrop rounded-full p-1" on:click={hide}>
+      <button class="hover:bg-transparent/20 rounded-full p-1" on:click={hide}>
         <CloseIcon class="w-6 h-6 text-background" />
       </button>
     </div>
 
-    <Divider />
+    <Divider theme="light" />
 
     <!-- Body -->
     <div class="px-6 py-4">

@@ -5,10 +5,14 @@
 
 <Meta title="components/Divider" component={Divider} />
 
-<Story name="Vertical">
+<Template let:args>
   <div>
     Above
-    <Divider />
+    <Divider {...args} />
     Below
   </div>
-</Story>
+</Template>
+
+<Story name="Dark" args={{}} />
+
+<Story name="Light" args={{ theme: "light" }} />
