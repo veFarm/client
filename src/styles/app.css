@@ -12,8 +12,8 @@ background	Body background color
 highlight	  A background color for highlighting text
 muted	      A faint color for borders, backgrounds, and accents that do not require high contrast with the background color
 accent	    A contrast color for emphasizing UI
-danger      A color for displaying error messages
 disabled    A color for disabled elements
+danger      A color for displaying error messages
 */
 @layer base {
   :root {
@@ -28,9 +28,9 @@ disabled    A color for disabled elements
     --color-highlight: 248 250 252; /* slate-50 */
     --color-muted: 55 65 81; /* gray-700 */
     --color-accent: 75 85 99; /* gray-600 */
+    --color-disabled: 209 213 219; /* gray-300 */
     --color-danger: 239 68 68; /* red-500 */
     --color-danger-100: 251 113 133; /* red-400 */
-    --color-disabled: 209 213 219; /* gray-300 */
     --color-backdrop: 0 0 0; /* transparent */
   }
 }

@@ -31,7 +31,7 @@
         danger: [
           "text-danger",
           "bg-body",
-          "border-2",
+          "border",
           "border-danger",
           "hover:border-danger-100",
           "hover:bg-danger",
@@ -49,7 +49,7 @@
         true: [
           "cursor-not-allowed",
           "bg-disabled",
-          "border-none",
+          "border-gray-400",
           "text-accent",
           "hover:bg-disabled",
           "hover:text-accent",
