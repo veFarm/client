@@ -59,4 +59,3 @@
     </div>
   </dialog>
 {/if}
-
