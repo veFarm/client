@@ -39,6 +39,7 @@
         true: [
           "cursor-not-allowed",
           "bg-secondary-100",
+          "border-none",
           "text-accent",
           "hover:bg-secondary-100",
         ],
