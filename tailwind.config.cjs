@@ -1,4 +1,9 @@
 /** @type {import('tailwindcss').Config} */
+/**
+ * @see {@link https://tailwindcss.com/docs/customizing-colors#naming-your-colors}
+ * Observation. We use css variables instead instead of hard coding the
+ * values so that we can have multiple themes.
+ */
 module.exports = {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {
@@ -16,6 +21,7 @@ module.exports = {
         danger: "rgb(var(--color-danger) / <alpha-value>)",
         "danger-100": "rgb(var(--color-danger-100) / <alpha-value>)",
         disabled: "rgb(var(--color-disabled) / <alpha-value>)",
+        backdrop: "rgb(var(--color-backdrop) / 0.5)",
       },
     },
   },
