@@ -1,5 +1,6 @@
 import "../src/styles/app.css";
 
+// The code below is messing with the story arguments
 // export const decorators = [
 //   (Story, { globals }) => {
 //     const themeMode =
