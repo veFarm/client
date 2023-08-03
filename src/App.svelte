@@ -3,7 +3,9 @@
   import { Layout } from "@/components/layout";
   import { Divider } from "@/components/divider";
   import { Hero } from "@/components/hero";
-  import { Form } from "@/components/form";
+  import { TargetsForm } from "@/components/targets-form";
+  import { ConnectWalletButton } from "@/components/connect-wallet-button";
+  import { AllowanceButton } from "@/components/allowance-button";
   import { SwapsHistory } from "@/components/swaps-history";
   import { chain } from "@/config";
 </script>
@@ -16,21 +18,26 @@
       md:flex-row md:space-y-0 md:space-x-8
     "
     >
-      <div class="basis-1/2 self-start">
+      <section class="basis-1/2 self-start">
         <Hero />
-      </div>
-      <div
-        class="basis-1/2 border border-accent rounded-lg px-6 py-4 bg-white text-black"
+      </section>
+      <section
+        class="basis-1/2 border border-accent rounded-lg px-6 py-4 bg-white text-black space-y-4"
       >
-        <Form />
-        <p class="text-center mt-4">Chain: {chain.name}</p>
-      </div>
+        <!-- TODO: AllowanceButton should be disabled as long as targets are not set in contract -->
+        <TargetsForm />
+        {#if !$wallet.connected}
+          <ConnectWalletButton intent="primary" fullWidth />
+        {:else}
+          <AllowanceButton />
+        {/if}
+        <p class="text-center">Chain: {chain.name}</p>
+      </section>
     </div>
 
     {#if $wallet.connected}
       <Divider />
+      <SwapsHistory />
     {/if}
-
-    <SwapsHistory />
   </div>
 </Layout>

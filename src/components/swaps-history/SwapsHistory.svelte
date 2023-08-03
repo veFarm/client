@@ -8,15 +8,18 @@
 
   const { GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
 
-  /** Error message if any. */
-  let error = "";
   /**
-   * Swap transactions performed by the Trader contract
-   * in behalf of the current logged in account.
+   * Array of swap transactions performed by the Trader
+   * contract in behalf of the current logged in account.
    */
   let swapTxs: SwapDoc[] = [];
+  /** Error message if any. */
+  let error: string | undefined;
 
-  async function getAccountSwaps() {
+  /**
+   * Fetch account swap transactions.
+   */
+  async function fetchSwaps() {
     try {
       if ($wallet.account == null) {
         throw new Error("Wallet is not connected.");
@@ -35,27 +38,25 @@
   // TODO: refetch account swaps every x mins.
   $: {
     if ($wallet.connected) {
-      getAccountSwaps();
+      fetchSwaps();
     }
   }
 </script>
 
-{#if $wallet.connected}
-  <div class="flex flex-col space-y-4">
-    <h2>Past Trades</h2>
-    {#if error != null && error.length > 0}
-      <p class="text-danger">{error}</p>
-    {:else if swapTxs == null || swapTxs.length === 0}
-      <p>You don&apos;t have any past trades</p>
-    {:else}
-      {#each swapTxs as tx}
-        <SwapTx
-          amountIn={formatUnits(tx.amountIn, 18, 3)}
-          amountOut={formatUnits(tx.amountOut, 18, 5)}
-          txId={tx.txId}
-          explorerUrl={chain.explorers[0].url}
-        />
-      {/each}
-    {/if}
-  </div>
-{/if}
+<section class="flex flex-col space-y-4">
+  <h2>Past Trades</h2>
+  {#if error != null && error.length > 0}
+    <p class="text-danger">{error}</p>
+  {:else if swapTxs == null || swapTxs.length === 0}
+    <p>You don&apos;t have any past trades</p>
+  {:else}
+    {#each swapTxs as tx}
+      <SwapTx
+        amountIn={formatUnits(tx.amountIn, 18, 3)}
+        amountOut={formatUnits(tx.amountOut, 18, 5)}
+        txId={tx.txId}
+        explorerUrl={chain.explorers[0].url}
+      />
+    {/each}
+  {/if}
+</section>

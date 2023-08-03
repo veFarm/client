@@ -19,5 +19,5 @@
 <div class="hidden md:grid md:grid-cols-3 md:row-gap-8 md:mt-10 md:mx-auto">
   <StatItem value="3.2K" label="Trades" />
   <StatItem value="13.8K" label="VET volume" />
-  <StatItem value="486" label="Users" />
+  <StatItem value="486" label="Accounts" />
 </div>

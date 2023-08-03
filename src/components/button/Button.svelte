@@ -52,10 +52,10 @@
           "cursor-not-allowed",
           "bg-disabled",
           "border-gray-400",
-          "text-accent",
+          "text-muted",
           "hover:bg-disabled",
-          "hover:text-accent",
-          "hover:border-gray-400"
+          "hover:text-muted",
+          "hover:border-gray-400",
         ],
       },
     },

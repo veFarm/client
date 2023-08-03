@@ -3,13 +3,14 @@
   import type { AbiItem } from "@/typings/types";
   import { ConnexUtils } from "@/blockchain/connex-utils";
   import * as vthoArtifact from "@/abis/VTHO.json";
+  import * as traderArtifact from "@/abis/Trader.json";
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
+  import { parseUnits } from "@/utils/parse-units";
   import { isNumber } from "@/utils/is-number";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
-  import { ConnectWalletButton } from "@/components/connect-wallet-button";
-  import { VTHO_TOTAL_SUPPLY } from "@/config";
+  import { VTHO_DECIMALS } from "@/config";
 
   const { VTHO_CONTRACT_ADDRESS, TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
@@ -22,6 +23,8 @@
   let connexUtils: ConnexUtils | undefined;
   /** Reference to the VTHO contract. */
   let vtho: Contract | undefined;
+  /** Reference to the VeFarm Trader contract */
+  let trader: Contract | undefined;
   /** Form status. */
   let disabled = false;
   /** Errors object. */
@@ -30,8 +33,6 @@
     targetAmount: [],
     amountLeft: [],
   };
-  /** Allowance given by the account to the Trader contract. */
-  let allowance = "0";
   /** Account's VET balance. */
   let balance: string | undefined = undefined;
   /** Account's VTHO balance. */
@@ -40,8 +41,6 @@
   let targetAmount = "500";
   /** VTHO balance to be retained after the swap. */
   let amountLeft = "10"; // TODO: this needs to be formated to BN
-  /** Alert message open status. */
-  let showAlert = true;
 
   /**
    * Reset errors object.
@@ -120,37 +119,13 @@
   }
 
   /**
-   * Fetch allowance given by the account to the Trader contract.
+   * Store targetAmount and amountLeft values into Trader contract.
    */
-  async function getAllowance(): Promise<void> {
+  async function handleSubmit(): Promise<void> {
     disabled = true;
 
     try {
-      if (vtho == null || $wallet.account == null) {
-        throw new Error("Wallet is not connected.");
-      }
-
-      allowance = await vtho.methods.constant.allowance({
-        args: [$wallet.account, TRADER_CONTRACT_ADDRESS],
-      });
-    } catch (error: any) {
-      errors.network.push(error?.message || "Unknown error occurred.");
-    } finally {
-      disabled = false;
-    }
-  }
-
-  /**
-   * Approve/revoke Trader's allowance to spend VTHO.
-   */
-  async function handleAllowance(
-    allowanceType: "approve" | "revoke",
-  ): Promise<void> {
-    disabled = true;
-    showAlert = false;
-
-    try {
-      if (connexUtils == null || vtho == null) {
+      if (connexUtils == null || vtho == null || trader == null) {
         throw new Error("Wallet is not connected.");
       }
 
@@ -166,30 +141,21 @@
         return;
       }
 
-      showAlert = true;
-      // TODO: store targetAmount and amountLeft and convert to BigNumber
-
-      const actions = {
-        approve: {
-          amount: VTHO_TOTAL_SUPPLY,
-          comment: "Allow VeFarm to exchange your VTHO for VET.",
-        },
-        revoke: {
-          amount: "0",
-          comment:
-            "VeFarm will no longer be able to exchange your VTHO for VET.",
-        },
-      };
-
-      const { amount, comment } = actions[allowanceType];
-
-      const response = await vtho.methods.signed.approve({
-        args: [TRADER_CONTRACT_ADDRESS, amount],
-        comment,
+      const response = await trader.methods.signed.setTargets({
+        args: [
+          TRADER_CONTRACT_ADDRESS,
+          parseUnits(targetAmount, VTHO_DECIMALS),
+          parseUnits(amountLeft, VTHO_DECIMALS),
+        ],
+        comment: "Store target values into the VeFarm contract.",
       });
 
       await connexUtils.waitForReceipt(response.txid);
-      await getAllowance();
+      // TODO:
+      // 1. deploy new contract exposing setTargets function.
+      // 2. update Trader contract ABI and address
+      // 3. store values via API or call the server to fetch SetTargets event
+      // 4. re-fetch user's data (this should be global)
     } catch (error: any) {
       errors.network.push(error?.message || "Unknown error occurred.");
     } finally {
@@ -197,6 +163,7 @@
     }
   }
 
+  // Fetch account balance on wallet connection.
   $: {
     if ($wallet.connex != null) {
       connexUtils = new ConnexUtils($wallet.connex);
@@ -206,59 +173,45 @@
         VTHO_CONTRACT_ADDRESS,
       );
 
-      getBalance();
-      getAllowance();
-    }
-  }
+      trader = connexUtils.getContract(
+        traderArtifact.abi as AbiItem[],
+        TRADER_CONTRACT_ADDRESS,
+      );
 
-  $: {
-    console.log({ targetAmount });
-    console.log({ amountLeft });
+      getBalance();
+    }
   }
 </script>
 
-<form on:submit|preventDefault class="flex flex-col space-y-4">
-  {#if allowance === "0"}
-    <Input
-      type="text"
-      id="targetAmount"
-      label="Swap VTHO for VET when my balance reaches"
-      placeholder="0.0"
-      currency="VTHO"
-      subtext={`Balance: ${energy || "0.0"}`}
-      disabled={disabled || !$wallet.connected}
-      error={errors.targetAmount[0]}
-      bind:value={targetAmount}
-      on:input={() => {
-        clearFieldErrors("targetAmount");
-      }}
-    />
-  {/if}
-  {#if allowance === "0"}
-    <Input
-      type="text"
-      id="amountLeft"
-      label="Keeping in my wallet"
-      placeholder="0.0"
-      currency="VTHO"
-      disabled={disabled || !$wallet.connected}
-      error={errors.amountLeft[0]}
-      bind:value={amountLeft}
-      on:input={() => {
-        clearFieldErrors("amountLeft");
-      }}
-    />
-  {/if}
+<form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
+  <Input
+    type="text"
+    id="targetAmount"
+    label="Swap VTHO for VET when my balance reaches"
+    placeholder="0.0"
+    currency="VTHO"
+    subtext={`Balance: ${energy || "0.0"}`}
+    disabled={disabled || !$wallet.connected}
+    error={errors.targetAmount[0]}
+    bind:value={targetAmount}
+    on:input={() => {
+      clearFieldErrors("targetAmount");
+    }}
+  />
+  <Input
+    type="text"
+    id="amountLeft"
+    label="Keep in my wallet after the swap"
+    placeholder="0.0"
+    currency="VTHO"
+    disabled={disabled || !$wallet.connected}
+    error={errors.amountLeft[0]}
+    bind:value={amountLeft}
+    on:input={() => {
+      clearFieldErrors("amountLeft");
+    }}
+  />
 
-  <!-- {#if showAlert}
-    <p class="text-accent">
-      We&apos;ll swap VTHO for VET when your balance reaches <b
-        >{targetAmount}
-        VTHO</b
-      >, leaving <b>{amountLeft} VTHO</b> in your wallet. Keep in mind that
-      every swap will cost you <b>3 VTHO</b> aproximately.
-    </p>
-  {/if} -->
   <p class="text-background">
     Minimum Received
     <br />
@@ -267,32 +220,8 @@
     Next Trade
   </p>
 
-  {#if !$wallet.connected}
-    <ConnectWalletButton intent="primary" fullWidth />
-  {:else if allowance === "0"}
-    <Button
-      type="submit"
-      intent="primary"
-      {disabled}
-      fullWidth
-      on:click={() => {
-        handleAllowance("approve");
-      }}
-    >
-      Approve
-    </Button>
-  {:else}
-    <Button
-      type="submit"
-      intent="danger"
-      {disabled}
-      fullWidth
-      on:click={() => {
-        handleAllowance("revoke");
-      }}
-    >
-      Revoke
-    </Button>
+  {#if $wallet.connected}
+    <Button type="submit" intent="primary" {disabled} fullWidth>Save</Button>
   {/if}
 
   {#if errors.network != null && errors.network.length > 0}
