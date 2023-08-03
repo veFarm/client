@@ -16,6 +16,10 @@
 
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
+  type Targets = {
+    targetAmount: string;
+    amountLeft: string;
+  };
   type ErrorFields = "network" | "targetAmount" | "amountLeft";
   type Errors = Record<ErrorFields, string[]>;
 
@@ -41,6 +45,8 @@
   let targetAmount = "500";
   /** VTHO balance to be retained after the swap. */
   let amountLeft = "10"; // TODO: this needs to be formated to BN
+  /** Account target values stored in the Trader contract. */
+  let targets: Targets | undefined;
 
   /**
    * Reset errors object.
@@ -96,6 +102,7 @@
     return _errors;
   }
 
+  // TODO: integrate balance into wallet store
   /**
    * Fetch account balance from the vechain ledger.
    */
@@ -115,6 +122,24 @@
       errors.network.push(error?.message || "Unknown error occurred.");
     } finally {
       disabled = false;
+    }
+  }
+
+  // TODO: it would be nice if this data would be globally available.
+  /**
+   * Fetch account targets stored in the Trader contract.
+   */
+  async function fetchTargets(): Promise<void> {
+    try {
+      if ($wallet.account == null || trader == null) {
+        throw new Error("Wallet is not connected.");
+      }
+
+      targets = await trader.methods.constant.accountTargets({
+        args: [$wallet.account],
+      });
+    } catch (err: any) {
+      errors.network.push(err?.message || "Unknown error occurred.");
     }
   }
 
@@ -151,19 +176,16 @@
 
       await connexUtils.waitForReceipt(response.txid);
       // TODO:
-      // 1. deploy new contract exposing setTargets function.
-      // 2. update Trader contract ABI and address
       // 3. store values via API or call the server to fetch SetTargets event
       // 4. re-fetch user's data (this should be global)
     } catch (error: any) {
-      console.error(error);
       errors.network.push(error?.message || "Unknown error occurred.");
     } finally {
       disabled = false;
     }
   }
 
-  // Fetch account balance on wallet connection.
+  // Fetch account targets on wallet connection.
   $: {
     if ($wallet.connex != null) {
       connexUtils = new ConnexUtils($wallet.connex);
@@ -178,7 +200,9 @@
         TRADER_CONTRACT_ADDRESS,
       );
 
+      // TODO: move this to wallet store
       getBalance();
+      fetchTargets();
     }
   }
 </script>
@@ -212,6 +236,7 @@
     }}
   />
 
+  <!-- TODO: move to it's out compoent and use a slot to insert -->
   <p class="text-background">
     Minimum Received
     <br />

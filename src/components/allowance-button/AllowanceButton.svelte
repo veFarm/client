@@ -23,14 +23,11 @@
   /** Error message if any. */
   let error: string | undefined;
 
-  /** List of possible allowance types. */
-  type AllowanceType = "APPROVE" | "REVOKE";
+  /** List of possible allowance actions. */
+  type Action = "APPROVE" | "REVOKE";
 
   /** Arguments to be passed to the vtho.approve function. */
-  const ALLOWANCE_PAYLOAD: Record<
-    AllowanceType,
-    { amount: string; comment: string }
-  > = {
+  const ACTION_PAYLOAD: Record<Action, { amount: string; comment: string }> = {
     APPROVE: {
       amount: VTHO_TOTAL_SUPPLY,
       comment: "Allow VeFarm to exchange your VTHO for VET.",
@@ -61,7 +58,7 @@
   /**
    * Approve/revoke Trader's allowance to spend VTHO.
    */
-  async function handleAllowance(allowanceType: AllowanceType): Promise<void> {
+  async function handleClick(action: Action): Promise<void> {
     disabled = true;
 
     try {
@@ -69,7 +66,7 @@
         throw new Error("Wallet is not connected.");
       }
 
-      const { amount, comment } = ALLOWANCE_PAYLOAD[allowanceType];
+      const { amount, comment } = ACTION_PAYLOAD[action];
 
       const response = await vtho.methods.signed.approve({
         args: [TRADER_CONTRACT_ADDRESS, amount],
@@ -109,7 +106,7 @@
     {disabled}
     fullWidth
     on:click={() => {
-      handleAllowance("APPROVE");
+      handleClick("APPROVE");
     }}
   >
     Approve VTHO Spending
@@ -120,7 +117,7 @@
     {disabled}
     fullWidth
     on:click={() => {
-      handleAllowance("REVOKE");
+      handleClick("REVOKE");
     }}
   >
     Revoke VTHO Spending
