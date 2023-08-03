@@ -143,7 +143,6 @@
 
       const response = await trader.methods.signed.setTargets({
         args: [
-          TRADER_CONTRACT_ADDRESS,
           parseUnits(targetAmount, VTHO_DECIMALS),
           parseUnits(amountLeft, VTHO_DECIMALS),
         ],
@@ -157,6 +156,7 @@
       // 3. store values via API or call the server to fetch SetTargets event
       // 4. re-fetch user's data (this should be global)
     } catch (error: any) {
+      console.error(error);
       errors.network.push(error?.message || "Unknown error occurred.");
     } finally {
       disabled = false;
