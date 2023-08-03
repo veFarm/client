@@ -37,10 +37,8 @@
     targetAmount: [],
     amountLeft: [],
   };
-  /** Account's VET balance. */
-  let balance: string | undefined = undefined;
-  /** Account's VTHO balance. */
-  let energy: string | undefined = undefined;
+  /** Account's VET and VTHO balance. */
+  let balance: {vet: string, vtho: string} | undefined = undefined;
   /** VTHO amount to initiate a swap. */
   let targetAmount = "500";
   /** VTHO balance to be retained after the swap. */
@@ -114,10 +112,7 @@
         throw new Error("Wallet is not connected.");
       }
 
-      const balances = await connexUtils.getBalance($wallet.account);
-
-      balance = balances.balance;
-      energy = balances.energy;
+      balance = await connexUtils.fetchBalance($wallet.account);
     } catch (error: any) {
       errors.network.push(error?.message || "Unknown error occurred.");
     } finally {
@@ -214,7 +209,7 @@
     label="Swap VTHO for VET when my balance reaches"
     placeholder="0.0"
     currency="VTHO"
-    subtext={`Balance: ${energy || "0.0"}`}
+    subtext={`Balance: ${balance?.vtho || "0"}`}
     disabled={disabled || !$wallet.connected}
     error={errors.targetAmount[0]}
     bind:value={targetAmount}
