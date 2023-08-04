@@ -37,9 +37,7 @@
     targetAmount: [],
     amountLeft: [],
   };
-  /** Account's VET and VTHO balance. */
-  let balance: {vet: string, vtho: string} | undefined = undefined;
-  /** VTHO amount to initiate a swap. */
+  /** VTHO target amount to initiate a swap. */
   let targetAmount = "500";
   /** VTHO balance to be retained after the swap. */
   let amountLeft = "10"; // TODO: this needs to be formated to BN
@@ -88,6 +86,7 @@
     } else if (_targetAmount === "0") {
       _errors.targetAmount.push("Please enter a positive amount.");
     }
+    // TODO: catch MAX_UINT256
 
     if (!_amountLeft) {
       _errors.amountLeft.push("Amount left is required!");
@@ -98,26 +97,6 @@
     }
 
     return _errors;
-  }
-
-  // TODO: integrate balance into wallet store
-  /**
-   * Fetch account balance from the vechain ledger.
-   */
-  async function getBalance(): Promise<void> {
-    disabled = true;
-
-    try {
-      if (connexUtils == null || $wallet.account == null) {
-        throw new Error("Wallet is not connected.");
-      }
-
-      balance = await connexUtils.fetchBalance($wallet.account);
-    } catch (error: any) {
-      errors.network.push(error?.message || "Unknown error occurred.");
-    } finally {
-      disabled = false;
-    }
   }
 
   // TODO: it would be nice if this data would be globally available.
@@ -170,6 +149,7 @@
       });
 
       await connexUtils.waitForReceipt(response.txid);
+      await wallet.refetchBalance();
       // TODO:
       // 3. store values via API or call the server to fetch SetTargets event
       // 4. re-fetch user's data (this should be global)
@@ -195,8 +175,6 @@
         TRADER_CONTRACT_ADDRESS,
       );
 
-      // TODO: move this to wallet store
-      getBalance();
       fetchTargets();
     }
   }
@@ -209,7 +187,7 @@
     label="Swap VTHO for VET when my balance reaches"
     placeholder="0.0"
     currency="VTHO"
-    subtext={`Balance: ${balance?.vtho || "0"}`}
+    subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
     disabled={disabled || !$wallet.connected}
     error={errors.targetAmount[0]}
     bind:value={targetAmount}

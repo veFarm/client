@@ -1,7 +1,7 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import type { Connex } from "@vechain/connex";
 import type { WalletId } from "@/typings/types";
-// import type { ConnexUtils } from "@/blockchain/connex-utils";
+import { ConnexUtils } from "@/blockchain/connex-utils";
 import { sync2 } from "@/stores/sync2";
 
 type State = {
@@ -10,7 +10,7 @@ type State = {
   error: string | undefined;
   connected: boolean;
   account: Address | undefined;
-  // chainId: number | undefined;
+  balance: { vet: string; vtho: string } | undefined;
 };
 
 const initialState: State = {
@@ -19,11 +19,11 @@ const initialState: State = {
   error: undefined,
   connected: false,
   account: undefined,
-  // chainId: undefined,
+  balance: undefined,
 };
 
 function createStore() {
-  const { subscribe, set, update } = writable<State>({ ...initialState });
+  const store = writable<State>({ ...initialState });
 
   let connectedWalletId: WalletId | undefined;
 
@@ -31,23 +31,26 @@ function createStore() {
   sync2.subscribe(async (data) => {
     // No data present means Sync2 got disconnected.
     if (data == null) {
-      set({ ...initialState });
+      store.set({ ...initialState });
       connectedWalletId = undefined;
       return;
     }
 
     // Sync2 is connected.
     try {
-      set({
-        connex: data.connex,
+      const { connex, account } = data;
+      const connexUtils = new ConnexUtils(connex);
+
+      store.set({
+        connex,
         loading: false,
         error: undefined,
         connected: true,
-        account: data.account,
-        // chainId: network.chainId,
+        account,
+        balance: await connexUtils.fetchBalance(account),
       });
     } catch (error) {
-      update((s) => ({
+      store.update((s) => ({
         ...s,
         error: error?.message || "Unknown error occurred.",
       }));
@@ -55,18 +58,13 @@ function createStore() {
   });
 
   return {
-    subscribe,
+    subscribe: store.subscribe,
     connect: async function (walletId: WalletId): Promise<void> {
-      update((s) => ({ ...s, loading: true, error: undefined }));
+      store.update((s) => ({ ...s, loading: true, error: undefined }));
 
       try {
         if (walletId !== "sync2") {
-          update((s) => ({
-            ...s,
-            loading: false,
-            error: `Ops! ${walletId} has not been integrated yet.`,
-          }));
-          return;
+          throw new Error(`Ops! ${walletId} has not been integrated yet.`);
         }
 
         if (walletId === "sync2") {
@@ -74,35 +72,49 @@ function createStore() {
           connectedWalletId = "sync2";
         }
       } catch (error) {
-        update((s) => ({
+        store.update((s) => ({
           ...s,
           error: error?.message || "Unknown error occurred.",
         }));
       } finally {
-        update((s) => ({ ...s, loading: false }));
+        store.update((s) => ({ ...s, loading: false }));
       }
     },
     disconnect: function (): void {
+      // TODO: can't we store the id inside the store itself or
+      // add a reference to the connected store like
+      // store.connectedWallet = sync2
+      // then we do store.connectedWallet.disconnect()
+      // TODO: clear localStorage
       if (connectedWalletId === "sync2") {
         sync2.disconnect();
       }
     },
-    // switchChain: async function (chainId: number): Promise<void> {
-    //   update((s) => ({ ...s, loading: true, error: undefined }));
+    refetchBalance: async function (): Promise<void> {
+      try {
+        const data = get(store);
 
-    //   try {
-    //     if (connectedWalletId === "metamask") {
-    //       await metamask.switchChain(chainId);
-    //     }
-    //   } catch (error) {
-    //     update((s) => ({
-    //       ...s,
-    //       error: error?.message || "Unknown error occurred.",
-    //     }));
-    //   } finally {
-    //     update((s) => ({ ...s, loading: false }));
-    //   }
-    // },
+        if (data?.connex == null || data?.account == null) {
+          throw new Error("Wallet is not connected.");
+        }
+
+        const { connex, account } = data;
+
+        const connexUtils = new ConnexUtils(connex);
+
+        const balance = await connexUtils.fetchBalance(account);
+
+        store.update((s) => ({
+          ...s,
+          balance,
+        }));
+      } catch (error) {
+        store.update((s) => ({
+          ...s,
+          error: error?.message || "Unknown error occurred.",
+        }));
+      }
+    },
   };
 }
 

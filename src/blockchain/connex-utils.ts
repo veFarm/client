@@ -216,10 +216,8 @@ export class ConnexUtils {
    * @param {Address} account Account to be checked.
    * @return VET and VTHO account balance.
    */
-  async fetchBalance(
-    account: Address,
-  ): Promise<{ vet: string; vtho: string }> {
-    const {balance, energy} = await this.connex.thor.account(account).get();
+  async fetchBalance(account: Address): Promise<{ vet: string; vtho: string }> {
+    const { balance, energy } = await this.connex.thor.account(account).get();
 
     return {
       vet: bn(balance).dividedBy(bn("1e18")).toFixed(2).toString(),
