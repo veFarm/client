@@ -7,7 +7,7 @@ import bn from "bignumber.js";
 export function formatUnits(
   value: string,
   digits: number,
-  decimals: number,
+  decimals = 0,
 ): string {
   return bn(value).div(bn(10).pow(digits)).decimalPlaces(decimals).toString();
 }

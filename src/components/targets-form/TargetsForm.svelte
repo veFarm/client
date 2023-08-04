@@ -7,6 +7,7 @@
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { parseUnits } from "@/utils/parse-units";
+  import { formatUnits } from "@/utils/format-units";
   import { isNumber } from "@/utils/is-number";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
@@ -38,11 +39,13 @@
     amountLeft: [],
   };
   /** VTHO target amount to initiate a swap. */
-  let targetAmount = "500";
+  let targetAmount = "";
   /** VTHO balance to be retained after the swap. */
-  let amountLeft = "10"; // TODO: this needs to be formated to BN
+  let amountLeft = ""; // TODO: this needs to be formated to BN
   /** Account target values stored in the Trader contract. */
   let targets: Targets | undefined;
+  /** Hack to set targets once. */
+  let runOnce = false;
 
   /**
    * Reset errors object.
@@ -109,9 +112,14 @@
         throw new Error("Wallet is not connected.");
       }
 
-      targets = await trader.methods.constant.accountTargets({
+      const decoded = await trader.methods.constant.accountTargets({
         args: [$wallet.account],
       });
+
+      targets = {
+        targetAmount: formatUnits(decoded[0], VTHO_DECIMALS),
+        amountLeft: formatUnits(decoded[1], VTHO_DECIMALS),
+      };
     } catch (err: any) {
       errors.network.push(err?.message || "Unknown error occurred.");
     }
@@ -178,6 +186,14 @@
       fetchTargets();
     }
   }
+
+  $: {
+    if (targets != null && !runOnce) {
+      targetAmount = targets.targetAmount;
+      amountLeft = targets.amountLeft;
+      runOnce = true;
+    }
+  }
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
@@ -185,7 +201,7 @@
     type="text"
     id="targetAmount"
     label="Swap VTHO for VET when my balance reaches"
-    placeholder="0.0"
+    placeholder={targets != null ? targets.targetAmount : "0"}
     currency="VTHO"
     subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
     disabled={disabled || !$wallet.connected}
@@ -199,7 +215,7 @@
     type="text"
     id="amountLeft"
     label="Keep in my wallet after the swap"
-    placeholder="0.0"
+    placeholder={targets != null ? targets.amountLeft : "0"}
     currency="VTHO"
     disabled={disabled || !$wallet.connected}
     error={errors.amountLeft[0]}
@@ -219,7 +235,15 @@
   </p>
 
   {#if $wallet.connected}
-    <Button type="submit" intent="primary" {disabled} fullWidth>Save</Button>
+    <Button
+      type="submit"
+      intent="primary"
+      disabled={disabled ||
+        (targets != null &&
+          targets.targetAmount === targetAmount &&
+          targets.amountLeft === amountLeft)}
+      fullWidth>Save Targets</Button
+    >
   {/if}
 
   {#if errors.network != null && errors.network.length > 0}

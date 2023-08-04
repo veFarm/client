@@ -30,7 +30,7 @@
   const ACTION_PAYLOAD: Record<Action, { amount: string; comment: string }> = {
     APPROVE: {
       amount: VTHO_TOTAL_SUPPLY,
-      comment: "Allow VeFarm to exchange your VTHO for VET.",
+      comment: "Allow VeFarm to spend your VTHO in exchange for VET.",
     },
     REVOKE: {
       amount: "0",
@@ -47,9 +47,11 @@
         throw new Error("Wallet is not connected.");
       }
 
-      allowance = await vtho.methods.constant.allowance({
+      const decoded = await vtho.methods.constant.allowance({
         args: [$wallet.account, TRADER_CONTRACT_ADDRESS],
       });
+
+      allowance = decoded[0];
     } catch (err: any) {
       error = err?.message || "Unknown error occurred.";
     }
@@ -109,7 +111,7 @@
       handleClick("APPROVE");
     }}
   >
-    Approve VTHO Spending
+    Approve Spending
   </Button>
 {:else}
   <Button
@@ -120,7 +122,7 @@
       handleClick("REVOKE");
     }}
   >
-    Revoke VTHO Spending
+    Revoke Spending
   </Button>
 {/if}
 

@@ -40,13 +40,13 @@ export class ConnexUtils {
   private defineConstant(
     address: Address,
     method: AbiItem,
-  ): ({ args }: { args: any[] }) => Promise<any> {
+  ): ({ args }: { args: any[] }) => Promise<Record<string | number, any>> {
     return async ({ args }: { args: any[] }) => {
       const res = await this.connex.thor
         .account(address)
         .method(method)
         .call(...args);
-      return res.decoded[0];
+      return res.decoded;
     };
   }
 
