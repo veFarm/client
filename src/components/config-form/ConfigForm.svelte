@@ -17,11 +17,11 @@
 
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
-  type Targets = {
-    targetAmount: string;
-    amountLeft: string;
+  type SwapConfig = {
+    triggerAmount: string;
+    reserveBalance: string;
   };
-  type ErrorFields = "network" | "targetAmount" | "amountLeft";
+  type ErrorFields = "network" | "triggerAmount" | "reserveBalance";
   type Errors = Record<ErrorFields, string[]>;
 
   /** Connex utils instance. */
@@ -35,15 +35,15 @@
   /** Errors object. */
   let errors: Errors = {
     network: [],
-    targetAmount: [],
-    amountLeft: [],
+    triggerAmount: [],
+    reserveBalance: [],
   };
-  /** VTHO target amount to initiate a swap. */
-  let targetAmount = "";
-  /** VTHO balance to be retained after the swap. */
-  let amountLeft = ""; // TODO: this needs to be formated to BN
+  /** VTHO balance to initiate a swap. */
+  let triggerAmount = "";
+  /** VTHO balance to be retained in the account after the swap. */
+  let reserveBalance = "";
   /** Account target values stored in the Trader contract. */
-  let targets: Targets | undefined;
+  let storedConfig: SwapConfig | undefined;
   /** Hack to set targets once. */
   let runOnce = false;
 
@@ -68,35 +68,36 @@
    * Validate input fields.
    */
   function validateFields(
-    targetAmount: string | undefined,
-    amountLeft: string | undefined,
+    triggerAmount: string | undefined,
+    reserveBalance: string | undefined,
   ): Errors {
     // Initialize errors
     const _errors: Errors = {
-      targetAmount: [],
-      amountLeft: [],
+      triggerAmount: [],
+      reserveBalance: [],
       network: [],
     };
 
     // Sanitize inputs
-    const _targetAmount = targetAmount != null && targetAmount.trim();
-    const _amountLeft = amountLeft != null && amountLeft.trim();
+    const _triggerAmount = triggerAmount != null && triggerAmount.trim();
+    const _reserveBalance = reserveBalance != null && reserveBalance.trim();
 
-    if (!_targetAmount) {
-      _errors.targetAmount.push("Target amount is required.");
-    } else if (!isNumber(_targetAmount)) {
-      _errors.targetAmount.push("Please enter a valid amount.");
-    } else if (_targetAmount === "0") {
-      _errors.targetAmount.push("Please enter a positive amount.");
+    if (!_triggerAmount) {
+      _errors.triggerAmount.push("Target amount is required.");
+    } else if (!isNumber(_triggerAmount)) {
+      _errors.triggerAmount.push("Please enter a valid amount.");
+    } else if (_triggerAmount === "0") {
+      _errors.triggerAmount.push("Please enter a positive amount.");
     }
     // TODO: catch MAX_UINT256
+    // TODO: triggerAmount - reserveBalance should be big enough
 
-    if (!_amountLeft) {
-      _errors.amountLeft.push("Amount left is required!");
-    } else if (!isNumber(_amountLeft)) {
-      _errors.amountLeft.push("Please enter a valid amount.");
-    } else if (_amountLeft === "0") {
-      _errors.amountLeft.push("Please enter a positive amount.");
+    if (!_reserveBalance) {
+      _errors.reserveBalance.push("Amount left is required!");
+    } else if (!isNumber(_reserveBalance)) {
+      _errors.reserveBalance.push("Please enter a valid amount.");
+    } else if (_reserveBalance === "0") {
+      _errors.reserveBalance.push("Please enter a positive amount.");
     }
 
     return _errors;
@@ -104,21 +105,21 @@
 
   // TODO: it would be nice if this data would be globally available.
   /**
-   * Fetch account targets stored in the Trader contract.
+   * Fetch account's swap config from the Trader contract.
    */
-  async function fetchTargets(): Promise<void> {
+  async function fetchConfig(): Promise<void> {
     try {
       if ($wallet.account == null || trader == null) {
         throw new Error("Wallet is not connected.");
       }
 
-      const decoded = await trader.methods.constant.accountTargets({
+      const decoded = await trader.methods.constant.configByAddress({
         args: [$wallet.account],
       });
 
-      targets = {
-        targetAmount: formatUnits(decoded[0], VTHO_DECIMALS),
-        amountLeft: formatUnits(decoded[1], VTHO_DECIMALS),
+      storedConfig = {
+        triggerAmount: formatUnits(decoded[0], VTHO_DECIMALS),
+        reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
       };
     } catch (err: any) {
       errors.network.push(err?.message || "Unknown error occurred.");
@@ -126,7 +127,7 @@
   }
 
   /**
-   * Store targetAmount and amountLeft values into Trader contract.
+   * Store selected configuration into the Trader contract.
    */
   async function handleSubmit(): Promise<void> {
     disabled = true;
@@ -140,27 +141,24 @@
       clearErrors();
 
       // Validate fields
-      const err = validateFields(targetAmount, amountLeft);
+      const err = validateFields(triggerAmount, reserveBalance);
 
       // In case of errors, display on UI and return handler to parent component
-      if (err.targetAmount.length > 0 || err.amountLeft.length > 0) {
+      if (err.triggerAmount.length > 0 || err.reserveBalance.length > 0) {
         errors = err;
         return;
       }
 
-      const response = await trader.methods.signed.setTargets({
+      const response = await trader.methods.signed.saveConfig({
         args: [
-          parseUnits(targetAmount, VTHO_DECIMALS),
-          parseUnits(amountLeft, VTHO_DECIMALS),
+          parseUnits(triggerAmount, VTHO_DECIMALS),
+          parseUnits(reserveBalance, VTHO_DECIMALS),
         ],
-        comment: "Store target values into the VeFarm contract.",
+        comment: "Save config values into the VeFarm contract.",
       });
 
       await connexUtils.waitForReceipt(response.txid);
       await wallet.refetchBalance();
-      // TODO:
-      // 3. store values via API or call the server to fetch SetTargets event
-      // 4. re-fetch user's data (this should be global)
     } catch (error: any) {
       errors.network.push(error?.message || "Unknown error occurred.");
     } finally {
@@ -168,7 +166,7 @@
     }
   }
 
-  // Fetch account targets on wallet connection.
+  // Fetch account's config on wallet connection.
   $: {
     if ($wallet.connex != null) {
       connexUtils = new ConnexUtils($wallet.connex);
@@ -183,14 +181,15 @@
         TRADER_CONTRACT_ADDRESS,
       );
 
-      fetchTargets();
+      fetchConfig();
     }
   }
 
+  // Set stored config values on render.
   $: {
-    if (targets != null && !runOnce) {
-      targetAmount = targets.targetAmount;
-      amountLeft = targets.amountLeft;
+    if (storedConfig != null && !runOnce) {
+      triggerAmount = storedConfig.triggerAmount;
+      reserveBalance = storedConfig.reserveBalance;
       runOnce = true;
     }
   }
@@ -199,29 +198,29 @@
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
   <Input
     type="text"
-    id="targetAmount"
-    label="Swap VTHO for VET when my balance reaches"
-    placeholder={targets != null ? targets.targetAmount : "0"}
+    id="triggerAmount"
+    label="Trigger Amount"
+    placeholder={storedConfig != null ? storedConfig.triggerAmount : "0"}
     currency="VTHO"
     subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
     disabled={disabled || !$wallet.connected}
-    error={errors.targetAmount[0]}
-    bind:value={targetAmount}
+    error={errors.triggerAmount[0]}
+    bind:value={triggerAmount}
     on:input={() => {
-      clearFieldErrors("targetAmount");
+      clearFieldErrors("triggerAmount");
     }}
   />
   <Input
     type="text"
-    id="amountLeft"
-    label="Keep in my wallet after the swap"
-    placeholder={targets != null ? targets.amountLeft : "0"}
+    id="reserveBalance"
+    label="Reserve Balance"
+    placeholder={storedConfig != null ? storedConfig.reserveBalance : "0"}
     currency="VTHO"
     disabled={disabled || !$wallet.connected}
-    error={errors.amountLeft[0]}
-    bind:value={amountLeft}
+    error={errors.reserveBalance[0]}
+    bind:value={reserveBalance}
     on:input={() => {
-      clearFieldErrors("amountLeft");
+      clearFieldErrors("reserveBalance");
     }}
   />
 
@@ -239,11 +238,13 @@
       type="submit"
       intent="primary"
       disabled={disabled ||
-        (targets != null &&
-          targets.targetAmount === targetAmount &&
-          targets.amountLeft === amountLeft)}
-      fullWidth>Save Targets</Button
+        (storedConfig != null &&
+          storedConfig.triggerAmount === triggerAmount &&
+          storedConfig.reserveBalance === reserveBalance)}
+      fullWidth
     >
+      Save Config
+    </Button>
   {/if}
 
   {#if errors.network != null && errors.network.length > 0}
