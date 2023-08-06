@@ -4,7 +4,7 @@
 
 <h1>Swap VTHO for VET automatically.</h1>
 <p class="text-gray-300 mt-4">
-  Select your preferred configuration and allow the VeFarm contract to spend your VTHO.
+  Select your swap configuration and allow the VeFarm contract to spend your VTHO.
   After which the contract will periodically withdraw VTHO from your account,
   perform a swap for VET tokens through a DEX, and return the resulting tokens
   back to your wallet.

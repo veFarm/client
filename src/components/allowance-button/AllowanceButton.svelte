@@ -99,6 +99,7 @@
   }
 
   // Disabled button while allowance is being fetched.
+  // TODO: disabled via parent component if config is not set
   $: disabled = allowance == null;
 </script>
 

@@ -33,3 +33,10 @@
     subtext: "Balance: 123.45",
   }}
 />
+
+<Story
+  name="Hint"
+  args={{
+    hint: "This is a hint",
+  }}
+/>

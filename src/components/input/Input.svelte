@@ -6,6 +6,7 @@
     label?: string;
     value: any;
     currency?: string;
+    hint?: string;
     error?: string;
     subtext?: string;
   };
@@ -14,6 +15,7 @@
   export let label = "";
   export let value: any;
   export let currency = "";
+  export let hint = "";
   export let error = "";
   export let subtext = "";
 
@@ -22,7 +24,7 @@
   $: hasError = error != null && error.length > 0;
 </script>
 
-<label for={id} class="{hasError ? 'text-danger' : 'text-accent'} text-sm">
+<label for={id} class="{hasError ? 'text-danger' : 'text-accent'} text-sm space-y-1">
   {label}
   <div class="relative">
     <input
@@ -47,7 +49,10 @@
       </div>
     {/if}
   </div>
+  {#if hint.length > 0}
+    <legend>{hint}</legend>
+  {/if}
   {#if hasError}
-    <legend class="text-sm mt-1">{error}</legend>
+    <legend>{error}</legend>
   {/if}
 </label>

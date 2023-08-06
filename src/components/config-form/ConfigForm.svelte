@@ -18,10 +18,10 @@
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
   type SwapConfig = {
-    triggerAmount: string;
+    triggerBalance: string;
     reserveBalance: string;
   };
-  type ErrorFields = "network" | "triggerAmount" | "reserveBalance";
+  type ErrorFields = "network" | "triggerBalance" | "reserveBalance";
   type Errors = Record<ErrorFields, string[]>;
 
   /** Connex utils instance. */
@@ -35,11 +35,11 @@
   /** Errors object. */
   let errors: Errors = {
     network: [],
-    triggerAmount: [],
+    triggerBalance: [],
     reserveBalance: [],
   };
   /** VTHO balance to initiate a swap. */
-  let triggerAmount = "";
+  let triggerBalance = "";
   /** VTHO balance to be retained in the account after the swap. */
   let reserveBalance = "";
   /** Account target values stored in the Trader contract. */
@@ -68,32 +68,32 @@
    * Validate input fields.
    */
   function validateFields(
-    triggerAmount: string | undefined,
+    triggerBalance: string | undefined,
     reserveBalance: string | undefined,
   ): Errors {
     // Initialize errors
     const _errors: Errors = {
-      triggerAmount: [],
+      triggerBalance: [],
       reserveBalance: [],
       network: [],
     };
 
     // Sanitize inputs
-    const _triggerAmount = triggerAmount != null && triggerAmount.trim();
+    const _triggerBalance = triggerBalance != null && triggerBalance.trim();
     const _reserveBalance = reserveBalance != null && reserveBalance.trim();
 
-    if (!_triggerAmount) {
-      _errors.triggerAmount.push("Target amount is required.");
-    } else if (!isNumber(_triggerAmount)) {
-      _errors.triggerAmount.push("Please enter a valid amount.");
-    } else if (_triggerAmount === "0") {
-      _errors.triggerAmount.push("Please enter a positive amount.");
+    if (!_triggerBalance) {
+      _errors.triggerBalance.push("Required field.");
+    } else if (!isNumber(_triggerBalance)) {
+      _errors.triggerBalance.push("Please enter a valid amount.");
+    } else if (_triggerBalance === "0") {
+      _errors.triggerBalance.push("Please enter a positive amount.");
     }
     // TODO: catch MAX_UINT256
-    // TODO: triggerAmount - reserveBalance should be big enough
+    // TODO: triggerBalance - reserveBalance should be big enough
 
     if (!_reserveBalance) {
-      _errors.reserveBalance.push("Amount left is required!");
+      _errors.reserveBalance.push("Required field.");
     } else if (!isNumber(_reserveBalance)) {
       _errors.reserveBalance.push("Please enter a valid amount.");
     } else if (_reserveBalance === "0") {
@@ -118,7 +118,7 @@
       });
 
       storedConfig = {
-        triggerAmount: formatUnits(decoded[0], VTHO_DECIMALS),
+        triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
         reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
       };
     } catch (err: any) {
@@ -141,17 +141,17 @@
       clearErrors();
 
       // Validate fields
-      const err = validateFields(triggerAmount, reserveBalance);
+      const err = validateFields(triggerBalance, reserveBalance);
 
       // In case of errors, display on UI and return handler to parent component
-      if (err.triggerAmount.length > 0 || err.reserveBalance.length > 0) {
+      if (err.triggerBalance.length > 0 || err.reserveBalance.length > 0) {
         errors = err;
         return;
       }
 
       const response = await trader.methods.signed.saveConfig({
         args: [
-          parseUnits(triggerAmount, VTHO_DECIMALS),
+          parseUnits(triggerBalance, VTHO_DECIMALS),
           parseUnits(reserveBalance, VTHO_DECIMALS),
         ],
         comment: "Save config values into the VeFarm contract.",
@@ -188,7 +188,7 @@
   // Set stored config values on render.
   $: {
     if (storedConfig != null && !runOnce) {
-      triggerAmount = storedConfig.triggerAmount;
+      triggerBalance = storedConfig.triggerBalance;
       reserveBalance = storedConfig.reserveBalance;
       runOnce = true;
     }
@@ -198,16 +198,17 @@
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
   <Input
     type="text"
-    id="triggerAmount"
-    label="Trigger Amount"
-    placeholder={storedConfig != null ? storedConfig.triggerAmount : "0"}
+    id="triggerBalance"
+    label="Trigger Balance"
+    placeholder={storedConfig != null ? storedConfig.triggerBalance : "0"}
     currency="VTHO"
     subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
+    hint="Minimum balance to initiate a swap"
     disabled={disabled || !$wallet.connected}
-    error={errors.triggerAmount[0]}
-    bind:value={triggerAmount}
+    error={errors.triggerBalance[0]}
+    bind:value={triggerBalance}
     on:input={() => {
-      clearFieldErrors("triggerAmount");
+      clearFieldErrors("triggerBalance");
     }}
   />
   <Input
@@ -216,6 +217,7 @@
     label="Reserve Balance"
     placeholder={storedConfig != null ? storedConfig.reserveBalance : "0"}
     currency="VTHO"
+    hint="Minimum balance to be retained after the swap"
     disabled={disabled || !$wallet.connected}
     error={errors.reserveBalance[0]}
     bind:value={reserveBalance}
@@ -239,7 +241,7 @@
       intent="primary"
       disabled={disabled ||
         (storedConfig != null &&
-          storedConfig.triggerAmount === triggerAmount &&
+          storedConfig.triggerBalance === triggerBalance &&
           storedConfig.reserveBalance === reserveBalance)}
       fullWidth
     >
