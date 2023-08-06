@@ -113,7 +113,7 @@
         throw new Error("Wallet is not connected.");
       }
 
-      const decoded = await trader.methods.constant.configByAddress({
+      const decoded = await trader.methods.constant.addressToConfig({
         args: [$wallet.account],
       });
 
