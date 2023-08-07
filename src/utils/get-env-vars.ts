@@ -5,6 +5,7 @@
  * VTHO_CONTRACT_ADDRESS: string,
  * TRADER_CONTRACT_ADDRESS: Address,
  * GET_ACCOUNT_SWAPS_ENDPOINT: string,
+ * GET_STATS_ENDPOINT: string,
  * }} Environment variables
  */
 export function getEnvVars() {
@@ -13,6 +14,7 @@ export function getEnvVars() {
   const TRADER_CONTRACT_ADDRESS = import.meta.env.VITE_TRADER_CONTRACT_ADDRESS;
   const GET_ACCOUNT_SWAPS_ENDPOINT = import.meta.env
     .VITE_GET_ACCOUNT_SWAPS_ENDPOINT;
+  const GET_STATS_ENDPOINT = import.meta.env.VITE_GET_STATS_ENDPOINT;
 
   if (CHAIN_ID == null) {
     throw new Error("Missing env var CHAIN_ID");
@@ -26,11 +28,15 @@ export function getEnvVars() {
   if (GET_ACCOUNT_SWAPS_ENDPOINT == null) {
     throw new Error("Missing env var GET_ACCOUNT_SWAPS_ENDPOINT");
   }
+  if (GET_STATS_ENDPOINT == null) {
+    throw new Error("Missing env var GET_STATS_ENDPOINT");
+  }
 
   return {
     CHAIN_ID,
     VTHO_CONTRACT_ADDRESS,
     TRADER_CONTRACT_ADDRESS,
     GET_ACCOUNT_SWAPS_ENDPOINT,
+    GET_STATS_ENDPOINT,
   };
 }

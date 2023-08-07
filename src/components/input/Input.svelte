@@ -24,7 +24,10 @@
   $: hasError = error != null && error.length > 0;
 </script>
 
-<label for={id} class="{hasError ? 'text-danger' : 'text-accent'} text-sm space-y-1">
+<label
+  for={id}
+  class="{hasError ? 'text-danger' : 'text-accent'} text-sm space-y-1"
+>
   {label}
   <div class="relative">
     <input

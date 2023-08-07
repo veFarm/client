@@ -43,3 +43,14 @@ export type SwapDoc = {
   txId: string;
   timestamp: string;
 };
+
+export type Stats = {
+  /** Number of registered accounts */
+  accountsCount: number;
+  /** Number of swap operations performed by the protocol */
+  swapsCount: number;
+  /** Total VET amount transacted by the protocol */
+  vetTotal: string;
+  /** Total VTHO amount transacted by the protocol */
+  vthoTotal: string;
+};
