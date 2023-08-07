@@ -38,7 +38,8 @@ export type AbiOutput = {
 
 export type SwapDoc = {
   account: Address;
-  amountIn: string;
+  withdrawAmount: string;
   amountOut: string;
   txId: string;
+  timestamp: string;
 };

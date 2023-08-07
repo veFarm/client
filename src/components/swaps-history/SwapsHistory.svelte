@@ -52,7 +52,7 @@
   {:else}
     {#each swapTxs as tx}
       <SwapTx
-        amountIn={formatUnits(tx.amountIn, 18, 3)}
+        withdrawAmount={formatUnits(tx.withdrawAmount, 18, 3)}
         amountOut={formatUnits(tx.amountOut, 18, 5)}
         txId={tx.txId}
         explorerUrl={chain.explorers[0].url}
