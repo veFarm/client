@@ -25,3 +25,7 @@ dist-ssr
 
 # Reports
 src/report.html
+
+# Environment variables
+.env
+.env.localhost
