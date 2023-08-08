@@ -41,7 +41,7 @@ export type SwapDoc = {
   withdrawAmount: string;
   amountOut: string;
   txId: string;
-  timestamp: string;
+  blockTimestamp: number;
 };
 
 export type Stats = {

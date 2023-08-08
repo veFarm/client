@@ -55,6 +55,7 @@
         withdrawAmount={formatUnits(tx.withdrawAmount, 18, 3)}
         amountOut={formatUnits(tx.amountOut, 18, 5)}
         txId={tx.txId}
+        blockTimestamp={tx.blockTimestamp}
         explorerUrl={chain.explorers[0].url}
       />
     {/each}

@@ -35,8 +35,8 @@
   onMount(fetchStats);
 </script>
 
-<div class="hidden md:grid md:grid-cols-3 md:row-gap-8 md:mt-10 md:mx-auto">
+{#if !error}
   <StatItem value={stats.swapsCount} label="Trades" />
   <StatItem value={formatUnits(stats.vetTotal, 18, 2)} label="VET volume" />
   <StatItem value={stats.accountsCount} label="Accounts" />
-</div>
+{/if}

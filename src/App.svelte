@@ -33,7 +33,11 @@
           you will generate more VTHO which can then be traded for even more VET,
           and the cycle continues.
         </p> -->
-        <Stats />
+        <div
+          class="hidden md:grid md:grid-cols-3 md:row-gap-8 md:mt-10 md:mx-auto"
+        >
+          <Stats />
+        </div>
       </section>
       <section
         class="basis-1/2 border border-accent rounded-lg px-6 py-4 bg-white text-black space-y-4"
