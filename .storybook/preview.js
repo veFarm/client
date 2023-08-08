@@ -1,21 +1,21 @@
 import "../src/styles/app.css";
 
-export const decorators = [
-  (Story, { globals }) => {
-    console.log({ globals });
-    const themeMode =
-      globals?.backgrounds?.value == null ||
-      globals.backgrounds.value === "#F8F8F8"
-        ? "light"
-        : "dark";
+// The code below is messing with the story arguments
+// export const decorators = [
+//   (Story, { globals }) => {
+//     const themeMode =
+//       globals?.backgrounds?.value == null ||
+//       globals.backgrounds.value === "#F8F8F8"
+//         ? "light"
+//         : "dark";
 
-    themeMode === "light"
-      ? window.document.documentElement.classList.remove("dark")
-      : window.document.documentElement.classList.add("dark");
+//     themeMode === "light"
+//       ? window.document.documentElement.classList.remove("dark")
+//       : window.document.documentElement.classList.add("dark");
 
-    return Story;
-  },
-];
+//     return Story;
+//   },
+// ];
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },

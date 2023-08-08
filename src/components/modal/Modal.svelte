@@ -41,17 +41,17 @@
   <div class="backdrop" on:click={hide} />
   <dialog bind:this={dialog} on:keydown={handleKeyDown} on:cancel={hide}>
     <!-- Header -->
-    <div class="flex items-center px-6 py-4">
+    <div class="flex items-end px-6 py-4">
       <h3 class="text-background flex-1 text-center ml-6">
         <slot name="header" />
       </h3>
 
-      <button class="hover:bg-secondary-100 rounded-full p-1" on:click={hide}>
+      <button class="hover:bg-transparent/20 rounded-full p-1" on:click={hide}>
         <CloseIcon class="w-6 h-6 text-background" />
       </button>
     </div>
 
-    <Divider />
+    <Divider theme="light" />
 
     <!-- Body -->
     <div class="px-6 py-4">
@@ -59,22 +59,3 @@
     </div>
   </dialog>
 {/if}
-
-<style>
-  .backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-  }
-
-  dialog {
-    position: fixed;
-    top: 50%;
-    transform: translate(0%, -50%);
-    z-index: 9999;
-  }
-</style>

@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
 import { ConnexUtils } from "@/blockchain/connex-utils";
-import { chain } from "@/config"
+import { chain } from "@/config";
 
 function createStore() {
   const { subscribe, set } = writable<

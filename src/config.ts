@@ -1,6 +1,6 @@
 import { getEnvVars } from "@/utils/get-env-vars";
 
-const { CHAIN_ID } = getEnvVars()
+const { CHAIN_ID } = getEnvVars();
 
 /**
  * JavaScript CAIP-2 representation object.
@@ -158,6 +158,8 @@ export const CHAINS: Record<100009 | 100010, ChainData> = {
 // };
 
 export const chain = CHAINS[CHAIN_ID];
+
+export const VTHO_DECIMALS = 18;
 
 // TODO: check this value
 // OR export const MAX_UINT256 = new Big(2).pow(256).sub(1);
