@@ -14,9 +14,10 @@
 <Story
   name="Default"
   args={{
-    amountIn: "490",
+    withdrawAmount: "490",
     amountOut: "23.45",
     txId: "0x123",
+    blockTimestamp: 1691481210,
     explorerUrl: "https://some.url",
   }}
 />
