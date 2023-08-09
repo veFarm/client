@@ -1,5 +1,13 @@
 <script lang="ts">
+  import { chain, VTHO_DECIMALS } from "@/config";
+  import type { Contract } from "@/blockchain/connex-utils";
+  import { ConnexUtils } from "@/blockchain/connex-utils";
+  import type { AbiItem, SwapConfig } from "@/typings/types";
+  import * as traderArtifact from "@/abis/Trader.json";
   import { wallet } from "@/stores/wallet";
+  import { vtho } from "@/stores/vtho";
+  import { getEnvVars } from "@/utils/get-env-vars";
+  import { formatUnits } from "@/utils/format-units";
   import { Layout } from "@/components/layout";
   import { Divider } from "@/components/divider";
   import { Stats } from "@/components/stats";
@@ -7,7 +15,68 @@
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { AllowanceButton } from "@/components/allowance-button";
   import { SwapsHistory } from "@/components/swaps-history";
-  import { chain } from "@/config";
+
+  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
+
+  type ErrorFields = "network";
+  type Errors = Record<ErrorFields, string[]>;
+
+  /** Connex utils instance. */
+  let connexUtils: ConnexUtils | undefined;
+  /** Reference to the VeFarm Trader contract */
+  let trader: Contract | undefined;
+  /** Account target values stored in the Trader contract. */
+  let storedConfig: SwapConfig | undefined;
+  let storedConfigSet = false;
+  /** Errors object. */
+  let errors: Errors = {
+    network: [],
+  };
+
+  /**
+   * Fetch account's swap config from the Trader contract.
+   */
+  async function fetchConfig(): Promise<void> {
+    try {
+      if ($wallet.account == null || trader == null) {
+        throw new Error("Wallet is not connected.");
+      }
+
+      const decoded = await trader.methods.constant.addressToConfig({
+        args: [$wallet.account],
+      });
+
+      storedConfig = {
+        triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
+        reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
+      };
+    } catch (err: any) {
+      errors.network.push(err?.message || "Unknown error occurred.");
+    }
+  }
+
+  // Fetch account's config on wallet connection.
+  $: {
+    if ($wallet.connex != null) {
+      connexUtils = new ConnexUtils($wallet.connex);
+
+      trader = connexUtils.getContract(
+        traderArtifact.abi as AbiItem[],
+        TRADER_CONTRACT_ADDRESS,
+      );
+
+      fetchConfig();
+    }
+  }
+
+  $: storedConfigSet =
+    storedConfig != null &&
+    storedConfig.triggerBalance !== "0" &&
+    storedConfig.reserveBalance !== "0";
+
+  $: {
+    console.log({ storedConfig, storedConfigSet });
+  }
 </script>
 
 <Layout>
@@ -42,12 +111,16 @@
       <section
         class="basis-1/2 border border-accent rounded-lg px-6 py-4 bg-white text-black space-y-4"
       >
-        <!-- TODO: AllowanceButton should be disabled as long as targets are not set in contract -->
-        <ConfigForm />
+        {#if storedConfigSet && $vtho.allowance !== "0"}
+          <h1>All set!</h1>
+          <p>{JSON.stringify(storedConfig, null, 2)}</p>
+        {:else}
+          <ConfigForm {storedConfig} />
+        {/if}
         {#if !$wallet.connected}
           <ConnectWalletButton intent="primary" fullWidth />
         {:else}
-          <AllowanceButton />
+          <AllowanceButton disabled={!storedConfigSet} />
         {/if}
         <p class="text-center">Chain: {chain.name}</p>
       </section>

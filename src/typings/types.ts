@@ -54,3 +54,8 @@ export type Stats = {
   /** Total VTHO amount transacted by the protocol */
   vthoTotal: string;
 };
+
+export type SwapConfig = {
+  triggerBalance: string;
+  reserveBalance: string;
+};

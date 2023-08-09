@@ -1,27 +1,26 @@
 <script lang="ts">
   import type { Contract } from "@/blockchain/connex-utils";
-  import type { AbiItem } from "@/typings/types";
+  import type { AbiItem, SwapConfig } from "@/typings/types";
   import { ConnexUtils } from "@/blockchain/connex-utils";
   import * as traderArtifact from "@/abis/Trader.json";
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { parseUnits } from "@/utils/parse-units";
-  import { formatUnits } from "@/utils/format-units";
+  // import { formatUnits } from "@/utils/format-units";
   import { isNumber } from "@/utils/is-number";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
   import { VTHO_DECIMALS } from "@/config";
 
-  const { VTHO_CONTRACT_ADDRESS, TRADER_CONTRACT_ADDRESS } = getEnvVars();
+  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
   // See: https://blog.vechain.energy/how-to-swap-tokens-in-a-contract-c82082024aed
 
-  type SwapConfig = {
-    triggerBalance: string;
-    reserveBalance: string;
-  };
   type ErrorFields = "network" | "triggerBalance" | "reserveBalance";
   type Errors = Record<ErrorFields, string[]>;
+
+  /** Account target values stored in the Trader contract. */
+  export let storedConfig: SwapConfig | undefined;
 
   /** Connex utils instance. */
   let connexUtils: ConnexUtils | undefined;
@@ -39,8 +38,6 @@
   let triggerBalance = "";
   /** VTHO balance to be retained in the account after the swap. */
   let reserveBalance = "";
-  /** Account target values stored in the Trader contract. */
-  let storedConfig: SwapConfig | undefined;
   /** Hack to set targets once. */
   let runOnce = false;
 
@@ -104,24 +101,24 @@
   /**
    * Fetch account's swap config from the Trader contract.
    */
-  async function fetchConfig(): Promise<void> {
-    try {
-      if ($wallet.account == null || trader == null) {
-        throw new Error("Wallet is not connected.");
-      }
+  // async function fetchConfig(): Promise<void> {
+  //   try {
+  //     if ($wallet.account == null || trader == null) {
+  //       throw new Error("Wallet is not connected.");
+  //     }
 
-      const decoded = await trader.methods.constant.addressToConfig({
-        args: [$wallet.account],
-      });
+  //     const decoded = await trader.methods.constant.addressToConfig({
+  //       args: [$wallet.account],
+  //     });
 
-      storedConfig = {
-        triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
-        reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
-      };
-    } catch (err: any) {
-      errors.network.push(err?.message || "Unknown error occurred.");
-    }
-  }
+  //     storedConfig = {
+  //       triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
+  //       reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
+  //     };
+  //   } catch (err: any) {
+  //     errors.network.push(err?.message || "Unknown error occurred.");
+  //   }
+  // }
 
   /**
    * Store selected configuration into the Trader contract.
@@ -172,8 +169,6 @@
         traderArtifact.abi as AbiItem[],
         TRADER_CONTRACT_ADDRESS,
       );
-
-      fetchConfig();
     }
   }
 
@@ -234,7 +229,9 @@
       disabled={disabled ||
         (storedConfig != null &&
           storedConfig.triggerBalance === triggerBalance &&
-          storedConfig.reserveBalance === reserveBalance)}
+          storedConfig.reserveBalance === reserveBalance &&
+          triggerBalance !== "0" &&
+          reserveBalance !== "0")}
       fullWidth
     >
       Save Config

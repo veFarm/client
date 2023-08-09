@@ -34,7 +34,7 @@
 <Modal isOpen={$walletModal.isOpen} on:close={handleClose}>
   <svelte:fragment slot="header">Connect wallet</svelte:fragment>
   <svelte:fragment slot="body">
-    <p class="text-sm text-accent">
+    <p class="text-sm text-body">
       Connect with one of our available wallet providers.
     </p>
 
