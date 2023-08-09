@@ -2,9 +2,10 @@ import { writable, get } from "svelte/store";
 import type { Contract } from "@/blockchain/connex-utils";
 import type { AbiItem } from "@/typings/types";
 import { ConnexUtils } from "@/blockchain/connex-utils";
-import * as vthoArtifact from "@/abis/VTHO.json";
+import * as traderArtifact from "@/abis/Trader.json";
 import { getEnvVars } from "@/utils/get-env-vars";
 import { formatUnits } from "@/utils/format-units";
+import { parseUnits } from "@/utils/parse-units";
 import { wallet } from "@/stores/wallet";
 import { VTHO_DECIMALS } from "@/config";
 
@@ -12,7 +13,8 @@ type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
-  allowance: string;
+  triggerBalance: string;
+  reserveBalance: string;
   error: string | undefined;
 };
 
@@ -20,19 +22,20 @@ const initialState: State = {
   connexUtils: undefined,
   contract: undefined,
   account: undefined,
-  allowance: "0",
+  triggerBalance: "0",
+  reserveBalance: "0",
   error: undefined,
 };
 
-const { VTHO_CONTRACT_ADDRESS, TRADER_CONTRACT_ADDRESS } = getEnvVars();
+const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
 /**
- * Keeps track of vtho state for the current logged in account.
+ * Keeps track of trader state for the current logged in account.
  */
 function createStore() {
   const store = writable<State>({ ...initialState });
 
-  // Update vtho store based on wallet store changes.
+  // Update trader store based on wallet store changes.
   wallet.subscribe(async (data) => {
     // No connex present means wallet is disconnected.
     if (data.connex == null) {
@@ -46,19 +49,20 @@ function createStore() {
       const connexUtils = new ConnexUtils(connex);
 
       const contract = connexUtils.getContract(
-        vthoArtifact.abi as AbiItem[],
-        VTHO_CONTRACT_ADDRESS,
+        traderArtifact.abi as AbiItem[],
+        TRADER_CONTRACT_ADDRESS,
       );
 
-      const decoded = await contract.methods.constant.allowance({
-        args: [account, TRADER_CONTRACT_ADDRESS],
+      const decoded = await contract.methods.constant.addressToConfig({
+        args: [account],
       });
 
       store.set({
         connexUtils,
         contract,
         account,
-        allowance: formatUnits(decoded[0], VTHO_DECIMALS),
+        triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
+        reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
         error: undefined,
       });
     } catch (error) {
@@ -71,7 +75,7 @@ function createStore() {
 
   return {
     subscribe: store.subscribe,
-    fetchAllowance: async function (): Promise<void> {
+    fetchConfig: async function (): Promise<void> {
       try {
         const data = get(store);
 
@@ -81,13 +85,14 @@ function createStore() {
 
         const { contract, account } = data;
 
-        const decoded = await contract.methods.constant.allowance({
-          args: [account, TRADER_CONTRACT_ADDRESS],
+        const decoded = await contract.methods.constant.addressToConfig({
+          args: [account],
         });
 
         store.update((s) => ({
           ...s,
-          allowance: formatUnits(decoded[0], VTHO_DECIMALS),
+          triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
+          reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
         }));
       } catch (error) {
         store.update((s) => ({
@@ -96,9 +101,9 @@ function createStore() {
         }));
       }
     },
-    setAllowance: async function (
-      amount: string,
-      comment: string,
+    setConfig: async function (
+      triggerBalance: string,
+      reserveBalance: string,
     ): Promise<void> {
       try {
         const data = get(store);
@@ -109,13 +114,16 @@ function createStore() {
 
         const { contract, connexUtils } = data;
 
-        const response = await contract.methods.signed.approve({
-          args: [TRADER_CONTRACT_ADDRESS, amount],
-          comment,
+        const response = await contract.methods.signed.saveConfig({
+          args: [
+            parseUnits(triggerBalance, VTHO_DECIMALS),
+            parseUnits(reserveBalance, VTHO_DECIMALS),
+          ],
+          comment: "Save config values into the VeFarm contract.",
         });
 
         await connexUtils.waitForReceipt(response.txid);
-        await this.fetchAllowance();
+        await this.fetchConfig();
       } catch (error) {
         store.update((s) => ({
           ...s,
@@ -126,4 +134,4 @@ function createStore() {
   };
 }
 
-export const vtho = createStore();
+export const trader = createStore();

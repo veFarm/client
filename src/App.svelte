@@ -115,7 +115,7 @@
           <h1>All set!</h1>
           <p>{JSON.stringify(storedConfig, null, 2)}</p>
         {:else}
-          <ConfigForm {storedConfig} />
+          <ConfigForm />
         {/if}
         {#if !$wallet.connected}
           <ConnectWalletButton intent="primary" fullWidth />
