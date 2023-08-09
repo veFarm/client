@@ -2,7 +2,6 @@
   import type { Contract } from "@/blockchain/connex-utils";
   import type { AbiItem } from "@/typings/types";
   import { ConnexUtils } from "@/blockchain/connex-utils";
-  import * as vthoArtifact from "@/abis/VTHO.json";
   import * as traderArtifact from "@/abis/Trader.json";
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
@@ -26,8 +25,6 @@
 
   /** Connex utils instance. */
   let connexUtils: ConnexUtils | undefined;
-  /** Reference to the VTHO contract. */
-  let vtho: Contract | undefined;
   /** Reference to the VeFarm Trader contract */
   let trader: Contract | undefined;
   /** Form status. */
@@ -133,7 +130,7 @@
     disabled = true;
 
     try {
-      if (connexUtils == null || vtho == null || trader == null) {
+      if (connexUtils == null || trader == null) {
         throw new Error("Wallet is not connected.");
       }
 
@@ -170,11 +167,6 @@
   $: {
     if ($wallet.connex != null) {
       connexUtils = new ConnexUtils($wallet.connex);
-
-      vtho = connexUtils.getContract(
-        vthoArtifact.abi as AbiItem[],
-        VTHO_CONTRACT_ADDRESS,
-      );
 
       trader = connexUtils.getContract(
         traderArtifact.abi as AbiItem[],
