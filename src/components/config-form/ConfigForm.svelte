@@ -92,6 +92,7 @@
     // In case of errors, display on UI and return handler to parent component
     if (err.triggerBalance.length > 0 || err.reserveBalance.length > 0) {
       errors = err;
+      disabled = false;
       return;
     }
 

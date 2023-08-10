@@ -1,14 +1,11 @@
 <script lang="ts">
-  import { chain, VTHO_DECIMALS } from "@/config";
-  import type { Contract } from "@/blockchain/connex-utils";
-  import { ConnexUtils } from "@/blockchain/connex-utils";
-  import type { AbiItem, SwapConfig } from "@/typings/types";
-  import * as traderArtifact from "@/abis/Trader.json";
+  import {blur, fade, fly, scale, slide} from 'svelte/transition';
+  import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
-  import { getEnvVars } from "@/utils/get-env-vars";
-  import { formatUnits } from "@/utils/format-units";
+  import { trader } from "@/stores/trader";
   import { Layout } from "@/components/layout";
+  import {Button} from "@/components/button";
   import { Divider } from "@/components/divider";
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
@@ -16,67 +13,14 @@
   import { AllowanceButton } from "@/components/allowance-button";
   import { SwapsHistory } from "@/components/swaps-history";
 
-  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
+  type View = "INITIAL" | "ALERT" | "UPDATE"
 
-  type ErrorFields = "network";
-  type Errors = Record<ErrorFields, string[]>;
+  let view: View = "INITIAL";
 
-  /** Connex utils instance. */
-  let connexUtils: ConnexUtils | undefined;
-  /** Reference to the VeFarm Trader contract */
-  let trader: Contract | undefined;
-  /** Account target values stored in the Trader contract. */
-  let storedConfig: SwapConfig | undefined;
-  let storedConfigSet = false;
-  /** Errors object. */
-  let errors: Errors = {
-    network: [],
-  };
+  let swapConfigSet: boolean = false;
 
-  /**
-   * Fetch account's swap config from the Trader contract.
-   */
-  async function fetchConfig(): Promise<void> {
-    try {
-      if ($wallet.account == null || trader == null) {
-        throw new Error("Wallet is not connected.");
-      }
-
-      const decoded = await trader.methods.constant.addressToConfig({
-        args: [$wallet.account],
-      });
-
-      storedConfig = {
-        triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
-        reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
-      };
-    } catch (err: any) {
-      errors.network.push(err?.message || "Unknown error occurred.");
-    }
-  }
-
-  // Fetch account's config on wallet connection.
-  $: {
-    if ($wallet.connex != null) {
-      connexUtils = new ConnexUtils($wallet.connex);
-
-      trader = connexUtils.getContract(
-        traderArtifact.abi as AbiItem[],
-        TRADER_CONTRACT_ADDRESS,
-      );
-
-      fetchConfig();
-    }
-  }
-
-  $: storedConfigSet =
-    storedConfig != null &&
-    storedConfig.triggerBalance !== "0" &&
-    storedConfig.reserveBalance !== "0";
-
-  $: {
-    console.log({ storedConfig, storedConfigSet });
-  }
+  $: swapConfigSet =
+    $trader.triggerBalance !== "0" && $trader.reserveBalance !== "0";
 </script>
 
 <Layout>
@@ -92,8 +36,9 @@
         <p class="text-gray-300 mt-4">
           Select your swap configuration and allow the VeFarm contract to spend
           your VTHO. After which the contract will periodically withdraw VTHO
-          from your account, perform a swap for VET tokens through a DEX, and
-          return the resulting tokens back to your wallet.
+          from your account, perform a swap for VET tokens through a
+          decentralized exchange (DEX), and return the resulting tokens back to
+          your wallet.
         </p>
         <!-- <p class="text-gray-400">
           VTHO is a token on VeChain, which is generated automatically when you
@@ -111,16 +56,27 @@
       <section
         class="basis-1/2 border border-accent rounded-lg px-6 py-4 bg-white text-black space-y-4"
       >
-        {#if storedConfigSet && $vtho.allowance !== "0"}
-          <h1>All set!</h1>
-          <p>{JSON.stringify(storedConfig, null, 2)}</p>
+        {#if swapConfigSet && $vtho.allowance !== "0"}
+          <div class="bg-green-50 border rounded-lg border-green-300 p-4" transition:slide>
+            <h2 class="text-green-700 text-center">
+              Great! We&apos;re all set.
+            </h2>
+            <p class="text-green-700 mt-2">
+              The VeFarm contract is configured to exchange VTHO for VET when your account
+              balance reaches <b>{$trader.triggerBalance}&nbsp;VTHO</b>. It will swap the
+              maximum possible amount while maintaining a reserve balance of <b>{$trader.reserveBalance}&nbsp;VTHO</b> in your account.
+            </p>
+          </div>
+          <Button intent="primary" fullWidth>
+            Update Configuration
+          </Button>
         {:else}
           <ConfigForm />
         {/if}
         {#if !$wallet.connected}
           <ConnectWalletButton intent="primary" fullWidth />
         {:else}
-          <AllowanceButton disabled={!storedConfigSet} />
+          <AllowanceButton disabled={!swapConfigSet} />
         {/if}
         <p class="text-center">Chain: {chain.name}</p>
       </section>
