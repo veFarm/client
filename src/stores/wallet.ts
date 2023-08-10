@@ -27,14 +27,11 @@ const initialState: State = {
 function createStore() {
   const store = writable<State>({ ...initialState });
 
-  // let connectedWalletId: WalletId | undefined;
-
   // Update wallet store based on Sync2 store changes.
   sync2.subscribe(async (data) => {
     // No data present means Sync2 is disconnected.
     if (data == null) {
       store.set({ ...initialState });
-      // connectedWalletId = undefined;
       return;
     }
 
