@@ -26,7 +26,7 @@
 
 <label
   for={id}
-  class="{hasError ? 'text-danger' : 'text-accent'} text-sm space-y-1"
+  class="{hasError ? 'text-danger' : 'text-background'} text-base space-y-1"
 >
   {label}
   <div class="relative">
@@ -53,7 +53,7 @@
     {/if}
   </div>
   {#if hint.length > 0}
-    <legend>{hint}</legend>
+    <legend class="text-xs text-accent">{hint}</legend>
   {/if}
   {#if hasError}
     <legend>{error}</legend>

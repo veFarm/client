@@ -1,9 +1,16 @@
 <script lang="ts">
+  import { VTHO_TOTAL_SUPPLY } from "@/config";
   import { wallet } from "@/stores/wallet";
+  import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
   import { isNumber } from "@/utils/is-number";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
+  import { ConnectWalletButton } from "@/components/connect-wallet-button";
+
+  type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "UPDATE_CONFIG";
+
+  export let variant: Variant;
 
   type ErrorFields = "triggerBalance" | "reserveBalance";
   type Errors = Record<ErrorFields, string[]>;
@@ -96,7 +103,16 @@
       return;
     }
 
-    await trader.setConfig(triggerBalance, reserveBalance);
+    if (!inputsMatchStore) {
+      await trader.setConfig(triggerBalance, reserveBalance);
+    }
+
+    if (variant === "CONFIG_AND_APPROVE") {
+      await vtho.setAllowance(
+        VTHO_TOTAL_SUPPLY,
+        "Allow VeFarm to spend your VTHO in exchange for VET.",
+      );
+    }
 
     await wallet.refetchBalance();
 
@@ -111,6 +127,14 @@
       runOnce = true;
     }
   }
+
+  let inputsMatchStore: boolean | undefined;
+
+  $: inputsMatchStore =
+    $trader.triggerBalance === triggerBalance &&
+    $trader.reserveBalance === reserveBalance &&
+    triggerBalance !== "0" &&
+    reserveBalance !== "0";
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
@@ -122,7 +146,7 @@
     currency="VTHO"
     subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
     hint="Minimum balance to initiate a swap"
-    disabled={disabled || !$wallet.connected}
+    disabled={disabled || variant === "LOGIN"}
     error={errors.triggerBalance[0]}
     bind:value={triggerBalance}
     on:input={() => {
@@ -135,8 +159,8 @@
     label="Reserve Balance"
     placeholder={$trader.reserveBalance || "0"}
     currency="VTHO"
-    hint="Minimum balance to be retained after the swap"
-    disabled={disabled || !$wallet.connected}
+    hint="Minimum balance to be maintained in your account after the swap"
+    disabled={disabled || variant === "LOGIN"}
     error={errors.reserveBalance[0]}
     bind:value={reserveBalance}
     on:input={() => {
@@ -145,27 +169,42 @@
   />
 
   <!-- TODO: move to it's out compoent and use a slot to insert -->
-  <p class="text-background">
+  <!-- <p class="text-background">
     Minimum Received
     <br />
     Fees
     <br />
     Next Trade
-  </p>
+  </p> -->
+  {#if variant === "LOGIN"}
+    <ConnectWalletButton intent="primary" fullWidth />
+  {/if}
 
-  {#if $wallet.connected}
+  {#if variant === "CONFIG_AND_APPROVE"}
     <Button
       type="submit"
       intent="primary"
       disabled={disabled ||
-        ($trader.triggerBalance === triggerBalance &&
-          $trader.reserveBalance === reserveBalance &&
-          triggerBalance !== "0" &&
-          reserveBalance !== "0")}
+        parseInt(triggerBalance, 10) === 0 ||
+        triggerBalance === "" ||
+        parseInt(reserveBalance, 10) === 0 ||
+        reserveBalance === ""}
       loading={disabled}
       fullWidth
     >
-      Save Config
+      Approve Spending
+    </Button>
+  {/if}
+
+  {#if variant === "UPDATE_CONFIG"}
+    <Button
+      type="submit"
+      intent="primary"
+      disabled={disabled || inputsMatchStore}
+      loading={disabled}
+      fullWidth
+    >
+      Update Configuration
     </Button>
   {/if}
 
