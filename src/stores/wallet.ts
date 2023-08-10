@@ -64,7 +64,12 @@ function createStore() {
   return {
     subscribe: store.subscribe,
     connect: async function (walletId: WalletId): Promise<void> {
-      store.update((s) => ({ ...s, loading: true, error: undefined }));
+      store.update((s) => ({
+        ...s,
+        loading: true,
+        error: undefined,
+        walletId,
+      }));
 
       try {
         if (walletId !== "sync2") {
@@ -73,12 +78,12 @@ function createStore() {
 
         if (walletId === "sync2") {
           await sync2.connect();
-          store.update((s) => ({...s, walletId: "sync2"}));
         }
       } catch (error) {
         store.update((s) => ({
           ...s,
           error: error?.message || "Unknown error occurred.",
+          walletId: undefined,
         }));
       } finally {
         store.update((s) => ({ ...s, loading: false }));

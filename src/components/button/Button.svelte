@@ -2,12 +2,13 @@
   import type { HTMLButtonAttributes } from "svelte/elements";
   import type { VariantProps } from "class-variance-authority";
   import { cva } from "class-variance-authority";
-  import {Spinner} from "@/components/spinner"
+  import { Spinner } from "@/components/spinner";
 
   type ButtonVariantProps = VariantProps<typeof buttonVariants>;
-  type $$Props = HTMLButtonAttributes & ButtonVariantProps & {
-    loading?: boolean;
-  };
+  type $$Props = HTMLButtonAttributes &
+    ButtonVariantProps & {
+      loading?: boolean;
+    };
 
   export let intent: ButtonVariantProps["intent"] = "secondary";
   export let size: ButtonVariantProps["size"] = "medium";
@@ -79,5 +80,6 @@
     class: $$props.class,
   })}
 >
-  {#if loading}<Spinner />{/if} <slot />
+  {#if loading}<Spinner />{/if}
+  <slot />
 </button>

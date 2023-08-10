@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { blur, fade, fly, scale, slide } from "svelte/transition";
+  import { slide } from "svelte/transition";
   import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
@@ -62,7 +62,7 @@
         </div>
       </section>
       <section
-        class="basis-1/2 border border-accent rounded-lg px-6 py-4 bg-white text-black space-y-4"
+        class="basis-1/2 border border-accent rounded-lg p-3 md:px-6 md:py-4 bg-white text-black space-y-4"
       >
         {#if view === "INITIAL"}
           <div class="space-y-4">
@@ -70,7 +70,7 @@
             {#if !$wallet.connected}
               <ConnectWalletButton intent="primary" fullWidth />
             {:else}
-            <!-- TODO: or stored value doesn't match form value, disable allowance button -->
+              <!-- TODO: or stored value doesn't match form value, disable allowance button -->
               <AllowanceButton disabled={!swapConfigSet} />
             {/if}
           </div>
