@@ -3,7 +3,18 @@
   import { wallet } from "@/stores/wallet";
   import { walletModal } from "@/stores/wallet-modal";
   import { Modal } from "@/components/modal";
-  import { WalletProviders } from "@/components/wallet-providers";
+  import { Button } from "@/components/button";
+  import Sync2Icon from "@/assets/Sync2.svg";
+  import VeWorldIcon from "@/assets/VeWorld.svg";
+
+  const WALLET_PROVIDERS: {
+    id: WalletId;
+    label: string;
+    icon: string;
+  }[] = [
+    { id: "sync2", label: "Sync2", icon: Sync2Icon },
+    { id: "ve_world", label: "VeWorld", icon: VeWorldIcon },
+  ];
 
   let error: string | undefined;
 
@@ -12,14 +23,9 @@
     error = undefined;
   }
 
-  async function handleConnect(event: CustomEvent) {
+  async function handleConnect(walletId: WalletId) {
     error = undefined;
-
-    try {
-      await wallet.connect(event.detail.walletId as WalletId);
-    } catch (error_: any) {
-      error = error_?.message || "Unknown error occurred.";
-    }
+    await wallet.connect(walletId);
   }
 
   $: error = $wallet.error;
@@ -34,12 +40,25 @@
 <Modal isOpen={$walletModal.isOpen} on:close={handleClose}>
   <svelte:fragment slot="header">Connect wallet</svelte:fragment>
   <svelte:fragment slot="body">
-    <p class="text-sm text-accent">
+    <p class="text-sm text-body">
       Connect with one of our available wallet providers.
     </p>
 
     <div class="flex flex-col space-y-3 my-4">
-      <WalletProviders disabled={$wallet.loading} on:connect={handleConnect} />
+      {#each WALLET_PROVIDERS as { id, label, icon }}
+        <Button
+          fullWidth
+          disabled={$wallet.loading}
+          loading={$wallet.walletId === id && $wallet.loading}
+          class="flex items-center justify-center space-x-3"
+          on:click={() => {
+            handleConnect(id);
+          }}
+        >
+          <img src={icon} class="h-5" alt={`${label} icon`} />
+          <span class="text-center">{label}</span>
+        </Button>
+      {/each}
     </div>
 
     {#if error != null}

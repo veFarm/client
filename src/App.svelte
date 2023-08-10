@@ -1,13 +1,34 @@
 <script lang="ts">
+  import { slide } from "svelte/transition";
+  import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
+  import { vtho } from "@/stores/vtho";
+  import { trader } from "@/stores/trader";
   import { Layout } from "@/components/layout";
+  import { Button } from "@/components/button";
   import { Divider } from "@/components/divider";
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { AllowanceButton } from "@/components/allowance-button";
   import { SwapsHistory } from "@/components/swaps-history";
-  import { chain } from "@/config";
+
+  type View = "INITIAL" | "ALERT" | "UPDATE";
+
+  let view: View = "INITIAL";
+
+  let swapConfigSet: boolean = false;
+
+  $: swapConfigSet =
+    $trader.triggerBalance !== "0" && $trader.reserveBalance !== "0";
+
+  $: {
+    if (!$wallet.connected || !swapConfigSet || $vtho.allowance === "0") {
+      view = "INITIAL";
+    } else if (swapConfigSet && $vtho.allowance !== "0") {
+      view = "ALERT";
+    }
+  }
 </script>
 
 <Layout>
@@ -23,8 +44,9 @@
         <p class="text-gray-300 mt-4">
           Select your swap configuration and allow the VeFarm contract to spend
           your VTHO. After which the contract will periodically withdraw VTHO
-          from your account, perform a swap for VET tokens through a DEX, and
-          return the resulting tokens back to your wallet.
+          from your account, perform a swap for VET tokens through a
+          decentralized exchange (DEX), and return the resulting tokens back to
+          your wallet.
         </p>
         <!-- <p class="text-gray-400">
           VTHO is a token on VeChain, which is generated automatically when you
@@ -40,14 +62,57 @@
         </div>
       </section>
       <section
-        class="basis-1/2 border border-accent rounded-lg px-6 py-4 bg-white text-black space-y-4"
+        class="basis-1/2 border border-accent rounded-lg p-3 md:px-6 md:py-4 bg-white text-black space-y-4"
       >
-        <!-- TODO: AllowanceButton should be disabled as long as targets are not set in contract -->
-        <ConfigForm />
-        {#if !$wallet.connected}
-          <ConnectWalletButton intent="primary" fullWidth />
-        {:else}
-          <AllowanceButton />
+        {#if view === "INITIAL"}
+          <div class="space-y-4">
+            <ConfigForm />
+            {#if !$wallet.connected}
+              <ConnectWalletButton intent="primary" fullWidth />
+            {:else}
+              <!-- TODO: or stored value doesn't match form value, disable allowance button -->
+              <AllowanceButton disabled={!swapConfigSet} />
+            {/if}
+          </div>
+        {/if}
+
+        {#if view === "ALERT"}
+          <div class="space-y-4" transition:slide>
+            <div class="bg-green-50 border rounded-lg border-green-300 p-4">
+              <h2 class="text-green-700 text-center">
+                Great! We&apos;re all set.
+              </h2>
+              <p class="text-green-700 mt-2">
+                The VeFarm contract is configured to exchange VTHO for VET when
+                your account balance reaches <b
+                  >{$trader.triggerBalance}&nbsp;VTHO</b
+                >. It will swap the maximum possible amount while maintaining a
+                reserve balance of <b>{$trader.reserveBalance}&nbsp;VTHO</b> in your
+                account.
+              </p>
+            </div>
+            <Button
+              intent="primary"
+              fullWidth
+              on:click={() => {
+                view = "UPDATE";
+              }}>Update Configuration</Button
+            >
+            <AllowanceButton disabled={!swapConfigSet} />
+          </div>
+        {/if}
+
+        {#if view === "UPDATE"}
+          <div class="space-y-4" transition:slide>
+            <ConfigForm />
+            <Button
+              intent="secondary"
+              fullWidth
+              on:click={() => {
+                view = "ALERT";
+              }}>Cancel</Button
+            >
+          </div>
         {/if}
         <p class="text-center">Chain: {chain.name}</p>
       </section>

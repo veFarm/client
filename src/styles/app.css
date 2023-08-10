@@ -81,7 +81,7 @@ input:disabled {
 
 /* Dialog */
 dialog {
-  @apply p-0 bg-highlight border rounded-lg z-10;
+  @apply p-0 bg-highlight border border-muted rounded-lg z-10;
   position: fixed;
   top: 50%;
   transform: translate(0%, -50%);
