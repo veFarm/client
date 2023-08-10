@@ -25,7 +25,6 @@
 
   async function handleConnect(walletId: WalletId) {
     error = undefined;
-
     await wallet.connect(walletId);
   }
 
