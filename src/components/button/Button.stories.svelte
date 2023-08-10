@@ -61,3 +61,11 @@
     disabled: true,
   }}
 />
+
+<Story
+  name="Loading"
+  args={{
+    disabled: true,
+    loading: true,
+  }}
+/>

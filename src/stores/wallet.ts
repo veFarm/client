@@ -11,6 +11,7 @@ type State = {
   connected: boolean;
   account: Address | undefined;
   balance: { vet: string; vtho: string } | undefined;
+  walletId: WalletId | undefined;
 };
 
 const initialState: State = {
@@ -20,23 +21,25 @@ const initialState: State = {
   connected: false,
   account: undefined,
   balance: undefined,
+  walletId: undefined,
 };
 
 function createStore() {
   const store = writable<State>({ ...initialState });
 
-  let connectedWalletId: WalletId | undefined;
+  // let connectedWalletId: WalletId | undefined;
 
   // Update wallet store based on Sync2 store changes.
   sync2.subscribe(async (data) => {
     // No data present means Sync2 is disconnected.
     if (data == null) {
       store.set({ ...initialState });
-      connectedWalletId = undefined;
+      // connectedWalletId = undefined;
       return;
     }
 
     // Sync2 is connected.
+    // TODO: store on localstore
     try {
       const { connex, account } = data;
       const connexUtils = new ConnexUtils(connex);
@@ -48,6 +51,7 @@ function createStore() {
         connected: true,
         account,
         balance: await connexUtils.fetchBalance(account),
+        walletId: "sync2",
       });
     } catch (error) {
       store.update((s) => ({
@@ -69,7 +73,7 @@ function createStore() {
 
         if (walletId === "sync2") {
           await sync2.connect();
-          connectedWalletId = "sync2";
+          store.update((s) => ({...s, walletId: "sync2"}));
         }
       } catch (error) {
         store.update((s) => ({
@@ -81,12 +85,10 @@ function createStore() {
       }
     },
     disconnect: function (): void {
-      // TODO: can't we store the id inside the store itself or
-      // add a reference to the connected store like
-      // store.connectedWallet = sync2
-      // then we do store.connectedWallet.disconnect()
+      const data = get(store);
+
       // TODO: clear localStorage
-      if (connectedWalletId === "sync2") {
+      if (data.walletId === "sync2") {
         sync2.disconnect();
       }
     },

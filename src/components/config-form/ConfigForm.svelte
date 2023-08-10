@@ -162,6 +162,7 @@
           $trader.reserveBalance === reserveBalance &&
           triggerBalance !== "0" &&
           reserveBalance !== "0")}
+      loading={disabled}
       fullWidth
     >
       Save Config

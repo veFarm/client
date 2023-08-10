@@ -4,7 +4,9 @@
   import { Button } from "@/components/button";
 
   /** Button status */
-  export let disabled = false;
+  export let disabled: boolean = false;
+
+  let loading: boolean = false;
 
   /**
    * Approve or revoke the Trader's allowance to spend VTHO on behalf
@@ -12,10 +14,12 @@
    */
   async function handleClick(amount: string, comment: string): Promise<void> {
     disabled = true;
+    loading = true;
 
     await vtho.setAllowance(amount, comment);
 
     disabled = false;
+    loading = false;
   }
 </script>
 
@@ -23,6 +27,7 @@
   <Button
     intent="primary"
     {disabled}
+    {loading}
     fullWidth
     on:click={() => {
       handleClick(
@@ -37,6 +42,7 @@
   <Button
     intent="danger"
     {disabled}
+    {loading}
     fullWidth
     on:click={() => {
       handleClick(

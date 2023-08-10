@@ -5,6 +5,8 @@
   import { Modal } from "@/components/modal";
   import { WalletProviders } from "@/components/wallet-providers";
 
+  // TODO: move WalletProviders into WalletModal
+  // TODO: use $wallet.walletId to add a loading state to the clicked button.
   let error: string | undefined;
 
   function handleClose() {
