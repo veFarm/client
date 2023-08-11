@@ -32,7 +32,7 @@
     on:click={() => {
       handleClick(
         VTHO_TOTAL_SUPPLY,
-        "Allow VeFarm to spend your VTHO in exchange for VET.",
+        "Allow the VeFarm contract to spend your VTHO in exchange for VET.",
       );
     }}
   >
@@ -47,7 +47,7 @@
     on:click={() => {
       handleClick(
         "0",
-        "VeFarm will no longer be able to spend your VTHO in exchange for VET.",
+        "The VeFarm contract will no longer be able to spend your VTHO in exchange for VET.",
       );
     }}
   >

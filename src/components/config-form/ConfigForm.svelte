@@ -1,9 +1,20 @@
 <script lang="ts">
+  import { VTHO_DECIMALS, VTHO_TOTAL_SUPPLY } from "@/config";
   import { wallet } from "@/stores/wallet";
+  import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
+  import { getEnvVars } from "@/utils/get-env-vars";
   import { isNumber } from "@/utils/is-number";
+  import { parseUnits } from "@/utils/parse-units";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
+  import { ConnectWalletButton } from "@/components/connect-wallet-button";
+
+  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
+
+  type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "UPDATE_CONFIG";
+
+  export let variant: Variant;
 
   type ErrorFields = "triggerBalance" | "reserveBalance";
   type Errors = Record<ErrorFields, string[]>;
@@ -96,21 +107,71 @@
       return;
     }
 
-    await trader.setConfig(triggerBalance, reserveBalance);
+    const clauses: Connex.VM.Clause[] = [];
+    const comments: string[] = ["Please approve the following action(s):"];
 
-    await wallet.refetchBalance();
+    if (!inputsMatchStore) {
+      clauses.push(
+        trader.getClause("saveConfig")!([
+          parseUnits(triggerBalance, VTHO_DECIMALS),
+          parseUnits(reserveBalance, VTHO_DECIMALS),
+        ]),
+      );
+
+      comments.push("Save configuration values into the VeFarm contract.");
+    }
+
+    if (variant === "CONFIG_AND_APPROVE") {
+      clauses.push(
+        vtho.getClause("approve")!([
+          TRADER_CONTRACT_ADDRESS,
+          VTHO_TOTAL_SUPPLY,
+        ]),
+      );
+
+      comments.push(
+        "Allow the VeFarm contract to spend your VTHO in exchange for VET.",
+      );
+    }
+
+    // TODO: expose signTx and waitForReceipt from wallet store methods
+    const response = await $wallet.connexUtils!.signTx(
+      clauses,
+      $wallet.account!,
+      comments.join(" "),
+    );
+    await $wallet.connexUtils!.waitForReceipt(response.txid);
+    await trader.fetchConfig();
+    await wallet.fetchBalance();
 
     disabled = false;
   }
 
   // Set stored config values on login.
   $: {
-    if ($trader.contract != null && !runOnce) {
+    if (
+      $trader.contract != null &&
+      $trader.triggerBalance !== "0" &&
+      $trader.reserveBalance !== "0" &&
+      !runOnce
+    ) {
       triggerBalance = $trader.triggerBalance;
       reserveBalance = $trader.reserveBalance;
       runOnce = true;
     }
   }
+
+  // Allow for numbers only.
+  $: triggerBalance = triggerBalance.replace(/\D+/g, "");
+  $: reserveBalance = reserveBalance.replace(/\D+/g, "");
+
+  let inputsMatchStore: boolean | undefined;
+
+  $: inputsMatchStore =
+    $trader.triggerBalance === triggerBalance &&
+    $trader.reserveBalance === reserveBalance &&
+    triggerBalance !== "0" &&
+    reserveBalance !== "0";
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
@@ -122,7 +183,7 @@
     currency="VTHO"
     subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
     hint="Minimum balance to initiate a swap"
-    disabled={disabled || !$wallet.connected}
+    disabled={disabled || variant === "LOGIN"}
     error={errors.triggerBalance[0]}
     bind:value={triggerBalance}
     on:input={() => {
@@ -135,8 +196,8 @@
     label="Reserve Balance"
     placeholder={$trader.reserveBalance || "0"}
     currency="VTHO"
-    hint="Minimum balance to be retained after the swap"
-    disabled={disabled || !$wallet.connected}
+    hint="Minimum balance to be maintained in your account after the swap"
+    disabled={disabled || variant === "LOGIN"}
     error={errors.reserveBalance[0]}
     bind:value={reserveBalance}
     on:input={() => {
@@ -145,27 +206,41 @@
   />
 
   <!-- TODO: move to it's out compoent and use a slot to insert -->
-  <p class="text-background">
+  <!-- <p class="text-background">
     Minimum Received
     <br />
     Fees
     <br />
     Next Trade
-  </p>
+  </p> -->
+  {#if variant === "LOGIN"}
+    <ConnectWalletButton intent="primary" fullWidth />
+  {/if}
 
-  {#if $wallet.connected}
+  {#if variant === "CONFIG_AND_APPROVE"}
+    <Button
+      type="submit"
+      intent="primary"
+      disabled={disabled || triggerBalance === "" || reserveBalance === ""}
+      loading={disabled}
+      fullWidth
+    >
+      Approve Spending
+    </Button>
+  {/if}
+
+  {#if variant === "UPDATE_CONFIG"}
     <Button
       type="submit"
       intent="primary"
       disabled={disabled ||
-        ($trader.triggerBalance === triggerBalance &&
-          $trader.reserveBalance === reserveBalance &&
-          triggerBalance !== "0" &&
-          reserveBalance !== "0")}
+        triggerBalance === "" ||
+        reserveBalance === "" ||
+        inputsMatchStore}
       loading={disabled}
       fullWidth
     >
-      Save Config
+      Update Configuration
     </Button>
   {/if}
 

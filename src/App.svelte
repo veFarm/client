@@ -9,13 +9,12 @@
   import { Divider } from "@/components/divider";
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
-  import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { AllowanceButton } from "@/components/allowance-button";
   import { SwapsHistory } from "@/components/swaps-history";
 
-  type View = "INITIAL" | "ALERT" | "UPDATE";
+  type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
-  let view: View = "INITIAL";
+  let view: View = "LOGIN";
 
   let swapConfigSet: boolean = false;
 
@@ -23,10 +22,12 @@
     $trader.triggerBalance !== "0" && $trader.reserveBalance !== "0";
 
   $: {
-    if (!$wallet.connected || !swapConfigSet || $vtho.allowance === "0") {
-      view = "INITIAL";
+    if (!$wallet.connected) {
+      view = "LOGIN";
+    } else if (!swapConfigSet || $vtho.allowance === "0") {
+      view = "CONFIG_AND_APPROVE";
     } else if (swapConfigSet && $vtho.allowance !== "0") {
-      view = "ALERT";
+      view = "SUMMARY";
     }
   }
 </script>
@@ -36,7 +37,7 @@
     <div
       class="
       flex flex-col items-center space-y-8
-      md:flex-row md:space-y-0 md:space-x-8
+      lg:flex-row lg:space-y-0 lg:space-x-8
     "
     >
       <section class="basis-1/2 self-start">
@@ -44,43 +45,33 @@
         <p class="text-gray-300 mt-4">
           Select your swap configuration and allow the VeFarm contract to spend
           your VTHO. After which the contract will periodically withdraw VTHO
-          from your account, perform a swap for VET tokens through a
-          decentralized exchange (DEX), and return the resulting tokens back to
-          your wallet.
+          from your account, perform a swap for VET tokens through a DEX, and
+          return the resulting tokens back to your wallet.
         </p>
-        <!-- <p class="text-gray-400">
-          VTHO is a token on VeChain, which is generated automatically when you
-          hold VET. Therefore, one way to increase your VET balance is by
-          exchanging earned VTHO tokens for VET on a regular basis. By doing so,
-          you will generate more VTHO which can then be traded for even more VET,
-          and the cycle continues.
-        </p> -->
         <div
-          class="hidden md:grid md:grid-cols-3 md:row-gap-8 md:mt-10 md:mx-auto"
+          class="hidden lg:grid lg:grid-cols-3 lg:row-gap-8 lg:mt-10 lg:mx-auto"
         >
           <Stats />
         </div>
       </section>
       <section
-        class="basis-1/2 border border-accent rounded-lg p-3 md:px-6 md:py-4 bg-white text-black space-y-4"
+        class="basis-1/2 max-w-lg border border-accent rounded-lg p-3 lg:p-6 bg-white text-black space-y-4"
       >
-        {#if view === "INITIAL"}
-          <div class="space-y-4">
-            <ConfigForm />
-            {#if !$wallet.connected}
-              <ConnectWalletButton intent="primary" fullWidth />
-            {:else}
-              <!-- TODO: or stored value doesn't match form value, disable allowance button -->
-              <AllowanceButton disabled={!swapConfigSet} />
-            {/if}
-          </div>
+        {#if view === "LOGIN"}
+          <ConfigForm variant="LOGIN" />
         {/if}
 
-        {#if view === "ALERT"}
-          <div class="space-y-4" transition:slide>
-            <div class="bg-green-50 border rounded-lg border-green-300 p-4">
+        {#if view === "CONFIG_AND_APPROVE"}
+          <ConfigForm variant="CONFIG_AND_APPROVE" />
+        {/if}
+
+        {#if view === "SUMMARY"}
+          <div class="space-y-4">
+            <div
+              class="bg-green-50 border rounded-lg border-green-300 p-3 lg:p-6"
+            >
               <h2 class="text-green-700 text-center">
-                Great! We&apos;re all set.
+                Great! We&apos;re&nbsp;all&nbsp;set.
               </h2>
               <p class="text-green-700 mt-2">
                 The VeFarm contract is configured to exchange VTHO for VET when
@@ -95,25 +86,30 @@
               intent="primary"
               fullWidth
               on:click={() => {
-                view = "UPDATE";
-              }}>Update Configuration</Button
+                view = "UPDATE_CONFIG";
+              }}
             >
+              Update Configuration
+            </Button>
             <AllowanceButton disabled={!swapConfigSet} />
           </div>
         {/if}
 
-        {#if view === "UPDATE"}
-          <div class="space-y-4" transition:slide>
-            <ConfigForm />
+        {#if view === "UPDATE_CONFIG"}
+          <div class="space-y-4">
+            <ConfigForm variant="UPDATE_CONFIG" />
             <Button
               intent="secondary"
               fullWidth
               on:click={() => {
-                view = "ALERT";
-              }}>Cancel</Button
+                view = "SUMMARY";
+              }}
             >
+              Cancel
+            </Button>
           </div>
         {/if}
+
         <p class="text-center">Chain: {chain.name}</p>
       </section>
     </div>

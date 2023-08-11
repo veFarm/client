@@ -1,11 +1,11 @@
 import { writable, get } from "svelte/store";
-import type { Connex } from "@vechain/connex";
+// import type { Connex } from "@vechain/connex";
 import type { WalletId } from "@/typings/types";
-import { ConnexUtils } from "@/blockchain/connex-utils";
+import type { ConnexUtils } from "@/blockchain/connex-utils";
 import { sync2 } from "@/stores/sync2";
 
 type State = {
-  connex: Connex | undefined;
+  connexUtils: ConnexUtils | undefined;
   loading: boolean;
   error: string | undefined;
   connected: boolean;
@@ -15,7 +15,7 @@ type State = {
 };
 
 const initialState: State = {
-  connex: undefined,
+  connexUtils: undefined,
   loading: false,
   error: undefined,
   connected: false,
@@ -38,11 +38,10 @@ function createStore() {
     // Sync2 is connected.
     // TODO: store on localstore
     try {
-      const { connex, account } = data;
-      const connexUtils = new ConnexUtils(connex);
+      const { connexUtils, account } = data;
 
       store.set({
-        connex,
+        connexUtils,
         loading: false,
         error: undefined,
         connected: true,
@@ -94,17 +93,15 @@ function createStore() {
         sync2.disconnect();
       }
     },
-    refetchBalance: async function (): Promise<void> {
+    fetchBalance: async function (): Promise<void> {
       try {
         const data = get(store);
 
-        if (data?.connex == null || data?.account == null) {
+        if (data?.connexUtils == null || data?.account == null) {
           throw new Error("Wallet is not connected.");
         }
 
-        const { connex, account } = data;
-
-        const connexUtils = new ConnexUtils(connex);
+        const { connexUtils, account } = data;
 
         const balance = await connexUtils.fetchBalance(account);
 

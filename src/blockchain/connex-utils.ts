@@ -5,17 +5,12 @@ import type { AbiItem } from "@/typings/types";
 
 export type Contract = {
   methods: {
-    constant: Record<string, ({ args }: { args: any[] }) => Promise<any>>;
+    constant: Record<string, (args: any[]) => Promise<any>>;
     signed: Record<
       string,
-      ({
-        comment,
-        args,
-      }: {
-        comment: string;
-        args: any[];
-      }) => Promise<Connex.Vendor.TxResponse>
+      (args: any[], comment: string) => Promise<Connex.Vendor.TxResponse>
     >;
+    clause: Record<string, (args: any[]) => Connex.VM.Clause>;
   };
   events: Record<string, Connex.Thor.Account.Event>;
 };
@@ -40,12 +35,13 @@ export class ConnexUtils {
   private defineConstant(
     address: Address,
     method: AbiItem,
-  ): ({ args }: { args: any[] }) => Promise<Record<string | number, any>> {
-    return async ({ args }: { args: any[] }) => {
+  ): (args: any[]) => Promise<Record<string | number, any>> {
+    return async (args: any[]) => {
       const res = await this.connex.thor
         .account(address)
         .method(method)
         .call(...args);
+
       return res.decoded;
     };
   }
@@ -59,20 +55,32 @@ export class ConnexUtils {
   private defineSignedRequest(
     address: Address,
     method: AbiItem,
-  ): ({
-    comment,
-    args,
-  }: {
-    comment: string;
-    args: any[];
-  }) => Promise<Connex.Vendor.TxResponse> {
-    return async ({ comment, args }: { comment: string; args: any[] }) => {
+  ): (args: any[], comment: string) => Promise<Connex.Vendor.TxResponse> {
+    return async (args: any[], comment: string) => {
       const clause = this.connex.thor
         .account(address)
         .method(method)
         .asClause(...args);
 
       return this.connex.vendor.sign("tx", [clause]).comment(comment).request();
+    };
+  }
+
+  /**
+   * Defines method clause.
+   * @param {Address} address Smart contract address.
+   * @param {AbiItem} method ABI method.
+   * @return {*} Method
+   */
+  defineClause(
+    address: Address,
+    method: AbiItem,
+  ): (args: any[]) => Connex.VM.Clause {
+    return (args: any[]) => {
+      return this.connex.thor
+        .account(address)
+        .method(method)
+        .asClause(...args);
     };
   }
 
@@ -85,7 +93,7 @@ export class ConnexUtils {
    */
   getContract(abi: AbiItem[], address: Address): Contract {
     const contract: Contract = {
-      methods: { constant: {}, signed: {} },
+      methods: { constant: {}, signed: {}, clause: {} },
       events: {},
     };
 
@@ -101,6 +109,7 @@ export class ConnexUtils {
             address,
             item,
           );
+          contract.methods.clause[item.name] = this.defineClause(address, item);
         }
       } else if (item.name != null && item.type === "event") {
         contract.events[item.name] = this.connex.thor
@@ -108,6 +117,7 @@ export class ConnexUtils {
           .event(item);
       }
     }
+
     return contract;
   }
 
