@@ -128,6 +128,10 @@
     }
   }
 
+  // Allow for numbers only.
+  $: triggerBalance = triggerBalance.replace(/\D+/g, "");
+  $: reserveBalance = reserveBalance.replace(/\D+/g, "");
+
   let inputsMatchStore: boolean | undefined;
 
   $: inputsMatchStore =
