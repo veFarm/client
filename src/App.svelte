@@ -45,8 +45,8 @@
         <p class="text-gray-300 mt-4">
           Select your swap configuration and allow the VeFarm contract to spend
           your VTHO. After which the contract will periodically withdraw VTHO
-          from your account, perform a swap for VET tokens through a
-          DEX, and return the resulting tokens back to your wallet.
+          from your account, perform a swap for VET tokens through a DEX, and
+          return the resulting tokens back to your wallet.
         </p>
         <div
           class="hidden lg:grid lg:grid-cols-3 lg:row-gap-8 lg:mt-10 lg:mx-auto"
@@ -67,7 +67,9 @@
 
         {#if view === "SUMMARY"}
           <div class="space-y-4">
-            <div class="bg-green-50 border rounded-lg border-green-300 p-3 lg:p-6">
+            <div
+              class="bg-green-50 border rounded-lg border-green-300 p-3 lg:p-6"
+            >
               <h2 class="text-green-700 text-center">
                 Great! We&apos;re&nbsp;all&nbsp;set.
               </h2>

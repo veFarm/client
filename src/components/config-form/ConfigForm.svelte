@@ -188,11 +188,7 @@
     <Button
       type="submit"
       intent="primary"
-      disabled={disabled ||
-        parseInt(triggerBalance, 10) === 0 ||
-        triggerBalance === "" ||
-        parseInt(reserveBalance, 10) === 0 ||
-        reserveBalance === ""}
+      disabled={disabled || triggerBalance === "" || reserveBalance === ""}
       loading={disabled}
       fullWidth
     >
@@ -204,7 +200,10 @@
     <Button
       type="submit"
       intent="primary"
-      disabled={disabled || inputsMatchStore}
+      disabled={disabled ||
+        triggerBalance === "" ||
+        reserveBalance === "" ||
+        inputsMatchStore}
       loading={disabled}
       fullWidth
     >
