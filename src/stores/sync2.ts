@@ -7,7 +7,7 @@ import { chain } from "@/config";
 function createStore() {
   const { subscribe, set } = writable<
     | {
-        connex: Connex;
+        connexUtils: ConnexUtils;
         account: Address;
       }
     | undefined
@@ -41,40 +41,15 @@ function createStore() {
       Certificate.verify(cert);
 
       set({
-        connex,
+        connexUtils,
         account: cert.signer as Address,
       });
     },
     disconnect: function () {
       set(undefined);
     },
-    // switchChain: async function (chainId: number): Promise<void> {
-    //   if (!injected?.isMetaMask) {
-    //     throw new Error("MetaMask is not installed.");
-    //   }
-
-    //   await injected.request({
-    //     method: "wallet_switchEthereumChain",
-    //     params: [{ chainId: `0x${chainId.toString(16)}` }],
-    //   });
-    // },
   };
 }
 
 export const sync2 = createStore();
 
-// if (injected?.isMetaMask) {
-//   // Connect account on landing or reload
-//   // const accounts = (await window.ethereum.request({
-//   //   method: "eth_requestAccounts",
-//   // })) as Address[];
-
-//   // if (accounts.length > 0) {
-//   //   metamask.connect();
-//   // }
-
-//   // Reconnect on accounts or network change
-//   injected.on("accountsChanged", metamask.connect);
-//   injected.on("chainChanged", metamask.connect);
-//   injected.on("disconnect", metamask.disconnect);
-// }
