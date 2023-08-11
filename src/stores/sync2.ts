@@ -52,4 +52,3 @@ function createStore() {
 }
 
 export const sync2 = createStore();
-

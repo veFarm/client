@@ -48,9 +48,10 @@ function createStore() {
         VTHO_CONTRACT_ADDRESS,
       );
 
-      const decoded = await contract.methods.constant.allowance(
-        [account, TRADER_CONTRACT_ADDRESS],
-      );
+      const decoded = await contract.methods.constant.allowance([
+        account,
+        TRADER_CONTRACT_ADDRESS,
+      ]);
 
       store.set({
         connexUtils,
@@ -79,9 +80,10 @@ function createStore() {
 
         const { contract, account } = data;
 
-        const decoded = await contract.methods.constant.allowance(
-          [account, TRADER_CONTRACT_ADDRESS],
-        );
+        const decoded = await contract.methods.constant.allowance([
+          account,
+          TRADER_CONTRACT_ADDRESS,
+        ]);
 
         store.update((s) => ({
           ...s,
@@ -136,7 +138,7 @@ function createStore() {
           error: error?.message || "Unknown error occurred.",
         }));
       }
-    }
+    },
   };
 }
 

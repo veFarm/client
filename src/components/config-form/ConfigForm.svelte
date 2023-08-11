@@ -3,7 +3,7 @@
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
-  import {getEnvVars} from "@/utils/get-env-vars";
+  import { getEnvVars } from "@/utils/get-env-vars";
   import { isNumber } from "@/utils/is-number";
   import { parseUnits } from "@/utils/parse-units";
   import { Button } from "@/components/button";
@@ -113,9 +113,9 @@
     if (!inputsMatchStore) {
       clauses.push(
         trader.getClause("saveConfig")!([
-            parseUnits(triggerBalance, VTHO_DECIMALS),
-            parseUnits(reserveBalance, VTHO_DECIMALS),
-        ])
+          parseUnits(triggerBalance, VTHO_DECIMALS),
+          parseUnits(reserveBalance, VTHO_DECIMALS),
+        ]),
       );
 
       comments.push("Save configuration values into the VeFarm contract.");
@@ -123,14 +123,23 @@
 
     if (variant === "CONFIG_AND_APPROVE") {
       clauses.push(
-        vtho.getClause("approve")!([TRADER_CONTRACT_ADDRESS, VTHO_TOTAL_SUPPLY])
+        vtho.getClause("approve")!([
+          TRADER_CONTRACT_ADDRESS,
+          VTHO_TOTAL_SUPPLY,
+        ]),
       );
 
-      comments.push("Allow the VeFarm contract to spend your VTHO in exchange for VET.")
+      comments.push(
+        "Allow the VeFarm contract to spend your VTHO in exchange for VET.",
+      );
     }
 
     // TODO: expose signTx and waitForReceipt from wallet store methods
-    const response = await $wallet.connexUtils!.signTx(clauses, $wallet.account!, comments.join("\n"))
+    const response = await $wallet.connexUtils!.signTx(
+      clauses,
+      $wallet.account!,
+      comments.join(" "),
+    );
     await $wallet.connexUtils!.waitForReceipt(response.txid);
     await trader.fetchConfig();
     await wallet.fetchBalance();
@@ -140,7 +149,12 @@
 
   // Set stored config values on login.
   $: {
-    if ($trader.contract != null && $trader.triggerBalance !== "0" && $trader.reserveBalance !== "0" && !runOnce) {
+    if (
+      $trader.contract != null &&
+      $trader.triggerBalance !== "0" &&
+      $trader.reserveBalance !== "0" &&
+      !runOnce
+    ) {
       triggerBalance = $trader.triggerBalance;
       reserveBalance = $trader.reserveBalance;
       runOnce = true;

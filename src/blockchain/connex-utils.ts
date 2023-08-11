@@ -6,7 +6,9 @@ import type { AbiItem } from "@/typings/types";
 export type Contract = {
   methods: {
     constant: Record<string, (args: any[]) => Promise<any>>;
-    signed: Record<string, (args: any[], comment: string) => Promise<Connex.Vendor.TxResponse>
+    signed: Record<
+      string,
+      (args: any[], comment: string) => Promise<Connex.Vendor.TxResponse>
     >;
     clause: Record<string, (args: any[]) => Connex.VM.Clause>;
   };
@@ -53,10 +55,7 @@ export class ConnexUtils {
   private defineSignedRequest(
     address: Address,
     method: AbiItem,
-  ): (
-    args: any[],
-    comment: string,
-  ) => Promise<Connex.Vendor.TxResponse> {
+  ): (args: any[], comment: string) => Promise<Connex.Vendor.TxResponse> {
     return async (args: any[], comment: string) => {
       const clause = this.connex.thor
         .account(address)
@@ -76,9 +75,7 @@ export class ConnexUtils {
   defineClause(
     address: Address,
     method: AbiItem,
-  ): (
-    args: any[],
-  ) => Connex.VM.Clause {
+  ): (args: any[]) => Connex.VM.Clause {
     return (args: any[]) => {
       return this.connex.thor
         .account(address)
