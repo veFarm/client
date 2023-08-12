@@ -134,13 +134,8 @@
       );
     }
 
-    // TODO: expose signTx and waitForReceipt from wallet store methods
-    const response = await $wallet.connexUtils!.signTx(
-      clauses,
-      $wallet.account!,
-      comments.join(" "),
-    );
-    await $wallet.connexUtils!.waitForReceipt(response.txid);
+    const response = await wallet.signTx(clauses, comments.join(" "));
+    await wallet.waitForReceipt(response!.txid);
     await trader.fetchConfig();
     await wallet.fetchBalance();
 

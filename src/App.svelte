@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { slide } from "svelte/transition";
   import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
@@ -9,7 +8,7 @@
   import { Divider } from "@/components/divider";
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
-  import { AllowanceButton } from "@/components/allowance-button";
+  import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { SwapsHistory } from "@/components/swaps-history";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
@@ -91,7 +90,7 @@
             >
               Update Configuration
             </Button>
-            <AllowanceButton disabled={!swapConfigSet} />
+            <RevokeAllowanceButton disabled={!swapConfigSet} />
           </div>
         {/if}
 

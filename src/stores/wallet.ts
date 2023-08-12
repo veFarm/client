@@ -1,5 +1,4 @@
 import { writable, get } from "svelte/store";
-// import type { Connex } from "@vechain/connex";
 import type { WalletId } from "@/typings/types";
 import type { ConnexUtils } from "@/blockchain/connex-utils";
 import { sync2 } from "@/stores/sync2";
@@ -23,6 +22,10 @@ const initialState: State = {
   balance: undefined,
   walletId: undefined,
 };
+
+// Observation: not sure if this is the best abstraction for handling
+// wallet related logic.
+// TODO: move sync2 store code into wallet store and integrate VeWorld wallet.
 
 function createStore() {
   const store = writable<State>({ ...initialState });
@@ -109,6 +112,47 @@ function createStore() {
           ...s,
           balance,
         }));
+      } catch (error) {
+        store.update((s) => ({
+          ...s,
+          error: error?.message || "Unknown error occurred.",
+        }));
+      }
+    },
+    signTx: async function (
+      clauses: Connex.VM.Clause[],
+      comment: string,
+    ): Promise<Connex.Vendor.TxResponse | undefined> {
+      try {
+        const data = get(store);
+
+        if (data?.connexUtils == null || data?.account == null) {
+          throw new Error("Wallet is not connected.");
+        }
+
+        const { connexUtils, account } = data;
+
+        return connexUtils.signTx(clauses, account, comment);
+      } catch (error) {
+        store.update((s) => ({
+          ...s,
+          error: error?.message || "Unknown error occurred.",
+        }));
+      }
+    },
+    waitForReceipt: async function (
+      txId: string,
+    ): Promise<Connex.Thor.Transaction.Receipt | undefined> {
+      try {
+        const data = get(store);
+
+        if (data?.connexUtils == null) {
+          throw new Error("Wallet is not connected.");
+        }
+
+        const { connexUtils } = data;
+
+        return connexUtils.waitForReceipt(txId);
       } catch (error) {
         store.update((s) => ({
           ...s,
