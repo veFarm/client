@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { VTHO_TOTAL_SUPPLY } from "@/config";
   import { vtho } from "@/stores/vtho";
   import { Button } from "@/components/button";
 
@@ -23,37 +22,20 @@
   }
 </script>
 
-{#if $vtho.allowance === "0"}
-  <Button
-    intent="primary"
-    {disabled}
-    {loading}
-    fullWidth
-    on:click={() => {
-      handleClick(
-        VTHO_TOTAL_SUPPLY,
-        "Allow the VeFarm contract to spend your VTHO in exchange for VET.",
-      );
-    }}
-  >
-    Approve Spending
-  </Button>
-{:else}
-  <Button
-    intent="danger"
-    {disabled}
-    {loading}
-    fullWidth
-    on:click={() => {
-      handleClick(
-        "0",
-        "The VeFarm contract will no longer be able to spend your VTHO in exchange for VET.",
-      );
-    }}
-  >
-    Revoke Spending
-  </Button>
-{/if}
+<Button
+  intent="danger"
+  {disabled}
+  {loading}
+  fullWidth
+  on:click={() => {
+    handleClick(
+      "0",
+      "The VeFarm contract will no longer be able to spend your VTHO in exchange for VET.",
+    );
+  }}
+>
+  Revoke Spending
+</Button>
 
 {#if $vtho.error != null && $vtho.error.length > 0}
   <p class="text-danger">ERROR: {$vtho.error}</p>
