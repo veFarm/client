@@ -39,7 +39,6 @@ function createStore() {
     }
 
     // Sync2 is connected.
-    // TODO: store on localstore
     try {
       const { connexUtils, account } = data;
 
@@ -62,7 +61,10 @@ function createStore() {
 
   return {
     subscribe: store.subscribe,
-    connect: async function (walletId: WalletId): Promise<void> {
+    connect: async function (
+      walletId: WalletId,
+      account?: Address,
+    ): Promise<Address | undefined> {
       store.update((s) => ({
         ...s,
         loading: true,
@@ -76,7 +78,7 @@ function createStore() {
         }
 
         if (walletId === "sync2") {
-          await sync2.connect();
+          return await sync2.connect(account);
         }
       } catch (error) {
         store.update((s) => ({

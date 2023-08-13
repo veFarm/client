@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
+    import type { WalletId } from "@/typings/types";
   import { trader } from "@/stores/trader";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
@@ -29,6 +31,14 @@
       view = "SUMMARY";
     }
   }
+
+  // Login stored user.
+  onMount(async () => {
+    const user = localStorage.getItem("user"); // "{"walletId": "sync2", "account": "0x"}"
+    if (user == null) return
+    const { walletId, account } = JSON.parse(user) as { walletId: WalletId; account: Address };
+    await wallet.connect(walletId, account)
+  });
 </script>
 
 <Layout>
