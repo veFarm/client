@@ -4,6 +4,7 @@
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { formatUnits } from "@/utils/format-units";
+  import { timeSince } from "@/utils/time-since";
   import { SwapTx } from "@/components/swap-tx";
 
   const { GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
@@ -15,6 +16,8 @@
   let swapTxs: SwapDoc[] = [];
   /** Error message if any. */
   let error: string | undefined;
+  /** Fetch time. */
+  let fetchAt: number = Date.now();
 
   /**
    * Fetch account swap transactions.
@@ -33,18 +36,42 @@
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
     }
+
+    fetchAt = Date.now();
   }
 
-  // TODO: refetch account swaps every x mins.
+  let interval1: NodeJS.Timer | undefined;
+
+  // Fetch swaps every 5 mins.
   $: {
     if ($wallet.connected) {
       fetchSwaps();
+      clearInterval(interval1);
+      interval1 = setInterval(fetchSwaps, 5 * 60 * 1_000);
     }
+  }
+
+  let interval2: NodeJS.Timer | undefined;
+  let updatedAt: string | undefined;
+
+  // Display last updated at.
+  $: {
+    clearInterval(interval2);
+    interval2 = setInterval(() => {
+      updatedAt = timeSince(fetchAt);
+    }, 60 * 1_000);
   }
 </script>
 
 <section class="flex flex-col space-y-4">
-  <h2>Past Trades</h2>
+  <h2>
+    Past Trades
+    <br />
+    <span class="block text-sm text-gray-500">
+      {updatedAt != null ? `Last updated: ${updatedAt} ago.` : ""}
+    </span>
+  </h2>
+
   {#if error != null && error.length > 0}
     <p class="text-danger">{error}</p>
   {:else if swapTxs == null || swapTxs.length === 0}

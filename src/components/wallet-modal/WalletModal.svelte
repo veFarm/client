@@ -25,7 +25,9 @@
 
   async function handleConnect(walletId: WalletId) {
     error = undefined;
-    await wallet.connect(walletId);
+    const account = await wallet.connect(walletId);
+    if (account == null) return;
+    localStorage.setItem("user", JSON.stringify({ walletId, account }));
   }
 
   $: error = $wallet.error;

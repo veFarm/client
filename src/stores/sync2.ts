@@ -18,7 +18,7 @@ function createStore() {
     // TODO: pass walletName as arg. Where
     // walletName === sync2 -> noExtension === true
     // walletName === veworld -> noExtension === false
-    connect: async function (): Promise<void> {
+    connect: async function (account?: Address): Promise<Address> {
       const connex = new Connex({
         node: chain.rpc[0],
         network: chain.network,
@@ -27,23 +27,33 @@ function createStore() {
 
       const connexUtils = new ConnexUtils(connex);
 
-      const message: Connex.Vendor.CertMessage = {
-        purpose: "identification",
-        payload: {
-          type: "text",
-          content: "Sign a certificate to prove your identity.",
-        },
-      };
+      if (account == null) {
+        const message: Connex.Vendor.CertMessage = {
+          purpose: "identification",
+          payload: {
+            type: "text",
+            content: "Sign a certificate to prove your identity.",
+          },
+        };
 
-      const cert = await connexUtils.signCert(message);
+        const cert = await connexUtils.signCert(message);
 
-      // This should throw if cert isn't valid.
-      Certificate.verify(cert);
+        // This should throw if cert isn't valid.
+        Certificate.verify(cert);
+        set({
+          connexUtils,
+          account: cert.signer as Address,
+        });
+
+        return cert.signer as Address;
+      }
 
       set({
         connexUtils,
-        account: cert.signer as Address,
+        account,
       });
+
+      return account;
     },
     disconnect: function () {
       set(undefined);
