@@ -67,7 +67,7 @@
   <h2>
     Past Trades
     <br />
-    <span class="block text-sm text-gray-500">
+    <span class="block text-sm text-gray-400 font-normal">
       {updatedAt != null ? `Last updated: ${updatedAt} ago.` : ""}
     </span>
   </h2>
