@@ -23,7 +23,6 @@
    * Fetch account swap transactions.
    */
   async function fetchSwaps() {
-    console.log("FETCH SWAP");
     try {
       if ($wallet.account == null) {
         throw new Error("Wallet is not connected.");
