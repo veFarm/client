@@ -134,7 +134,8 @@ export class ConnexUtils {
     const cert: Certificate = {
       purpose: message.purpose,
       payload: message.payload,
-      domain: certResponse.annex.domain,
+      // domain: certResponse.annex.domain,
+      domain: window.location.hostname,
       timestamp: certResponse.annex.timestamp,
       signer: certResponse.annex.signer,
       signature: certResponse.signature,
