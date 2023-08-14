@@ -1,6 +1,5 @@
 export function timeSince(ms: number): string {
   const seconds = Math.floor((Date.now() - ms) / 1000);
-  console.log({ seconds });
   let interval = seconds / 31536000;
 
   if (interval > 1) {

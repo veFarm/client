@@ -43,34 +43,36 @@
 
   let interval1: NodeJS.Timer | undefined;
 
-  // Fetch swaps every x mins
+  // Fetch swaps every 5 mins.
   $: {
     if ($wallet.connected) {
       fetchSwaps();
       clearInterval(interval1);
       interval1 = setInterval(fetchSwaps, 5 * 60 * 1_000);
-      // interval = setInterval(fetchSwaps, 5*1_000);
     }
   }
 
-  // let interval2: NodeJS.Timer | undefined;
+  let interval2: NodeJS.Timer | undefined;
   let updatedAt: string | undefined;
 
-  // $: {
-  //     clearInterval(interval2);
-  //     interval2 = setInterval(() => {
-  //       updatedAt = timeSince(fetchAt);
-  //     }, 10 * 1_000);
-  //     // interval = setInterval(fetchSwaps, 5*1_000);
-  // }
+  // Display last updated at.
+  $: {
+    clearInterval(interval2);
+    interval2 = setInterval(() => {
+      updatedAt = timeSince(fetchAt);
+    }, 60 * 1_000);
+  }
 </script>
 
 <section class="flex flex-col space-y-4">
   <h2>
-    Past Trades <span class="text-sm text-gray-500"
-      >(Last updated: {updatedAt} ago)</span
-    >
+    Past Trades
+    <br />
+    <span class="block text-sm text-gray-500">
+      {updatedAt != null ? `Last updated: ${updatedAt} ago.` : ""}
+    </span>
   </h2>
+
   {#if error != null && error.length > 0}
     <p class="text-danger">{error}</p>
   {:else if swapTxs == null || swapTxs.length === 0}

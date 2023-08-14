@@ -27,7 +27,7 @@
     error = undefined;
     const account = await wallet.connect(walletId);
     if (account == null) return;
-    localStorage.setItem("user", JSON.stringify({walletId, account}));
+    localStorage.setItem("user", JSON.stringify({ walletId, account }));
   }
 
   $: error = $wallet.error;
