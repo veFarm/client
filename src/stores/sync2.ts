@@ -40,6 +40,7 @@ function createStore() {
 
         // This should throw if cert isn't valid.
         Certificate.verify(cert);
+
         set({
           connexUtils,
           account: cert.signer as Address,
