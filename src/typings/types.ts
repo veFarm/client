@@ -1,4 +1,4 @@
-export type WalletId = "sync2" | "ve_world";
+export type WalletId = "sync2" | "veworld";
 
 export type AbiType =
   | "function"

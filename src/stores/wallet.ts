@@ -1,7 +1,9 @@
 import { writable, get } from "svelte/store";
+import { Connex } from "@vechain/connex";
+import { Certificate } from "thor-devkit";
+import { chain } from "@/config";
 import type { WalletId } from "@/typings/types";
-import type { ConnexUtils } from "@/blockchain/connex-utils";
-import { sync2 } from "@/stores/sync2";
+import { ConnexUtils } from "@/blockchain/connex-utils";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
@@ -25,39 +27,9 @@ const initialState: State = {
 
 // Observation: not sure if this is the best abstraction for handling
 // wallet related logic.
-// TODO: move sync2 store code into wallet store and integrate VeWorld wallet.
 
 function createStore() {
   const store = writable<State>({ ...initialState });
-
-  // Update wallet store based on Sync2 store changes.
-  sync2.subscribe(async (data) => {
-    // No data present means Sync2 is disconnected.
-    if (data == null) {
-      store.set({ ...initialState });
-      return;
-    }
-
-    // Sync2 is connected.
-    try {
-      const { connexUtils, account } = data;
-
-      store.set({
-        connexUtils,
-        loading: false,
-        error: undefined,
-        connected: true,
-        account,
-        balance: await connexUtils.fetchBalance(account),
-        walletId: "sync2",
-      });
-    } catch (error) {
-      store.update((s) => ({
-        ...s,
-        error: error?.message || "Unknown error occurred.",
-      }));
-    }
-  });
 
   return {
     subscribe: store.subscribe,
@@ -73,13 +45,63 @@ function createStore() {
       }));
 
       try {
-        if (walletId !== "sync2") {
-          throw new Error(`Ops! ${walletId} has not been integrated yet.`);
+        // VeWorld injects window.vechain which can serve as detection utility.
+        if (walletId === "veworld" && !window.vechain) {
+          throw new Error("VeWorld is not installed.");
         }
 
-        if (walletId === "sync2") {
-          return await sync2.connect(account);
+        const connex = new Connex({
+          node: chain.rpc[0],
+          network: chain.network,
+          noExtension: walletId === "sync2",
+        });
+
+        const connexUtils = new ConnexUtils(connex);
+
+        console.log({ account });
+        // If account is given, it means we are loading user's profile from local storage,
+        // i.e., not cert is required.
+        if (account != null) {
+          console.log("CCOUNT NOT NULL");
+          store.set({
+            connexUtils,
+            loading: false,
+            error: undefined,
+            connected: true,
+            account,
+            balance: await connexUtils.fetchBalance(account),
+            walletId,
+          });
+
+          return account;
         }
+
+        const message: Connex.Vendor.CertMessage = {
+          purpose: "identification",
+          payload: {
+            type: "text",
+            content: "Sign a certificate to prove your identity.",
+          },
+        };
+
+        const cert = await connexUtils.signCert(message);
+
+        // This should throw if cert isn't valid.
+        Certificate.verify(cert);
+
+        const acc = cert.signer as Address;
+
+        store.set({
+          connexUtils,
+          loading: false,
+          error: undefined,
+          connected: true,
+          account: acc,
+          balance: await connexUtils.fetchBalance(acc),
+          walletId,
+        });
+
+        return acc;
       } catch (error) {
         store.update((s) => ({
           ...s,
@@ -91,12 +113,7 @@ function createStore() {
       }
     },
     disconnect: function (): void {
-      const data = get(store);
-
-      // TODO: clear localStorage
-      if (data.walletId === "sync2") {
-        sync2.disconnect();
-      }
+      store.set({ ...initialState });
     },
     fetchBalance: async function (): Promise<void> {
       try {
