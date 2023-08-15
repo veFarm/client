@@ -73,13 +73,13 @@ function createStore() {
       }));
 
       try {
-        if (walletId !== "sync2") {
-          throw new Error(`Ops! ${walletId} has not been integrated yet.`);
-        }
+        // if (walletId !== "sync2") {
+        //   throw new Error(`Ops! ${walletId} has not been integrated yet.`);
+        // }
 
-        if (walletId === "sync2") {
-          return await sync2.connect(account);
-        }
+        // if (walletId === "sync2") {
+        return await sync2.connect(walletId, account);
+        // }
       } catch (error) {
         store.update((s) => ({
           ...s,

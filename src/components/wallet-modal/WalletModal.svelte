@@ -13,7 +13,7 @@
     icon: string;
   }[] = [
     { id: "sync2", label: "Sync2", icon: Sync2Icon },
-    { id: "ve_world", label: "VeWorld", icon: VeWorldIcon },
+    { id: "veworld", label: "VeWorld", icon: VeWorldIcon },
   ];
 
   let error: string | undefined;

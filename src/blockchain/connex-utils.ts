@@ -129,13 +129,13 @@ export class ConnexUtils {
   async signCert(message: Connex.Vendor.CertMessage): Promise<Certificate> {
     const certResponse = await this.connex.vendor
       .sign("cert", message)
+      // .link(window.location.host)
       .request();
 
     const cert: Certificate = {
       purpose: message.purpose,
       payload: message.payload,
-      // domain: certResponse.annex.domain,
-      domain: window.location.hostname,
+      domain: certResponse.annex.domain,
       timestamp: certResponse.annex.timestamp,
       signer: certResponse.annex.signer,
       signature: certResponse.signature,
