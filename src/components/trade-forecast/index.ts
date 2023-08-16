@@ -1,1 +1,1 @@
-export {default as TradeForecast} from "./TradeForecast.svelte";
+export { default as TradeForecast } from "./TradeForecast.svelte";

@@ -8,7 +8,7 @@
   import { parseUnits } from "@/utils/parse-units";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
-  import {TradeForecast} from "@/components/trade-forecast"
+  import { TradeForecast } from "@/components/trade-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
 
   const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
@@ -209,7 +209,7 @@
     }}
   />
 
-  <TradeForecast {triggerBalance} />
+  <TradeForecast {triggerBalance} {reserveBalance} />
 
   {#if variant === "LOGIN"}
     <ConnectWalletButton intent="primary" fullWidth />
