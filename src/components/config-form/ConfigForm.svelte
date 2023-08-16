@@ -1,5 +1,4 @@
 <script lang="ts">
-  import bn from "bignumber.js";
   import { VTHO_TOTAL_SUPPLY } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
@@ -70,6 +69,7 @@
     const _triggerBalance = triggerBalance != null && triggerBalance.trim();
     const _reserveBalance = reserveBalance != null && reserveBalance.trim();
 
+    // TODO
     if (!_triggerBalance) {
       _errors.triggerBalance.push("Required field.");
     } else if (!isNumber(_triggerBalance)) {
@@ -164,14 +164,19 @@
   $: triggerBalance = triggerBalance.replace(/\D+/g, "");
   $: reserveBalance = reserveBalance.replace(/\D+/g, "");
 
-  // TODO: what happens when input value is 0000?
-  let inputsMatchStore: boolean | undefined;
+  let inputsEmpty: boolean = true;
+
+  $: inputsEmpty =
+    triggerBalance.trim() === "" ||
+    reserveBalance.trim() === "" ||
+    parseInt(triggerBalance, 10) === 0 ||
+    parseInt(reserveBalance, 10) === 0; // case when input equals "0000"
+
+  let inputsMatchStore: boolean = false;
 
   $: inputsMatchStore =
     $trader.triggerBalance === triggerBalance &&
-    $trader.reserveBalance === reserveBalance &&
-    triggerBalance !== "0" &&
-    reserveBalance !== "0";
+    $trader.reserveBalance === reserveBalance;
 
   let nextTrade: string | undefined;
 
@@ -181,6 +186,8 @@
 
       if (nextTradeSecs != null) {
         const { d, m, h, s } = secondsToDHMS(nextTradeSecs);
+
+        // Get the most significant number.
         nextTrade =
           d > 0
             ? `${d} days`
@@ -232,8 +239,6 @@
     <span>Next Trade</span>
     {#if nextTrade != null}
       <span class="float-right">{nextTrade}</span>
-    {:else}
-      <div class="w-6 h-4 animate-pulse bg-slate-200 float-right" />
     {/if}
     <br />
     Fees
@@ -249,7 +254,7 @@
     <Button
       type="submit"
       intent="primary"
-      disabled={disabled || triggerBalance === "" || reserveBalance === ""}
+      disabled={disabled || inputsEmpty}
       loading={disabled}
       fullWidth
     >
@@ -261,10 +266,7 @@
     <Button
       type="submit"
       intent="primary"
-      disabled={disabled ||
-        triggerBalance === "" ||
-        reserveBalance === "" ||
-        inputsMatchStore}
+      disabled={disabled || inputsEmpty || inputsMatchStore}
       loading={disabled}
       fullWidth
     >
