@@ -1,11 +1,14 @@
 <script lang="ts">
-  import { VTHO_DECIMALS, VTHO_TOTAL_SUPPLY } from "@/config";
+  import bn from "bignumber.js";
+  import { VTHO_TOTAL_SUPPLY } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { isNumber } from "@/utils/is-number";
   import { parseUnits } from "@/utils/parse-units";
+  import { secsTillNextTrade } from "@/utils/secs-till-next-trade";
+  import { secondsToDHMS } from "@/utils/seconds-to-dhms";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
@@ -26,9 +29,9 @@
     triggerBalance: [],
     reserveBalance: [],
   };
-  /** VTHO balance to initiate a swap. */
+  /** VTHO balance to initiate a swap in decimals. */
   let triggerBalance = "";
-  /** VTHO balance to be retained in the account after the swap. */
+  /** VTHO balance to be retained in the account after the swap in decimals. */
   let reserveBalance = "";
   /** Hack to set targets once. */
   let runOnce = false;
@@ -110,11 +113,12 @@
     const clauses: Connex.VM.Clause[] = [];
     const comments: string[] = ["Please approve the following action(s):"];
 
+    // TODO: get clause and comment from store
     if (!inputsMatchStore) {
       clauses.push(
         trader.getClause("saveConfig")!([
-          parseUnits(triggerBalance, VTHO_DECIMALS),
-          parseUnits(reserveBalance, VTHO_DECIMALS),
+          parseUnits(triggerBalance),
+          parseUnits(reserveBalance),
         ]),
       );
 
@@ -160,6 +164,7 @@
   $: triggerBalance = triggerBalance.replace(/\D+/g, "");
   $: reserveBalance = reserveBalance.replace(/\D+/g, "");
 
+  // TODO: what happens when input value is 0000?
   let inputsMatchStore: boolean | undefined;
 
   $: inputsMatchStore =
@@ -167,6 +172,28 @@
     $trader.reserveBalance === reserveBalance &&
     triggerBalance !== "0" &&
     reserveBalance !== "0";
+
+  let nextTrade: string | undefined;
+
+  $: {
+    if ($wallet.connected) {
+      const nextTradeSecs = secsTillNextTrade(triggerBalance, $wallet.balance);
+
+      if (nextTradeSecs != null) {
+        const { d, m, h, s } = secondsToDHMS(nextTradeSecs);
+        nextTrade =
+          d > 0
+            ? `${d} days`
+            : h > 0
+            ? `${h} hours`
+            : m > 0
+            ? `${m} minutes`
+            : `${s} seconds`;
+      } else {
+        nextTrade = undefined;
+      }
+    }
+  }
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
@@ -201,13 +228,19 @@
   />
 
   <!-- TODO: move to it's out compoent and use a slot to insert -->
-  <!-- <p class="text-background">
-    Minimum Received
+  <p class="text-accent">
+    <span>Next Trade</span>
+    {#if nextTrade != null}
+      <span class="float-right">{nextTrade}</span>
+    {:else}
+      <div class="w-6 h-4 animate-pulse bg-slate-200 float-right" />
+    {/if}
     <br />
     Fees
     <br />
-    Next Trade
-  </p> -->
+    Minimum Received
+  </p>
+
   {#if variant === "LOGIN"}
     <ConnectWalletButton intent="primary" fullWidth />
   {/if}

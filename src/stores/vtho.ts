@@ -3,15 +3,13 @@ import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as vthoArtifact from "@/abis/VTHO.json";
 import { getEnvVars } from "@/utils/get-env-vars";
-import { formatUnits } from "@/utils/format-units";
 import { wallet } from "@/stores/wallet";
-import { VTHO_DECIMALS } from "@/config";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
-  allowance: string;
+  allowed: boolean;
   error: string | undefined;
 };
 
@@ -19,7 +17,7 @@ const initialState: State = {
   connexUtils: undefined,
   contract: undefined,
   account: undefined,
-  allowance: "0",
+  allowed: false,
   error: undefined,
 };
 
@@ -57,7 +55,7 @@ function createStore() {
         connexUtils,
         contract,
         account,
-        allowance: formatUnits(decoded[0], VTHO_DECIMALS),
+        allowed: decoded[0] !== "0",
         error: undefined,
       });
     } catch (error) {
@@ -87,7 +85,7 @@ function createStore() {
 
         store.update((s) => ({
           ...s,
-          allowance: formatUnits(decoded[0], VTHO_DECIMALS),
+          allowed: decoded[0] !== "0",
         }));
       } catch (error) {
         store.update((s) => ({
@@ -96,7 +94,9 @@ function createStore() {
         }));
       }
     },
+    // TODO: replace with approve/revoke?
     setAllowance: async function (
+      /** wei */
       amount: string,
       comment: string,
     ): Promise<void> {
@@ -123,6 +123,7 @@ function createStore() {
         }));
       }
     },
+    // TODO: or getApproveClause
     getClause: function (methodName: string) {
       try {
         const data = get(store);

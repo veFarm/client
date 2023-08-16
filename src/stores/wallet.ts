@@ -5,15 +5,26 @@ import { chain } from "@/config";
 import type { WalletId } from "@/typings/types";
 import { ConnexUtils } from "@/blockchain/connex-utils";
 
-type State = {
-  connexUtils: ConnexUtils | undefined;
-  loading: boolean;
-  error: string | undefined;
-  connected: boolean;
-  account: Address | undefined;
-  balance: { vet: string; vtho: string } | undefined;
-  walletId: WalletId | undefined;
-};
+type State =
+  | {
+      connexUtils: ConnexUtils;
+      loading: boolean;
+      error: string | undefined;
+      connected: true;
+      account: Address;
+      /** Decimals. */
+      balance: { vet: string; vtho: string };
+      walletId: WalletId;
+    }
+  | {
+      connexUtils: ConnexUtils | undefined;
+      loading: boolean;
+      error: string | undefined;
+      connected: false;
+      account: undefined;
+      balance: undefined;
+      walletId: WalletId | undefined;
+    };
 
 const initialState: State = {
   connexUtils: undefined,
@@ -33,14 +44,18 @@ function createStore() {
 
   return {
     subscribe: store.subscribe,
+    disconnect: function (): void {
+      store.set({ ...initialState });
+    },
     connect: async function (
       walletId: WalletId,
       account?: Address,
     ): Promise<Address | undefined> {
+      this.disconnect();
+
       store.update((s) => ({
         ...s,
         loading: true,
-        error: undefined,
         walletId,
       }));
 
@@ -58,11 +73,9 @@ function createStore() {
 
         const connexUtils = new ConnexUtils(connex);
 
-        console.log({ account });
         // If account is given, it means we are loading user's profile from local storage,
         // i.e., not cert is required.
         if (account != null) {
-          console.log("CCOUNT NOT NULL");
           store.set({
             connexUtils,
             loading: false,
@@ -103,23 +116,19 @@ function createStore() {
 
         return acc;
       } catch (error) {
-        store.update((s) => ({
-          ...s,
+        store.set({
+          ...initialState,
           error: error?.message || "Unknown error occurred.",
-          walletId: undefined,
-        }));
+        });
       } finally {
         store.update((s) => ({ ...s, loading: false }));
       }
-    },
-    disconnect: function (): void {
-      store.set({ ...initialState });
     },
     fetchBalance: async function (): Promise<void> {
       try {
         const data = get(store);
 
-        if (data?.connexUtils == null || data?.account == null) {
+        if (!data.connected) {
           throw new Error("Wallet is not connected.");
         }
 
@@ -127,8 +136,8 @@ function createStore() {
 
         const balance = await connexUtils.fetchBalance(account);
 
-        store.update((s) => ({
-          ...s,
+        store.update(() => ({
+          ...data,
           balance,
         }));
       } catch (error) {
@@ -145,7 +154,7 @@ function createStore() {
       try {
         const data = get(store);
 
-        if (data?.connexUtils == null || data?.account == null) {
+        if (!data.connected) {
           throw new Error("Wallet is not connected.");
         }
 
@@ -165,7 +174,7 @@ function createStore() {
       try {
         const data = get(store);
 
-        if (data?.connexUtils == null) {
+        if (!data.connected) {
           throw new Error("Wallet is not connected.");
         }
 

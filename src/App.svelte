@@ -25,9 +25,9 @@
   $: {
     if (!$wallet.connected) {
       view = "LOGIN";
-    } else if (!swapConfigSet || $vtho.allowance === "0") {
+    } else if (!swapConfigSet || !$vtho.allowed) {
       view = "CONFIG_AND_APPROVE";
-    } else if (swapConfigSet && $vtho.allowance !== "0") {
+    } else if (swapConfigSet && $vtho.allowed) {
       view = "SUMMARY";
     }
   }

@@ -6,13 +6,14 @@ import { getEnvVars } from "@/utils/get-env-vars";
 import { formatUnits } from "@/utils/format-units";
 import { parseUnits } from "@/utils/parse-units";
 import { wallet } from "@/stores/wallet";
-import { VTHO_DECIMALS } from "@/config";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
+  /** Decimals. */
   triggerBalance: string;
+  /** Decimals. */
   reserveBalance: string;
   error: string | undefined;
 };
@@ -59,8 +60,8 @@ function createStore() {
         connexUtils,
         contract,
         account,
-        triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
-        reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
+        triggerBalance: formatUnits(decoded[0]),
+        reserveBalance: formatUnits(decoded[1]),
         error: undefined,
       });
     } catch (error) {
@@ -89,8 +90,8 @@ function createStore() {
 
         store.update((s) => ({
           ...s,
-          triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
-          reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
+          triggerBalance: formatUnits(decoded[0]),
+          reserveBalance: formatUnits(decoded[1]),
         }));
       } catch (error) {
         store.update((s) => ({
@@ -100,7 +101,9 @@ function createStore() {
       }
     },
     setConfig: async function (
+      /** Decimals. */
       triggerBalance: string,
+      /** Decimals. */
       reserveBalance: string,
     ): Promise<void> {
       try {
@@ -113,10 +116,7 @@ function createStore() {
         const { connexUtils, contract } = data;
 
         const response = await contract.methods.signed.saveConfig(
-          [
-            parseUnits(triggerBalance, VTHO_DECIMALS),
-            parseUnits(reserveBalance, VTHO_DECIMALS),
-          ],
+          [parseUnits(triggerBalance), parseUnits(reserveBalance)],
           "Save config values into the VeFarm contract.",
         );
 
