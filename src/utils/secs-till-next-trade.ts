@@ -1,6 +1,7 @@
 import bn from "bignumber.js";
 import { parseUnits } from "@/utils/parse-units";
 
+// TODO: see https://vechainstats.com/vtho-calculator/
 export function secsTillNextTrade(
   triggerBalance: string,
   balance: {

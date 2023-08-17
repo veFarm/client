@@ -1,5 +1,6 @@
 import type { Connex } from "@vechain/connex";
-import type { Certificate } from "thor-devkit";
+import type { Certificate} from "thor-devkit";
+import { Transaction } from "thor-devkit";
 import type { AbiItem } from "@/typings/types";
 import { formatUnits } from "@/utils/format-units";
 
@@ -22,7 +23,7 @@ export type Contract = {
  */
 export class ConnexUtils {
   /**
-   * Establishes a connection with the blockchain.
+   * Creates ConnexUtils instance given a connex connection.
    */
   constructor(private readonly connex: Connex) {}
 
@@ -235,4 +236,26 @@ export class ConnexUtils {
       vtho: formatUnits(energy, 2),
     };
   }
+
+      /**
+     * @see https://github.com/vechain/connex/blob/c00bfc1abec3572c7d1df722bf8a7dfb14295102/packages/driver/src/driver.ts#L165
+     */
+    async estimateGas(clauses: Connex.VM.Clause[], signer?: Address) {
+        let explainer = this.connex.thor.explain(clauses);
+
+        if (signer) {
+            explainer = explainer.caller(signer);
+        }
+
+        const output = await explainer.execute();
+        const executionGas = output.reduce((sum, out) => sum + out.gasUsed, 0);
+
+        const intrinsicGas = Transaction.intrinsicGas(
+            clauses as Transaction.Clause[]
+        );
+
+        const leeway = executionGas > 0 ? 16000 : 0;
+
+        return intrinsicGas + executionGas + leeway;
+    }
 }

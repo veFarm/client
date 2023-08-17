@@ -35,9 +35,32 @@
     }
   }
 
-  let fees: string | undefined;
+  let txFee: string | undefined;
 
-  $: fees = formatUnits(
+  // TODO: see https://docs.vechain.org/tutorials/Useful-tips-for-building-a-dApp.html#_6-estimate-the-transaction-fee
+  $: txFee = formatUnits(
+    bn(parseUnits(triggerBalance))
+      .minus(bn(parseUnits(reserveBalance)))
+      .times(bn(3))
+      .div(bn(1000))
+      .toString(),
+    2,
+  );
+
+  let protocolFee: string | undefined;
+
+  $: protocolFee = formatUnits(
+    bn(parseUnits(triggerBalance))
+      .minus(bn(parseUnits(reserveBalance)))
+      .times(bn(3))
+      .div(bn(1000))
+      .toString(),
+    2,
+  );
+
+  let dexFee: string | undefined;
+
+  $: dexFee = formatUnits(
     bn(parseUnits(triggerBalance))
       .minus(bn(parseUnits(reserveBalance)))
       .times(bn(6))
@@ -52,7 +75,7 @@
   $: amountOut = formatUnits(
     bn(parseUnits(triggerBalance))
       .minus(bn(parseUnits(reserveBalance)))
-      .minus(bn(parseUnits(fees || "0")))
+      .minus(bn(parseUnits(dexFee || "0")))
       .div(bn(20))
       .toString(),
     2,
@@ -67,12 +90,12 @@
   {/if}
   <br />
   <span>Fees</span>
-  {#if fees != null}
-    <span class="float-right">{fees} VTHO</span>
+  {#if dexFee != null}
+    <span class="float-right">{dexFee} VTHO</span>
   {/if}
   <br />
   <span>Minimum Received</span>
-  {#if fees != null}
+  {#if dexFee != null}
     <span class="float-right">{amountOut} VET</span>
   {/if}
 </p>
