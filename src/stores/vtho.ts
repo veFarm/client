@@ -1,9 +1,14 @@
 import { writable, get } from "svelte/store";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
-import * as vthoArtifact from "@/abis/VTHO.json";
+import * as energyArtifact from "@/artifacts/Energy.json";
 import { getEnvVars } from "@/utils/get-env-vars";
 import { wallet } from "@/stores/wallet";
+
+/**
+ * Observation: we use VTHO and Energy interchangeably. They both refer to
+ * the same token, which is used on VeChain network to pay for transaction fees.
+ */
 
 type State = {
   connexUtils: ConnexUtils | undefined;
@@ -42,7 +47,7 @@ function createStore() {
       const { connexUtils, account } = data;
 
       const contract = connexUtils.getContract(
-        vthoArtifact.abi as AbiItem[],
+        energyArtifact.abi as AbiItem[],
         VTHO_CONTRACT_ADDRESS,
       );
 

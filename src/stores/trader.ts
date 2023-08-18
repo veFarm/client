@@ -1,7 +1,7 @@
 import { writable, get } from "svelte/store";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
-import * as traderArtifact from "@/abis/Trader.json";
+import * as traderArtifact from "@/artifacts/Trader.json";
 import { getEnvVars } from "@/utils/get-env-vars";
 import { formatUnits } from "@/utils/format-units";
 import { parseUnits } from "@/utils/parse-units";
@@ -11,6 +11,8 @@ type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
+  /** Wei. */
+  swapTxFee: string | undefined;
   /** Decimals. */
   triggerBalance: string;
   /** Decimals. */
@@ -22,6 +24,7 @@ const initialState: State = {
   connexUtils: undefined,
   contract: undefined,
   account: undefined,
+  swapTxFee: undefined,
   triggerBalance: "0",
   reserveBalance: "0",
   error: undefined,
@@ -37,16 +40,16 @@ function createStore() {
 
   // Update trader store based on wallet store changes.
   wallet.subscribe(async (data) => {
-    // No connex present means wallet is disconnected.
-    if (data.connexUtils == null) {
+    if (!data.connected) {
       store.set({ ...initialState });
       return;
     }
 
-    // wallet is connected.
+    // Wallet is connected.
     try {
-      const { connexUtils, account } = data;
+      const { connexUtils, account, baseGasPrice } = data;
 
+      // Create an instance of the Trader contract.
       const contract = connexUtils.getContract(
         traderArtifact.abi as AbiItem[],
         TRADER_CONTRACT_ADDRESS,
@@ -56,10 +59,23 @@ function createStore() {
         account,
       ]);
 
+      const clause = contract.methods.clause.swap([
+        account,
+        "2000", // TODO: is this relevant? Pass oracle/DEX value
+      ]);
+
+      // Calculate gas used by the swap function.
+      // TODO: this should be a constant.
+      const gas = await connexUtils.estimateGas(
+        [clause],
+        TRADER_CONTRACT_ADDRESS,
+      );
+
       store.set({
         connexUtils,
         contract,
         account,
+        swapTxFee: connexUtils.calcTxFee(gas, baseGasPrice, 85),
         triggerBalance: formatUnits(decoded[0]),
         reserveBalance: formatUnits(decoded[1]),
         error: undefined,

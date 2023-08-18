@@ -187,7 +187,7 @@
     currency="VTHO"
     subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
     hint="Minimum balance to initiate a swap"
-    {disabled}
+    disabled={disabled || !$wallet.connected}
     error={errors.triggerBalance[0]}
     bind:value={triggerBalance}
     on:input={() => {
@@ -201,7 +201,7 @@
     placeholder={$trader.reserveBalance || "0"}
     currency="VTHO"
     hint="Minimum balance to be maintained in your account after the swap"
-    {disabled}
+    disabled={disabled || !$wallet.connected}
     error={errors.reserveBalance[0]}
     bind:value={reserveBalance}
     on:input={() => {

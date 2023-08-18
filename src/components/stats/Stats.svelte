@@ -37,6 +37,6 @@
 
 {#if !error}
   <StatItem value={stats.swapsCount} label="Trades" />
-  <StatItem value={formatUnits(stats.vetTotal, 18, 2)} label="VET volume" />
+  <StatItem value={formatUnits(stats.vetTotal, 2)} label="VET volume" />
   <StatItem value={stats.accountsCount} label="Accounts" />
 {/if}

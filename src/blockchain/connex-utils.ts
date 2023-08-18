@@ -1,8 +1,10 @@
 import type { Connex } from "@vechain/connex";
-import type { Certificate} from "thor-devkit";
+import type { Certificate } from "thor-devkit";
 import { Transaction } from "thor-devkit";
+import bn from "bignumber.js";
 import type { AbiItem } from "@/typings/types";
 import { formatUnits } from "@/utils/format-units";
+import * as paramsArtifact from "@/artifacts/Params.json";
 
 export type Contract = {
   methods: {
@@ -237,25 +239,73 @@ export class ConnexUtils {
     };
   }
 
-      /**
-     * @see https://github.com/vechain/connex/blob/c00bfc1abec3572c7d1df722bf8a7dfb14295102/packages/driver/src/driver.ts#L165
-     */
-    async estimateGas(clauses: Connex.VM.Clause[], signer?: Address) {
-        let explainer = this.connex.thor.explain(clauses);
+  /**
+   * Fetch the Params VeChain smart contract to ge the current base gas price.
+   * @see {@link https://docs.vechain.org/tutorials/Useful-tips-for-building-a-dApp.html#_6-estimate-the-transaction-fee}
+   * @return {string} Base gas price.
+   */
+  async fetchBaseGasPrice(): Promise<string> {
+    // Create an instance of the VeChain Params contract.
+    const contract = this.getContract(
+      paramsArtifact.abi as AbiItem[],
+      // Params contract address for both main and test nets.
+      "0x0000000000000000000000000000506172616d73",
+    );
 
-        if (signer) {
-            explainer = explainer.caller(signer);
-        }
+    const decoded = await contract.methods.constant.get([
+      // 0x000000…696365 is the key of baseGasPrice https://docs.vechain.org/others/miscellaneous.html#key-of-governance-params
+      "0x000000000000000000000000000000000000626173652d6761732d7072696365",
+    ]);
 
-        const output = await explainer.execute();
-        const executionGas = output.reduce((sum, out) => sum + out.gasUsed, 0);
+    return decoded[0];
+  }
 
-        const intrinsicGas = Transaction.intrinsicGas(
-            clauses as Transaction.Clause[]
-        );
+  /**
+   * Estimate units of gas used to execute the given set of clauses.
+   * @see https://github.com/vechain/connex/blob/c00bfc1abec3572c7d1df722bf8a7dfb14295102/packages/driver/src/driver.ts#L165
+   */
+  async estimateGas(
+    clauses: Connex.VM.Clause[],
+    signer?: Address,
+  ): Promise<number> {
+    let explainer = this.connex.thor.explain(clauses);
 
-        const leeway = executionGas > 0 ? 16000 : 0;
-
-        return intrinsicGas + executionGas + leeway;
+    if (signer) {
+      explainer = explainer.caller(signer);
     }
+
+    const output = await explainer.execute();
+    const executionGas = output.reduce((sum, out) => sum + out.gasUsed, 0);
+
+    const intrinsicGas = Transaction.intrinsicGas(
+      clauses as Transaction.Clause[],
+    );
+
+    // Adding some extra gas to make sure the tx goes through.
+    const leeway = executionGas > 0 ? 16000 : 0;
+
+    return intrinsicGas + executionGas + leeway;
+  }
+
+  /**
+   * Calculate tx fee given gas usage, baseGasPrice and the gasPriceCoefficient.
+   * CasPriceCoefficient in {0, 85, 255}.
+   * @param {number} gas Gas used to execute the tx.
+   * @param {string} baseGasPrice Base gas price fetched from the VeChain Params contract.
+   * @param {number} gasPriceCoef Gas price coefficient to determine regular, medium or high gas cost.
+   * @return Total transaction gas cost in wei.
+   */
+  calcTxFee(
+    gas: number,
+    baseGasPrice: string,
+    gasPriceCoef: 0 | 85 | 255,
+  ): string {
+    return bn(baseGasPrice)
+      .times(gasPriceCoef)
+      .idiv(255)
+      .plus(baseGasPrice)
+      .times(gas)
+      // .dividedBy(1e18)
+      .toString();
+  }
 }

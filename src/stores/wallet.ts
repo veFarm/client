@@ -15,6 +15,8 @@ type State =
       /** Decimals. */
       balance: { vet: string; vtho: string };
       walletId: WalletId;
+      /** Wei */
+      baseGasPrice: string;
     }
   | {
       connexUtils: ConnexUtils | undefined;
@@ -24,6 +26,7 @@ type State =
       account: undefined;
       balance: undefined;
       walletId: WalletId | undefined;
+      baseGasPrice: undefined;
     };
 
 const initialState: State = {
@@ -34,6 +37,7 @@ const initialState: State = {
   account: undefined,
   balance: undefined,
   walletId: undefined,
+  baseGasPrice: undefined,
 };
 
 // Observation: not sure if this is the best abstraction for handling
@@ -84,6 +88,7 @@ function createStore() {
             account,
             balance: await connexUtils.fetchBalance(account),
             walletId,
+            baseGasPrice: await connexUtils.fetchBaseGasPrice(),
           });
 
           return account;
@@ -112,6 +117,7 @@ function createStore() {
           account: acc,
           balance: await connexUtils.fetchBalance(acc),
           walletId,
+          baseGasPrice: await connexUtils.fetchBaseGasPrice(),
         });
 
         return acc;
