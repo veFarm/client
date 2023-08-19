@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { VTHO_TOTAL_SUPPLY } from "@/config";
+  import { MAX_UINT256 } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
@@ -128,7 +128,7 @@
       clauses.push(
         vtho.getClause("approve")!([
           TRADER_CONTRACT_ADDRESS,
-          VTHO_TOTAL_SUPPLY,
+          MAX_UINT256,
         ]),
       );
 
