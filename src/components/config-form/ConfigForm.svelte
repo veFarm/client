@@ -17,7 +17,7 @@
 
   export let variant: Variant;
 
-  type ErrorFields = "triggerBalance" | "reserveBalance";
+  type ErrorFields = "triggerBalance" | "reserveBalance" | "network";
   type Errors = Record<ErrorFields, string[]>;
 
   /** Form status. */
@@ -26,6 +26,7 @@
   let errors: Errors = {
     triggerBalance: [],
     reserveBalance: [],
+    network: [],
   };
   /** VTHO balance to initiate a swap in decimals. */
   let triggerBalance = "";
@@ -62,6 +63,7 @@
     const _errors: Errors = {
       triggerBalance: [],
       reserveBalance: [],
+      network: [],
     };
 
     // Sanitize inputs
@@ -96,53 +98,56 @@
   async function handleSubmit(): Promise<void> {
     disabled = true;
 
-    // Clear previous errors if any
-    clearErrors();
+    try {
+      // Clear previous errors if any
+      clearErrors();
 
-    // Validate fields
-    const err = validateFields(triggerBalance, reserveBalance);
+      console.log({ triggerBalance, reserveBalance });
+      // Validate fields
+      const err = validateFields(triggerBalance, reserveBalance);
 
-    // In case of errors, display on UI and return handler to parent component
-    if (err.triggerBalance.length > 0 || err.reserveBalance.length > 0) {
-      errors = err;
+      // In case of errors, display on UI and return handler to parent component
+      if (err.triggerBalance.length > 0 || err.reserveBalance.length > 0) {
+        errors = err;
+        disabled = false;
+        return;
+      }
+
+      const clauses: Connex.VM.Clause[] = [];
+      const comments: string[] = ["Please approve the following action(s):"];
+
+      // TODO: get clause and comment from store
+      if (!inputsMatchStore) {
+        clauses.push(
+          trader.getClause("saveConfig")!([
+            parseUnits(triggerBalance),
+            parseUnits(reserveBalance),
+          ]),
+        );
+
+        comments.push("Save configuration values into the VeFarm contract.");
+      }
+
+      if (variant === "CONFIG_AND_APPROVE") {
+        clauses.push(
+          vtho.getClause("approve")!([TRADER_CONTRACT_ADDRESS, MAX_UINT256]),
+        );
+
+        comments.push(
+          "Allow the VeFarm contract to spend your VTHO in exchange for VET.",
+        );
+      }
+
+      const response = await wallet.signTx(clauses, comments.join(" "));
+      await wallet.waitForReceipt(response!.txid);
+      await trader.fetchConfig();
+      await wallet.fetchBalance();
+    } catch (error: any) {
+      console.log({ error });
+      errors.network.push(error?.message || "Unknown error occurred.");
+    } finally {
       disabled = false;
-      return;
     }
-
-    const clauses: Connex.VM.Clause[] = [];
-    const comments: string[] = ["Please approve the following action(s):"];
-
-    // TODO: get clause and comment from store
-    if (!inputsMatchStore) {
-      clauses.push(
-        trader.getClause("saveConfig")!([
-          parseUnits(triggerBalance),
-          parseUnits(reserveBalance),
-        ]),
-      );
-
-      comments.push("Save configuration values into the VeFarm contract.");
-    }
-
-    if (variant === "CONFIG_AND_APPROVE") {
-      clauses.push(
-        vtho.getClause("approve")!([
-          TRADER_CONTRACT_ADDRESS,
-          MAX_UINT256,
-        ]),
-      );
-
-      comments.push(
-        "Allow the VeFarm contract to spend your VTHO in exchange for VET.",
-      );
-    }
-
-    const response = await wallet.signTx(clauses, comments.join(" "));
-    await wallet.waitForReceipt(response!.txid);
-    await trader.fetchConfig();
-    await wallet.fetchBalance();
-
-    disabled = false;
   }
 
   // Set stored config values on login.
@@ -244,5 +249,8 @@
   {/if}
   {#if $trader.error != null && $trader.error.length > 0}
     <p class="text-danger">ERROR: {$trader.error}</p>
+  {/if}
+  {#if errors.network != null && errors.network.length > 0}
+    <p class="text-danger">ERROR: {errors.network[0]}</p>
   {/if}
 </form>

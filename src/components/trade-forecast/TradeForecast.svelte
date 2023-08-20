@@ -55,11 +55,11 @@
   $: {
     if (txFee != null && !inputsEmpty) {
       protocolFee = bn(parseUnits(triggerBalance))
-          .minus(bn(parseUnits(reserveBalance)))
-          .minus(bn(txFee))
-          .times(bn(3))
-          .div(bn(1000))
-          .toString()
+        .minus(bn(parseUnits(reserveBalance)))
+        .minus(bn(txFee))
+        .times(bn(3))
+        .div(bn(1000))
+        .toFixed();
     }
   }
 
@@ -68,14 +68,13 @@
 
   $: {
     if (txFee != null && !inputsEmpty && protocolFee != null) {
-      dexFee =
-        bn(parseUnits(triggerBalance))
-          .minus(bn(parseUnits(reserveBalance)))
-          .minus(bn(txFee))
-          .minus(bn(protocolFee))
-          .times(bn(3))
-          .div(bn(1000))
-          .toString()
+      dexFee = bn(parseUnits(triggerBalance))
+        .minus(bn(parseUnits(reserveBalance)))
+        .minus(bn(txFee))
+        .minus(bn(protocolFee))
+        .times(bn(3))
+        .div(bn(1000))
+        .toFixed();
     }
   }
 
@@ -89,7 +88,7 @@
       protocolFee != null &&
       dexFee != null
     ) {
-      totalFees = bn(txFee).plus(bn(protocolFee)).plus(bn(dexFee)).toString();
+      totalFees = bn(txFee).plus(bn(protocolFee)).plus(bn(dexFee)).toFixed();
     }
   }
 
@@ -99,17 +98,24 @@
   // TODO: fetch exchage rate
   $: {
     if (txFee != null && !inputsEmpty && totalFees != null) {
-      amountOut =
-        bn(parseUnits(triggerBalance))
-          .minus(bn(parseUnits(reserveBalance)))
-          .minus(bn(totalFees))
-          .div(bn(20))
-          .toString()
+      amountOut = bn(parseUnits(triggerBalance))
+        .minus(bn(parseUnits(reserveBalance)))
+        .minus(bn(totalFees))
+        .div(bn(20))
+        .toFixed();
     }
   }
 
-  $:{
-    console.log({txFee, protocolFee, dexFee, amountOut, totalFees, nextTrade, balance: $wallet.balance})
+  $: {
+    console.log({
+      txFee,
+      protocolFee,
+      dexFee,
+      amountOut,
+      totalFees,
+      nextTrade,
+      balance: $wallet.balance,
+    });
   }
 </script>
 

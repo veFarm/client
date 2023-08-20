@@ -79,8 +79,8 @@
   {:else}
     {#each swapTxs as tx}
       <SwapTx
-        withdrawAmount={formatUnits(tx.withdrawAmount, 18, 3)}
-        amountOut={formatUnits(tx.amountOut, 18, 5)}
+        withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
+        amountOut={formatUnits(tx.amountOut, 5)}
         txId={tx.txId}
         blockTimestamp={tx.blockTimestamp}
         explorerUrl={chain.explorers[0].url}

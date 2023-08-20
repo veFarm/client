@@ -300,12 +300,15 @@ export class ConnexUtils {
     baseGasPrice: string,
     gasPriceCoef: 0 | 85 | 255,
   ): string {
-    return bn(baseGasPrice)
-      .times(gasPriceCoef)
-      .idiv(255)
-      .plus(baseGasPrice)
-      .times(gas)
-      // .dividedBy(1e18)
-      .toString();
+    return (
+      bn(baseGasPrice)
+        .times(gasPriceCoef)
+        .idiv(255)
+        .plus(baseGasPrice)
+        .times(gas)
+        // .dividedBy(1e18)
+        // .toString();
+        .toFixed()
+    );
   }
 }

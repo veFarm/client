@@ -1,4 +1,5 @@
 import { writable, get } from "svelte/store";
+import bn from "bignumber.js";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
@@ -29,6 +30,15 @@ const initialState: State = {
   reserveBalance: "0",
   error: undefined,
 };
+
+// TODO: move to utils or merge with formatUnits
+/**
+ * Returns a string representation of value formatted with 18 digits.
+ * It does not use scientific notation.
+ */
+function format(str: string): string {
+  return bn(str).div(bn(1e18)).toFixed();
+}
 
 const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
@@ -76,8 +86,8 @@ function createStore() {
         contract,
         account,
         swapTxFee: connexUtils.calcTxFee(gas, baseGasPrice, 85),
-        triggerBalance: formatUnits(decoded[0]),
-        reserveBalance: formatUnits(decoded[1]),
+        triggerBalance: format(decoded[0]),
+        reserveBalance: format(decoded[1]),
         error: undefined,
       });
     } catch (error) {
@@ -106,8 +116,8 @@ function createStore() {
 
         store.update((s) => ({
           ...s,
-          triggerBalance: formatUnits(decoded[0]),
-          reserveBalance: formatUnits(decoded[1]),
+          triggerBalance: format(decoded[0]),
+          reserveBalance: format(decoded[1]),
         }));
       } catch (error) {
         store.update((s) => ({
