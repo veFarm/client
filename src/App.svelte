@@ -12,7 +12,7 @@
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { SwapsHistory } from "@/components/swaps-history";
-  import TradeForecast from "./components/trade-forecast/TradeForecast.svelte";
+  import { TradeForecast } from "@/components/trade-forecast";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
