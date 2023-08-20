@@ -1,8 +1,8 @@
 import bn from "bignumber.js";
 
 /**
- * Returns a string representation of value formatted with unit digits.
+ * Returns a string representation of value formatted with 18 digits.
  */
-export function parseUnits(value: string, digits: number): string {
-  return bn(value).times(bn(10).pow(digits)).toString();
+export function parseUnits(value: string): string {
+  return bn(value).times(bn(1e18)).toFixed();
 }

@@ -12,6 +12,7 @@
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { SwapsHistory } from "@/components/swaps-history";
+  import { TradeForecast } from "@/components/trade-forecast";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
@@ -25,9 +26,9 @@
   $: {
     if (!$wallet.connected) {
       view = "LOGIN";
-    } else if (!swapConfigSet || $vtho.allowance === "0") {
+    } else if (!swapConfigSet || !$vtho.allowed) {
       view = "CONFIG_AND_APPROVE";
-    } else if (swapConfigSet && $vtho.allowance !== "0") {
+    } else if (swapConfigSet && $vtho.allowed) {
       view = "SUMMARY";
     }
   }
@@ -80,12 +81,12 @@
         {#if view === "SUMMARY"}
           <div class="space-y-4">
             <div
-              class="bg-green-50 border rounded-lg border-green-300 p-3 lg:p-6"
+              class="text-green-700 bg-green-50 border rounded-lg border-green-300 space-y-4 p-3 lg:p-6"
             >
               <h2 class="text-green-700 text-center">
                 Great! We&apos;re&nbsp;all&nbsp;set.
               </h2>
-              <p class="text-green-700 mt-2">
+              <p>
                 The VeFarm contract is configured to exchange VTHO for VET when
                 your account balance reaches <b
                   >{$trader.triggerBalance}&nbsp;VTHO</b
@@ -93,6 +94,10 @@
                 reserve balance of <b>{$trader.reserveBalance}&nbsp;VTHO</b> in your
                 account.
               </p>
+              <TradeForecast
+                triggerBalance={$trader.triggerBalance}
+                reserveBalance={$trader.reserveBalance}
+              />
             </div>
             <Button
               intent="primary"

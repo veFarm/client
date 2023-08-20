@@ -1,18 +1,22 @@
 import { writable, get } from "svelte/store";
+import bn from "bignumber.js";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
-import * as traderArtifact from "@/abis/Trader.json";
+import * as traderArtifact from "@/artifacts/Trader.json";
 import { getEnvVars } from "@/utils/get-env-vars";
 import { formatUnits } from "@/utils/format-units";
 import { parseUnits } from "@/utils/parse-units";
 import { wallet } from "@/stores/wallet";
-import { VTHO_DECIMALS } from "@/config";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
+  /** Wei. */
+  swapTxFee: string | undefined;
+  /** Decimals. */
   triggerBalance: string;
+  /** Decimals. */
   reserveBalance: string;
   error: string | undefined;
 };
@@ -21,10 +25,20 @@ const initialState: State = {
   connexUtils: undefined,
   contract: undefined,
   account: undefined,
+  swapTxFee: undefined,
   triggerBalance: "0",
   reserveBalance: "0",
   error: undefined,
 };
+
+// TODO: move to utils or merge with formatUnits
+/**
+ * Returns a string representation of value formatted with 18 digits.
+ * It does not use scientific notation.
+ */
+function format(str: string): string {
+  return bn(str).div(bn(1e18)).toFixed();
+}
 
 const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
@@ -36,16 +50,16 @@ function createStore() {
 
   // Update trader store based on wallet store changes.
   wallet.subscribe(async (data) => {
-    // No connex present means wallet is disconnected.
-    if (data.connexUtils == null) {
+    if (!data.connected) {
       store.set({ ...initialState });
       return;
     }
 
-    // wallet is connected.
+    // Wallet is connected.
     try {
-      const { connexUtils, account } = data;
+      const { connexUtils, account, baseGasPrice } = data;
 
+      // Create an instance of the Trader contract.
       const contract = connexUtils.getContract(
         traderArtifact.abi as AbiItem[],
         TRADER_CONTRACT_ADDRESS,
@@ -55,12 +69,25 @@ function createStore() {
         account,
       ]);
 
+      const clause = contract.methods.clause.swap([
+        account,
+        "2000", // TODO: is this relevant? Pass oracle/DEX value
+      ]);
+
+      // Calculate gas used by the swap function.
+      // TODO: this should be a constant.
+      const gas = await connexUtils.estimateGas(
+        [clause],
+        TRADER_CONTRACT_ADDRESS,
+      );
+
       store.set({
         connexUtils,
         contract,
         account,
-        triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
-        reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
+        swapTxFee: connexUtils.calcTxFee(gas, baseGasPrice, 85),
+        triggerBalance: format(decoded[0]),
+        reserveBalance: format(decoded[1]),
         error: undefined,
       });
     } catch (error) {
@@ -89,8 +116,8 @@ function createStore() {
 
         store.update((s) => ({
           ...s,
-          triggerBalance: formatUnits(decoded[0], VTHO_DECIMALS),
-          reserveBalance: formatUnits(decoded[1], VTHO_DECIMALS),
+          triggerBalance: format(decoded[0]),
+          reserveBalance: format(decoded[1]),
         }));
       } catch (error) {
         store.update((s) => ({
@@ -100,7 +127,9 @@ function createStore() {
       }
     },
     setConfig: async function (
+      /** Decimals. */
       triggerBalance: string,
+      /** Decimals. */
       reserveBalance: string,
     ): Promise<void> {
       try {
@@ -113,10 +142,7 @@ function createStore() {
         const { connexUtils, contract } = data;
 
         const response = await contract.methods.signed.saveConfig(
-          [
-            parseUnits(triggerBalance, VTHO_DECIMALS),
-            parseUnits(reserveBalance, VTHO_DECIMALS),
-          ],
+          [parseUnits(triggerBalance), parseUnits(reserveBalance)],
           "Save config values into the VeFarm contract.",
         );
 

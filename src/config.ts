@@ -1,3 +1,4 @@
+import bn from "bignumber.js";
 import { getEnvVars } from "@/utils/get-env-vars";
 
 const { CHAIN_ID } = getEnvVars();
@@ -159,8 +160,7 @@ export const CHAINS: Record<100009 | 100010, ChainData> = {
 
 export const chain = CHAINS[CHAIN_ID];
 
-export const VTHO_DECIMALS = 18;
-
-// TODO: check this value
-// OR export const MAX_UINT256 = new Big(2).pow(256).sub(1);
-export const VTHO_TOTAL_SUPPLY = "37805720913750000000000000000";
+// "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+export const MAX_UINT256 = bn(
+  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+).toFixed();

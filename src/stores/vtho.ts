@@ -1,17 +1,20 @@
 import { writable, get } from "svelte/store";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
-import * as vthoArtifact from "@/abis/VTHO.json";
+import * as energyArtifact from "@/artifacts/Energy.json";
 import { getEnvVars } from "@/utils/get-env-vars";
-import { formatUnits } from "@/utils/format-units";
 import { wallet } from "@/stores/wallet";
-import { VTHO_DECIMALS } from "@/config";
+
+/**
+ * Observation: we use VTHO and Energy interchangeably. They both refer to
+ * the same token, which is used on VeChain network to pay for transaction fees.
+ */
 
 type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
-  allowance: string;
+  allowed: boolean;
   error: string | undefined;
 };
 
@@ -19,7 +22,7 @@ const initialState: State = {
   connexUtils: undefined,
   contract: undefined,
   account: undefined,
-  allowance: "0",
+  allowed: false,
   error: undefined,
 };
 
@@ -44,7 +47,7 @@ function createStore() {
       const { connexUtils, account } = data;
 
       const contract = connexUtils.getContract(
-        vthoArtifact.abi as AbiItem[],
+        energyArtifact.abi as AbiItem[],
         VTHO_CONTRACT_ADDRESS,
       );
 
@@ -57,7 +60,7 @@ function createStore() {
         connexUtils,
         contract,
         account,
-        allowance: formatUnits(decoded[0], VTHO_DECIMALS),
+        allowed: decoded[0] !== "0",
         error: undefined,
       });
     } catch (error) {
@@ -87,7 +90,7 @@ function createStore() {
 
         store.update((s) => ({
           ...s,
-          allowance: formatUnits(decoded[0], VTHO_DECIMALS),
+          allowed: decoded[0] !== "0",
         }));
       } catch (error) {
         store.update((s) => ({
@@ -96,7 +99,9 @@ function createStore() {
         }));
       }
     },
+    // TODO: replace with approve/revoke?
     setAllowance: async function (
+      /** wei */
       amount: string,
       comment: string,
     ): Promise<void> {
@@ -123,6 +128,7 @@ function createStore() {
         }));
       }
     },
+    // TODO: or getApproveClause
     getClause: function (methodName: string) {
       try {
         const data = get(store);
