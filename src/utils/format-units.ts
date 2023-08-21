@@ -8,3 +8,8 @@ import bn from "bignumber.js";
 export function formatUnits(value: string, decimals: number = 0): string {
   return bn(value).div(bn(1e18)).decimalPlaces(decimals).toString();
 }
+
+// TODO: rename to
+// export function expandTo18Decimals(n: number): BigNumber {
+//   return bigNumberify(n).mul(bigNumberify(10).pow(18))
+// }
