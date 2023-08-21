@@ -52,7 +52,7 @@
       </div>
     {/if}
   </div>
-  {#if hint.length > 0}
+  {#if hint.length > 0 && !hasError}
     <legend class="text-xs text-accent">{hint}</legend>
   {/if}
   {#if hasError}

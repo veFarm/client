@@ -1,4 +1,5 @@
 <script lang="ts">
+  import bn from "bignumber.js";
   import { MAX_UINT256 } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
@@ -67,8 +68,10 @@
     };
 
     // Sanitize inputs
-    const _triggerBalance = triggerBalance != null && triggerBalance.trim();
-    const _reserveBalance = reserveBalance != null && reserveBalance.trim();
+    const _triggerBalance =
+      triggerBalance != null ? triggerBalance.trim() : undefined;
+    const _reserveBalance =
+      reserveBalance != null ? reserveBalance.trim() : undefined;
 
     // TODO
     if (!_triggerBalance) {
@@ -87,6 +90,14 @@
       _errors.reserveBalance.push("Please enter a valid amount.");
     } else if (_reserveBalance === "0") {
       _errors.reserveBalance.push("Please enter a positive amount.");
+    } else if (
+      _triggerBalance != null &&
+      isNumber(_triggerBalance) &&
+      bn(_triggerBalance).lte(bn(_reserveBalance))
+    ) {
+      _errors.reserveBalance.push(
+        "Trigger balance must exceed reserve balance",
+      );
     }
 
     return _errors;
