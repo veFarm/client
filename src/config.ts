@@ -1,7 +1,10 @@
+import type { Connex } from "@vechain/connex";
 import bn from "bignumber.js";
 import { getEnvVars } from "@/utils/get-env-vars";
 
 const { CHAIN_ID } = getEnvVars();
+
+// TODO: see devnet config https://docs.vechain.org/connex/connex#or-connect-to-a-private-network
 
 /**
  * JavaScript CAIP-2 representation object.
@@ -10,7 +13,7 @@ const { CHAIN_ID } = getEnvVars();
 export type ChainData = {
   name: string;
   chain: string;
-  network: "main" | "test";
+  network: "main" | "test" | Connex.Thor.Block; // TODO: add support for devnet
   rpc: string[];
   faucets: string[];
   nativeCurrency: {
@@ -87,76 +90,9 @@ export const CHAINS: Record<100009 | 100010, ChainData> = {
     ],
   },
 };
-//   1: {
-//     name: "Ethereum Mainnet",
-//     chain: "ETH",
-//     rpc: [`https://mainnet.infura.io/v3/${INFURA_API_KEY}`],
-//     faucets: [],
-//     nativeCurrency: {
-//       name: "Ether",
-//       symbol: "ETH",
-//       decimals: 18,
-//     },
-//     // features: [{ name: "EIP155" }, { name: "EIP1559" }],
-//     infoURL: "https://ethereum.org",
-//     shortName: "eth",
-//     chainId: 1,
-//     networkId: 1,
-//     icon: "ethereum",
-//     explorers: [
-//       {
-//         name: "etherscan",
-//         url: "https://etherscan.io",
-//         icon: "etherscan",
-//         standard: "EIP3091",
-//       },
-//     ],
-//   },
-//   5: {
-//     name: "Goerli",
-//     chain: "ETH",
-//     rpc: [`https://goerli.infura.io/v3/${INFURA_API_KEY}`],
-//     faucets: [
-//       "http://fauceth.komputing.org?chain=5&address=${ADDRESS}",
-//       "https://goerli-faucet.slock.it?address=${ADDRESS}",
-//       "https://faucet.goerli.mudit.blog",
-//     ],
-//     nativeCurrency: {
-//       name: "Goerli Ether",
-//       symbol: "ETH",
-//       decimals: 18,
-//     },
-//     infoURL: "https://goerli.net/#about",
-//     shortName: "gor",
-//     chainId: 5,
-//     networkId: 5,
-//     // ens: {
-//     //   registry: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
-//     // },
-//     explorers: [
-//       {
-//         name: "etherscan-goerli",
-//         url: "https://goerli.etherscan.io",
-//         standard: "EIP3091",
-//       },
-//     ],
-//   },
-//   1337: {
-//     name: "Geth Testnet",
-//     chain: "ETH",
-//     rpc: ["http://127.0.0.1:8545"],
-//     faucets: [],
-//     nativeCurrency: {
-//       name: "Geth Testnet Ether",
-//       symbol: "ETH",
-//       decimals: 18,
-//     },
-//     infoURL: "https://geth.ethereum.org",
-//     shortName: "geth",
-//     chainId: 1337,
-//     networkId: 1337,
-//   },
-// };
+
+// This is the same address for all environments.
+export const VTHO_CONTRACT_ADDRESS = "0x0000000000000000000000000000456E65726779" as Address;
 
 export const chain = CHAINS[CHAIN_ID];
 

@@ -25,12 +25,9 @@ export function secsTillNextTrade(
 
   // If balance < triggerBalance and vetBalance > 0
   if (vetBalanceWei.gt(0)) {
-    // 1 VET produces 5e-8 VTHO per block
-    // TODO: check this --> https://docs.vechain.org/openzeppelin-compatibility/vechain-modifications#two-token-design
-    const vthoPerBlock = vetBalanceWei.times(bn(5e-8)); // not zero
-    // Number of blocks till reaching the trigger balance
-    const blocksTillTrigger = diff.div(vthoPerBlock);
-    // 1 block minted every 10 secs
-    return blocksTillTrigger.times(10).toNumber(); // TODO: can it overflow?
+    // 1 VET produces 5e-9 VTHO per second
+    const vthoPerSec = vetBalanceWei.times(bn(5e-9)); // not zero
+    // Number of seconds till reaching the trigger balance
+    return diff.div(vthoPerSec).toNumber();
   }
 }

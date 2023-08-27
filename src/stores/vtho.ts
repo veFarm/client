@@ -1,4 +1,5 @@
 import { writable, get } from "svelte/store";
+import { VTHO_CONTRACT_ADDRESS } from "@/config";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as energyArtifact from "@/artifacts/Energy.json";
@@ -26,7 +27,7 @@ const initialState: State = {
   error: undefined,
 };
 
-const { VTHO_CONTRACT_ADDRESS, TRADER_CONTRACT_ADDRESS } = getEnvVars();
+const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
 /**
  * Keeps track of vtho state for the current logged in account.
