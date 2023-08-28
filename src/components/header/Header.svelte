@@ -18,11 +18,11 @@
     VeFarm
   </a>
 
-  <div class="flex items-center space-x-3">
+  <div class="flex items-center space-x-3 bg-highlight border border-muted rounded-md p-2">
     {#if $wallet.account == null}
       <!-- <ConnectWalletButton size="small" /> -->
     {:else}
-      <span>{shortenAddress($wallet.account)}</span>
+      <span class="text-sm md:text-base">{$wallet.balance.vet} VET {shortenAddress($wallet.account)}</span>
     {/if}
   </div>
 </nav>

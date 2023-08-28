@@ -92,7 +92,8 @@ export const CHAINS: Record<100009 | 100010, ChainData> = {
 };
 
 // This is the same address for all environments.
-export const VTHO_CONTRACT_ADDRESS = "0x0000000000000000000000000000456E65726779" as Address;
+export const VTHO_CONTRACT_ADDRESS =
+  "0x0000000000000000000000000000456E65726779" as Address;
 
 export const chain = CHAINS[CHAIN_ID];
 
