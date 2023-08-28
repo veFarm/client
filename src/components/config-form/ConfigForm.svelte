@@ -197,6 +197,20 @@
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
   <Input
     type="text"
+    id="reserveBalance"
+    label="Reserve Balance"
+    placeholder={$trader.reserveBalance || "0"}
+    currency="VTHO"
+    hint="Minimum balance to be maintained in your account after the swap"
+    disabled={disabled || !$wallet.connected}
+    error={errors.reserveBalance[0]}
+    bind:value={reserveBalance}
+    on:input={() => {
+      clearFieldErrors("reserveBalance");
+    }}
+  />
+  <Input
+    type="text"
     id="triggerBalance"
     label="Trigger Balance"
     placeholder={$trader.triggerBalance || "0"}
@@ -208,20 +222,6 @@
     bind:value={triggerBalance}
     on:input={() => {
       clearFieldErrors("triggerBalance");
-    }}
-  />
-  <Input
-    type="text"
-    id="reserveBalance"
-    label="Reserve Balance"
-    placeholder={$trader.reserveBalance || "0"}
-    currency="VTHO"
-    hint="Minimum balance to be maintained in your account after the swap"
-    disabled={disabled || !$wallet.connected}
-    error={errors.reserveBalance[0]}
-    bind:value={reserveBalance}
-    on:input={() => {
-      clearFieldErrors("reserveBalance");
     }}
   />
 
