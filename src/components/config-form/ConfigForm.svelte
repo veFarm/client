@@ -95,7 +95,7 @@
       isNumber(_triggerBalance) &&
       bn(_triggerBalance).lte(bn(_reserveBalance))
     ) {
-      _errors.reserveBalance.push(
+      _errors.triggerBalance.push(
         "Trigger balance must exceed reserve balance",
       );
     }
