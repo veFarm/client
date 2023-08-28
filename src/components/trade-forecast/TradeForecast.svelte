@@ -50,13 +50,14 @@
     parseInt(triggerBalance, 10) === 0 ||
     parseInt(reserveBalance, 10) === 0; // case when input equals "0000"
 
-  let vthoWithdrewAmount: BigNumber | undefined;
+  // VTHO withdrew amount.
+  let withdrewAmount: BigNumber | undefined;
 
   $: {
     if ($wallet.connected) {
       // Always spend max possible amount.
       // TODO: fetch MAX_VTHO_WITHDRAWAL_AMOUNT from Trader contract.
-      vthoWithdrewAmount = bn(parseUnits($wallet.balance.vtho)).gt(bn(parseUnits(triggerBalance)))
+      withdrewAmount = bn(parseUnits($wallet.balance.vtho)).gt(bn(parseUnits(triggerBalance)))
         ? bn(parseUnits($wallet.balance.vtho)).minus(bn(parseUnits(reserveBalance)))
         : bn(parseUnits(triggerBalance)).minus(bn(parseUnits(reserveBalance)))
     }
@@ -65,8 +66,8 @@
   let protocolFee: string | undefined;
 
   $: {
-    if (txFee != null && !inputsEmpty && vthoWithdrewAmount != null) {
-      protocolFee = vthoWithdrewAmount
+    if (txFee != null && !inputsEmpty && withdrewAmount != null) {
+      protocolFee = withdrewAmount
         .minus(bn(txFee))
         .times(bn(3))
         .div(bn(1000))
@@ -78,8 +79,8 @@
   let dexFee: string | undefined;
 
   $: {
-    if (txFee != null && !inputsEmpty && protocolFee != null && vthoWithdrewAmount != null) {
-      dexFee = vthoWithdrewAmount
+    if (txFee != null && !inputsEmpty && protocolFee != null && withdrewAmount != null) {
+      dexFee = withdrewAmount
         .minus(bn(txFee))
         .minus(bn(protocolFee))
         .times(bn(3))
@@ -107,9 +108,9 @@
 
   // TODO: fetch exchage rate
   $: {
-    if (txFee != null && !inputsEmpty && totalFees != null && vthoWithdrewAmount != null) {
-      amountOut = vthoWithdrewAmount.gt(0)
-      ? vthoWithdrewAmount
+    if (txFee != null && !inputsEmpty && totalFees != null && withdrewAmount != null) {
+      amountOut = withdrewAmount.gt(0)
+      ? withdrewAmount
         .minus(bn(totalFees))
         .div(bn(20))
         .toFixed()
@@ -130,13 +131,13 @@
   }
 </script>
 
-{#if nextTrade != null && totalFees != null && amountOut != null && vthoWithdrewAmount != null}
+{#if nextTrade != null && totalFees != null && amountOut != null && withdrewAmount != null}
   <p>
     <span>Next Trade</span>
     <span class="float-right">&plusmn;{nextTrade}</span>
     <br />
     <span>Total Spent</span>
-    <span class="float-right">{formatUnits(vthoWithdrewAmount.toFixed(), 2)} VTHO</span>
+    <span class="float-right">{formatUnits(withdrewAmount.toFixed(), 2)} VTHO</span>
     <br />
     <span>Fees</span>
     <span class="float-right">{formatUnits(totalFees, 2)} VTHO</span>
