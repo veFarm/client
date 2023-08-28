@@ -65,7 +65,7 @@
 
 <section class="flex flex-col space-y-4">
   <h2>
-    Past Trades
+    Your Trades
     <br />
     <span class="block text-sm text-gray-400 font-normal">
       {updatedAt != null ? `Last updated: ${updatedAt} ago` : ""}
