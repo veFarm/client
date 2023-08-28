@@ -108,10 +108,12 @@
   // TODO: fetch exchage rate
   $: {
     if (txFee != null && !inputsEmpty && totalFees != null && vthoWithdrewAmount != null) {
-      amountOut = vthoWithdrewAmount
+      amountOut = vthoWithdrewAmount.gt(0)
+      ? vthoWithdrewAmount
         .minus(bn(totalFees))
         .div(bn(20))
-        .toFixed();
+        .toFixed()
+      : "0";
     }
   }
 
