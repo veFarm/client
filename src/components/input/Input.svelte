@@ -34,7 +34,7 @@
       {id}
       class="bg-gray-50 border {hasError
         ? 'border-danger'
-        : 'border-gray-300'} text-background text-xl font-medium rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-5 pb-7 disabled:bg-gray-100"
+        : 'border-gray-300'} text-background text-xl font-medium rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-5 pb-7 disabled:bg-gray-200"
       {...$$restProps}
       bind:value
       on:input
@@ -42,6 +42,7 @@
     {#if currency.length > 0}
       <div
         class="absolute top-5 right-2 text-lg font-medium bg-gray-200 px-1.5 rounded-sm"
+        class:bg-gray-300={$$restProps.disabled}
       >
         {currency}
       </div>
