@@ -1,5 +1,6 @@
 <script lang="ts">
   import bn from "bignumber.js";
+  import type { BigNumber } from "bignumber.js";
   import { wallet } from "@/stores/wallet";
   import { trader } from "@/stores/trader";
   import { secsTillNextTrade } from "@/utils/secs-till-next-trade";
@@ -49,13 +50,23 @@
     parseInt(triggerBalance, 10) === 0 ||
     parseInt(reserveBalance, 10) === 0; // case when input equals "0000"
 
+  let vthoWithdrewAmount: BigNumber | undefined;
+
+  $: {
+    if ($wallet.connected) {
+      // Always spend max possible amount.
+      // TODO: fetch MAX_VTHO_WITHDRAWAL_AMOUNT from Trader contract.
+      vthoWithdrewAmount = bn(parseUnits($wallet.balance.vtho)).gt(bn(parseUnits(triggerBalance)))
+        ? bn(parseUnits($wallet.balance.vtho)).minus(bn(parseUnits(reserveBalance)))
+        : bn(parseUnits(triggerBalance)).minus(bn(parseUnits(reserveBalance)))
+    }
+  }
   // Wei
   let protocolFee: string | undefined;
 
   $: {
-    if (txFee != null && !inputsEmpty) {
-      protocolFee = bn(parseUnits(triggerBalance))
-        .minus(bn(parseUnits(reserveBalance)))
+    if (txFee != null && !inputsEmpty && vthoWithdrewAmount != null) {
+      protocolFee = vthoWithdrewAmount
         .minus(bn(txFee))
         .times(bn(3))
         .div(bn(1000))
@@ -67,9 +78,8 @@
   let dexFee: string | undefined;
 
   $: {
-    if (txFee != null && !inputsEmpty && protocolFee != null) {
-      dexFee = bn(parseUnits(triggerBalance))
-        .minus(bn(parseUnits(reserveBalance)))
+    if (txFee != null && !inputsEmpty && protocolFee != null && vthoWithdrewAmount != null) {
+      dexFee = vthoWithdrewAmount
         .minus(bn(txFee))
         .minus(bn(protocolFee))
         .times(bn(3))
@@ -97,9 +107,8 @@
 
   // TODO: fetch exchage rate
   $: {
-    if (txFee != null && !inputsEmpty && totalFees != null) {
-      amountOut = bn(parseUnits(triggerBalance))
-        .minus(bn(parseUnits(reserveBalance)))
+    if (txFee != null && !inputsEmpty && totalFees != null && vthoWithdrewAmount != null) {
+      amountOut = vthoWithdrewAmount
         .minus(bn(totalFees))
         .div(bn(20))
         .toFixed();
@@ -119,10 +128,13 @@
   }
 </script>
 
-{#if nextTrade != null && totalFees != null && amountOut != null}
+{#if nextTrade != null && totalFees != null && amountOut != null && vthoWithdrewAmount != null}
   <p>
     <span>Next Trade</span>
-    <span class="float-right">{nextTrade}</span>
+    <span class="float-right">&plusmn;{nextTrade}</span>
+    <br />
+    <span>Total Spent</span>
+    <span class="float-right">{formatUnits(vthoWithdrewAmount.toFixed(), 2)} VTHO</span>
     <br />
     <span>Fees</span>
     <span class="float-right">{formatUnits(totalFees, 2)} VTHO</span>

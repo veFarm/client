@@ -200,6 +200,7 @@
     id="reserveBalance"
     label="Reserve Balance"
     placeholder={$trader.reserveBalance || "0"}
+    autocomplete="off"
     currency="VTHO"
     hint="Minimum balance to be maintained in your account after the swap"
     disabled={disabled || !$wallet.connected}
@@ -214,6 +215,7 @@
     id="triggerBalance"
     label="Trigger Balance"
     placeholder={$trader.triggerBalance || "0"}
+    autocomplete="off"
     currency="VTHO"
     subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
     hint="Minimum balance to initiate a swap"
