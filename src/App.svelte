@@ -5,6 +5,7 @@
   import { vtho } from "@/stores/vtho";
   import type { WalletId } from "@/typings/types";
   import { trader } from "@/stores/trader";
+  import { formatUnits } from "@/utils/format-units";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
   import { Divider } from "@/components/divider";
@@ -18,17 +19,12 @@
 
   let view: View = "LOGIN";
 
-  let swapConfigSet: boolean = false;
-
-  $: swapConfigSet =
-    $trader.triggerBalance !== "0" && $trader.reserveBalance !== "0";
-
   $: {
     if (!$wallet.connected) {
       view = "LOGIN";
-    } else if (!swapConfigSet || !$vtho.allowed) {
+    } else if (!$trader.swapConfigSet || !$vtho.allowed) {
       view = "CONFIG_AND_APPROVE";
-    } else if (swapConfigSet && $vtho.allowed) {
+    } else if ($trader.swapConfigSet && $vtho.allowed) {
       view = "SUMMARY";
     }
   }
@@ -88,11 +84,11 @@
               </h2>
               <p>
                 The VeFarm contract is configured to exchange VTHO for VET when
-                your account balance reaches <b
-                  >{$trader.triggerBalance}&nbsp;VTHO</b
-                >. It will swap the maximum possible amount while maintaining a
-                reserve balance of <b>{$trader.reserveBalance}&nbsp;VTHO</b> in your
-                account.
+                your account balance reaches
+                <b>{formatUnits($trader.triggerBalance)}&nbsp;VTHO</b>. It will
+                swap the maximum possible amount while maintaining a reserve
+                balance of
+                <b>{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b> in your account.
               </p>
               <TradeForecast
                 triggerBalance={$trader.triggerBalance}
@@ -108,7 +104,7 @@
             >
               Update Configuration
             </Button>
-            <RevokeAllowanceButton disabled={!swapConfigSet} />
+            <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
           </div>
         {/if}
 

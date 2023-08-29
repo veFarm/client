@@ -6,7 +6,9 @@
   import { trader } from "@/stores/trader";
   import { getEnvVars } from "@/utils/get-env-vars";
   import { isNumber } from "@/utils/is-number";
-  import { parseUnits } from "@/utils/parse-units";
+  import { formatUnits } from "@/utils/format-units";
+  import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
+  import { isZeroOrEmpty } from "@/utils/is-zero-or-empty";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
   import { TradeForecast } from "@/components/trade-forecast";
@@ -18,21 +20,21 @@
 
   export let variant: Variant;
 
-  type ErrorFields = "triggerBalance" | "reserveBalance" | "network";
+  type ErrorFields = "reserveBalance" | "triggerBalance" | "network";
   type Errors = Record<ErrorFields, string[]>;
 
   /** Form status. */
   let disabled = false;
   /** Errors object. */
   let errors: Errors = {
-    triggerBalance: [],
     reserveBalance: [],
+    triggerBalance: [],
     network: [],
   };
-  /** VTHO balance to initiate a swap in decimals. */
-  let triggerBalance = "";
   /** VTHO balance to be retained in the account after the swap in decimals. */
   let reserveBalance = "";
+  /** VTHO balance to initiate a swap in decimals. */
+  let triggerBalance = "";
   /** Hack to set targets once. */
   let runOnce = false;
 
@@ -57,32 +59,21 @@
    * Validate input fields.
    */
   function validateFields(
-    triggerBalance: string | undefined,
     reserveBalance: string | undefined,
+    triggerBalance: string | undefined,
   ): Errors {
     // Initialize errors
     const _errors: Errors = {
-      triggerBalance: [],
       reserveBalance: [],
+      triggerBalance: [],
       network: [],
     };
 
     // Sanitize inputs
-    const _triggerBalance =
-      triggerBalance != null ? triggerBalance.trim() : undefined;
     const _reserveBalance =
       reserveBalance != null ? reserveBalance.trim() : undefined;
-
-    // TODO
-    if (!_triggerBalance) {
-      _errors.triggerBalance.push("Required field.");
-    } else if (!isNumber(_triggerBalance)) {
-      _errors.triggerBalance.push("Please enter a valid amount.");
-    } else if (_triggerBalance === "0") {
-      _errors.triggerBalance.push("Please enter a positive amount.");
-    }
-    // TODO: catch MAX_UINT256
-    // TODO: triggerBalance - reserveBalance should be big enough
+    const _triggerBalance =
+      triggerBalance != null ? triggerBalance.trim() : undefined;
 
     if (!_reserveBalance) {
       _errors.reserveBalance.push("Required field.");
@@ -100,6 +91,17 @@
       );
     }
 
+    // TODO
+    if (!_triggerBalance) {
+      _errors.triggerBalance.push("Required field.");
+    } else if (!isNumber(_triggerBalance)) {
+      _errors.triggerBalance.push("Please enter a valid amount.");
+    } else if (_triggerBalance === "0") {
+      _errors.triggerBalance.push("Please enter a positive amount.");
+    }
+    // TODO: catch MAX_UINT256
+    // TODO: triggerBalance - reserveBalance should be big enough
+
     return _errors;
   }
 
@@ -113,12 +115,11 @@
       // Clear previous errors if any
       clearErrors();
 
-      console.log({ triggerBalance, reserveBalance });
       // Validate fields
       const err = validateFields(triggerBalance, reserveBalance);
 
       // In case of errors, display on UI and return handler to parent component
-      if (err.triggerBalance.length > 0 || err.reserveBalance.length > 0) {
+      if (err.reserveBalance.length > 0 || err.triggerBalance.length > 0) {
         errors = err;
         disabled = false;
         return;
@@ -131,8 +132,9 @@
       if (!inputsMatchStore) {
         clauses.push(
           trader.getClause("saveConfig")!([
-            parseUnits(triggerBalance),
-            parseUnits(reserveBalance),
+            // TODO: swap order at contract level.
+            expandTo18Decimals(triggerBalance), // toFixed
+            expandTo18Decimals(reserveBalance), // toFixed
           ]),
         );
 
@@ -149,7 +151,10 @@
         );
       }
 
-      const response = await wallet.signTx(clauses, comments.join(" "));
+      const response = await wallet.signTx(
+        clauses,
+        comments.reverse().join(" "),
+      );
       await wallet.waitForReceipt(response!.txid);
       await trader.fetchConfig();
       await wallet.fetchBalance();
@@ -163,35 +168,31 @@
 
   // Set stored config values on login.
   $: {
-    if (
-      $trader.contract != null &&
-      $trader.triggerBalance !== "0" &&
-      $trader.reserveBalance !== "0" &&
-      !runOnce
-    ) {
-      triggerBalance = $trader.triggerBalance;
-      reserveBalance = $trader.reserveBalance;
+    if ($trader.contract != null && $trader.swapConfigSet && !runOnce) {
+      reserveBalance = formatUnits($trader.reserveBalance);
+      triggerBalance = formatUnits($trader.triggerBalance);
       runOnce = true;
     }
   }
 
   // Allow for numbers only.
-  $: triggerBalance = triggerBalance.replace(/\D+/g, "");
   $: reserveBalance = reserveBalance.replace(/\D+/g, "");
+  $: triggerBalance = triggerBalance.replace(/\D+/g, "");
 
   let inputsEmpty: boolean = true;
 
   $: inputsEmpty =
-    triggerBalance.trim() === "" ||
-    reserveBalance.trim() === "" ||
-    parseInt(triggerBalance, 10) === 0 ||
-    parseInt(reserveBalance, 10) === 0; // case when input equals "0000"
+    isZeroOrEmpty(reserveBalance) || isZeroOrEmpty(triggerBalance);
 
   let inputsMatchStore: boolean = false;
 
   $: inputsMatchStore =
-    $trader.triggerBalance === triggerBalance &&
-    $trader.reserveBalance === reserveBalance;
+    $trader.reserveBalance.eq(
+      isZeroOrEmpty(reserveBalance) ? 0 : expandTo18Decimals(reserveBalance),
+    ) &&
+    $trader.triggerBalance.eq(
+      isZeroOrEmpty(triggerBalance) ? 0 : expandTo18Decimals(triggerBalance),
+    );
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
@@ -199,7 +200,7 @@
     type="text"
     id="reserveBalance"
     label="Reserve Balance"
-    placeholder={$trader.reserveBalance || "0"}
+    placeholder={formatUnits($trader.reserveBalance)}
     autocomplete="off"
     currency="VTHO"
     hint="Minimum balance to be maintained in your account after the swap"
@@ -214,10 +215,12 @@
     type="text"
     id="triggerBalance"
     label="Trigger Balance"
-    placeholder={$trader.triggerBalance || "0"}
+    placeholder={formatUnits($trader.triggerBalance)}
     autocomplete="off"
     currency="VTHO"
-    subtext={`Balance: ${$wallet.balance?.vtho || "0"}`}
+    subtext={`Balance: ${
+      $wallet.balance != null ? formatUnits($wallet.balance.vtho, 2) : "0"
+    }`}
     hint="Minimum balance to initiate a swap"
     disabled={disabled || !$wallet.connected}
     error={errors.triggerBalance[0]}
@@ -227,7 +230,12 @@
     }}
   />
 
-  <TradeForecast {triggerBalance} {reserveBalance} />
+  {#if !inputsEmpty}
+    <TradeForecast
+      reserveBalance={expandTo18Decimals(reserveBalance)}
+      triggerBalance={expandTo18Decimals(triggerBalance)}
+    />
+  {/if}
 
   {#if variant === "LOGIN"}
     <ConnectWalletButton intent="primary" fullWidth />

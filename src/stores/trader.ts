@@ -1,23 +1,20 @@
 import { writable, get } from "svelte/store";
 import bn from "bignumber.js";
+import type { BigNumber } from "bignumber.js";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
 import { getEnvVars } from "@/utils/get-env-vars";
-import { formatUnits } from "@/utils/format-units";
-import { parseUnits } from "@/utils/parse-units";
 import { wallet } from "@/stores/wallet";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
-  /** Wei. */
-  swapTxFee: string | undefined;
-  /** Decimals. */
-  triggerBalance: string;
-  /** Decimals. */
-  reserveBalance: string;
+  swapTxFee: BigNumber | undefined;
+  reserveBalance: BigNumber;
+  triggerBalance: BigNumber;
+  swapConfigSet: boolean;
   error: string | undefined;
 };
 
@@ -26,19 +23,11 @@ const initialState: State = {
   contract: undefined,
   account: undefined,
   swapTxFee: undefined,
-  triggerBalance: "0",
-  reserveBalance: "0",
+  reserveBalance: bn(0),
+  triggerBalance: bn(0),
+  swapConfigSet: false,
   error: undefined,
 };
-
-// TODO: move to utils or merge with formatUnits
-/**
- * Returns a string representation of value formatted with 18 digits.
- * It does not use scientific notation.
- */
-function format(str: string): string {
-  return bn(str).div(bn(1e18)).toFixed();
-}
 
 const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
@@ -81,13 +70,18 @@ function createStore() {
         TRADER_CONTRACT_ADDRESS,
       );
 
+      // TODO: swap order at contract level
+      const reserveBalance = bn(decoded[1]);
+      const triggerBalance = bn(decoded[0]);
+
       store.set({
         connexUtils,
         contract,
         account,
         swapTxFee: connexUtils.calcTxFee(gas, baseGasPrice, 85),
-        triggerBalance: format(decoded[0]),
-        reserveBalance: format(decoded[1]),
+        reserveBalance,
+        triggerBalance,
+        swapConfigSet: reserveBalance.gt(0) && triggerBalance.gt(0),
         error: undefined,
       });
     } catch (error) {
@@ -114,40 +108,16 @@ function createStore() {
           account,
         ]);
 
+        // TODO: swap order at contract level
+        const reserveBalance = bn(decoded[1]);
+        const triggerBalance = bn(decoded[0]);
+
         store.update((s) => ({
           ...s,
-          triggerBalance: format(decoded[0]),
-          reserveBalance: format(decoded[1]),
+          reserveBalance,
+          triggerBalance,
+          swapConfigSet: reserveBalance.gt(0) && triggerBalance.gt(0),
         }));
-      } catch (error) {
-        store.update((s) => ({
-          ...s,
-          error: error?.message || "Unknown error occurred.",
-        }));
-      }
-    },
-    setConfig: async function (
-      /** Decimals. */
-      triggerBalance: string,
-      /** Decimals. */
-      reserveBalance: string,
-    ): Promise<void> {
-      try {
-        const data = get(store);
-
-        if (data?.connexUtils == null || data?.contract == null) {
-          throw new Error("Wallet is not connected.");
-        }
-
-        const { connexUtils, contract } = data;
-
-        const response = await contract.methods.signed.saveConfig(
-          [parseUnits(triggerBalance), parseUnits(reserveBalance)],
-          "Save config values into the VeFarm contract.",
-        );
-
-        await connexUtils.waitForReceipt(response.txid);
-        await this.fetchConfig();
       } catch (error) {
         store.update((s) => ({
           ...s,

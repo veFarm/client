@@ -1,8 +1,7 @@
 <script lang="ts">
   import { wallet } from "@/stores/wallet";
   import { shortenAddress } from "@/utils/shorten-address";
-  // import SvelteLogo from "@/assets/Svelte.svg";
-  // import { ConnectWalletButton } from "@/components/connect-wallet-button";
+  import { formatUnits } from "@/utils/format-units";
 </script>
 
 <nav
@@ -18,13 +17,14 @@
     VeFarm
   </a>
 
-  <div class="flex items-center space-x-3 bg-highlight border border-muted rounded-md p-2">
-    {#if $wallet.account == null}
-      <!-- <ConnectWalletButton size="small" /> -->
-    {:else}
-      <span class="text-sm md:text-base">{$wallet.balance.vet} VET {shortenAddress($wallet.account)}</span>
-    {/if}
-  </div>
+  {#if $wallet.account == null}
+    <!-- <ConnectWalletButton size="small" /> -->
+  {:else}
+    <span class="text-sm md:text-base">
+      {formatUnits($wallet.balance.vet, 2)}&nbsp;VET{" "}
+      {shortenAddress($wallet.account)}
+    </span>
+  {/if}
 </nav>
 
 <style>

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { SwapDoc } from "@/typings/types";
+  import bn from "bignumber.js";
+  import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
   import { getEnvVars } from "@/utils/get-env-vars";
@@ -8,6 +9,24 @@
   import { SwapTx } from "@/components/swap-tx";
 
   const { GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
+
+// TODO: rename it to PastTrades
+
+  type RawSwapDoc = {
+    account: Address;
+    withdrawAmount: string;
+    amountOut: string;
+    txId: string;
+    blockTimestamp: number;
+  };
+
+  type SwapDoc = {
+    account: Address;
+    withdrawAmount: BigNumber;
+    amountOut: BigNumber;
+    txId: string;
+    blockTimestamp: number;
+  };
 
   /**
    * Array of swap transactions performed by the Trader
@@ -32,7 +51,15 @@
         `${GET_ACCOUNT_SWAPS_ENDPOINT}?account=${$wallet.account}`,
       );
 
-      swapTxs = await response.json();
+      const json = (await response.json()) as RawSwapDoc[];
+
+      swapTxs = json.map((tx) => ({
+        account: tx.account,
+        withdrawAmount: bn(tx.withdrawAmount),
+        amountOut: bn(tx.amountOut),
+        txId: tx.txId,
+        blockTimestamp: tx.blockTimestamp,
+      }));
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
     }

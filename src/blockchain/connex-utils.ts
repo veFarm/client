@@ -2,8 +2,8 @@ import type { Connex } from "@vechain/connex";
 import type { Certificate } from "thor-devkit";
 import { Transaction } from "thor-devkit";
 import bn from "bignumber.js";
-import type { AbiItem } from "@/typings/types";
-import { formatUnits } from "@/utils/format-units";
+import type { BigNumber } from "bignumber.js";
+import type { AbiItem, Balance } from "@/typings/types";
 import * as paramsArtifact from "@/artifacts/Params.json";
 
 export type Contract = {
@@ -228,23 +228,23 @@ export class ConnexUtils {
   /**
    * Fetch VET and VTHO account balance.
    * @param {Address} account Account to be checked.
-   * @return VET and VTHO account balance in decimals.
+   * @return VET and VTHO account balance in wei.
    */
-  async fetchBalance(account: Address): Promise<{ vet: string; vtho: string }> {
+  async fetchBalance(account: Address): Promise<Balance> {
     const { balance, energy } = await this.connex.thor.account(account).get();
 
     return {
-      vet: formatUnits(balance, 2),
-      vtho: formatUnits(energy, 2),
+      vet: bn(balance),
+      vtho: bn(energy),
     };
   }
 
   /**
    * Fetch the Params VeChain smart contract to ge the current base gas price.
    * @see {@link https://docs.vechain.org/tutorials/Useful-tips-for-building-a-dApp.html#_6-estimate-the-transaction-fee}
-   * @return {string} Base gas price.
+   * @return {BigNumber} Base gas price.
    */
-  async fetchBaseGasPrice(): Promise<string> {
+  async fetchBaseGasPrice(): Promise<BigNumber> {
     // Create an instance of the VeChain Params contract.
     const contract = this.getContract(
       paramsArtifact.abi as AbiItem[],
@@ -257,7 +257,7 @@ export class ConnexUtils {
       "0x000000000000000000000000000000000000626173652d6761732d7072696365",
     ]);
 
-    return decoded[0];
+    return bn(decoded[0]);
   }
 
   /**
@@ -291,24 +291,19 @@ export class ConnexUtils {
    * Calculate tx fee given gas usage, baseGasPrice and the gasPriceCoefficient.
    * CasPriceCoefficient in {0, 85, 255}.
    * @param {number} gas Gas used to execute the tx.
-   * @param {string} baseGasPrice Base gas price fetched from the VeChain Params contract.
+   * @param {BigNumber} baseGasPrice Base gas price fetched from the VeChain Params contract in wei.
    * @param {number} gasPriceCoef Gas price coefficient to determine regular, medium or high gas cost.
    * @return Total transaction gas cost in wei.
    */
   calcTxFee(
     gas: number,
-    baseGasPrice: string,
+    baseGasPrice: BigNumber,
     gasPriceCoef: 0 | 85 | 255,
-  ): string {
-    return (
-      bn(baseGasPrice)
-        .times(gasPriceCoef)
-        .idiv(255)
-        .plus(baseGasPrice)
-        .times(gas)
-        // .dividedBy(1e18)
-        // .toString();
-        .toFixed()
-    );
+  ): BigNumber {
+    return bn(baseGasPrice)
+      .times(gasPriceCoef)
+      .idiv(255)
+      .plus(baseGasPrice)
+      .times(gas);
   }
 }
