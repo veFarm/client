@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { slide } from "svelte/transition";
+  import { fly } from "svelte/transition";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { wallet } from "@/stores/wallet";
@@ -119,7 +119,7 @@
       </tr>
     </table>
     {#if showMore}
-      <table transition:slide>
+      <table transition:fly={{ duration: 200 }}>
         <tr>
           <td class="title">TX Fee</td>
           <td class="value">{formatUnits(firstTrade.txFee, 2)} VTHO</td>
