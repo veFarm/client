@@ -10,6 +10,7 @@
     bg-background border-b border-muted
     px-2 sm:px-4 py-2
     flex flex-wrap items-center justify-between
+    text-sm md:text-base
   "
 >
   <a href="/">
@@ -20,7 +21,7 @@
   {#if $wallet.account == null}
     <!-- <ConnectWalletButton size="small" /> -->
   {:else}
-    <span class="text-sm md:text-base">
+    <span>
       {formatUnits($wallet.balance.vet, 2)}&nbsp;VET{" "}
       {shortenAddress($wallet.account)}
     </span>

@@ -2,7 +2,6 @@ import type { BigNumber } from "bignumber.js";
 import bn from "bignumber.js";
 import type { Balance } from "@/typings/types";
 import { secondsToTrigger } from "@/utils/seconds-to-trigger";
-import { secondsToDHMS } from "@/utils/seconds-to-dhms";
 
 export type Trade = {
   withdrawAmount: BigNumber;
@@ -11,7 +10,7 @@ export type Trade = {
   protocolFee: BigNumber;
   dexFee: BigNumber;
   totalFees: BigNumber;
-  timeLeft: string;
+  timeLeft: number;
 };
 
 /**
@@ -23,10 +22,6 @@ export type Trade = {
  * @param {BigNumber} exchangeRate Exchange rate VET -> VTHO in wei.
  * @return Trade.
  */
-// TODO: when calling this function pass either triggerBalance or balance.vtho based on
-// bn(parseUnits(balance)).gt(bn(parseUnits(triggerBalance))) ? balance : triggerBalance
-// TODO: should we use BN or strings?
-// TODO: make sure we pass params in WEI!
 // TODO: Should we substract the fee when using this on the ConfigForm component
 export function calcNextTrade(
   reserveBalance: BigNumber,
@@ -35,23 +30,10 @@ export function calcNextTrade(
   txFee: BigNumber,
   exchangeRate: BigNumber, // TODO: should we use BigNumber or number?
 ): Trade | undefined {
-  const seconds = secondsToTrigger(balance, triggerBalance);
+  const timeLeft = secondsToTrigger(balance, triggerBalance);
 
   // 'undefined' means no trade is possible (balance.vet === 0 && balance.vtho < triggerBalance).
-  if (seconds == null) return;
-
-  const { d, h, m } = secondsToDHMS(seconds);
-
-  // Use the most significant figure to represent the time left.
-  // In case of seconds, default to a 5 min window.
-  const timeLeft: string =
-    d + h + m === 0
-      ? "5 mins"
-      : d > 0
-      ? `${d} days`
-      : h > 0
-      ? `${h} hours`
-      : `${m} minutes`;
+  if (timeLeft == null) return;
 
   // TODO: substract fee
   // TODO: use MAX_WITHDRAWAL_AMOUNT from Trader contract.

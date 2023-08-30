@@ -13,7 +13,7 @@
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { TradesHistory } from "@/components/trades-history";
-  import { TradeForecast } from "@/components/trade-forecast";
+  import { TradesForecast } from "@/components/trades-forecast";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
@@ -90,7 +90,7 @@
                 balance of
                 <b>{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b> in your account.
               </p>
-              <TradeForecast
+              <TradesForecast
                 triggerBalance={$trader.triggerBalance}
                 reserveBalance={$trader.reserveBalance}
               />

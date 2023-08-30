@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
   import { PastTrade } from ".";
 </script>
 
@@ -15,8 +14,8 @@
 <Story
   name="Default"
   args={{
-    withdrawAmount: expandTo18Decimals(490),
-    amountOut: expandTo18Decimals(23.45),
+    withdrawAmount: "490",
+    amountOut: "23.45",
     txId: "0x123",
     blockTimestamp: 1691481210,
     explorerUrl: "https://some.url",

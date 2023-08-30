@@ -11,7 +11,7 @@
   import { isZeroOrEmpty } from "@/utils/is-zero-or-empty";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
-  import { TradeForecast } from "@/components/trade-forecast";
+  import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
 
   const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
@@ -134,8 +134,8 @@
         clauses.push(
           trader.getClause("saveConfig")!([
             // TODO: swap order at contract level.
-            expandTo18Decimals(triggerBalance), // toFixed
-            expandTo18Decimals(reserveBalance), // toFixed
+            expandTo18Decimals(triggerBalance).toFixed(),
+            expandTo18Decimals(reserveBalance).toFixed(),
           ]),
         );
 
@@ -235,7 +235,7 @@
   />
 
   {#if !inputsEmpty}
-    <TradeForecast
+    <TradesForecast
       reserveBalance={expandTo18Decimals(reserveBalance)}
       triggerBalance={expandTo18Decimals(triggerBalance)}
     />

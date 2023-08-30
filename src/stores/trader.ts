@@ -6,6 +6,7 @@ import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
 import { getEnvVars } from "@/utils/get-env-vars";
 import { wallet } from "@/stores/wallet";
+import { formatUnits } from "@/utils/format-units";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
@@ -65,10 +66,14 @@ function createStore() {
 
       // Calculate gas used by the swap function.
       // TODO: this should be a constant.
+      // TODO: replace this calculation with the actual constant
+      // gas amount
       const gas = await connexUtils.estimateGas(
         [clause],
         TRADER_CONTRACT_ADDRESS,
       );
+
+      console.log({ gas, baseGasPrice: formatUnits(baseGasPrice, 2) });
 
       // TODO: swap order at contract level
       const reserveBalance = bn(decoded[1]);

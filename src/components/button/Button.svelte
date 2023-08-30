@@ -47,7 +47,7 @@
       },
       size: {
         small: ["text-sm", "p-2", "px-3", "rounded-lg"],
-        medium: ["text-md", "md:text-lg", "py-4", "px-6", "rounded-lg"],
+        medium: ["text-base", "md:text-lg", "py-4", "px-6", "rounded-lg"],
       },
       fullWidth: {
         true: ["w-full"],
