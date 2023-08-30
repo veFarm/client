@@ -11,4 +11,4 @@
     clip-rule="evenodd"
   />
 </svg>
-<span class="sr-only">Close modal</span>
+<span class="sr-only">Close</span>

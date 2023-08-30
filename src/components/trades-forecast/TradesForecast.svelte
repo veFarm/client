@@ -7,6 +7,7 @@
   import { calcNextTrade } from "@/utils/calc-next-trade";
   import type { Trade } from "@/utils/calc-next-trade";
   import { secondsToDHMS } from "@/utils/seconds-to-dhms";
+  import QuestionMark from "@/assets/QuestionMark.svelte";
 
   export let reserveBalance: BigNumber;
   export let triggerBalance: BigNumber;
@@ -75,6 +76,14 @@
         secondTrade?.dexFee != null ? formatUnits(secondTrade.dexFee, 2) : 0,
     });
   }
+
+  let showMore: boolean = false;
+
+  function toggleFees() {
+    showMore = !showMore;
+  }
+
+  // $:{console.log({showMore})}
 </script>
 
 {#if firstTrade != null && secondTrade != null}
@@ -93,15 +102,34 @@
       <td class="value">{formatUnits(secondTrade.withdrawAmount, 2)} VTHO</td>
     </tr>
     <tr>
-      <td class="title">Fees</td>
-      <td class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</td>
-      <td class="value">{formatUnits(secondTrade.totalFees, 2)} VTHO</td>
-    </tr>
-    <tr>
       <td class="title">Received</td>
       <td class="value">{formatUnits(firstTrade.amountOut, 2)} VET</td>
       <td class="value">{formatUnits(secondTrade.amountOut, 2)} VET</td>
     </tr>
+    <tr class="cursor-pointer" on:click={toggleFees}>
+      <td class="title">
+        Fees<QuestionMark class="inline-block w-5 h-5 text-inherit scale-75" />
+      </td>
+      <td class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</td>
+      <td class="value">{formatUnits(secondTrade.totalFees, 2)} VTHO</td>
+    </tr>
+    {#if showMore}
+      <tr>
+        <td class="title">TX Fee</td>
+        <td class="value">{formatUnits(firstTrade.txFee, 2)} VTHO</td>
+        <td class="value">{formatUnits(secondTrade.txFee, 2)} VTHO</td>
+      </tr>
+      <tr>
+        <td class="title">VeFarm Fee</td>
+        <td class="value">{formatUnits(firstTrade.protocolFee, 2)} VTHO</td>
+        <td class="value">{formatUnits(secondTrade.protocolFee, 2)} VTHO</td>
+      </tr>
+      <tr>
+        <td class="title">DEX Fee</td>
+        <td class="value">{formatUnits(firstTrade.dexFee, 2)} VTHO</td>
+        <td class="value">{formatUnits(secondTrade.dexFee, 2)} VTHO</td>
+      </tr>
+    {/if}
   </table>
 {/if}
 
