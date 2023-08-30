@@ -44,6 +44,15 @@
           "hover:bg-danger",
           "hover:text-body",
         ],
+        outline: [
+          "text-background",
+          "bg-body",
+          "border",
+          "border-background", // TODO: add to palette
+          "hover:text-body",
+          "hover:bg-background",
+          "hover:border-body",
+        ],
       },
       size: {
         small: ["text-sm", "p-2", "px-3", "rounded-lg"],

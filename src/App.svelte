@@ -112,7 +112,7 @@
           <div class="space-y-4">
             <ConfigForm variant="UPDATE_CONFIG" />
             <Button
-              intent="secondary"
+              intent="outline"
               fullWidth
               on:click={() => {
                 view = "SUMMARY";
