@@ -107,7 +107,7 @@
   }
 
   /**
-   * Store selected configuration into the Trader contract.
+   * Store selected parameters into the Trader contract.
    */
   async function handleSubmit(): Promise<void> {
     disabled = true;
@@ -265,7 +265,7 @@
       loading={disabled}
       fullWidth
     >
-      Update Configuration
+      Update Parameters
     </Button>
   {/if}
 

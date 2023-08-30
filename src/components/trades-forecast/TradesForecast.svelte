@@ -79,7 +79,7 @@
 
 {#if firstTrade != null && secondTrade != null}
   <table class="w-full text-sm md:text-base">
-    <caption class="text-left text-base font-bold">Future Trades</caption>
+    <caption class="text-left text-base font-bold">Upcoming Trades (estimated)</caption>
     <tr>
       <td class="title">Time</td>
       <td class="value">{formatTime(firstTrade.timeLeft)}</td>
