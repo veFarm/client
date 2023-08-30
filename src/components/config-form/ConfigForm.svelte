@@ -79,16 +79,8 @@
       _errors.reserveBalance.push("Required field.");
     } else if (!isNumber(_reserveBalance)) {
       _errors.reserveBalance.push("Please enter a valid amount.");
-    } else if (_reserveBalance === "0") {
-      _errors.reserveBalance.push("Please enter a positive amount.");
-    } else if (
-      _triggerBalance != null &&
-      isNumber(_triggerBalance) &&
-      bn(_triggerBalance).lte(bn(_reserveBalance))
-    ) {
-      _errors.triggerBalance.push(
-        "Trigger balance must exceed reserve balance",
-      );
+    } else if (parseInt(_reserveBalance, 10) === 0) {
+      _errors.reserveBalance.push("Please enter a positive value.");
     }
 
     // TODO
@@ -96,9 +88,18 @@
       _errors.triggerBalance.push("Required field.");
     } else if (!isNumber(_triggerBalance)) {
       _errors.triggerBalance.push("Please enter a valid amount.");
-    } else if (_triggerBalance === "0") {
-      _errors.triggerBalance.push("Please enter a positive amount.");
+    } else if (parseInt(_triggerBalance, 10) === 0) {
+      _errors.triggerBalance.push("Please enter a positive value.");
+    } else if (
+      _reserveBalance != null &&
+      isNumber(_reserveBalance) &&
+      bn(_triggerBalance).lte(bn(_reserveBalance))
+    ) {
+      _errors.triggerBalance.push(
+        "Trigger balance must exceed reserve balance",
+      );
     }
+
     // TODO: catch MAX_UINT256
     // TODO: triggerBalance - reserveBalance should be big enough
 
@@ -116,7 +117,7 @@
       clearErrors();
 
       // Validate fields
-      const err = validateFields(triggerBalance, reserveBalance);
+      const err = validateFields(reserveBalance, triggerBalance);
 
       // In case of errors, display on UI and return handler to parent component
       if (err.reserveBalance.length > 0 || err.triggerBalance.length > 0) {
@@ -126,7 +127,7 @@
       }
 
       const clauses: Connex.VM.Clause[] = [];
-      const comments: string[] = ["Please approve the following action(s):"];
+      const comments: string[] = [];
 
       // TODO: get clause and comment from store
       if (!inputsMatchStore) {
@@ -138,7 +139,7 @@
           ]),
         );
 
-        comments.push("Save configuration values into the VeFarm contract.");
+        comments.push("Save reserveBalance and triggerBalance values into the VeFarm contract.");
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
@@ -153,7 +154,7 @@
 
       const response = await wallet.signTx(
         clauses,
-        comments.reverse().join(" "),
+        "Please approve the following action(s):" + comments.reverse().join(" "),
       );
       await wallet.waitForReceipt(response!.txid);
       await trader.fetchConfig();
