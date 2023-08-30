@@ -77,7 +77,7 @@
         {#if view === "SUMMARY"}
           <div class="space-y-4">
             <div
-              class="text-green-700 bg-green-50 border rounded-lg border-green-300 space-y-4 p-3 lg:p-4"
+              class="text-green-700 bg-green-50 rounded-t-lg space-y-4 p-3 lg:p-4"
             >
               <h2 class="text-green-700 text-center">
                 Great! We&apos;re&nbsp;all&nbsp;set.

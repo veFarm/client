@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { slide } from "svelte/transition";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { wallet } from "@/stores/wallet";
@@ -87,50 +88,56 @@
 </script>
 
 {#if firstTrade != null && secondTrade != null}
-  <table class="w-full text-sm md:text-base">
-    <caption class="text-base font-bold">Upcoming Trades (estimated)</caption>
-    <tr>
-      <td class="title">Time</td>
-      <td class="value">{formatTime(firstTrade.timeLeft)}</td>
-      <td class="value"
-        >{formatTime(firstTrade.timeLeft + secondTrade.timeLeft)}</td
-      >
-    </tr>
-    <tr>
-      <td class="title">Spent</td>
-      <td class="value">{formatUnits(firstTrade.withdrawAmount, 2)} VTHO</td>
-      <td class="value">{formatUnits(secondTrade.withdrawAmount, 2)} VTHO</td>
-    </tr>
-    <tr>
-      <td class="title">Received</td>
-      <td class="value">{formatUnits(firstTrade.amountOut, 2)} VET</td>
-      <td class="value">{formatUnits(secondTrade.amountOut, 2)} VET</td>
-    </tr>
-    <tr class="cursor-pointer" on:click={toggleFees}>
-      <td class="title">
-        Fees<QuestionMark class="inline-block w-5 h-5 text-inherit scale-75" />
-      </td>
-      <td class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</td>
-      <td class="value">{formatUnits(secondTrade.totalFees, 2)} VTHO</td>
-    </tr>
+  <div>
+    <table class="w-full text-sm md:text-base">
+      <caption class="text-base font-bold">Upcoming Trades (estimated)</caption>
+      <tr>
+        <td class="title">Time</td>
+        <td class="value">{formatTime(firstTrade.timeLeft)}</td>
+        <td class="value"
+          >{formatTime(firstTrade.timeLeft + secondTrade.timeLeft)}</td
+        >
+      </tr>
+      <tr>
+        <td class="title">Spent</td>
+        <td class="value">{formatUnits(firstTrade.withdrawAmount, 2)} VTHO</td>
+        <td class="value">{formatUnits(secondTrade.withdrawAmount, 2)} VTHO</td>
+      </tr>
+      <tr>
+        <td class="title">Received</td>
+        <td class="value">{formatUnits(firstTrade.amountOut, 2)} VET</td>
+        <td class="value">{formatUnits(secondTrade.amountOut, 2)} VET</td>
+      </tr>
+      <tr class="cursor-pointer" on:click={toggleFees}>
+        <td class="title">
+          Fees<QuestionMark
+            class="inline-block w-5 h-5 text-inherit scale-75"
+          />&nbsp;&nbsp;&nbsp;
+        </td>
+        <td class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</td>
+        <td class="value">{formatUnits(secondTrade.totalFees, 2)} VTHO</td>
+      </tr>
+    </table>
     {#if showMore}
-      <tr>
-        <td class="title">TX Fee</td>
-        <td class="value">{formatUnits(firstTrade.txFee, 2)} VTHO</td>
-        <td class="value">{formatUnits(secondTrade.txFee, 2)} VTHO</td>
-      </tr>
-      <tr>
-        <td class="title">VeFarm Fee</td>
-        <td class="value">{formatUnits(firstTrade.protocolFee, 2)} VTHO</td>
-        <td class="value">{formatUnits(secondTrade.protocolFee, 2)} VTHO</td>
-      </tr>
-      <tr>
-        <td class="title">DEX Fee</td>
-        <td class="value">{formatUnits(firstTrade.dexFee, 2)} VTHO</td>
-        <td class="value">{formatUnits(secondTrade.dexFee, 2)} VTHO</td>
-      </tr>
+      <table transition:slide>
+        <tr>
+          <td class="title">TX Fee</td>
+          <td class="value">{formatUnits(firstTrade.txFee, 2)} VTHO</td>
+          <td class="value">{formatUnits(secondTrade.txFee, 2)} VTHO</td>
+        </tr>
+        <tr>
+          <td class="title">VeFarm Fee</td>
+          <td class="value">{formatUnits(firstTrade.protocolFee, 2)} VTHO</td>
+          <td class="value">{formatUnits(secondTrade.protocolFee, 2)} VTHO</td>
+        </tr>
+        <tr>
+          <td class="title">DEX Fee</td>
+          <td class="value">{formatUnits(firstTrade.dexFee, 2)} VTHO</td>
+          <td class="value">{formatUnits(secondTrade.dexFee, 2)} VTHO</td>
+        </tr>
+      </table>
     {/if}
-  </table>
+  </div>
 {/if}
 
 <style lang="postcss">
