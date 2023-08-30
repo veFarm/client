@@ -6,11 +6,11 @@
   import { getEnvVars } from "@/utils/get-env-vars";
   import { formatUnits } from "@/utils/format-units";
   import { timeSince } from "@/utils/time-since";
-  import { SwapTx } from "@/components/swap-tx";
+  import { PastTx } from "@/components/past-tx";
 
   const { GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
 
-// TODO: rename it to PastTrades
+  // TODO: rename it to PastTrades
 
   type RawSwapDoc = {
     account: Address;
@@ -105,7 +105,7 @@
     <p>You don&apos;t have any past trades</p>
   {:else}
     {#each swapTxs as tx}
-      <SwapTx
+      <PastTx
         withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
         amountOut={formatUnits(tx.amountOut, 5)}
         txId={tx.txId}

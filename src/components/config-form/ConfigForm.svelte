@@ -139,7 +139,9 @@
           ]),
         );
 
-        comments.push("Save reserveBalance and triggerBalance values into the VeFarm contract.");
+        comments.push(
+          "Save reserveBalance and triggerBalance values into the VeFarm contract.",
+        );
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
@@ -154,7 +156,8 @@
 
       const response = await wallet.signTx(
         clauses,
-        "Please approve the following action(s):" + comments.reverse().join(" "),
+        "Please approve the following action(s):" +
+          comments.reverse().join(" "),
       );
       await wallet.waitForReceipt(response!.txid);
       await trader.fetchConfig();
