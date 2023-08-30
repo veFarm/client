@@ -1,14 +1,14 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
   import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
-  import { PastTx } from ".";
+  import { PastTrade } from ".";
 </script>
 
-<Meta title="components/PastTx" component={PastTx} />
+<Meta title="components/PastTrade" component={PastTrade} />
 
 <Template let:args>
   <div class="bg-background p-4">
-    <PastTx {...args} />
+    <PastTrade {...args} />
   </div>
 </Template>
 

@@ -6,7 +6,7 @@
   import { getEnvVars } from "@/utils/get-env-vars";
   import { formatUnits } from "@/utils/format-units";
   import { timeSince } from "@/utils/time-since";
-  import { PastTx } from "@/components/past-tx";
+  import { PastTrade } from "@/components/past-trade";
 
   const { GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
 
@@ -105,7 +105,7 @@
     <p>You don&apos;t have any past trades</p>
   {:else}
     {#each swapTxs as tx}
-      <PastTx
+      <PastTrade
         withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
         amountOut={formatUnits(tx.amountOut, 5)}
         txId={tx.txId}

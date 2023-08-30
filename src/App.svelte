@@ -12,7 +12,7 @@
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
-  import { SwapsHistory } from "@/components/swaps-history";
+  import { TradesHistory } from "@/components/trades-history";
   import { TradeForecast } from "@/components/trade-forecast";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
@@ -129,7 +129,7 @@
 
     {#if $wallet.connected}
       <Divider />
-      <SwapsHistory />
+      <TradesHistory />
     {/if}
   </div>
 </Layout>
