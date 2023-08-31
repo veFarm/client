@@ -1,3 +1,5 @@
+import type { BigNumber } from "bignumber.js";
+
 export type WalletId = "sync2" | "veworld";
 
 export type AbiType =
@@ -36,26 +38,12 @@ export type AbiOutput = {
   internalType?: string;
 };
 
-export type SwapDoc = {
-  account: Address;
-  withdrawAmount: string;
-  amountOut: string;
-  txId: string;
-  blockTimestamp: number;
-};
-
-export type Stats = {
-  /** Number of registered accounts */
-  accountsCount: number;
-  /** Number of swap operations performed by the protocol */
-  swapsCount: number;
-  /** Total VET amount transacted by the protocol */
-  vetTotal: string;
-  /** Total VTHO amount transacted by the protocol */
-  vthoTotal: string;
-};
-
 export type SwapConfig = {
-  triggerBalance: string;
   reserveBalance: string;
+  triggerBalance: string;
+};
+
+export type Balance = {
+  vet: BigNumber;
+  vtho: BigNumber;
 };

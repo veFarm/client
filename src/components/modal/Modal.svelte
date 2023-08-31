@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import CloseIcon from "@/assets/Close.svelte";
+  import Close from "@/assets/Close.svelte";
   import { Divider } from "@/components/divider";
 
   export let isOpen = false;
@@ -47,7 +47,7 @@
       </h3>
 
       <button class="hover:bg-transparent/20 rounded-full p-1" on:click={hide}>
-        <CloseIcon class="w-6 h-6 text-body" />
+        <Close class="w-6 h-6 text-body" />
       </button>
     </div>
 

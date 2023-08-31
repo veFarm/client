@@ -17,7 +17,7 @@
     {new Date(blockTimestamp * 1000).toLocaleString()}
   </span>
   <br />
-  <span class="text-md text-primary md:text-lg">
+  <span class="text-base text-primary md:text-lg">
     {withdrawAmount} VTHO ➡ {amountOut} VET
   </span>
   <br />

@@ -40,3 +40,18 @@
     hint: "This is a hint",
   }}
 />
+
+<Story
+  name="Disabled"
+  args={{
+    disabled: true,
+  }}
+/>
+
+<Story
+  name="DisabledWithCurrency"
+  args={{
+    disabled: true,
+    currency: "VTHO",
+  }}
+/>

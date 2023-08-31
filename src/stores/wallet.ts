@@ -1,8 +1,9 @@
 import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
+import type BigNumber from "bignumber.js";
 import { chain } from "@/config";
-import type { WalletId } from "@/typings/types";
+import type { WalletId, Balance } from "@/typings/types";
 import { ConnexUtils } from "@/blockchain/connex-utils";
 
 type State =
@@ -12,11 +13,9 @@ type State =
       error: string | undefined;
       connected: true;
       account: Address;
-      /** Decimals. */
-      balance: { vet: string; vtho: string };
+      balance: Balance;
       walletId: WalletId;
-      /** Wei */
-      baseGasPrice: string;
+      baseGasPrice: BigNumber;
     }
   | {
       connexUtils: ConnexUtils | undefined;

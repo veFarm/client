@@ -1,13 +1,13 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import { SwapTx } from ".";
+  import { PastTrade } from ".";
 </script>
 
-<Meta title="components/SwapTx" component={SwapTx} />
+<Meta title="components/PastTrade" component={PastTrade} />
 
 <Template let:args>
   <div class="bg-background p-4">
-    <SwapTx {...args} />
+    <PastTrade {...args} />
   </div>
 </Template>
 

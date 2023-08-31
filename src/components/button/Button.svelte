@@ -44,10 +44,19 @@
           "hover:bg-danger",
           "hover:text-body",
         ],
+        outline: [
+          "text-background",
+          "bg-body",
+          "border",
+          "border-background", // TODO: add to palette
+          "hover:border-lime-400", // TODO: add to palette
+          "hover:bg-primary-100",
+          "hover:border-primary",
+        ],
       },
       size: {
         small: ["text-sm", "p-2", "px-3", "rounded-lg"],
-        medium: ["text-md", "md:text-lg", "py-4", "px-6", "rounded-lg"],
+        medium: ["text-base", "md:text-lg", "py-4", "px-6", "rounded-lg"],
       },
       fullWidth: {
         true: ["w-full"],
