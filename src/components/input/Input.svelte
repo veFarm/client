@@ -26,7 +26,7 @@
 
 <label
   for={id}
-  class="{hasError ? 'text-danger' : 'text-background'} text-base space-y-1"
+  class="{hasError ? 'text-danger' : 'text-background'} text-sm space-y-1"
 >
   {label}
   <div class="relative">

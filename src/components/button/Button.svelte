@@ -49,9 +49,9 @@
           "bg-body",
           "border",
           "border-background", // TODO: add to palette
-          "hover:text-body",
-          "hover:bg-background",
-          "hover:border-body",
+          "hover:border-lime-400", // TODO: add to palette
+          "hover:bg-primary-100",
+          "hover:border-primary",
         ],
       },
       size: {
