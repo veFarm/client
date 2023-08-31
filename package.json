@@ -53,6 +53,7 @@
     "@vechain/connex": "^2.0.14",
     "bignumber.js": "^9.1.1",
     "class-variance-authority": "^0.7.0",
+    "svelte-smooth-popover": "^1.0.8",
     "thor-devkit": "^2.0.7"
   }
 }
