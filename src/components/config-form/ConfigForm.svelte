@@ -1,10 +1,10 @@
 <script lang="ts">
   import bn from "bignumber.js";
-  import { MAX_UINT256 } from "@/config";
+  import { MAX_UINT256 } from "@/config/index";
+  import { getEnvVars } from "@/config/get-env-vars";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
-  import { getEnvVars } from "@/utils/get-env-vars";
   import { isNumeric } from "@/utils/is-numeric/is-numeric";
   import { formatUnits } from "@/utils/format-units";
   import { expandTo18Decimals } from "@/utils/expand-to18-decimals";

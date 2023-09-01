@@ -1,10 +1,10 @@
 import { writable, get } from "svelte/store";
 import bn from "bignumber.js";
 import type { BigNumber } from "bignumber.js";
+import { getEnvVars } from "@/config/get-env-vars";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
-import { getEnvVars } from "@/utils/get-env-vars";
 import { wallet } from "@/stores/wallet";
 import { formatUnits } from "@/utils/format-units";
 

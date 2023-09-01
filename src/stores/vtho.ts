@@ -1,9 +1,9 @@
 import { writable, get } from "svelte/store";
-import { VTHO_CONTRACT_ADDRESS } from "@/config";
+import { VTHO_CONTRACT_ADDRESS } from "@/config/index";
+import { getEnvVars } from "@/config/get-env-vars";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as energyArtifact from "@/artifacts/Energy.json";
-import { getEnvVars } from "@/utils/get-env-vars";
 import { wallet } from "@/stores/wallet";
 
 /**
