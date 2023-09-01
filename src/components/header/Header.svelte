@@ -43,6 +43,7 @@
           showOnClick
           hideOnExternalClick
           caretWidth={0}
+          align="bottom-left"
           on:open={() => {
             isOpen = true;
           }}
