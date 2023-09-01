@@ -6,7 +6,6 @@
  */
 export function truncateDecimalString(str: string, decimals: number): string {
   const chunks = str.split(".");
-  debugger;
 
   const zeros = Array(decimals).fill(0).join("");
 
@@ -14,5 +13,5 @@ export function truncateDecimalString(str: string, decimals: number): string {
     return chunks[0] + "." + zeros;
   }
 
-  return chunks[0] + "." + chunks[1].concat(zeros).substring(0, decimals - 1);
+  return chunks[0] + "." + chunks[1].concat(zeros).substring(0, decimals);
 }

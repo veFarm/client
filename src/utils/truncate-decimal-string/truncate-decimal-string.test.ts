@@ -12,8 +12,8 @@ describe("truncateDecimalString", () => {
   });
   test.only("float string representation", () => {
     expect(truncateDecimalString("1.234", 2)).to.equal("1.23");
-    // expect(truncateDecimalString('123.456', 1)).to.equal('123.4')
-    // expect(truncateDecimalString('123.456', 5)).to.equal('123.45600')
-    // expect(truncateDecimalString('-123.456', 1)).to.equal('-123.4')
+    expect(truncateDecimalString('123.456', 1)).to.equal('123.4')
+    expect(truncateDecimalString('123.456', 5)).to.equal('123.45600')
+    expect(truncateDecimalString('-123.456', 1)).to.equal('-123.4')
   });
 });
