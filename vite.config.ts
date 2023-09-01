@@ -1,6 +1,9 @@
-import { defineConfig } from "vite";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
 import path from "node:path";
+import { defineConfig } from "vite";
+import type { UserConfig } from "vite";
+import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { configDefaults } from "vitest/config";
+import type { UserConfig as VitestConfig } from "vitest/config";
 // import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 // import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
 // You don't need to add this to deps, it's included by @esbuild-plugins/node-modules-polyfill
@@ -8,7 +11,7 @@ import path from "node:path";
 // import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+const config: UserConfig & { test: VitestConfig["test"] } = {
   plugins: [
     svelte(),
     // , visualizer()
@@ -41,14 +44,21 @@ export default defineConfig({
       // ],
     },
   },
-  // build: {
-  //   rollupOptions: {
-  //     plugins: [
-  //       // Enable rollup polyfills plugin
-  //       // used during production bundling
-  //       // @ts-ignore
-  //       rollupNodePolyFills({ crypto: true }),
-  //     ],
-  //   },
-  // },
-});
+  test: {
+    // jest like globals
+    globals: true,
+    environment: "jsdom",
+    // in-source testing
+    includeSource: ["src/**/*.{js,ts,svelte}"],
+    // Add @testing-library/jest-dom matchers & mocks of SvelteKit modules
+    setupFiles: ["./setupTest.ts"],
+    // Exclude files in c8
+    // coverage: {
+    //   exclude: ['setupTest.ts']
+    // },
+    // Exclude playwright tests folder
+    exclude: [...configDefaults.exclude, "tests"],
+  },
+};
+
+export default defineConfig(config);

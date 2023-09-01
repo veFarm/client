@@ -35,7 +35,7 @@
     <div>
       {formatUnits($wallet.balance.vet, 2)}&nbsp;VET&nbsp;
 
-      <button class="inline-block ">
+      <button class="inline-block">
         {shortenAddress($wallet.account)}
         <ChevronDown class="inline-block text-inherit" />
 
@@ -51,7 +51,9 @@
           }}
         >
           <div class="bg-highlight border border-muted rounded-md px-4 py-3">
-            <button class="text-sm md:text-base" on:click={handleDisconnect}>Disconnect Wallet</button>
+            <button class="text-sm md:text-base" on:click={handleDisconnect}
+              >Disconnect Wallet</button
+            >
           </div>
         </Popover>
       </button>
