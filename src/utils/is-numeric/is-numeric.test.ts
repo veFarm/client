@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { isNumeric } from ".";
+import { isNumeric } from "./is-numeric";
 
 const numbers: string[] = [];
 for (let i = 0; i < 10; i++) {
