@@ -1,4 +1,4 @@
-import path from "node:path";
+import * as path from "node:path";
 import { defineConfig } from "vite";
 import type { UserConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
