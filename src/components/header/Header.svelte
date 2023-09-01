@@ -29,9 +29,7 @@
     VeFarm
   </a>
 
-  {#if $wallet.account == null}
-    <!-- <ConnectWalletButton size="small" /> -->
-  {:else}
+  {#if $wallet.connected}
     <div>
       {formatUnits($wallet.balance.vet, 2)}&nbsp;VET&nbsp;
 
