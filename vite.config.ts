@@ -52,10 +52,12 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
     includeSource: ["src/**/*.{js,ts,svelte}"],
     // Add @testing-library/jest-dom matchers & mocks of SvelteKit modules
     setupFiles: ["./setupTest.ts"],
-    // Exclude files in c8
-    // coverage: {
-    //   exclude: ['setupTest.ts']
-    // },
+    // Exclude files in v8
+    coverage: {
+      provider: "v8",
+      reporter: ['text', 'json', 'html'],
+      // exclude: ['setupTest.ts']
+    },
     // Exclude playwright tests folder
     exclude: [...configDefaults.exclude, "tests"],
   },
