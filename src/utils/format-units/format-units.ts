@@ -1,12 +1,13 @@
 import bn from "bignumber.js";
 import type { BigNumber } from "bignumber.js";
+import { truncateDecimalString } from "@/utils/truncate-decimal-string";
 
 /**
- * Returns a string representation (in scientific notation) of the value
- * formatted with 18 digits and the specified amount of decimal places.
- * Defaults to 0 decimal places if not specified.
+ * Converts value into a decimal string and the specified amount of decimal places.
+ * @param {BigNumber} value Value to be formatted.
+ * @param {number} decimals Decimal places.
  */
 export function formatUnits(value: BigNumber, decimals?: number): string {
-  // return value.div(bn(1e18)).decimalPlaces(decimals).toString();
-  return value.div(bn(1e18)).toFixed();
+  const ether = value.div(bn(1e18)).toFixed();
+  return decimals != null ? truncateDecimalString(ether, decimals) : ether;
 }

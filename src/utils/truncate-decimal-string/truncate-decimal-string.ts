@@ -7,6 +7,10 @@
 export function truncateDecimalString(str: string, decimals: number): string {
   const chunks = str.split(".");
 
+  if (decimals === 0) {
+    return chunks[0];
+  }
+
   const zeros = Array(decimals).fill(0).join("");
 
   if (chunks.length === 1) {
