@@ -3,11 +3,11 @@ import bn from "bignumber.js";
 import { formatUnits } from "./format-units";
 
 type Test = {
-  name: string,
-  wei: string,
-  ether: string,
-  decimals?: number,
-}
+  name: string;
+  wei: string;
+  ether: string;
+  decimals?: number;
+};
 
 const tests: Test[] = [
   {
@@ -80,6 +80,12 @@ const tests: Test[] = [
     wei: "1234567890000000000000000",
     ether: "1234567.89",
     decimals: 2,
+  },
+  {
+    name: "one-two-three-three-decimals",
+    wei: "1234567890123456789012345",
+    ether: "1234567.890",
+    decimals: 3,
   },
   {
     name: "one-two-three-expanded",
