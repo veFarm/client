@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { chain } from "@/config";
+  import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
   import type { WalletId } from "@/typings/types";

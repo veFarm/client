@@ -1,10 +1,10 @@
 import { writable, get } from "svelte/store";
 import bn from "bignumber.js";
 import type { BigNumber } from "bignumber.js";
+import { getEnvVars } from "@/config/get-env-vars";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
-import { getEnvVars } from "@/utils/get-env-vars";
 import { wallet } from "@/stores/wallet";
 import { formatUnits } from "@/utils/format-units";
 
@@ -89,10 +89,11 @@ function createStore() {
         swapConfigSet: reserveBalance.gt(0) && triggerBalance.gt(0),
         error: undefined,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       store.update((s) => ({
         ...s,
-        error: error?.message || "Unknown error occurred.",
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred.",
       }));
     }
   });
@@ -123,10 +124,11 @@ function createStore() {
           triggerBalance,
           swapConfigSet: reserveBalance.gt(0) && triggerBalance.gt(0),
         }));
-      } catch (error) {
+      } catch (error: unknown) {
         store.update((s) => ({
           ...s,
-          error: error?.message || "Unknown error occurred.",
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred.",
         }));
       }
     },
@@ -139,10 +141,11 @@ function createStore() {
         }
 
         return data.contract.methods.clause[methodName];
-      } catch (error) {
+      } catch (error: unknown) {
         store.update((s) => ({
           ...s,
-          error: error?.message || "Unknown error occurred.",
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred.",
         }));
       }
     },
