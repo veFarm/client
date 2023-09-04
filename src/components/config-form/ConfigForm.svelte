@@ -7,7 +7,7 @@
   import { trader } from "@/stores/trader";
   import { isNumeric } from "@/utils/is-numeric/is-numeric";
   import { formatUnits } from "@/utils/format-units";
-  import { expandTo18Decimals } from "@/utils/expand-to18-decimals";
+  import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
   import { isZeroOrEmpty } from "@/utils/is-zero-or-empty";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
