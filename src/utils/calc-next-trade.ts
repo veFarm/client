@@ -1,68 +1,26 @@
-import type { BigNumber } from "bignumber.js";
-import bn from "bignumber.js";
-import type { Balance } from "@/typings/types";
 import { secondsToTrigger } from "@/utils/seconds-to-trigger";
+import { getTradeAmounts } from "@/utils/get-trade-amounts";
+import type { GetTradeAmountsArgs,TradeAmounts } from "@/utils/get-trade-amounts";
 
-export type Trade = {
-  withdrawAmount: BigNumber;
-  amountOut: BigNumber;
-  txFee: BigNumber;
-  protocolFee: BigNumber;
-  dexFee: BigNumber;
-  totalFees: BigNumber;
+export type Trade = TradeAmounts & {
   timeLeft: number;
 };
 
 /**
- *
- * @param {BigNumber} reserveBalance Reserve balance in wei.
- * @param {BigNumber} triggerBalance Trigger balance in wei.
- * @param {Balance} balance Account balance for both VET and VTHO in wei.
- * @param {BigNumber} txFee Trader.swap transaction fee in wei.
- * @param {BigNumber} exchangeRate Exchange rate VET -> VTHO in wei.
+ * Compute next trade amounts and time.
+ * @param {GetTradeAmountsArgs} args Arguments
  * @return Trade.
  */
 // TODO: Should we substract the fee when using this on the ConfigForm component
-export function calcNextTrade(
-  reserveBalance: BigNumber,
-  triggerBalance: BigNumber,
-  balance: Balance,
-  txFee: BigNumber,
-  exchangeRate: BigNumber, // TODO: should we use BigNumber or number?
-): Trade | undefined {
-  const timeLeft = secondsToTrigger(balance, triggerBalance);
+export function calcNextTrade(args: GetTradeAmountsArgs): Trade | undefined {
+  const timeLeft = secondsToTrigger(args.balance, args.triggerBalance);
 
-  // 'undefined' means no trade is possible (balance.vet === 0 && balance.vtho < triggerBalance).
+  // 'undefined' means no trade is possible. This happens when
+  // balance.vet === 0 && balance.vtho < triggerBalance.
   if (timeLeft == null) return;
 
-  // TODO: substract fee
-  // TODO: use MAX_WITHDRAWAL_AMOUNT from Trader contract.
-  // Always spend max possible amount.
-  const withdrawAmount = balance.vtho.gt(triggerBalance)
-    ? balance.vtho.minus(reserveBalance)
-    : triggerBalance.minus(reserveBalance);
-
-  const protocolFee = withdrawAmount.minus(txFee).times(3).div(1000);
-
-  const dexFee = withdrawAmount
-    .minus(txFee)
-    .minus(protocolFee)
-    .times(3)
-    .div(1000);
-
-  const totalFees = txFee.plus(protocolFee).plus(dexFee);
-
-  const amountOut = withdrawAmount.gt(0)
-    ? withdrawAmount.minus(totalFees).div(exchangeRate)
-    : bn(0);
-
   return {
-    withdrawAmount,
-    amountOut,
-    txFee,
-    protocolFee,
-    dexFee,
-    totalFees,
+    ...getTradeAmounts(args),
     timeLeft,
   };
 }
