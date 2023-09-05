@@ -51,7 +51,7 @@ interface ImportMetaEnv {
    * ```
    *
    */
-  readonly VITE_CHAIN_ID: `${keyof typeof import("src/config").CHAINS}`;
+  readonly VITE_CHAIN_ID: `${keyof typeof import("src/config/index").CHAINS}`;
   readonly VITE_TRADER_CONTRACT_ADDRESS: Address;
   readonly VITE_GET_ACCOUNT_SWAPS_ENDPOINT: string;
   readonly VITE_GET_STATS_ENDPOINT: string;

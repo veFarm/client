@@ -120,10 +120,11 @@ function createStore() {
         });
 
         return acc;
-      } catch (error) {
+      } catch (error: unknown) {
         store.set({
           ...initialState,
-          error: error?.message || "Unknown error occurred.",
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred.",
         });
       } finally {
         store.update((s) => ({ ...s, loading: false }));
@@ -145,10 +146,11 @@ function createStore() {
           ...data,
           balance,
         }));
-      } catch (error) {
+      } catch (error: unknown) {
         store.update((s) => ({
           ...s,
-          error: error?.message || "Unknown error occurred.",
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred.",
         }));
       }
     },
@@ -166,10 +168,11 @@ function createStore() {
         const { connexUtils, account } = data;
 
         return connexUtils.signTx(clauses, account, comment);
-      } catch (error) {
+      } catch (error: unknown) {
         store.update((s) => ({
           ...s,
-          error: error?.message || "Unknown error occurred.",
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred.",
         }));
       }
     },
@@ -186,10 +189,11 @@ function createStore() {
         const { connexUtils } = data;
 
         return connexUtils.waitForReceipt(txId);
-      } catch (error) {
+      } catch (error: unknown) {
         store.update((s) => ({
           ...s,
-          error: error?.message || "Unknown error occurred.",
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred.",
         }));
       }
     },

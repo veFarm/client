@@ -1,9 +1,9 @@
 <script lang="ts">
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
-  import { chain } from "@/config";
+  import { chain } from "@/config/index";
+  import { getEnvVars } from "@/config/get-env-vars";
   import { wallet } from "@/stores/wallet";
-  import { getEnvVars } from "@/utils/get-env-vars";
   import { formatUnits } from "@/utils/format-units";
   import { timeSince } from "@/utils/time-since";
   import { PastTrade } from "@/components/past-trade";

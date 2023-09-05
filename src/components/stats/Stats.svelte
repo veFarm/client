@@ -2,9 +2,9 @@
   import { onMount } from "svelte";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
-  import { StatItem } from "@/components/stat-item";
-  import { getEnvVars } from "@/utils/get-env-vars";
+  import { getEnvVars } from "@/config/get-env-vars";
   import { formatUnits } from "@/utils/format-units";
+  import { StatItem } from "@/components/stat-item";
 
   const { GET_STATS_ENDPOINT } = getEnvVars();
 

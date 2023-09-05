@@ -1,11 +1,11 @@
 <script lang="ts">
   import bn from "bignumber.js";
-  import { MAX_UINT256 } from "@/config";
+  import { MAX_UINT256 } from "@/config/index";
+  import { getEnvVars } from "@/config/get-env-vars";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
-  import { getEnvVars } from "@/utils/get-env-vars";
-  import { isNumber } from "@/utils/is-number";
+  import { isNumeric } from "@/utils/is-numeric/is-numeric";
   import { formatUnits } from "@/utils/format-units";
   import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
   import { isZeroOrEmpty } from "@/utils/is-zero-or-empty";
@@ -77,7 +77,7 @@
 
     if (!_reserveBalance) {
       _errors.reserveBalance.push("Required field.");
-    } else if (!isNumber(_reserveBalance)) {
+    } else if (!isNumeric(_reserveBalance)) {
       _errors.reserveBalance.push("Please enter a valid amount.");
     } else if (parseInt(_reserveBalance, 10) === 0) {
       _errors.reserveBalance.push("Please enter a positive value.");
@@ -86,13 +86,13 @@
     // TODO
     if (!_triggerBalance) {
       _errors.triggerBalance.push("Required field.");
-    } else if (!isNumber(_triggerBalance)) {
+    } else if (!isNumeric(_triggerBalance)) {
       _errors.triggerBalance.push("Please enter a valid amount.");
     } else if (parseInt(_triggerBalance, 10) === 0) {
       _errors.triggerBalance.push("Please enter a positive value.");
     } else if (
       _reserveBalance != null &&
-      isNumber(_reserveBalance) &&
+      isNumeric(_reserveBalance) &&
       bn(_triggerBalance).lte(bn(_reserveBalance))
     ) {
       _errors.triggerBalance.push(
@@ -207,6 +207,9 @@
     placeholder={formatUnits($trader.reserveBalance)}
     autocomplete="off"
     currency="VTHO"
+    subtext={`Balance: ${
+      $wallet.balance != null ? formatUnits($wallet.balance.vtho, 2) : "0"
+    }`}
     hint="Minimum balance to be maintained in your account after the swap"
     disabled={disabled || !$wallet.connected}
     error={errors.reserveBalance[0]}
@@ -222,9 +225,6 @@
     placeholder={formatUnits($trader.triggerBalance)}
     autocomplete="off"
     currency="VTHO"
-    subtext={`Balance: ${
-      $wallet.balance != null ? formatUnits($wallet.balance.vtho, 2) : "0"
-    }`}
     hint="Minimum balance to initiate a swap"
     disabled={disabled || !$wallet.connected}
     error={errors.triggerBalance[0]}

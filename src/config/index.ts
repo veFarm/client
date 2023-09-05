@@ -1,6 +1,5 @@
-import type { Connex } from "@vechain/connex";
 import bn from "bignumber.js";
-import { getEnvVars } from "@/utils/get-env-vars";
+import { getEnvVars } from "@/config/get-env-vars";
 
 const { CHAIN_ID } = getEnvVars();
 
