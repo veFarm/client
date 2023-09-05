@@ -65,7 +65,7 @@ function createStore() {
       try {
         // VeWorld injects window.vechain which can serve as detection utility.
         if (walletId === "veworld" && !window.vechain) {
-          throw new Error("VeWorld is not installed.");
+          throw new Error("VeWorld extension not found.");
         }
 
         const connex = new Connex({
