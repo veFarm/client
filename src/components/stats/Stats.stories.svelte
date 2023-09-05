@@ -3,7 +3,7 @@
   import { Stats } from ".";
 </script>
 
-<Meta title="components/Hero" component={Stats} />
+<Meta title="components/Stats" component={Stats} />
 
 <Story name="Default">
   <div class="max-w-xl">
