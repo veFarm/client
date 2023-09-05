@@ -207,6 +207,9 @@
     placeholder={formatUnits($trader.reserveBalance)}
     autocomplete="off"
     currency="VTHO"
+    subtext={`Balance: ${
+      $wallet.balance != null ? formatUnits($wallet.balance.vtho, 2) : "0"
+    }`}
     hint="Minimum balance to be maintained in your account after the swap"
     disabled={disabled || !$wallet.connected}
     error={errors.reserveBalance[0]}
@@ -222,9 +225,6 @@
     placeholder={formatUnits($trader.triggerBalance)}
     autocomplete="off"
     currency="VTHO"
-    subtext={`Balance: ${
-      $wallet.balance != null ? formatUnits($wallet.balance.vtho, 2) : "0"
-    }`}
     hint="Minimum balance to initiate a swap"
     disabled={disabled || !$wallet.connected}
     error={errors.triggerBalance[0]}

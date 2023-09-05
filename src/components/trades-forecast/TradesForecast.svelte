@@ -13,6 +13,8 @@
   export let reserveBalance: BigNumber;
   export let triggerBalance: BigNumber;
 
+  const exchangeRate = bn(20);
+
   /**
    * Use the most significant figure to represent the time left.
    * In case of seconds, default to a 5 min window.
@@ -34,13 +36,13 @@
 
   $: {
     if ($wallet.connected && $trader.swapTxFee != null) {
-      firstTrade = calcNextTrade(
+      firstTrade = calcNextTrade({
         reserveBalance,
         triggerBalance,
-        $wallet.balance,
-        $trader.swapTxFee,
-        bn(20),
-      );
+        balance: $wallet.balance,
+        txFee: $trader.swapTxFee,
+        exchangeRate,
+      });
       console.log("FIRST", {
         txFee: firstTrade?.txFee != null ? formatUnits(firstTrade.txFee, 2) : 0,
         protocolFee:
@@ -59,13 +61,13 @@
 
   $: {
     if ($wallet.connected && $trader.swapTxFee != null) {
-      secondTrade = calcNextTrade(
+      secondTrade = calcNextTrade({
         reserveBalance,
         triggerBalance,
-        { ...$wallet.balance, vtho: bn(0) },
-        $trader.swapTxFee,
-        bn(20),
-      );
+        balance: { ...$wallet.balance, vtho: bn(0) },
+        txFee: $trader.swapTxFee,
+        exchangeRate,
+      });
     }
     console.log("SECOND", {
       txFee: secondTrade?.txFee != null ? formatUnits(secondTrade.txFee, 2) : 0,
