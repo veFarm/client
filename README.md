@@ -5,9 +5,13 @@
 
 # VeFarm Interface
 
-Interface for the VeFarm Protocol. Currently deployed at: [https://main--symphonious-macaron-41163f.netlify.app/](https://main--symphonious-macaron-41163f.netlify.app/)
+Interface for the VeFarm Protocol supporting Connex instances for VeWorld and Sync2.
 
-## Getting Started
+Live version (testnet): [https://main--symphonious-macaron-41163f.netlify.app/](https://main--symphonious-macaron-41163f.netlify.app/)
+
+This DApp was built with Svelte.
+
+## Available Scripts
 
 Clone the project:
 ```
@@ -29,10 +33,21 @@ Run in dev mode:
 npm run dev
 ```
 
+Build for production:
+```
+npm run build
+```
+
+Serve production build locally:
+```
+npm run preview
+```
+
 ## Testing
 
 ```
 npm test
+npm run coverage
 ```
 
 ## Storybook
