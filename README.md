@@ -16,7 +16,7 @@ git clone https://github.com/veFarm/client
 
 Copy `.env.example` into `.env` and set your environmental variables:
 ```
-cp ./env.example ./env
+cp .env.example .env
 ```
 
 Install deps:
