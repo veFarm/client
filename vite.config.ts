@@ -55,7 +55,8 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
     // Exclude files in v8
     coverage: {
       provider: "v8",
-      reporter: ['text', 'json', 'html'],
+      // you can include other reporters, but 'json-summary' is required, json is recommended
+      reporter: ['text', 'json-summary', 'json'],
       // exclude: ['setupTest.ts']
     },
     // Exclude playwright tests folder
