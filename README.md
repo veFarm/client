@@ -15,7 +15,7 @@ This DApp was built with Svelte.
 
 Clone the project:
 ```
-git clone https://github.com/veFarm/client
+git clone git@github.com:veFarm/client.git
 ```
 
 Copy `.env.example` into `.env` and set your environmental variables:
