@@ -14,6 +14,7 @@
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { TradesHistory } from "@/components/trades-history";
   import { TradesForecast } from "@/components/trades-forecast";
+  import { FundsWarning } from "@/components/funds-warning";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
@@ -95,6 +96,7 @@
                 reserveBalance={$trader.reserveBalance}
               />
             </div>
+            <FundsWarning triggerBalance={$trader.triggerBalance} />
             <Button
               intent="primary"
               fullWidth

@@ -56,7 +56,7 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
     coverage: {
       provider: "istanbul",
       // you can include other reporters, but 'json-summary' is required, json is recommended
-      reporter: ['text', 'json-summary', 'json', 'lcov'],
+      reporter: ["text", "json-summary", "json", "lcov"],
       // exclude: ['setupTest.ts']
     },
     // Exclude playwright tests folder
