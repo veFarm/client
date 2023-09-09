@@ -1,1 +1,1 @@
-export { isZeroOrEmpty } from "./is-zero-or-empty"
+export { isZeroOrEmpty } from "./is-zero-or-empty";

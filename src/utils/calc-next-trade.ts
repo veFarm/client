@@ -1,6 +1,9 @@
 import { secondsToTrigger } from "@/utils/seconds-to-trigger";
 import { getTradeAmounts } from "@/utils/get-trade-amounts";
-import type { GetTradeAmountsArgs,TradeAmounts } from "@/utils/get-trade-amounts";
+import type {
+  GetTradeAmountsArgs,
+  TradeAmounts,
+} from "@/utils/get-trade-amounts";
 
 export type Trade = TradeAmounts & {
   timeLeft: number;

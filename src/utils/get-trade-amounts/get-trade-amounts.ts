@@ -4,16 +4,16 @@ import type { Balance } from "@/typings/types";
 
 export type GetTradeAmountsArgs = {
   /** Reserve balance in wei. */
-  reserveBalance: BigNumber,
+  reserveBalance: BigNumber;
   /** Trigger balance in wei. */
-  triggerBalance: BigNumber,
+  triggerBalance: BigNumber;
   /** Account balance for both VET and VTHO in wei. */
-  balance: Balance,
+  balance: Balance;
   /** Trader.swap transaction fee in wei. */
-  txFee: BigNumber,
+  txFee: BigNumber;
   /** Exchange rate VET -> VTHO in wei. */
-  exchangeRate: BigNumber, // TODO: should we use BigNumber or number?
-}
+  exchangeRate: BigNumber; // TODO: should we use BigNumber or number?
+};
 
 export type TradeAmounts = {
   /** VTHO amount to be withdrawn from the target account. */

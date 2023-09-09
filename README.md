@@ -14,31 +14,37 @@ This DApp was built with Svelte.
 ## Available Scripts
 
 Clone the project:
+
 ```
-git clone https://github.com/veFarm/client
+git clone git@github.com:veFarm/client.git
 ```
 
 Copy `.env.example` into `.env` and set your environmental variables:
+
 ```
 cp .env.example .env
 ```
 
 Install deps:
+
 ```
 npm install
 ```
 
 Run in dev mode:
+
 ```
 npm run dev
 ```
 
 Build for production:
+
 ```
 npm run build
 ```
 
 Serve production build locally:
+
 ```
 npm run preview
 ```

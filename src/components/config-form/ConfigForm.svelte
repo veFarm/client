@@ -13,6 +13,7 @@
   import { Input } from "@/components/input";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
+  import { FundsWarning } from "@/components/funds-warning";
 
   const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
@@ -37,6 +38,10 @@
   let triggerBalance = "";
   /** Hack to set targets once. */
   let runOnce = false;
+  /** Reserve balance in wei. */
+  let reserveBalanceWei = bn(0);
+  /** Trigger balance in wei. */
+  let triggerBalanceWei = bn(0);
 
   /**
    * Reset errors object.
@@ -134,8 +139,8 @@
         clauses.push(
           trader.getClause("saveConfig")!([
             // TODO: swap order at contract level.
-            expandTo18Decimals(triggerBalance).toFixed(),
-            expandTo18Decimals(reserveBalance).toFixed(),
+            triggerBalanceWei.toFixed(),
+            reserveBalanceWei.toFixed(),
           ]),
         );
 
@@ -183,20 +188,22 @@
   $: reserveBalance = reserveBalance.replace(/\D+/g, "");
   $: triggerBalance = triggerBalance.replace(/\D+/g, "");
 
+  $: reserveBalanceWei = isZeroOrEmpty(reserveBalance)
+    ? bn(0)
+    : expandTo18Decimals(reserveBalance);
+  $: triggerBalanceWei = isZeroOrEmpty(triggerBalance)
+    ? bn(0)
+    : expandTo18Decimals(triggerBalance);
+
   let inputsEmpty: boolean = true;
 
-  $: inputsEmpty =
-    isZeroOrEmpty(reserveBalance) || isZeroOrEmpty(triggerBalance);
+  $: inputsEmpty = reserveBalanceWei.eq(0) || triggerBalanceWei.eq(0);
 
   let inputsMatchStore: boolean = false;
 
   $: inputsMatchStore =
-    $trader.reserveBalance.eq(
-      isZeroOrEmpty(reserveBalance) ? 0 : expandTo18Decimals(reserveBalance),
-    ) &&
-    $trader.triggerBalance.eq(
-      isZeroOrEmpty(triggerBalance) ? 0 : expandTo18Decimals(triggerBalance),
-    );
+    $trader.reserveBalance.eq(reserveBalanceWei) &&
+    $trader.triggerBalance.eq(triggerBalanceWei);
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
@@ -234,10 +241,12 @@
     }}
   />
 
+  <FundsWarning triggerBalance={triggerBalanceWei} />
+
   {#if !inputsEmpty}
     <TradesForecast
-      reserveBalance={expandTo18Decimals(reserveBalance)}
-      triggerBalance={expandTo18Decimals(triggerBalance)}
+      reserveBalance={reserveBalanceWei}
+      triggerBalance={triggerBalanceWei}
     />
   {/if}
 
