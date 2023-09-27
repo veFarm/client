@@ -2,11 +2,9 @@
   import { onMount } from "svelte";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
-  import { getEnvVars } from "@/config/get-env-vars";
+  import { chain } from "@/config/index";
   import { formatUnits } from "@/utils/format-units";
   import { StatItem } from "@/components/stat-item";
-
-  const { GET_STATS_ENDPOINT } = getEnvVars();
 
   type RawStats = {
     /** Number of registered accounts */
@@ -44,7 +42,7 @@
    */
   async function fetchStats() {
     try {
-      const response = await fetch(GET_STATS_ENDPOINT);
+      const response = await fetch(chain.getStatsEndpoint);
       const json = (await response.json()) as RawStats;
       stats = {
         accountsCount: json.accountsCount,

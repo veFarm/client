@@ -5,6 +5,8 @@ const { CHAIN_ID } = getEnvVars();
 
 // TODO: see devnet config https://docs.vechain.org/connex/connex#or-connect-to-a-private-network
 
+type ChainId = 100010 | 100009
+
 /**
  * JavaScript CAIP-2 representation object.
  * @see https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
@@ -22,7 +24,7 @@ export type ChainData = {
   };
   infoURL: string;
   shortName: string;
-  chainId: number;
+  chainId: ChainId;
   networkId: number;
   icon?: string;
   explorers: {
@@ -31,12 +33,18 @@ export type ChainData = {
     icon?: string;
     standard: string;
   }[];
+  /** VTHO contract address. */
+  vtho: Address;
+  /** Trader contract address. */
+  trader: Address;
+  getAccountSwapsEndpoint: string;
+  getStatsEndpoint: string;
 };
 
 /**
  * @link https://github.com/ethereum-lists/chains
  */
-export const CHAINS: Record<100009 | 100010, ChainData> = {
+export const CHAINS: Record<ChainId, ChainData> = {
   100009: {
     name: "VeChain",
     chain: "VeChain",
@@ -64,6 +72,10 @@ export const CHAINS: Record<100009 | 100010, ChainData> = {
         standard: "none",
       },
     ],
+    vtho: "0x0000000000000000000000000000456E65726779",
+    trader: "0x0000000000000000000000000000000000000000", // TODO
+    getAccountSwapsEndpoint: "https://",
+    getStatsEndpoint: "https://",
   },
   100010: {
     name: "VeChain Testnet",
@@ -87,6 +99,10 @@ export const CHAINS: Record<100009 | 100010, ChainData> = {
         standard: "none",
       },
     ],
+    vtho: "0x0000000000000000000000000000456E65726779",
+    trader: "0xc1E3224A71470fa22C76e76046bA4113e3FaBfFc",
+    getAccountSwapsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
+    getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
   },
 };
 

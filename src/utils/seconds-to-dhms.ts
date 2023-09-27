@@ -10,5 +10,5 @@ export function secondsToDHMS(_seconds: number) {
   const minutes = Math.floor(seconds / 60);
   seconds %= 60;
 
-  return { d: days, m: minutes, h: hours, s: seconds };
+  return { d: days, h: hours, m: minutes, s: seconds };
 }

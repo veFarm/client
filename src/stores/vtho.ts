@@ -1,6 +1,5 @@
 import { writable, get } from "svelte/store";
-import { VTHO_CONTRACT_ADDRESS } from "@/config/index";
-import { getEnvVars } from "@/config/get-env-vars";
+import { chain } from "@/config/index";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as energyArtifact from "@/artifacts/Energy.json";
@@ -27,8 +26,6 @@ const initialState: State = {
   error: undefined,
 };
 
-const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
-
 /**
  * Keeps track of vtho state for the current logged in account.
  */
@@ -49,12 +46,12 @@ function createStore() {
 
       const contract = connexUtils.getContract(
         energyArtifact.abi as AbiItem[],
-        VTHO_CONTRACT_ADDRESS,
+        chain.vtho,
       );
 
       const decoded = await contract.methods.constant.allowance([
         account,
-        TRADER_CONTRACT_ADDRESS,
+        chain.trader,
       ]);
 
       store.set({
@@ -87,7 +84,7 @@ function createStore() {
 
         const decoded = await contract.methods.constant.allowance([
           account,
-          TRADER_CONTRACT_ADDRESS,
+          chain.trader,
         ]);
 
         store.update((s) => ({
@@ -118,7 +115,7 @@ function createStore() {
         const { connexUtils, contract } = data;
 
         const response = await contract.methods.signed.approve(
-          [TRADER_CONTRACT_ADDRESS, amount],
+          [chain.trader, amount],
           comment,
         );
 

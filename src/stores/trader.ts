@@ -1,7 +1,7 @@
 import { writable, get } from "svelte/store";
 import bn from "bignumber.js";
 import type { BigNumber } from "bignumber.js";
-import { getEnvVars } from "@/config/get-env-vars";
+import { chain } from "@/config/index";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
@@ -14,7 +14,6 @@ type State = {
   account: Address | undefined;
   swapTxFee: BigNumber | undefined;
   reserveBalance: BigNumber;
-  triggerBalance: BigNumber;
   swapConfigSet: boolean;
   error: string | undefined;
 };
@@ -25,12 +24,9 @@ const initialState: State = {
   account: undefined,
   swapTxFee: undefined,
   reserveBalance: bn(0),
-  triggerBalance: bn(0),
   swapConfigSet: false,
   error: undefined,
 };
-
-const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
 
 /**
  * Keeps track of trader state for the current logged in account.
@@ -52,7 +48,7 @@ function createStore() {
       // Create an instance of the Trader contract.
       const contract = connexUtils.getContract(
         traderArtifact.abi as AbiItem[],
-        TRADER_CONTRACT_ADDRESS,
+        chain.trader,
       );
 
       const decoded = await contract.methods.constant.addressToConfig([
@@ -70,14 +66,12 @@ function createStore() {
       // gas amount
       const gas = await connexUtils.estimateGas(
         [clause],
-        TRADER_CONTRACT_ADDRESS,
+        chain.trader,
       );
 
       console.log({ gas, baseGasPrice: formatUnits(baseGasPrice, 2) });
 
-      // TODO: swap order at contract level
-      const reserveBalance = bn(decoded[1]);
-      const triggerBalance = bn(decoded[0]);
+      const reserveBalance = bn(decoded[0]);
 
       store.set({
         connexUtils,
@@ -85,8 +79,7 @@ function createStore() {
         account,
         swapTxFee: connexUtils.calcTxFee(gas, baseGasPrice, 85),
         reserveBalance,
-        triggerBalance,
-        swapConfigSet: reserveBalance.gt(0) && triggerBalance.gt(0),
+        swapConfigSet: reserveBalance.gt(0),
         error: undefined,
       });
     } catch (error: unknown) {
@@ -114,15 +107,12 @@ function createStore() {
           account,
         ]);
 
-        // TODO: swap order at contract level
-        const reserveBalance = bn(decoded[1]);
-        const triggerBalance = bn(decoded[0]);
+        const reserveBalance = bn(decoded[0]);
 
         store.update((s) => ({
           ...s,
           reserveBalance,
-          triggerBalance,
-          swapConfigSet: reserveBalance.gt(0) && triggerBalance.gt(0),
+          swapConfigSet: reserveBalance.gt(0),
         }));
       } catch (error: unknown) {
         store.update((s) => ({

@@ -2,13 +2,10 @@
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
-  import { getEnvVars } from "@/config/get-env-vars";
   import { wallet } from "@/stores/wallet";
   import { formatUnits } from "@/utils/format-units";
   import { timeSince } from "@/utils/time-since";
   import { PastTrade } from "@/components/past-trade";
-
-  const { GET_ACCOUNT_SWAPS_ENDPOINT } = getEnvVars();
 
   // TODO: rename it to PastTrades
 
@@ -48,7 +45,7 @@
       }
 
       const response = await fetch(
-        `${GET_ACCOUNT_SWAPS_ENDPOINT}?account=${$wallet.account}`,
+        `${chain.getAccountSwapsEndpoint}?account=${$wallet.account}`,
       );
 
       const json = (await response.json()) as RawSwapDoc[];

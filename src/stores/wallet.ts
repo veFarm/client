@@ -76,37 +76,28 @@ function createStore() {
 
         const connexUtils = new ConnexUtils(connex);
 
-        // If account is given, it means we are loading user's profile from local storage,
-        // i.e., not cert is required.
-        if (account != null) {
-          store.set({
-            connexUtils,
-            loading: false,
-            error: undefined,
-            connected: true,
-            account,
-            balance: await connexUtils.fetchBalance(account),
-            walletId,
-            baseGasPrice: await connexUtils.fetchBaseGasPrice(),
-          });
+        let acc: Address | undefined = account;
 
-          return account;
+        // If account is given, it means that we are loading user's profile from local storage.
+        // Therefore cert is not required.
+        if (acc == null) {
+          const message: Connex.Vendor.CertMessage = {
+            purpose: "identification",
+            payload: {
+              type: "text",
+              content: "Sign a certificate to prove your identity.",
+            },
+          };
+
+          const cert = await connexUtils.signCert(message);
+
+          // This should throw if cert isn't valid.
+          Certificate.verify(cert);
+
+          acc = cert.signer as Address;
         }
 
-        const message: Connex.Vendor.CertMessage = {
-          purpose: "identification",
-          payload: {
-            type: "text",
-            content: "Sign a certificate to prove your identity.",
-          },
-        };
-
-        const cert = await connexUtils.signCert(message);
-
-        // This should throw if cert isn't valid.
-        Certificate.verify(cert);
-
-        const acc = cert.signer as Address;
+        const balance = await connexUtils.fetchBalance(acc);
 
         store.set({
           connexUtils,
@@ -114,7 +105,7 @@ function createStore() {
           error: undefined,
           connected: true,
           account: acc,
-          balance: await connexUtils.fetchBalance(acc),
+          balance,
           walletId,
           baseGasPrice: await connexUtils.fetchBaseGasPrice(),
         });

@@ -1,7 +1,6 @@
 <script lang="ts">
   import bn from "bignumber.js";
-  import { MAX_UINT256 } from "@/config/index";
-  import { getEnvVars } from "@/config/get-env-vars";
+  import { chain, MAX_UINT256 } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
@@ -15,13 +14,11 @@
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { FundsWarning } from "@/components/funds-warning";
 
-  const { TRADER_CONTRACT_ADDRESS } = getEnvVars();
-
   type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "UPDATE_CONFIG";
 
   export let variant: Variant;
 
-  type ErrorFields = "reserveBalance" | "triggerBalance" | "network";
+  type ErrorFields = "reserveBalance" | "network";
   type Errors = Record<ErrorFields, string[]>;
 
   /** Form status. */
@@ -29,19 +26,14 @@
   /** Errors object. */
   let errors: Errors = {
     reserveBalance: [],
-    triggerBalance: [],
     network: [],
   };
   /** VTHO balance to be retained in the account after the swap in decimals. */
   let reserveBalance = "";
-  /** VTHO balance to initiate a swap in decimals. */
-  let triggerBalance = "";
   /** Hack to set targets once. */
   let runOnce = false;
   /** Reserve balance in wei. */
   let reserveBalanceWei = bn(0);
-  /** Trigger balance in wei. */
-  let triggerBalanceWei = bn(0);
 
   /**
    * Reset errors object.
@@ -65,12 +57,10 @@
    */
   function validateFields(
     reserveBalance: string | undefined,
-    triggerBalance: string | undefined,
   ): Errors {
     // Initialize errors
     const _errors: Errors = {
       reserveBalance: [],
-      triggerBalance: [],
       network: [],
     };
 
@@ -86,23 +76,6 @@
       _errors.reserveBalance.push("Please enter a valid amount.");
     } else if (parseInt(_reserveBalance, 10) === 0) {
       _errors.reserveBalance.push("Please enter a positive value.");
-    }
-
-    // TODO
-    if (!_triggerBalance) {
-      _errors.triggerBalance.push("Required field.");
-    } else if (!isNumeric(_triggerBalance)) {
-      _errors.triggerBalance.push("Please enter a valid amount.");
-    } else if (parseInt(_triggerBalance, 10) === 0) {
-      _errors.triggerBalance.push("Please enter a positive value.");
-    } else if (
-      _reserveBalance != null &&
-      isNumeric(_reserveBalance) &&
-      bn(_triggerBalance).lte(bn(_reserveBalance))
-    ) {
-      _errors.triggerBalance.push(
-        "Trigger balance must exceed reserve balance",
-      );
     }
 
     // TODO: catch MAX_UINT256
@@ -122,10 +95,10 @@
       clearErrors();
 
       // Validate fields
-      const err = validateFields(reserveBalance, triggerBalance);
+      const err = validateFields(reserveBalance);
 
       // In case of errors, display on UI and return handler to parent component
-      if (err.reserveBalance.length > 0 || err.triggerBalance.length > 0) {
+      if (err.reserveBalance.length > 0) {
         errors = err;
         disabled = false;
         return;
@@ -138,20 +111,18 @@
       if (!inputsMatchStore) {
         clauses.push(
           trader.getClause("saveConfig")!([
-            // TODO: swap order at contract level.
-            triggerBalanceWei.toFixed(),
             reserveBalanceWei.toFixed(),
           ]),
         );
 
         comments.push(
-          "Save reserveBalance and triggerBalance values into the VeFarm contract.",
+          "Save reserve balance into the VeFarm contract.",
         );
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
         clauses.push(
-          vtho.getClause("approve")!([TRADER_CONTRACT_ADDRESS, MAX_UINT256]),
+          vtho.getClause("approve")!([chain.vtho, MAX_UINT256]),
         );
 
         comments.push(
@@ -162,7 +133,7 @@
       const response = await wallet.signTx(
         clauses,
         "Please approve the following action(s):" +
-          comments.reverse().join(" "),
+        comments.reverse().join(" "),
       );
       await wallet.waitForReceipt(response!.txid);
       await trader.fetchConfig();
@@ -179,31 +150,24 @@
   $: {
     if ($trader.contract != null && $trader.swapConfigSet && !runOnce) {
       reserveBalance = formatUnits($trader.reserveBalance);
-      triggerBalance = formatUnits($trader.triggerBalance);
       runOnce = true;
     }
   }
 
   // Allow for numbers only.
   $: reserveBalance = reserveBalance.replace(/\D+/g, "");
-  $: triggerBalance = triggerBalance.replace(/\D+/g, "");
 
   $: reserveBalanceWei = isZeroOrEmpty(reserveBalance)
     ? bn(0)
     : expandTo18Decimals(reserveBalance);
-  $: triggerBalanceWei = isZeroOrEmpty(triggerBalance)
-    ? bn(0)
-    : expandTo18Decimals(triggerBalance);
 
   let inputsEmpty: boolean = true;
 
-  $: inputsEmpty = reserveBalanceWei.eq(0) || triggerBalanceWei.eq(0);
+  $: inputsEmpty = reserveBalanceWei.eq(0);
 
   let inputsMatchStore: boolean = false;
 
-  $: inputsMatchStore =
-    $trader.reserveBalance.eq(reserveBalanceWei) &&
-    $trader.triggerBalance.eq(triggerBalanceWei);
+  $: inputsMatchStore = $trader.reserveBalance.eq(reserveBalanceWei);
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
@@ -225,29 +189,11 @@
       clearFieldErrors("reserveBalance");
     }}
   />
-  <Input
-    type="text"
-    id="triggerBalance"
-    label="Trigger Balance"
-    placeholder={formatUnits($trader.triggerBalance)}
-    autocomplete="off"
-    currency="VTHO"
-    hint="Minimum balance to initiate a swap"
-    disabled={disabled || !$wallet.connected}
-    error={errors.triggerBalance[0]}
-    bind:value={triggerBalance}
-    on:input={() => {
-      clearFieldErrors("triggerBalance");
-    }}
-  />
 
   <FundsWarning triggerBalance={triggerBalanceWei} />
 
   {#if !inputsEmpty}
-    <TradesForecast
-      reserveBalance={reserveBalanceWei}
-      triggerBalance={triggerBalanceWei}
-    />
+    <TradesForecast reserveBalance={reserveBalanceWei} />
   {/if}
 
   {#if variant === "LOGIN"}
