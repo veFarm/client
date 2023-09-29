@@ -5,7 +5,7 @@ const { CHAIN_ID } = getEnvVars();
 
 // TODO: see devnet config https://docs.vechain.org/connex/connex#or-connect-to-a-private-network
 
-type ChainId = 100010 | 100009
+type ChainId = 100010 | 100009;
 
 /**
  * JavaScript CAIP-2 representation object.
@@ -39,6 +39,7 @@ export type ChainData = {
   trader: Address;
   getAccountSwapsEndpoint: string;
   getStatsEndpoint: string;
+  getAccountTriggerBalanceEndpoint: string;
 };
 
 /**
@@ -76,6 +77,7 @@ export const CHAINS: Record<ChainId, ChainData> = {
     trader: "0x0000000000000000000000000000000000000000", // TODO
     getAccountSwapsEndpoint: "https://",
     getStatsEndpoint: "https://",
+    getAccountTriggerBalanceEndpoint: "https://",
   },
   100010: {
     name: "VeChain Testnet",
@@ -100,15 +102,14 @@ export const CHAINS: Record<ChainId, ChainData> = {
       },
     ],
     vtho: "0x0000000000000000000000000000456E65726779",
-    trader: "0xc1E3224A71470fa22C76e76046bA4113e3FaBfFc",
-    getAccountSwapsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
+    trader: "0xee5ff7cfacf7b1f90f689c18541f5925ebe8e177",
+    getAccountSwapsEndpoint:
+      "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
     getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
+    getAccountTriggerBalanceEndpoint:
+      "http://127.0.0.1:5001/vefarmdev/us-central1/getaccounttriggerbalance",
   },
 };
-
-// This is the same address for all environments.
-export const VTHO_CONTRACT_ADDRESS =
-  "0x0000000000000000000000000000456E65726779" as Address;
 
 export const chain = CHAINS[CHAIN_ID];
 

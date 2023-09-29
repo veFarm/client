@@ -28,6 +28,7 @@
     const account = await wallet.connect(walletId);
     if (account == null) return;
     localStorage.setItem("user", JSON.stringify({ walletId, account }));
+    await wallet.fetchTriggerBalance();
   }
 
   $: error = $wallet.error;

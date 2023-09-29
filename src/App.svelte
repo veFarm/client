@@ -39,6 +39,7 @@
       account: Address;
     };
     await wallet.connect(walletId, account);
+    await wallet.fetchTriggerBalance();
   });
 </script>
 

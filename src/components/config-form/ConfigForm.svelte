@@ -55,9 +55,7 @@
   /**
    * Validate input fields.
    */
-  function validateFields(
-    reserveBalance: string | undefined,
-  ): Errors {
+  function validateFields(reserveBalance: string | undefined): Errors {
     // Initialize errors
     const _errors: Errors = {
       reserveBalance: [],
@@ -67,8 +65,6 @@
     // Sanitize inputs
     const _reserveBalance =
       reserveBalance != null ? reserveBalance.trim() : undefined;
-    const _triggerBalance =
-      triggerBalance != null ? triggerBalance.trim() : undefined;
 
     if (!_reserveBalance) {
       _errors.reserveBalance.push("Required field.");
@@ -110,20 +106,14 @@
       // TODO: get clause and comment from store
       if (!inputsMatchStore) {
         clauses.push(
-          trader.getClause("saveConfig")!([
-            reserveBalanceWei.toFixed(),
-          ]),
+          trader.getClause("saveConfig")!([reserveBalanceWei.toFixed()]),
         );
 
-        comments.push(
-          "Save reserve balance into the VeFarm contract.",
-        );
+        comments.push("Save reserve balance into the VeFarm contract.");
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
-        clauses.push(
-          vtho.getClause("approve")!([chain.vtho, MAX_UINT256]),
-        );
+        clauses.push(vtho.getClause("approve")!([chain.vtho, MAX_UINT256]));
 
         comments.push(
           "Allow the VeFarm contract to spend your VTHO in exchange for VET.",
@@ -133,7 +123,7 @@
       const response = await wallet.signTx(
         clauses,
         "Please approve the following action(s):" +
-        comments.reverse().join(" "),
+          comments.reverse().join(" "),
       );
       await wallet.waitForReceipt(response!.txid);
       await trader.fetchConfig();
@@ -190,7 +180,7 @@
     }}
   />
 
-  <FundsWarning triggerBalance={triggerBalanceWei} />
+  <FundsWarning />
 
   {#if !inputsEmpty}
     <TradesForecast reserveBalance={reserveBalanceWei} />

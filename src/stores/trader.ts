@@ -7,6 +7,7 @@ import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
 import { wallet } from "@/stores/wallet";
 import { formatUnits } from "@/utils/format-units";
+import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
@@ -51,12 +52,14 @@ function createStore() {
         chain.trader,
       );
 
-      const decoded = await contract.methods.constant.addressToConfig([
+      const decoded = await contract.methods.constant.reserves([
         account,
       ]);
 
       const clause = contract.methods.clause.swap([
         account,
+        0,
+        expandTo18Decimals(150).toFixed(),
         "2000", // TODO: is this relevant? Pass oracle/DEX value
       ]);
 
@@ -64,10 +67,7 @@ function createStore() {
       // TODO: this should be a constant.
       // TODO: replace this calculation with the actual constant
       // gas amount
-      const gas = await connexUtils.estimateGas(
-        [clause],
-        chain.trader,
-      );
+      const gas = await connexUtils.estimateGas([clause], chain.trader);
 
       console.log({ gas, baseGasPrice: formatUnits(baseGasPrice, 2) });
 
@@ -103,9 +103,11 @@ function createStore() {
 
         const { contract, account } = data;
 
-        const decoded = await contract.methods.constant.addressToConfig([
+        const decoded = await contract.methods.constant.reserves([
           account,
         ]);
+
+        console.log({decoded: JSON.stringify(decoded, null, 2)})
 
         const reserveBalance = bn(decoded[0]);
 

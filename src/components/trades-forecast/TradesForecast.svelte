@@ -2,7 +2,6 @@
   import { fly } from "svelte/transition";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
-  import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { trader } from "@/stores/trader";
   import { formatUnits } from "@/utils/format-units";
@@ -12,8 +11,8 @@
   import QuestionMark from "@/assets/QuestionMark.svelte";
 
   export let reserveBalance: BigNumber;
-  export let triggerBalance: BigNumber;
 
+  // TODO: query from exchanges
   const exchangeRate = bn(20);
 
   /**
@@ -36,10 +35,10 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    if ($wallet.connected && $trader.swapTxFee != null) {
+    if ($wallet.connected && $trader.swapTxFee != null && $wallet.triggerBalance != null) {
       firstTrade = calcNextTrade({
         reserveBalance,
-        triggerBalance,
+        triggerBalance: $wallet.triggerBalance,
         balance: $wallet.balance,
         txFee: $trader.swapTxFee,
         exchangeRate,
@@ -61,10 +60,10 @@
   let secondTrade: Trade | undefined;
 
   $: {
-    if ($wallet.connected && $trader.swapTxFee != null) {
+    if ($wallet.connected && $trader.swapTxFee != null && $wallet.triggerBalance != null) {
       secondTrade = calcNextTrade({
         reserveBalance,
-        triggerBalance,
+        triggerBalance: $wallet.triggerBalance,
         balance: { ...$wallet.balance, vtho: bn(0) },
         txFee: $trader.swapTxFee,
         exchangeRate,
