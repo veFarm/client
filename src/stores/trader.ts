@@ -52,9 +52,7 @@ function createStore() {
         chain.trader,
       );
 
-      const decoded = await contract.methods.constant.reserves([
-        account,
-      ]);
+      const decoded = await contract.methods.constant.reserves([account]);
 
       const clause = contract.methods.clause.swap([
         account,
@@ -73,6 +71,7 @@ function createStore() {
 
       const reserveBalance = bn(decoded[0]);
 
+      console.log({ reserveBalance: reserveBalance.toFixed() });
       store.set({
         connexUtils,
         contract,
@@ -103,11 +102,7 @@ function createStore() {
 
         const { contract, account } = data;
 
-        const decoded = await contract.methods.constant.reserves([
-          account,
-        ]);
-
-        console.log({decoded: JSON.stringify(decoded, null, 2)})
+        const decoded = await contract.methods.constant.reserves([account]);
 
         const reserveBalance = bn(decoded[0]);
 

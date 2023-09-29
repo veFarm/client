@@ -113,7 +113,7 @@
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
-        clauses.push(vtho.getClause("approve")!([chain.vtho, MAX_UINT256]));
+        clauses.push(vtho.getClause("approve")!([chain.trader, MAX_UINT256]));
 
         comments.push(
           "Allow the VeFarm contract to spend your VTHO in exchange for VET.",

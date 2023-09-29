@@ -85,19 +85,14 @@
                 Great! We&apos;re&nbsp;all&nbsp;set.
               </h2>
               <p>
-                The VeFarm contract is configured to exchange VTHO for VET when
-                your account balance reaches
-                <b>{formatUnits($trader.triggerBalance)}&nbsp;VTHO</b>. It will
-                swap the maximum possible amount while maintaining a reserve
-                balance of
+                The VeFarm contract is configured to exchange VTHO for VET at
+                the best possible time. It will swap the maximum possible amount
+                while maintaining a reserve balance of
                 <b>{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b> in your account.
               </p>
-              <TradesForecast
-                triggerBalance={$trader.triggerBalance}
-                reserveBalance={$trader.reserveBalance}
-              />
+              <TradesForecast reserveBalance={$trader.reserveBalance} />
             </div>
-            <FundsWarning triggerBalance={$trader.triggerBalance} />
+            <FundsWarning />
             <Button
               intent="primary"
               fullWidth

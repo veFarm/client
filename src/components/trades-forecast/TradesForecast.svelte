@@ -35,7 +35,11 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    if ($wallet.connected && $trader.swapTxFee != null && $wallet.triggerBalance != null) {
+    if (
+      $wallet.connected &&
+      $trader.swapTxFee != null &&
+      $wallet.triggerBalance != null
+    ) {
       firstTrade = calcNextTrade({
         reserveBalance,
         triggerBalance: $wallet.triggerBalance,
@@ -60,7 +64,11 @@
   let secondTrade: Trade | undefined;
 
   $: {
-    if ($wallet.connected && $trader.swapTxFee != null && $wallet.triggerBalance != null) {
+    if (
+      $wallet.connected &&
+      $trader.swapTxFee != null &&
+      $wallet.triggerBalance != null
+    ) {
       secondTrade = calcNextTrade({
         reserveBalance,
         triggerBalance: $wallet.triggerBalance,

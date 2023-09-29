@@ -158,10 +158,12 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const {balance} = data;
+        const { balance } = data;
 
         const response = await fetch(
-          `${chain.getAccountTriggerBalanceEndpoint}?vet=${balance.vet.toFixed()}`,
+          `${
+            chain.getAccountTriggerBalanceEndpoint
+          }?vet=${balance.vet.toFixed()}`,
         );
 
         const json = (await response.json()) as { triggerBalance: string };
