@@ -1,7 +1,7 @@
 import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
-import bn from "bignumber.js";
+// import bn from "bignumber.js";
 import type BigNumber from "bignumber.js";
 import { chain } from "@/config";
 import type { WalletId, Balance } from "@/typings/types";
@@ -17,7 +17,7 @@ type State =
       balance: Balance;
       walletId: WalletId;
       baseGasPrice: BigNumber;
-      triggerBalance: BigNumber | undefined;
+      // triggerBalance: BigNumber | undefined;
     }
   | {
       connexUtils: ConnexUtils | undefined;
@@ -28,7 +28,7 @@ type State =
       balance: undefined;
       walletId: WalletId | undefined;
       baseGasPrice: undefined;
-      triggerBalance: undefined;
+      // triggerBalance: undefined;
     };
 
 const initialState: State = {
@@ -40,7 +40,7 @@ const initialState: State = {
   balance: undefined,
   walletId: undefined,
   baseGasPrice: undefined,
-  triggerBalance: undefined,
+  // triggerBalance: undefined,
 };
 
 // Observation: not sure if this is the best abstraction for handling
@@ -112,7 +112,7 @@ function createStore() {
           balance,
           walletId,
           baseGasPrice: await connexUtils.fetchBaseGasPrice(),
-          triggerBalance: undefined,
+          // triggerBalance: undefined,
         });
 
         return acc;
@@ -150,36 +150,38 @@ function createStore() {
         }));
       }
     },
-    fetchTriggerBalance: async function (): Promise<void> {
-      try {
-        const data = get(store);
+    // fetchTriggerBalance: async function (): Promise<void> {
+    //   try {
+    //     const data = get(store);
 
-        if (!data.connected) {
-          throw new Error("Wallet is not connected.");
-        }
+    //     if (!data.connected) {
+    //       throw new Error("Wallet is not connected.");
+    //     }
 
-        const { balance } = data;
+    //     const { account } = data;
 
-        const response = await fetch(
-          `${
-            chain.getAccountTriggerBalanceEndpoint
-          }?vet=${balance.vet.toFixed()}`,
-        );
+    //     const response = await fetch(
+    //       `${
+    //         chain.getAccountTriggerBalanceEndpoint
+    //       }?account=${account}`,
+    //     );
 
-        const json = (await response.json()) as { triggerBalance: string };
+    //     const json = (await response.json()) as { withdrawAmount: string, txFee: string };
 
-        store.update(() => ({
-          ...data,
-          triggerBalance: bn(json.triggerBalance),
-        }));
-      } catch (error: unknown) {
-        store.update((s) => ({
-          ...s,
-          error:
-            error instanceof Error ? error.message : "Unknown error occurred.",
-        }));
-      }
-    },
+    //     store.update(() => ({
+    //       ...data,
+    //       triggerBalance: bn(json.withdrawAmount),
+    //       // TODO: add txFee.
+    //       // TODO: move this to trader store
+    //     }));
+    //   } catch (error: unknown) {
+    //     store.update((s) => ({
+    //       ...s,
+    //       error:
+    //         error instanceof Error ? error.message : "Unknown error occurred.",
+    //     }));
+    //   }
+    // },
     signTx: async function (
       clauses: Connex.VM.Clause[],
       comment: string,

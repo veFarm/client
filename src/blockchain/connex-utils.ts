@@ -228,7 +228,7 @@ export class ConnexUtils {
   /**
    * Fetch VET and VTHO account balance.
    * @param {Address} account Account to be checked.
-   * @return VET and VTHO account balance in wei.
+   * @return {Balance} VET and VTHO account balance in wei.
    */
   async fetchBalance(account: Address): Promise<Balance> {
     const { balance, energy } = await this.connex.thor.account(account).get();

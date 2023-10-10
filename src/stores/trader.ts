@@ -6,14 +6,14 @@ import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
 import { wallet } from "@/stores/wallet";
-import { formatUnits } from "@/utils/format-units";
-import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
+// import { formatUnits } from "@/utils/format-units";
+// import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
-  swapTxFee: BigNumber | undefined;
+  // swapTxFee: BigNumber | undefined;
   reserveBalance: BigNumber;
   swapConfigSet: boolean;
   error: string | undefined;
@@ -23,7 +23,7 @@ const initialState: State = {
   connexUtils: undefined,
   contract: undefined,
   account: undefined,
-  swapTxFee: undefined,
+  // swapTxFee: undefined,
   reserveBalance: bn(0),
   swapConfigSet: false,
   error: undefined,
@@ -44,7 +44,7 @@ function createStore() {
 
     // Wallet is connected.
     try {
-      const { connexUtils, account, baseGasPrice } = data;
+      const { connexUtils, account } = data;
 
       // Create an instance of the Trader contract.
       const contract = connexUtils.getContract(
@@ -54,20 +54,21 @@ function createStore() {
 
       const decoded = await contract.methods.constant.reserves([account]);
 
-      const clause = contract.methods.clause.swap([
-        account,
-        0,
-        expandTo18Decimals(150).toFixed(),
-        "2000", // TODO: is this relevant? Pass oracle/DEX value
-      ]);
+      // TODO: get this value fro BE
+      // const clause = contract.methods.clause.swap([
+      //   account,
+      //   0,
+      //   expandTo18Decimals(150).toFixed(),
+      //   "2000", // TODO: is this relevant? Pass oracle/DEX value
+      // ]);
 
-      // Calculate gas used by the swap function.
-      // TODO: this should be a constant.
-      // TODO: replace this calculation with the actual constant
-      // gas amount
-      const gas = await connexUtils.estimateGas([clause], chain.trader);
+      // // Calculate gas used by the swap function.
+      // // TODO: this should be a constant.
+      // // TODO: replace this calculation with the actual constant
+      // // gas amount
+      // const gas = await connexUtils.estimateGas([clause], chain.trader);
 
-      console.log({ gas, baseGasPrice: formatUnits(baseGasPrice, 2) });
+      // console.log({ gas, baseGasPrice: formatUnits(baseGasPrice, 2) });
 
       const reserveBalance = bn(decoded[0]);
 
@@ -76,7 +77,8 @@ function createStore() {
         connexUtils,
         contract,
         account,
-        swapTxFee: connexUtils.calcTxFee(gas, baseGasPrice, 85),
+        // swapTxFee: connexUtils.calcTxFee(gas, baseGasPrice, 85),
+        // ^ TODO: we can get this from the server
         reserveBalance,
         swapConfigSet: reserveBalance.gt(0),
         error: undefined,

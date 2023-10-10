@@ -16,7 +16,9 @@ export type Trade = TradeAmounts & {
  */
 // TODO: Should we substract the fee when using this on the ConfigForm component
 export function calcNextTrade(args: GetTradeAmountsArgs): Trade | undefined {
-  const timeLeft = secondsToTrigger(args.balance, args.triggerBalance);
+  const { balance, reserveBalance, withdrawAmount } = args
+
+  const timeLeft = secondsToTrigger(balance, reserveBalance.plus(withdrawAmount));
 
   // 'undefined' means no trade is possible. This happens when
   // balance.vet === 0 && balance.vtho < triggerBalance.

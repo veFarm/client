@@ -5,8 +5,8 @@ import type { Balance } from "@/typings/types";
 export type GetTradeAmountsArgs = {
   /** Reserve balance in wei. */
   reserveBalance: BigNumber;
-  /** Trigger balance in wei. */
-  triggerBalance: BigNumber;
+  /** Withdraw amount in wei. */
+  withdrawAmount: BigNumber;
   /** Account balance for both VET and VTHO in wei. */
   balance: Balance;
   /** Trader.swap transaction fee in wei. */
@@ -37,18 +37,18 @@ export type TradeAmounts = {
  */
 // TODO: Should we substract the fee when using this on the ConfigForm component
 export function getTradeAmounts({
-  reserveBalance,
-  triggerBalance,
-  balance,
+  // reserveBalance,
+  withdrawAmount,
+  // balance,
   txFee,
   exchangeRate,
 }: GetTradeAmountsArgs): TradeAmounts {
   // TODO: substract approve tx fee
   // TODO: use MAX_WITHDRAWAL_AMOUNT from Trader contract.
   // Always spend max possible amount.
-  const withdrawAmount = balance.vtho.gt(triggerBalance)
-    ? balance.vtho.minus(reserveBalance)
-    : triggerBalance.minus(reserveBalance);
+  // const withdrawAmount = balance.vtho.gt(triggerBalance)
+  //   ? balance.vtho.minus(reserveBalance)
+  //   : triggerBalance.minus(reserveBalance);
 
   const protocolFee = withdrawAmount.minus(txFee).times(3).div(1000);
 

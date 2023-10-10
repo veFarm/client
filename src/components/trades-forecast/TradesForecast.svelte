@@ -2,8 +2,9 @@
   import { fly } from "svelte/transition";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
+  import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
-  import { trader } from "@/stores/trader";
+  // import { trader } from "@/stores/trader";
   import { formatUnits } from "@/utils/format-units";
   import { calcNextTrade } from "@/utils/calc-next-trade";
   import type { Trade } from "@/utils/calc-next-trade";
@@ -12,8 +13,9 @@
 
   export let reserveBalance: BigNumber;
 
-  // TODO: query from exchanges
-  const exchangeRate = bn(20);
+  let withdrawAmount: BigNumber | undefined;
+  let exchangeRate: BigNumber | undefined;
+  let txFee: BigNumber | undefined;
 
   /**
    * Use the most significant figure to represent the time left.
@@ -37,14 +39,15 @@
   $: {
     if (
       $wallet.connected &&
-      $trader.swapTxFee != null &&
-      $wallet.triggerBalance != null
+      txFee != null &&
+      withdrawAmount != null &&
+      exchangeRate != null
     ) {
       firstTrade = calcNextTrade({
         reserveBalance,
-        triggerBalance: $wallet.triggerBalance,
+        withdrawAmount,
         balance: $wallet.balance,
-        txFee: $trader.swapTxFee,
+        txFee,
         exchangeRate,
       });
       console.log("FIRST", {
@@ -66,14 +69,20 @@
   $: {
     if (
       $wallet.connected &&
-      $trader.swapTxFee != null &&
-      $wallet.triggerBalance != null
+      txFee != null &&
+      withdrawAmount != null &&
+      exchangeRate != null
     ) {
       secondTrade = calcNextTrade({
         reserveBalance,
-        triggerBalance: $wallet.triggerBalance,
-        balance: { ...$wallet.balance, vtho: bn(0) },
-        txFee: $trader.swapTxFee,
+        withdrawAmount,
+        balance: {
+          ...$wallet.balance,
+           vtho: $wallet.balance.vtho.gt(withdrawAmount.plus(reserveBalance))
+           ? $wallet.balance.vtho.minus(withdrawAmount.plus(reserveBalance))
+           : reserveBalance,
+          }, // TODO: check this
+        txFee,
         exchangeRate,
       });
     }
@@ -92,6 +101,20 @@
 
   function toggleFees() {
     showMore = !showMore;
+  }
+
+  $: {
+    if ($wallet.connected) {
+        fetch(`${chain.getAccountTriggerBalanceEndpoint}?account=${$wallet.account}`)
+          .then((response) => {
+            response.json()
+              .then((json) => {   // { withdrawAmount: string, exchangeRate: string, txFee: string }
+                withdrawAmount = bn(json.withdrawAmount);
+                exchangeRate = bn(json.exchangeRate);
+                txFee = bn(json.txFee);
+              })
+          })
+    }
   }
 </script>
 
