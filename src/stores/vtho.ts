@@ -89,7 +89,7 @@ function createStore() {
           chain.trader,
         ]);
 
-        console.log({account, trader: chain.trader})
+        console.log({ account, trader: chain.trader });
 
         store.update((s) => ({
           ...s,

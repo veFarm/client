@@ -9,13 +9,40 @@
   import { calcNextTrade } from "@/utils/calc-next-trade";
   import type { Trade } from "@/utils/calc-next-trade";
   import { secondsToDHMS } from "@/utils/seconds-to-dhms";
+  import { chooseWithdrawAmount } from "@/utils/choose-withdraw-amount";
   import QuestionMark from "@/assets/QuestionMark.svelte";
 
   export let reserveBalance: BigNumber;
 
-  let withdrawAmount: BigNumber | undefined;
+  let withdrawAmounts: BigNumber[] | undefined;
   let exchangeRate: BigNumber | undefined;
   let txFee: BigNumber | undefined;
+
+  let firstWithdrawAmount: BigNumber = bn(0);
+  let secondWithdrawAmount: BigNumber = bn(0);
+
+  let showMore: boolean = false;
+
+  function toggleFees() {
+    showMore = !showMore;
+  }
+
+  $: {
+    if ($wallet.connected) {
+      fetch(
+        `${chain.getAccountTriggerBalanceEndpoint}?account=${$wallet.account}`,
+      ).then((response) => {
+        response.json().then((json) => {
+          // { withdrawAmount: string, exchangeRate: string, txFee: string }
+          withdrawAmounts = (json.withdrawAmounts as string[]).map((v) =>
+            bn(v),
+          );
+          exchangeRate = bn(json.exchangeRate);
+          txFee = bn(json.txFee);
+        });
+      });
+    }
+  }
 
   /**
    * Use the most significant figure to represent the time left.
@@ -40,24 +67,21 @@
     if (
       $wallet.connected &&
       txFee != null &&
-      withdrawAmount != null &&
+      withdrawAmounts != null &&
       exchangeRate != null
     ) {
+      firstWithdrawAmount = chooseWithdrawAmount(
+        withdrawAmounts,
+        $wallet.balance.vtho,
+        reserveBalance,
+      );
+
       firstTrade = calcNextTrade({
         reserveBalance,
-        withdrawAmount,
+        withdrawAmount: firstWithdrawAmount,
         balance: $wallet.balance,
         txFee,
         exchangeRate,
-      });
-      console.log("FIRST", {
-        txFee: firstTrade?.txFee != null ? formatUnits(firstTrade.txFee, 2) : 0,
-        protocolFee:
-          firstTrade?.protocolFee != null
-            ? formatUnits(firstTrade.protocolFee, 2)
-            : 0,
-        dexFee:
-          firstTrade?.dexFee != null ? formatUnits(firstTrade.dexFee, 2) : 0,
       });
     }
   }
@@ -70,50 +94,31 @@
     if (
       $wallet.connected &&
       txFee != null &&
-      withdrawAmount != null &&
+      withdrawAmounts != null &&
       exchangeRate != null
     ) {
+      const vthoRemainingBalance = $wallet.balance.vtho.gte(
+        firstWithdrawAmount.plus(reserveBalance),
+      )
+        ? $wallet.balance.vtho.minus(firstWithdrawAmount)
+        : reserveBalance;
+
+      secondWithdrawAmount = chooseWithdrawAmount(
+        withdrawAmounts,
+        vthoRemainingBalance,
+        reserveBalance,
+      );
+
       secondTrade = calcNextTrade({
         reserveBalance,
-        withdrawAmount,
+        withdrawAmount: secondWithdrawAmount,
         balance: {
           ...$wallet.balance,
-           vtho: $wallet.balance.vtho.gt(withdrawAmount.plus(reserveBalance))
-           ? $wallet.balance.vtho.minus(withdrawAmount.plus(reserveBalance))
-           : reserveBalance,
-          }, // TODO: check this
+          vtho: vthoRemainingBalance,
+        }, // TODO: check this
         txFee,
         exchangeRate,
       });
-    }
-    console.log("SECOND", {
-      txFee: secondTrade?.txFee != null ? formatUnits(secondTrade.txFee, 2) : 0,
-      protocolFee:
-        secondTrade?.protocolFee != null
-          ? formatUnits(secondTrade.protocolFee, 2)
-          : 0,
-      dexFee:
-        secondTrade?.dexFee != null ? formatUnits(secondTrade.dexFee, 2) : 0,
-    });
-  }
-
-  let showMore: boolean = false;
-
-  function toggleFees() {
-    showMore = !showMore;
-  }
-
-  $: {
-    if ($wallet.connected) {
-        fetch(`${chain.getAccountTriggerBalanceEndpoint}?account=${$wallet.account}`)
-          .then((response) => {
-            response.json()
-              .then((json) => {   // { withdrawAmount: string, exchangeRate: string, txFee: string }
-                withdrawAmount = bn(json.withdrawAmount);
-                exchangeRate = bn(json.exchangeRate);
-                txFee = bn(json.txFee);
-              })
-          })
     }
   }
 </script>
