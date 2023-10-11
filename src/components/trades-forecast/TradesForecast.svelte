@@ -2,9 +2,8 @@
   import { fly } from "svelte/transition";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
-  import { chain } from "@/config";
   import { wallet } from "@/stores/wallet";
-  // import { trader } from "@/stores/trader";
+  import { tradeForecast } from "@/stores/trade-forecast";
   import { formatUnits } from "@/utils/format-units";
   import { calcNextTrade } from "@/utils/calc-next-trade";
   import type { Trade } from "@/utils/calc-next-trade";
@@ -14,10 +13,6 @@
 
   export let reserveBalance: BigNumber;
 
-  let withdrawAmounts: BigNumber[] | undefined;
-  let exchangeRate: BigNumber | undefined;
-  let txFee: BigNumber | undefined;
-
   let firstWithdrawAmount: BigNumber = bn(0);
   let secondWithdrawAmount: BigNumber = bn(0);
 
@@ -25,23 +20,6 @@
 
   function toggleFees() {
     showMore = !showMore;
-  }
-
-  $: {
-    if ($wallet.connected) {
-      fetch(
-        `${chain.getAccountTriggerBalanceEndpoint}?account=${$wallet.account}`,
-      ).then((response) => {
-        response.json().then((json) => {
-          // { withdrawAmount: string, exchangeRate: string, txFee: string }
-          withdrawAmounts = (json.withdrawAmounts as string[]).map((v) =>
-            bn(v),
-          );
-          exchangeRate = bn(json.exchangeRate);
-          txFee = bn(json.txFee);
-        });
-      });
-    }
   }
 
   /**
@@ -64,22 +42,20 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    if (
-      $wallet.connected &&
-      txFee != null &&
-      withdrawAmounts != null &&
-      exchangeRate != null
-    ) {
+    if ($wallet.connected && $tradeForecast.fetched) {
+      const { balance } = $wallet;
+      const { withdrawAmounts, txFee, exchangeRate } = $tradeForecast;
+
       firstWithdrawAmount = chooseWithdrawAmount(
         withdrawAmounts,
-        $wallet.balance.vtho,
+        balance.vtho,
         reserveBalance,
       );
 
       firstTrade = calcNextTrade({
         reserveBalance,
         withdrawAmount: firstWithdrawAmount,
-        balance: $wallet.balance,
+        balance,
         txFee,
         exchangeRate,
       });
@@ -91,16 +67,14 @@
   let secondTrade: Trade | undefined;
 
   $: {
-    if (
-      $wallet.connected &&
-      txFee != null &&
-      withdrawAmounts != null &&
-      exchangeRate != null
-    ) {
-      const vthoRemainingBalance = $wallet.balance.vtho.gte(
+    if ($wallet.connected && $tradeForecast.fetched) {
+      const { balance } = $wallet;
+      const { withdrawAmounts, txFee, exchangeRate } = $tradeForecast;
+
+      const vthoRemainingBalance = balance.vtho.gte(
         firstWithdrawAmount.plus(reserveBalance),
       )
-        ? $wallet.balance.vtho.minus(firstWithdrawAmount)
+        ? balance.vtho.minus(firstWithdrawAmount)
         : reserveBalance;
 
       secondWithdrawAmount = chooseWithdrawAmount(
@@ -113,9 +87,9 @@
         reserveBalance,
         withdrawAmount: secondWithdrawAmount,
         balance: {
-          ...$wallet.balance,
+          ...balance,
           vtho: vthoRemainingBalance,
-        }, // TODO: check this
+        },
         txFee,
         exchangeRate,
       });
