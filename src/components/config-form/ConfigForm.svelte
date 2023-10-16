@@ -210,7 +210,7 @@
       loading={disabled}
       fullWidth
     >
-      Update Parameters
+      Update Reserve
     </Button>
   {/if}
 
