@@ -51,12 +51,18 @@
     "
     >
       <section class="basis-1/2 self-start">
-        <h1>Swap VTHO for VET automatically.</h1>
+        <h1>Grow your VET balance.</h1>
         <p class="text-gray-300 mt-4">
-          Set your swap parameters and allow the VeFarm contract to spend your
-          VTHO. After which the contract will periodically withdraw VTHO from
-          your account, perform a swap for VET tokens through a DEX, and return
-          the resulting tokens back to your wallet.
+          <!-- Automatically swap VTHO for VET using optimized strategies. How does it work?
+          Set your reserve balance and allow the VeFarm contract to spend your VTHO.
+          Afterward, the contract will periodically withdraw VTHO from your account,
+          execute a swap for VET tokens through a DEX, and return the resulting tokens
+          to your wallet. You don&apos;t need to worry about finding the best exchange rate
+          or the right time to trade; we&apos;ll take care of that. -->
+          With your VET holdings, you automatically accumulate VTHO tokens in your
+          account. VeFarm takes care of exchanging these VTHO tokens for additional
+          VET tokens at strategically optimized moments, boosting your VET balance
+          and increasing your potential gains.
         </p>
         <div
           class="hidden lg:grid lg:grid-cols-3 lg:row-gap-8 lg:mt-10 lg:mx-auto"
@@ -84,8 +90,7 @@
                 Great! We&apos;re&nbsp;all&nbsp;set.
               </h2>
               <p>
-                The VeFarm contract is configured to exchange VTHO for VET at
-                the best possible time. It will swap the maximum possible amount
+                VeFarm is configured to exchange VTHO for VET automatically
                 while maintaining a reserve balance of
                 <b>{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b> in your account.
               </p>
@@ -99,7 +104,7 @@
                 view = "UPDATE_CONFIG";
               }}
             >
-              Update Parameters
+              Update Reserve
             </Button>
             <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
           </div>
