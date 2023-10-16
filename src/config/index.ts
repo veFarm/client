@@ -102,7 +102,7 @@ export const CHAINS: Record<ChainId, ChainData> = {
       },
     ],
     vtho: "0x0000000000000000000000000000456E65726779",
-    trader: "0x80C74B67ADFB6165829BEd2A6C703d2a14678647",
+    trader: "0x0317B19b8b94aE1D5Bfb4727b9064fe8118aA305",
     getAccountSwapsEndpoint:
       "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
     getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",

@@ -6,14 +6,11 @@ import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
 import { wallet } from "@/stores/wallet";
-// import { formatUnits } from "@/utils/format-units";
-// import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
-  // swapTxFee: BigNumber | undefined;
   reserveBalance: BigNumber;
   swapConfigSet: boolean;
   error: string | undefined;
@@ -23,7 +20,6 @@ const initialState: State = {
   connexUtils: undefined,
   contract: undefined,
   account: undefined,
-  // swapTxFee: undefined,
   reserveBalance: bn(0),
   swapConfigSet: false,
   error: undefined,
@@ -77,8 +73,6 @@ function createStore() {
         connexUtils,
         contract,
         account,
-        // swapTxFee: connexUtils.calcTxFee(gas, baseGasPrice, 85),
-        // ^ TODO: we can get this from the server
         reserveBalance,
         swapConfigSet: reserveBalance.gt(0),
         error: undefined,

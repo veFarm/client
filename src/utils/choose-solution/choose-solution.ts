@@ -1,27 +1,28 @@
 import type { BigNumber } from "bignumber.js";
+import type { Sol } from "@/stores/trade-forecast";
 
 /**
  * Choose the 'best' withdraw amount for the given vtho balance.
- * @param {BigNumber[]} withdrawAmounts Array of possible withdraw amounts.
  * @param {BigNumber} vthoBalance VTHO balance.
  * @param {BigNumber} reserveBalance Reserve balance.
- * @return {BigNumber} Best withdraw amount.
+ * @param {Sol[]} solutions Array of possible solutions (withdrawAmounts).
+ * @return {Sol} Best solution.
  */
-export function chooseWithdrawAmount(
-  withdrawAmounts: BigNumber[],
+export function chooseSolution(
   vthoBalance: BigNumber,
   reserveBalance: BigNumber,
-): BigNumber {
+  solutions: Sol[],
+): Sol {
   // Default to lowest possible withdraw amount.
-  let withdrawAmount = withdrawAmounts[0];
+  let sol = solutions[0];
 
   // In case the current balance is large enough to use a
   // higher withdraw amount, use it.
-  for (let wa of withdrawAmounts) {
-    if (vthoBalance.gte(wa.plus(reserveBalance))) {
-      withdrawAmount = wa;
+  for (const s of solutions) {
+    if (vthoBalance.gte(s.withdrawAmount.plus(reserveBalance))) {
+      sol = s;
     }
   }
 
-  return withdrawAmount;
+  return sol;
 }

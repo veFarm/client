@@ -5,15 +5,17 @@ import type { Balance } from "@/typings/types";
  * Compute the amount of seconds till reaching the triggerBalance.
  * Observation: 1 VET produces 5 * 10 ** -9 VTHO per second.
  * @param {BigNumber} balance Account balance for both VET and VTHO in wei.
- * @param {BigNumber} triggerBalance Trigger balance in wei.
+ * @param {BigNumber} reserveBalance Reserve balance in wei.
+ * @param {BigNumber} withdrawAmount Withdraw amount in wei.
  * @return Seconds to reach the triggerBalance.
  * @todo see https://vechainstats.com/vtho-calculator/ for testing.
  */
 export function secondsToTrigger(
   balance: Balance,
-  triggerBalance: BigNumber,
+  reserveBalance: BigNumber,
+  withdrawAmount: BigNumber,
 ): number | undefined {
-  const diff = triggerBalance.minus(balance.vtho);
+  const diff = reserveBalance.plus(withdrawAmount).minus(balance.vtho);
 
   // Execute the trade right away when balance.vtho >= triggerBalance.
   if (diff.lte(0)) return 0;

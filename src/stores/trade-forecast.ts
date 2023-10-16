@@ -4,19 +4,40 @@ import type { BigNumber } from "bignumber.js";
 import { chain } from "@/config/index";
 import { wallet } from "@/stores/wallet";
 
+type ApiResponse = {
+  txFee: string;
+  solutions: {
+    protocolFee: string;
+    dexFee: string;
+    amountInWithFees: string;
+    deltaVET: string;
+    stepsCount: number;
+    withdrawAmount: string;
+    totalProfitVET: string;
+  }[];
+};
+
+export type Sol = {
+  protocolFee: BigNumber;
+  dexFee: BigNumber;
+  amountInWithFees: BigNumber;
+  deltaVET: BigNumber;
+  stepsCount: number;
+  withdrawAmount: BigNumber;
+  totalProfitVET: BigNumber;
+};
+
 type State =
   | {
       fetched: true;
-      withdrawAmounts: BigNumber[];
-      exchangeRate: BigNumber;
+      solutions: Sol[];
       txFee: BigNumber;
       loading: boolean;
       error: string | undefined;
     }
   | {
       fetched: false;
-      withdrawAmounts: undefined;
-      exchangeRate: undefined;
+      solutions: undefined;
       txFee: undefined;
       loading: boolean;
       error: string | undefined;
@@ -24,8 +45,7 @@ type State =
 
 const initialState: State = {
   fetched: false,
-  withdrawAmounts: undefined,
-  exchangeRate: undefined,
+  solutions: undefined,
   txFee: undefined,
   loading: false,
   error: undefined,
@@ -57,17 +77,20 @@ function createStore() {
         `${chain.getAccountTriggerBalanceEndpoint}?account=${account}`,
       );
 
-      const json = (await response.json()) as {
-        withdrawAmounts: string[];
-        exchangeRate: string;
-        txFee: string;
-      };
+      const json = (await response.json()) as ApiResponse;
 
       store.set({
         fetched: true,
-        withdrawAmounts: json.withdrawAmounts.map((v) => bn(v)),
-        exchangeRate: bn(json.exchangeRate),
         txFee: bn(json.txFee),
+        solutions: json.solutions.map((s) => ({
+          protocolFee: bn(s.protocolFee),
+          dexFee: bn(s.dexFee),
+          amountInWithFees: bn(s.amountInWithFees),
+          deltaVET: bn(s.deltaVET),
+          stepsCount: s.stepsCount,
+          withdrawAmount: bn(s.withdrawAmount),
+          totalProfitVET: bn(s.totalProfitVET),
+        })),
         loading: false,
         error: undefined,
       });
