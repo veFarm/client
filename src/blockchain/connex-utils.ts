@@ -228,7 +228,7 @@ export class ConnexUtils {
   /**
    * Fetch VET and VTHO account balance.
    * @param {Address} account Account to be checked.
-   * @return VET and VTHO account balance in wei.
+   * @return {Balance} VET and VTHO account balance in wei.
    */
   async fetchBalance(account: Address): Promise<Balance> {
     const { balance, energy } = await this.connex.thor.account(account).get();
@@ -274,17 +274,22 @@ export class ConnexUtils {
       explainer = explainer.caller(signer);
     }
 
-    const output = await explainer.execute();
-    const executionGas = output.reduce((sum, out) => sum + out.gasUsed, 0);
+    /**
+     * It is impossible to calculate the VM gas offline, which is why a simulation is required.
+     * This involves sending the clause data to a node, and the return will include details
+     * about the gas costs.
+     */
+    const outputs = await explainer.execute();
+    const vmGas = outputs.reduce((gas, output) => gas + output.gasUsed, 0);
 
     const intrinsicGas = Transaction.intrinsicGas(
       clauses as Transaction.Clause[],
     );
 
     // Adding some extra gas to make sure the tx goes through.
-    const leeway = executionGas > 0 ? 16000 : 0;
+    const leeway = vmGas > 0 ? 16000 : 0;
 
-    return intrinsicGas + executionGas + leeway;
+    return intrinsicGas + vmGas + leeway;
   }
 
   /**

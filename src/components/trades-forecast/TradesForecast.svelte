@@ -1,20 +1,32 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import bn from "bignumber.js";
+  // import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
-  import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
-  import { trader } from "@/stores/trader";
+  import type { Sol } from "@/stores/trade-forecast";
+  import { tradeForecast } from "@/stores/trade-forecast";
   import { formatUnits } from "@/utils/format-units";
-  import { calcNextTrade } from "@/utils/calc-next-trade";
-  import type { Trade } from "@/utils/calc-next-trade";
+  // import { calcNextTrade } from "@/utils/calc-next-trade.txt";
+  // import type { Trade } from "@/utils/calc-next-trade";
   import { secondsToDHMS } from "@/utils/seconds-to-dhms";
+  import { chooseSolution } from "@/utils/choose-solution";
+  import { secondsToTrigger } from "@/utils/seconds-to-trigger";
   import QuestionMark from "@/assets/QuestionMark.svelte";
 
   export let reserveBalance: BigNumber;
-  export let triggerBalance: BigNumber;
 
-  const exchangeRate = bn(20);
+  type Trade = Sol & {
+    /** Total fees. */
+    totalFees: BigNumber;
+    /** Seconds to trigger. */
+    timeLeft: number;
+  };
+
+  let showMore: boolean = false;
+
+  function toggleFees() {
+    showMore = !showMore;
+  }
 
   /**
    * Use the most significant figure to represent the time left.
@@ -36,59 +48,85 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    if ($wallet.connected && $trader.swapTxFee != null) {
-      firstTrade = calcNextTrade({
+    if ($wallet.connected && $tradeForecast.fetched) {
+      const { balance } = $wallet;
+      const { txFee, solutions } = $tradeForecast;
+
+      const sol = chooseSolution(balance.vtho, reserveBalance, solutions);
+
+      const timeLeft = secondsToTrigger(
+        balance,
         reserveBalance,
-        triggerBalance,
-        balance: $wallet.balance,
-        txFee: $trader.swapTxFee,
-        exchangeRate,
-      });
-      console.log("FIRST", {
-        txFee: firstTrade?.txFee != null ? formatUnits(firstTrade.txFee, 2) : 0,
-        protocolFee:
-          firstTrade?.protocolFee != null
-            ? formatUnits(firstTrade.protocolFee, 2)
-            : 0,
-        dexFee:
-          firstTrade?.dexFee != null ? formatUnits(firstTrade.dexFee, 2) : 0,
-      });
+        sol.withdrawAmount,
+      );
+
+      if (timeLeft != null) {
+        firstTrade = {
+          ...sol,
+          totalFees: txFee.plus(sol.protocolFee).plus(sol.dexFee),
+          timeLeft,
+        };
+      }
     }
   }
 
   // Simulate a future trade right after the first one is executed.
   // TODO: implement MAX_WITHDRAWAL_VTHO_AMOUNT at wallet.balance line.
+  // let secondSol: Sol | undefined;
   let secondTrade: Trade | undefined;
 
   $: {
-    if ($wallet.connected && $trader.swapTxFee != null) {
-      secondTrade = calcNextTrade({
+    if ($wallet.connected && $tradeForecast.fetched && firstTrade != null) {
+      const { balance } = $wallet;
+      const { txFee, solutions } = $tradeForecast;
+
+      // VTHO balance after the first trade occurred.
+      const remainingBalanceVTHO = balance.vtho.gte(
+        firstTrade.withdrawAmount.plus(reserveBalance),
+      )
+        ? balance.vtho.minus(firstTrade.withdrawAmount)
+        : reserveBalance;
+
+      const sol = chooseSolution(
+        remainingBalanceVTHO,
         reserveBalance,
-        triggerBalance,
-        balance: { ...$wallet.balance, vtho: bn(0) },
-        txFee: $trader.swapTxFee,
-        exchangeRate,
-      });
+        solutions,
+      );
+
+      const timeLeft = secondsToTrigger(
+        { ...balance, vtho: remainingBalanceVTHO },
+        reserveBalance,
+        sol.withdrawAmount,
+      );
+
+      if (timeLeft != null) {
+        secondTrade = {
+          ...sol,
+          totalFees: txFee.plus(sol.protocolFee).plus(sol.dexFee),
+          timeLeft,
+        };
+      }
+      // secondSol = chooseSolution(
+      //   withdrawAmounts,
+      //   remainingBalanceVTHO,
+      //   reserveBalance,
+      // );
+
+      // secondTrade = calcNextTrade({
+      //   reserveBalance,
+      //   withdrawAmount: secondSol,
+      //   balance: {
+      //     ...balance,
+      //     vtho: remainingBalanceVTHO,
+      //   },
+      //   txFee,
+      //   exchangeRate,
+      // });
     }
-    console.log("SECOND", {
-      txFee: secondTrade?.txFee != null ? formatUnits(secondTrade.txFee, 2) : 0,
-      protocolFee:
-        secondTrade?.protocolFee != null
-          ? formatUnits(secondTrade.protocolFee, 2)
-          : 0,
-      dexFee:
-        secondTrade?.dexFee != null ? formatUnits(secondTrade.dexFee, 2) : 0,
-    });
-  }
-
-  let showMore: boolean = false;
-
-  function toggleFees() {
-    showMore = !showMore;
   }
 </script>
 
-{#if firstTrade != null}
+{#if firstTrade != null && $tradeForecast.txFee != null}
   <div>
     <table class="w-full text-sm md:text-base">
       <!-- <caption class="text-sm">Upcoming Trades (estimated)</caption> -->
@@ -121,9 +159,9 @@
         </tr>
         <tr>
           <td class="title">Received</td>
-          <td class="value">{formatUnits(firstTrade.amountOut, 2)} VET</td>
+          <td class="value">{formatUnits(firstTrade.deltaVET, 2)} VET</td>
           <td class="value"
-            >{secondTrade != null ? formatUnits(secondTrade.amountOut, 2) : "0"}
+            >{secondTrade != null ? formatUnits(secondTrade.deltaVET, 2) : "0"}
             VET</td
           >
         </tr>
@@ -145,9 +183,9 @@
       <table transition:fly={{ duration: 200 }}>
         <tr>
           <td class="title">TX Fee</td>
-          <td class="value">{formatUnits(firstTrade.txFee, 2)} VTHO</td>
+          <td class="value">{formatUnits($tradeForecast.txFee, 2)} VTHO</td>
           <td class="value"
-            >{secondTrade != null ? formatUnits(secondTrade.txFee, 2) : "0"} VTHO</td
+            >{secondTrade != null ? formatUnits($tradeForecast.txFee, 2) : "0"} VTHO</td
           >
         </tr>
         <tr>
