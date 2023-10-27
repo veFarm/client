@@ -8,6 +8,7 @@ import type { Sol } from "@/stores/trade-forecast";
  * @param {Sol[]} solutions Array of possible solutions (withdrawAmounts).
  * @return {Sol} Best solution.
  */
+// TODO: check. This assumes that there exists a feasible solution.
 export function chooseSolution(
   vthoBalance: BigNumber,
   reserveBalance: BigNumber,

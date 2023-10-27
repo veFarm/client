@@ -74,7 +74,7 @@ function createStore() {
       const { account } = data;
 
       const response = await fetch(
-        `${chain.getAccountTriggerBalanceEndpoint}?account=${account}`,
+        `${chain.getTradeForecastEndpoint}?account=${account}`,
       );
 
       const json = (await response.json()) as ApiResponse;
