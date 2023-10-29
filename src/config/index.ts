@@ -107,7 +107,7 @@ export const CHAINS: Record<ChainId, ChainData> = {
       "https://getaccountswaps-3co32ksh6a-uc.a.run.app",
     getStatsEndpoint: "https://getstats-3co32ksh6a-uc.a.run.app",
     getTradeForecastEndpoint:
-      "https://getaccounttriggerbalance-3co32ksh6a-uc.a.run.app",
+      "https://gettradeforecast-3co32ksh6a-uc.a.run.app",
     // getAccountSwapsEndpoint:
     //   "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
     // getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
