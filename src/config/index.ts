@@ -39,7 +39,7 @@ export type ChainData = {
   trader: Address;
   getAccountSwapsEndpoint: string;
   getStatsEndpoint: string;
-  getAccountTriggerBalanceEndpoint: string;
+  getTradeForecastEndpoint: string;
 };
 
 /**
@@ -77,7 +77,7 @@ export const CHAINS: Record<ChainId, ChainData> = {
     trader: "0x0000000000000000000000000000000000000000", // TODO
     getAccountSwapsEndpoint: "https://",
     getStatsEndpoint: "https://",
-    getAccountTriggerBalanceEndpoint: "https://",
+    getTradeForecastEndpoint: "https://",
   },
   100010: {
     name: "VeChain Testnet",
@@ -106,13 +106,13 @@ export const CHAINS: Record<ChainId, ChainData> = {
     getAccountSwapsEndpoint:
       "https://getaccountswaps-3co32ksh6a-uc.a.run.app",
     getStatsEndpoint: "https://getstats-3co32ksh6a-uc.a.run.app",
-    getAccountTriggerBalanceEndpoint:
+    getTradeForecastEndpoint:
       "https://getaccounttriggerbalance-3co32ksh6a-uc.a.run.app",
     // getAccountSwapsEndpoint:
     //   "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
     // getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
-    // getAccountTriggerBalanceEndpoint:
-    //   "http://127.0.0.1:5001/vefarmdev/us-central1/getaccounttriggerbalance",
+    // getTradeForecastEndpoint:
+    //   "http://127.0.0.1:5001/vefarmdev/us-central1/gettradeforecast",
   },
 };
 
