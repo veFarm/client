@@ -103,16 +103,16 @@ export const CHAINS: Record<ChainId, ChainData> = {
     ],
     vtho: "0x0000000000000000000000000000456E65726779",
     trader: "0x0317B19b8b94aE1D5Bfb4727b9064fe8118aA305",
-    // getAccountSwapsEndpoint:
-    //   "https://getaccountswaps-3co32ksh6a-uc.a.run.app",
-    // getStatsEndpoint: "https://getstats-3co32ksh6a-uc.a.run.app",
-    // getAccountTriggerBalanceEndpoint:
-    //   "https://getaccounttriggerbalance-3co32ksh6a-uc.a.run.app",
     getAccountSwapsEndpoint:
-      "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
-    getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
+      "https://getaccountswaps-3co32ksh6a-uc.a.run.app",
+    getStatsEndpoint: "https://getstats-3co32ksh6a-uc.a.run.app",
     getTradeForecastEndpoint:
-      "http://127.0.0.1:5001/vefarmdev/us-central1/gettradeforecast",
+      "https://getaccounttriggerbalance-3co32ksh6a-uc.a.run.app",
+    // getAccountSwapsEndpoint:
+    //   "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
+    // getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
+    // getTradeForecastEndpoint:
+    //   "http://127.0.0.1:5001/vefarmdev/us-central1/gettradeforecast",
   },
 };
 
