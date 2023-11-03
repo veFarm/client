@@ -5,7 +5,8 @@ const { CHAIN_ID } = getEnvVars();
 
 // TODO: see devnet config https://docs.vechain.org/connex/connex#or-connect-to-a-private-network
 
-type ChainId = 100010 | 100009;
+type ChainId =  100009 | 100010 | 100011;
+// ^ 100009 = production, 100010 = staging, 100011 = development
 
 /**
  * JavaScript CAIP-2 representation object.
@@ -108,11 +109,36 @@ export const CHAINS: Record<ChainId, ChainData> = {
     getStatsEndpoint: "https://getstats-3co32ksh6a-uc.a.run.app",
     getTradeForecastEndpoint:
       "https://gettradeforecast-3co32ksh6a-uc.a.run.app",
-    // getAccountSwapsEndpoint:
-    //   "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
-    // getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
-    // getTradeForecastEndpoint:
-    //   "http://127.0.0.1:5001/vefarmdev/us-central1/gettradeforecast",
+  },
+  100011: {
+    name: "VeChain Testnet",
+    chain: "VeChain",
+    network: "test",
+    rpc: ["https://testnet.veblocks.net/"],
+    faucets: ["https://faucet.vecha.in"],
+    nativeCurrency: {
+      name: "VeChain",
+      symbol: "VET",
+      decimals: 18,
+    },
+    infoURL: "https://vechain.org",
+    shortName: "vechain-testnet",
+    chainId: 100010,
+    networkId: 100010,
+    explorers: [
+      {
+        name: "VeChain Explorer",
+        url: "https://explore-testnet.vechain.org",
+        standard: "none",
+      },
+    ],
+    vtho: "0x0000000000000000000000000000456E65726779",
+    trader: "0x0317B19b8b94aE1D5Bfb4727b9064fe8118aA305",
+    getAccountSwapsEndpoint:
+      "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
+    getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
+    getTradeForecastEndpoint:
+      "http://127.0.0.1:5001/vefarmdev/us-central1/gettradeforecast",
   },
 };
 
