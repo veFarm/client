@@ -1,7 +1,6 @@
 import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
-// import bn from "bignumber.js";
 import type BigNumber from "bignumber.js";
 import { chain } from "@/config";
 import type { WalletId, Balance } from "@/typings/types";
@@ -50,6 +49,8 @@ function createStore() {
     subscribe: store.subscribe,
     disconnect: function (): void {
       store.set({ ...initialState });
+
+      // Forget user data.
       localStorage.removeItem("user");
     },
     /**
@@ -94,7 +95,7 @@ function createStore() {
 
         const account = cert.signer as Address;
 
-        // Remember user
+        // Remember user.
         localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
         const balance = await connexUtils.fetchBalance(account);
