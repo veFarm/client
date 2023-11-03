@@ -30,15 +30,9 @@
     }
   }
 
-  // Login stored user if any.
   onMount(async () => {
-    const user = localStorage.getItem("user"); // "{"walletId": "sync2", "account": "0x"}"
-    if (user == null) return;
-    const { walletId, account } = JSON.parse(user) as {
-      walletId: WalletId;
-      account: Address;
-    };
-    await wallet.connect(walletId, account);
+    // Login user from localStorage if any.
+    await wallet.loadStoredAccount();
   });
 </script>
 

@@ -12,7 +12,7 @@
   import { chooseSolution } from "@/utils/choose-solution";
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
   import QuestionMark from "@/assets/QuestionMark.svelte";
-    import Spinner from "../spinner/Spinner.svelte";
+  import Spinner from "../spinner/Spinner.svelte";
 
   export let reserveBalance: BigNumber;
 

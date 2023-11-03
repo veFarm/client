@@ -5,7 +5,7 @@ const { CHAIN_ID } = getEnvVars();
 
 // TODO: see devnet config https://docs.vechain.org/connex/connex#or-connect-to-a-private-network
 
-type ChainId =  100009 | 100010 | 100011;
+type ChainId = 100009 | 100010 | 100011;
 // ^ 100009 = production, 100010 = staging, 100011 = development
 
 /**
@@ -104,8 +104,7 @@ export const CHAINS: Record<ChainId, ChainData> = {
     ],
     vtho: "0x0000000000000000000000000000456E65726779",
     trader: "0x0317B19b8b94aE1D5Bfb4727b9064fe8118aA305",
-    getAccountSwapsEndpoint:
-      "https://getaccountswaps-3co32ksh6a-uc.a.run.app",
+    getAccountSwapsEndpoint: "https://getaccountswaps-3co32ksh6a-uc.a.run.app",
     getStatsEndpoint: "https://getstats-3co32ksh6a-uc.a.run.app",
     getTradeForecastEndpoint:
       "https://gettradeforecast-3co32ksh6a-uc.a.run.app",
