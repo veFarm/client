@@ -2,6 +2,7 @@
   import bn from "bignumber.js";
   import { chain, MAX_UINT256 } from "@/config/index";
   import { wallet } from "@/stores/wallet";
+  import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
   import { isNumeric } from "@/utils/is-numeric/is-numeric";
@@ -169,7 +170,7 @@
     autocomplete="off"
     currency="VTHO"
     subtext={`Balance: ${
-      $wallet.balance != null ? formatUnits($wallet.balance.vtho, 2) : "0"
+      $balance.current != null ? formatUnits($balance.current.vtho, 2) : "0"
     }`}
     hint="Minimum balance to be maintained in your account after the swap"
     disabled={disabled || !$wallet.connected}

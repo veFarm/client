@@ -3,6 +3,7 @@
   // import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { wallet } from "@/stores/wallet";
+  import { balance } from "@/stores/balance";
   import type { Sol } from "@/stores/trade-forecast";
   import { tradeForecast } from "@/stores/trade-forecast";
   import { formatUnits } from "@/utils/format-units";
@@ -49,14 +50,18 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    if ($wallet.connected && $tradeForecast.fetched) {
-      const { balance } = $wallet;
-      const { txFee, solutions } = $tradeForecast;
+    console.log($balance.current)
+  }
 
-      const sol = chooseSolution(balance.vtho, reserveBalance, solutions);
+  $: {
+    if ($balance.current != null && $tradeForecast.fetched) {
+      const { txFee, solutions } = $tradeForecast;
+      // ^ Replace store with http call
+
+      const sol = chooseSolution($balance.current.vtho, reserveBalance, solutions);
 
       const timeLeft = secondsToTrigger(
-        balance,
+        $balance.current,
         reserveBalance,
         sol.withdrawAmount,
       );
@@ -77,15 +82,14 @@
   let secondTrade: Trade | undefined;
 
   $: {
-    if ($wallet.connected && $tradeForecast.fetched && firstTrade != null) {
-      const { balance } = $wallet;
+    if ($balance.current != null && $tradeForecast.fetched && firstTrade != null) {
       const { txFee, solutions } = $tradeForecast;
 
       // VTHO balance after the first trade occurred.
-      const remainingBalanceVTHO = balance.vtho.gte(
+      const remainingBalanceVTHO = $balance.current.vtho.gte(
         firstTrade.withdrawAmount.plus(reserveBalance),
       )
-        ? balance.vtho.minus(firstTrade.withdrawAmount)
+        ? $balance.current.vtho.minus(firstTrade.withdrawAmount)
         : reserveBalance;
 
       const sol = chooseSolution(
@@ -95,7 +99,7 @@
       );
 
       const timeLeft = secondsToTrigger(
-        { ...balance, vtho: remainingBalanceVTHO },
+        { vet: $balance.current.vet.plus(firstTrade.deltaVET), vtho: remainingBalanceVTHO },
         reserveBalance,
         sol.withdrawAmount,
       );

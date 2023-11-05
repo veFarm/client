@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
+  import {balance} from "@/stores/balance"
   import { vtho } from "@/stores/vtho";
   import type { WalletId } from "@/typings/types";
   import { trader } from "@/stores/trader";
@@ -27,6 +28,19 @@
       view = "CONFIG_AND_APPROVE";
     } else if ($trader.swapConfigSet && $vtho.allowed) {
       view = "SUMMARY";
+    }
+  }
+
+  $: {
+    if ($wallet.connected) {
+      const ticker = $wallet.connexUtils.ticker();
+
+      void (async () => {
+        for (;;) {
+          await ticker.next();
+          await balance.fetchBalance();
+        }
+      })();
     }
   }
 

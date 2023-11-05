@@ -203,6 +203,14 @@ export class ConnexUtils {
   }
 
   /**
+   * Return thor ticker to track when new blocks are added to the chain.
+   * @return {Connex.Thor.Ticker}
+   */
+  ticker(): Connex.Thor.Ticker {
+    return this.connex.thor.ticker();
+  }
+
+  /**
    * Return current block.
    * @return {Promise<Connex.Thor.Block>} Current block.
    */

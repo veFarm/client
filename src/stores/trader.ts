@@ -16,6 +16,25 @@ type State = {
   error: string | undefined;
 };
 
+// TODO
+// type State =
+// | {
+//   connexUtils: ConnexUtils;
+//   contract: Contract;
+//   account: Address;
+//   reserveBalance: BigNumber;
+//   swapConfigSet: boolean;
+//   error: string | undefined;
+// }
+// | {
+//   connexUtils: undefined;
+//   contract: undefined;
+//   account: undefined;
+//   reserveBalance: undefined;
+//   swapConfigSet: boolean;
+//   error: string | undefined;
+// };
+
 const initialState: State = {
   connexUtils: undefined,
   contract: undefined,
@@ -24,6 +43,19 @@ const initialState: State = {
   swapConfigSet: false,
   error: undefined,
 };
+
+/**
+ * Fetch reserve balance from the Trader contract for the given account.
+ * @param connexUtils Connex utils
+ * @return {BigNumber} Reserve balance.
+ */
+async function fetchReserveBalance(
+  contract: Contract,
+  account: Address,
+): Promise<BigNumber> {
+  const decoded = await contract.methods.constant.reserves([account]);
+  return bn(decoded[0]);
+}
 
 /**
  * Keeps track of trader state for the current logged in account.
@@ -48,27 +80,8 @@ function createStore() {
         chain.trader,
       );
 
-      const decoded = await contract.methods.constant.reserves([account]);
+      const reserveBalance = await fetchReserveBalance(contract, account);
 
-      // TODO: get this value fro BE
-      // const clause = contract.methods.clause.swap([
-      //   account,
-      //   0,
-      //   expandTo18Decimals(150).toFixed(),
-      //   "2000", // TODO: is this relevant? Pass oracle/DEX value
-      // ]);
-
-      // // Calculate gas used by the swap function.
-      // // TODO: this should be a constant.
-      // // TODO: replace this calculation with the actual constant
-      // // gas amount
-      // const gas = await connexUtils.estimateGas([clause], chain.trader);
-
-      // console.log({ gas, baseGasPrice: formatUnits(baseGasPrice, 2) });
-
-      const reserveBalance = bn(decoded[0]);
-
-      console.log({ reserveBalance: reserveBalance.toFixed() });
       store.set({
         connexUtils,
         contract,
@@ -98,9 +111,7 @@ function createStore() {
 
         const { contract, account } = data;
 
-        const decoded = await contract.methods.constant.reserves([account]);
-
-        const reserveBalance = bn(decoded[0]);
+        const reserveBalance = await fetchReserveBalance(contract, account);
 
         store.update((s) => ({
           ...s,
@@ -136,3 +147,19 @@ function createStore() {
 }
 
 export const trader = createStore();
+
+// TODO: get this value fro BE
+// const clause = contract.methods.clause.swap([
+//   account,
+//   0,
+//   expandTo18Decimals(150).toFixed(),
+//   "2000", // TODO: is this relevant? Pass oracle/DEX value
+// ]);
+
+// // Calculate gas used by the swap function.
+// // TODO: this should be a constant.
+// // TODO: replace this calculation with the actual constant
+// // gas amount
+// const gas = await connexUtils.estimateGas([clause], chain.trader);
+
+// console.log({ gas, baseGasPrice: formatUnits(baseGasPrice, 2) });
