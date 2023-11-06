@@ -1,13 +1,25 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
   import { PastTrade } from ".";
+
+  let items: string[] = ['1']
+
+  function pushItem() {
+    items = [...items, items.length.toString()]
+  }
 </script>
 
 <Meta title="components/PastTrade" component={PastTrade} />
 
 <Template let:args>
   <div class="bg-background p-4">
-    <PastTrade {...args} />
+    {#each items as item}
+      <PastTrade {...args} />
+    {/each}
+
+    <button on:click={pushItem}>
+      Push Item
+    </button>
   </div>
 </Template>
 

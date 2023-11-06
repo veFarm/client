@@ -130,7 +130,7 @@
       await trader.fetchConfig();
       await wallet.fetchBalance();
     } catch (error: any) {
-      console.log({ error });
+      console.error(error);
       errors.network.push(error?.message || "Unknown error occurred.");
     } finally {
       disabled = false;

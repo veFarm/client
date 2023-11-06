@@ -54,8 +54,6 @@ function createStore() {
         chain.trader,
       ]);
 
-      console.log({ allowance: decoded[0] });
-
       store.set({
         connexUtils,
         contract,
@@ -88,8 +86,6 @@ function createStore() {
           account,
           chain.trader,
         ]);
-
-        console.log({ account, trader: chain.trader });
 
         store.update((s) => ({
           ...s,

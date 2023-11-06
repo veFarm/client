@@ -50,10 +50,6 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    console.log($balance.current);
-  }
-
-  $: {
     if ($balance.current != null && $tradeForecast.fetched) {
       const { txFee, solutions } = $tradeForecast;
       // ^ Replace store with http call
