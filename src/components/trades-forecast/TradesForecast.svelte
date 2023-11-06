@@ -50,7 +50,7 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    console.log($balance.current)
+    console.log($balance.current);
   }
 
   $: {
@@ -58,7 +58,11 @@
       const { txFee, solutions } = $tradeForecast;
       // ^ Replace store with http call
 
-      const sol = chooseSolution($balance.current.vtho, reserveBalance, solutions);
+      const sol = chooseSolution(
+        $balance.current.vtho,
+        reserveBalance,
+        solutions,
+      );
 
       const timeLeft = secondsToTrigger(
         $balance.current,
@@ -82,7 +86,11 @@
   let secondTrade: Trade | undefined;
 
   $: {
-    if ($balance.current != null && $tradeForecast.fetched && firstTrade != null) {
+    if (
+      $balance.current != null &&
+      $tradeForecast.fetched &&
+      firstTrade != null
+    ) {
       const { txFee, solutions } = $tradeForecast;
 
       // VTHO balance after the first trade occurred.
@@ -99,7 +107,10 @@
       );
 
       const timeLeft = secondsToTrigger(
-        { vet: $balance.current.vet.plus(firstTrade.deltaVET), vtho: remainingBalanceVTHO },
+        {
+          vet: $balance.current.vet.plus(firstTrade.deltaVET),
+          vtho: remainingBalanceVTHO,
+        },
         reserveBalance,
         sol.withdrawAmount,
       );
@@ -133,9 +144,7 @@
 
 {#if $tradeForecast.loading}
   <Spinner />
-{/if}
-
-{#if firstTrade != null && $tradeForecast.txFee != null}
+{:else if firstTrade != null && $tradeForecast.txFee != null}
   <div>
     <table class="w-full text-sm md:text-base">
       <!-- <caption class="text-sm">Upcoming Trades (estimated)</caption> -->

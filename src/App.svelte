@@ -2,9 +2,8 @@
   import { onMount } from "svelte";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
-  import {balance} from "@/stores/balance"
+  import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
-  import type { WalletId } from "@/typings/types";
   import { trader } from "@/stores/trader";
   import { formatUnits } from "@/utils/format-units";
   import { Layout } from "@/components/layout";
@@ -31,6 +30,7 @@
     }
   }
 
+  // Update account balance with every new tick.
   $: {
     if ($wallet.connected) {
       const ticker = $wallet.connexUtils.ticker();

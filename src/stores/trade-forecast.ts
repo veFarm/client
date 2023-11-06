@@ -100,17 +100,18 @@ function createStore() {
       const { account, current, previous } = data;
 
       // In case VET balance is unchanged, do not fetch again.
-      if (current?.vet != null && previous?.vet != null && current.vet.eq(previous.vet)) {
-        console.log("VET balance did not change")
-        return
+      if (
+        current?.vet != null &&
+        previous?.vet != null &&
+        current.vet.eq(previous.vet)
+      ) {
+        return;
       }
 
-    store.update((s) => ({
-      ...s,
-      loading: true,
-    }));
-
-      console.log("FETCH!")
+      store.update((s) => ({
+        ...s,
+        loading: true,
+      }));
 
       const { txFee, solutions } = await fetchTradeForecast(account);
 
@@ -134,34 +135,6 @@ function createStore() {
 
   return {
     subscribe: store.subscribe,
-    // fetchTradeForecast: async function (): Promise<void> {
-    //   try {
-    //     const data = get(store);
-
-    //     if (data?.account == null) {
-    //       throw new Error("balance is not connected.");
-    //     }
-
-    //     const { account } = data;
-
-    //     const { txFee, solutions } = await fetchTradeForecast(account);
-
-    //     store.set({
-    //       fetched: true,
-    //       account,
-    //       txFee,
-    //       solutions,
-    //       loading: false,
-    //       error: undefined,
-    //     });
-    //   } catch (error: unknown) {
-    //     store.update((s) => ({
-    //       ...s,
-    //       error:
-    //         error instanceof Error ? error.message : "Unknown error occurred.",
-    //     }));
-    //   }
-    // },
   };
 }
 
