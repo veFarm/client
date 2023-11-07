@@ -1,4 +1,4 @@
-import type { Connex } from "@vechain/connex";
+// import type { Connex } from "@vechain/connex";
 import type { Certificate } from "thor-devkit";
 import { Transaction } from "thor-devkit";
 import bn from "bignumber.js";

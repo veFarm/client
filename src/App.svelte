@@ -98,8 +98,8 @@
                 Great! We&apos;re&nbsp;all&nbsp;set.
               </h2>
               <p>
-                VeFarm is configured to exchange VTHO for VET automatically
-                while maintaining a reserve balance of
+                VeFarm is configured to periodically exchange VTHO for VET while
+                maintaining a reserve balance of
                 <b>{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b> in your account.
               </p>
               <TradesForecast reserveBalance={$trader.reserveBalance} />

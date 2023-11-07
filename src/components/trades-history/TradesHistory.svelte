@@ -3,12 +3,10 @@
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
-  import { balance } from "@/stores/balance"
+  import { balance } from "@/stores/balance";
   import { formatUnits } from "@/utils/format-units";
   import { PastTrade } from "@/components/past-trade";
-  import {Spinner} from "@/components/spinner"
-
-  // TODO: rename it to PastTrades
+  import { Spinner } from "@/components/spinner";
 
   type RawSwapDoc = {
     account: Address;
@@ -78,35 +76,29 @@
   }
 
   $: {
-    if ($balance.current != null &&
+    if (
+      $balance.current != null &&
       $balance.previous != null &&
       !$balance.current.vet.eq($balance.previous.vet)
     ) {
-    let timeout: NodeJS.Timeout | undefined;
-    new Promise((res, rej) => {
-      timeout = setTimeout(res, 3_000)
-    })
-    .then(() => {
-      fetchSwaps();
-      clearTimeout(timeout)
-    })
+      let timeout: NodeJS.Timeout | undefined;
+      new Promise((res, rej) => {
+        timeout = setTimeout(res, 3_000);
+      }).then(() => {
+        fetchSwaps();
+        clearTimeout(timeout);
+      });
     }
   }
 </script>
 
 <section class="flex flex-col space-y-4">
-  <h2>
-    Your Trades
-    <br />
-    <!-- <span class="block text-sm text-gray-400 font-normal">
-      {updatedAt != null ? `Last updated: ${updatedAt} ago` : ""}
-    </span> -->
-  </h2>
+  <h2>Your Trades</h2>
 
   {#if error != null && error.length > 0}
     <p class="text-danger">{error}</p>
   {:else if loading}
-    <Spinner />
+    <p><Spinner /> Fetching transactions...</p>
   {:else if swapTxs == null || swapTxs.length === 0}
     <p>You don&apos;t have any past trades</p>
   {:else}

@@ -2,10 +2,10 @@
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
   import { PastTrade } from ".";
 
-  let items: string[] = ['1']
+  let items: string[] = ["1"];
 
   function pushItem() {
-    items = [...items, items.length.toString()]
+    items = [...items, items.length.toString()];
   }
 </script>
 
@@ -17,9 +17,7 @@
       <PastTrade {...args} />
     {/each}
 
-    <button on:click={pushItem}>
-      Push Item
-    </button>
+    <button on:click={pushItem}> Push Item </button>
   </div>
 </Template>
 
