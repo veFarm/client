@@ -1,4 +1,4 @@
-import type { Connex } from "@vechain/connex";
+// import type { Connex } from "@vechain/connex";
 import type { Certificate } from "thor-devkit";
 import { Transaction } from "thor-devkit";
 import bn from "bignumber.js";
@@ -200,6 +200,14 @@ export class ConnexUtils {
         return receipt;
       }
     }
+  }
+
+  /**
+   * Return thor ticker to track when new blocks are added to the chain.
+   * @return {Connex.Thor.Ticker}
+   */
+  ticker(): Connex.Thor.Ticker {
+    return this.connex.thor.ticker();
   }
 
   /**

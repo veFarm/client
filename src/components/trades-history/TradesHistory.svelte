@@ -3,11 +3,10 @@
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
+  import { balance } from "@/stores/balance";
   import { formatUnits } from "@/utils/format-units";
-  import { timeSince } from "@/utils/time-since";
   import { PastTrade } from "@/components/past-trade";
-
-  // TODO: rename it to PastTrades
+  import { Spinner } from "@/components/spinner";
 
   type RawSwapDoc = {
     account: Address;
@@ -34,6 +33,8 @@
   let error: string | undefined;
   /** Fetch time. */
   let fetchAt: number = Date.now();
+  /** Loading state. */
+  let loading: boolean = false;
 
   /**
    * Fetch account swap transactions.
@@ -43,6 +44,8 @@
       if ($wallet.account == null) {
         throw new Error("Wallet is not connected.");
       }
+
+      loading = true;
 
       const response = await fetch(
         `${chain.getAccountSwapsEndpoint}?account=${$wallet.account}`,
@@ -59,45 +62,43 @@
       }));
     } catch (_error: any) {
       error = _error?.message || "Unknown error occurred.";
+    } finally {
+      loading = false;
     }
 
     fetchAt = Date.now();
   }
 
-  let interval1: NodeJS.Timer | undefined;
-
-  // Fetch swaps every 5 mins.
   $: {
     if ($wallet.connected) {
       fetchSwaps();
-      clearInterval(interval1);
-      interval1 = setInterval(fetchSwaps, 5 * 60 * 1_000);
     }
   }
 
-  let interval2: NodeJS.Timer | undefined;
-  let updatedAt: string | undefined;
-
-  // Display last updated at.
   $: {
-    clearInterval(interval2);
-    interval2 = setInterval(() => {
-      updatedAt = timeSince(fetchAt);
-    }, 60 * 1_000);
+    if (
+      $balance.current != null &&
+      $balance.previous != null &&
+      !$balance.current.vet.eq($balance.previous.vet)
+    ) {
+      let timeout: NodeJS.Timeout | undefined;
+      new Promise((res, rej) => {
+        timeout = setTimeout(res, 3_000);
+      }).then(() => {
+        fetchSwaps();
+        clearTimeout(timeout);
+      });
+    }
   }
 </script>
 
 <section class="flex flex-col space-y-4">
-  <h2>
-    Your Trades
-    <br />
-    <span class="block text-sm text-gray-400 font-normal">
-      {updatedAt != null ? `Last updated: ${updatedAt} ago` : ""}
-    </span>
-  </h2>
+  <h2>Your Trades</h2>
 
   {#if error != null && error.length > 0}
     <p class="text-danger">{error}</p>
+  {:else if loading}
+    <p><Spinner /> Fetching transactions...</p>
   {:else if swapTxs == null || swapTxs.length === 0}
     <p>You don&apos;t have any past trades</p>
   {:else}

@@ -1,7 +1,6 @@
 import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
-// import bn from "bignumber.js";
 import type BigNumber from "bignumber.js";
 import { chain } from "@/config";
 import type { WalletId, Balance } from "@/typings/types";
@@ -50,20 +49,24 @@ function createStore() {
     subscribe: store.subscribe,
     disconnect: function (): void {
       store.set({ ...initialState });
+
+      // Forget user data.
+      localStorage.removeItem("user");
     },
-    connect: async function (
-      walletId: WalletId,
-      account?: Address,
-    ): Promise<Address | undefined> {
-      this.disconnect();
-
-      store.update((s) => ({
-        ...s,
-        loading: true,
-        walletId,
-      }));
-
+    /**
+     * Request user signature.
+     * @param {WalletId} walletId Wallet id.
+     */
+    connect: async function (walletId: WalletId): Promise<void> {
       try {
+        store.set({ ...initialState });
+
+        store.update((s) => ({
+          ...s,
+          loading: true,
+          walletId,
+        }));
+
         // VeWorld injects window.vechain which can serve as detection utility.
         if (walletId === "veworld" && !window.vechain) {
           throw new Error("VeWorld extension not found.");
@@ -77,41 +80,36 @@ function createStore() {
 
         const connexUtils = new ConnexUtils(connex);
 
-        let acc: Address | undefined = account;
+        const message: Connex.Vendor.CertMessage = {
+          purpose: "identification",
+          payload: {
+            type: "text",
+            content: "Sign a certificate to prove your identity.",
+          },
+        };
 
-        // If account is given, it means that we are loading user's profile from local storage.
-        // Therefore cert is not required.
-        if (acc == null) {
-          const message: Connex.Vendor.CertMessage = {
-            purpose: "identification",
-            payload: {
-              type: "text",
-              content: "Sign a certificate to prove your identity.",
-            },
-          };
+        const cert = await connexUtils.signCert(message);
 
-          const cert = await connexUtils.signCert(message);
+        // This should throw if cert isn't valid.
+        Certificate.verify(cert);
 
-          // This should throw if cert isn't valid.
-          Certificate.verify(cert);
+        const account = cert.signer as Address;
 
-          acc = cert.signer as Address;
-        }
+        // Remember user.
+        localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
-        const balance = await connexUtils.fetchBalance(acc);
+        const balance = await connexUtils.fetchBalance(account);
 
         store.set({
           connexUtils,
           loading: false,
           error: undefined,
           connected: true,
-          account: acc,
+          account,
           balance,
           walletId,
           baseGasPrice: await connexUtils.fetchBaseGasPrice(),
         });
-
-        return acc;
       } catch (error: unknown) {
         store.set({
           ...initialState,
@@ -122,6 +120,61 @@ function createStore() {
         store.update((s) => ({ ...s, loading: false }));
       }
     },
+    /**
+     * Load user account from localStorage if any.
+     */
+    loadStoredAccount: async function (): Promise<void> {
+      try {
+        store.set({ ...initialState });
+
+        const user = localStorage.getItem("user"); // "{"walletId": "sync2", "account": "0x"}"
+
+        if (user == null) return;
+
+        const { walletId, account } = JSON.parse(user) as {
+          walletId: WalletId;
+          account: Address;
+        };
+
+        store.update((s) => ({
+          ...s,
+          loading: true,
+          walletId,
+        }));
+
+        const connex = new Connex({
+          node: chain.rpc[0],
+          network: chain.network,
+          noExtension: walletId === "sync2",
+        });
+
+        const connexUtils = new ConnexUtils(connex);
+
+        const balance = await connexUtils.fetchBalance(account);
+
+        store.set({
+          connexUtils,
+          loading: false,
+          error: undefined,
+          connected: true,
+          account,
+          balance,
+          walletId,
+          baseGasPrice: await connexUtils.fetchBaseGasPrice(),
+        });
+      } catch (error: unknown) {
+        store.set({
+          ...initialState,
+          error:
+            error instanceof Error ? error.message : "Unknown error occurred.",
+        });
+      } finally {
+        store.update((s) => ({ ...s, loading: false }));
+      }
+    },
+    /**
+     * Fetch user balance (VET and VTHO).
+     */
     fetchBalance: async function (): Promise<void> {
       try {
         const data = get(store);

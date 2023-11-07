@@ -9,7 +9,6 @@
   let isOpen = false;
 
   function handleDisconnect() {
-    localStorage.removeItem("user");
     wallet.disconnect();
     isOpen = false;
   }

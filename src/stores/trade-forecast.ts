@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import bn from "bignumber.js";
 import type { BigNumber } from "bignumber.js";
 import { chain } from "@/config/index";
-import { wallet } from "@/stores/wallet";
+import { balance } from "@/stores/balance";
 
 type ApiResponse = {
   txFee: string;
@@ -30,6 +30,7 @@ export type Sol = {
 type State =
   | {
       fetched: true;
+      account: Address;
       solutions: Sol[];
       txFee: BigNumber;
       loading: boolean;
@@ -37,6 +38,7 @@ type State =
     }
   | {
       fetched: false;
+      account: undefined;
       solutions: undefined;
       txFee: undefined;
       loading: boolean;
@@ -45,6 +47,7 @@ type State =
 
 const initialState: State = {
   fetched: false,
+  account: undefined,
   solutions: undefined,
   txFee: undefined,
   loading: false,
@@ -52,45 +55,71 @@ const initialState: State = {
 };
 
 /**
+ * Fetch trade forecast for the given account.
+ * @param {Address} account Target account.
+ * @return {{txFee: BigNumber, solutions: Sol[]}}
+ */
+async function fetchTradeForecast(
+  account: Address,
+): Promise<{ solutions: Sol[]; txFee: BigNumber }> {
+  const response = await fetch(
+    `${chain.getTradeForecastEndpoint}?account=${account}`,
+  );
+
+  const json = (await response.json()) as ApiResponse;
+
+  return {
+    txFee: bn(json.txFee),
+    solutions: json.solutions.map((s) => ({
+      protocolFee: bn(s.protocolFee),
+      dexFee: bn(s.dexFee),
+      amountInWithFees: bn(s.amountInWithFees),
+      deltaVET: bn(s.deltaVET),
+      stepsCount: s.stepsCount,
+      withdrawAmount: bn(s.withdrawAmount),
+      totalProfitVET: bn(s.totalProfitVET),
+    })),
+  };
+}
+
+/**
  * Fetch trade forecast for the current logged in account.
  */
 function createStore() {
   const store = writable<State>({ ...initialState });
 
-  // Update trade forecast store based on wallet store changes.
-  wallet.subscribe(async (data) => {
-    if (!data.connected) {
+  // Update trade forecast store based on balance store changes.
+  balance.subscribe(async (data) => {
+    if (!data.account) {
       store.set({ ...initialState });
       return;
     }
 
     // Wallet is connected.
-    store.update((s) => ({
-      ...s,
-      loading: true,
-    }));
-
     try {
-      const { account } = data;
+      const { account, current, previous } = data;
 
-      const response = await fetch(
-        `${chain.getTradeForecastEndpoint}?account=${account}`,
-      );
+      // In case VET balance is unchanged, do not fetch again.
+      if (
+        current?.vet != null &&
+        previous?.vet != null &&
+        current.vet.eq(previous.vet)
+      ) {
+        return;
+      }
 
-      const json = (await response.json()) as ApiResponse;
+      store.update((s) => ({
+        ...s,
+        loading: true,
+      }));
+
+      const { txFee, solutions } = await fetchTradeForecast(account);
 
       store.set({
         fetched: true,
-        txFee: bn(json.txFee),
-        solutions: json.solutions.map((s) => ({
-          protocolFee: bn(s.protocolFee),
-          dexFee: bn(s.dexFee),
-          amountInWithFees: bn(s.amountInWithFees),
-          deltaVET: bn(s.deltaVET),
-          stepsCount: s.stepsCount,
-          withdrawAmount: bn(s.withdrawAmount),
-          totalProfitVET: bn(s.totalProfitVET),
-        })),
+        account,
+        txFee,
+        solutions,
         loading: false,
         error: undefined,
       });

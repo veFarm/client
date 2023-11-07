@@ -2,8 +2,8 @@
   import { onMount } from "svelte";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
+  import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
-  import type { WalletId } from "@/typings/types";
   import { trader } from "@/stores/trader";
   import { formatUnits } from "@/utils/format-units";
   import { Layout } from "@/components/layout";
@@ -30,15 +30,23 @@
     }
   }
 
-  // Login stored user if any.
+  // Update account balance with every new tick.
+  $: {
+    if ($wallet.connected) {
+      const ticker = $wallet.connexUtils.ticker();
+
+      void (async () => {
+        for (;;) {
+          await ticker.next();
+          await balance.fetchBalance();
+        }
+      })();
+    }
+  }
+
   onMount(async () => {
-    const user = localStorage.getItem("user"); // "{"walletId": "sync2", "account": "0x"}"
-    if (user == null) return;
-    const { walletId, account } = JSON.parse(user) as {
-      walletId: WalletId;
-      account: Address;
-    };
-    await wallet.connect(walletId, account);
+    // Login user from localStorage if any.
+    await wallet.loadStoredAccount();
   });
 </script>
 
@@ -90,8 +98,8 @@
                 Great! We&apos;re&nbsp;all&nbsp;set.
               </h2>
               <p>
-                VeFarm is configured to exchange VTHO for VET automatically
-                while maintaining a reserve balance of
+                VeFarm is configured to periodically exchange VTHO for VET while
+                maintaining a reserve balance of
                 <b>{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b> in your account.
               </p>
               <TradesForecast reserveBalance={$trader.reserveBalance} />
