@@ -39,7 +39,7 @@ export type ChainData = {
   /** Trader contract address. */
   trader: Address;
   getAccountSwapsEndpoint: string;
-  getStatsEndpoint: string;
+  getAccountStatsEndpoint: string;
   getTradeForecastEndpoint: string;
 };
 
@@ -77,7 +77,7 @@ export const CHAINS: Record<ChainId, ChainData> = {
     vtho: "0x0000000000000000000000000000456E65726779",
     trader: "0x0000000000000000000000000000000000000000", // TODO
     getAccountSwapsEndpoint: "https://",
-    getStatsEndpoint: "https://",
+    getAccountStatsEndpoint: "https://",
     getTradeForecastEndpoint: "https://",
   },
   100010: {
@@ -105,7 +105,7 @@ export const CHAINS: Record<ChainId, ChainData> = {
     vtho: "0x0000000000000000000000000000456E65726779",
     trader: "0x0317B19b8b94aE1D5Bfb4727b9064fe8118aA305",
     getAccountSwapsEndpoint: "https://getaccountswaps-3co32ksh6a-uc.a.run.app",
-    getStatsEndpoint: "https://getstats-3co32ksh6a-uc.a.run.app",
+    getAccountStatsEndpoint: "https://getaccountstats-3co32ksh6a-uc.a.run.app",
     getTradeForecastEndpoint:
       "https://gettradeforecast-3co32ksh6a-uc.a.run.app",
   },
@@ -135,7 +135,8 @@ export const CHAINS: Record<ChainId, ChainData> = {
     trader: "0x0317B19b8b94aE1D5Bfb4727b9064fe8118aA305",
     getAccountSwapsEndpoint:
       "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountswaps",
-    getStatsEndpoint: "http://127.0.0.1:5001/vefarmdev/us-central1/getstats",
+    getAccountStatsEndpoint:
+      "http://127.0.0.1:5001/vefarmdev/us-central1/getaccountstats",
     getTradeForecastEndpoint:
       "http://127.0.0.1:5001/vefarmdev/us-central1/gettradeforecast",
   },

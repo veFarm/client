@@ -31,24 +31,18 @@
   let swapTxs: SwapDoc[] = [];
   /** Error message if any. */
   let error: string | undefined;
-  /** Fetch time. */
-  let fetchAt: number = Date.now();
   /** Loading state. */
   let loading: boolean = false;
 
   /**
    * Fetch account swap transactions.
    */
-  async function fetchSwaps() {
+  async function fetchSwaps(account: Address): Promise<void> {
     try {
-      if ($wallet.account == null) {
-        throw new Error("Wallet is not connected.");
-      }
-
       loading = true;
 
       const response = await fetch(
-        `${chain.getAccountSwapsEndpoint}?account=${$wallet.account}`,
+        `${chain.getAccountSwapsEndpoint}?account=${account}`,
       );
 
       const json = (await response.json()) as RawSwapDoc[];
@@ -65,13 +59,11 @@
     } finally {
       loading = false;
     }
-
-    fetchAt = Date.now();
   }
 
   $: {
     if ($wallet.connected) {
-      fetchSwaps();
+      fetchSwaps($wallet.account);
     }
   }
 
@@ -85,7 +77,9 @@
       new Promise((res, rej) => {
         timeout = setTimeout(res, 3_000);
       }).then(() => {
-        fetchSwaps();
+        if ($wallet.connected) {
+          fetchSwaps($wallet.account);
+        }
         clearTimeout(timeout);
       });
     }
