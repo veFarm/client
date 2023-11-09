@@ -1,13 +1,15 @@
 import { describe, test, expect } from "vitest";
 import { isNumeric } from "./is-numeric";
 
-const numbers: string[] = [];
+const stringNumbers: string[] = [];
+
 for (let i = 0; i < 10; i++) {
-  numbers.push(i.toString());
+  stringNumbers.push(i.toString());
 }
 // numbers: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 const allChars: string[] = [];
+
 for (let i = 32; i < 127; i++) {
   allChars.push(String.fromCharCode(i));
 }
@@ -31,7 +33,7 @@ describe("isNumeric", () => {
     expect(isNumeric("")).toBe(false);
   });
   allChars
-    .filter((char) => !numbers.includes(char))
+    .filter((char) => !stringNumbers.includes(char))
     .forEach((char) => {
       test(`string containing the ${char} character should return false`, () => {
         expect(isNumeric(char)).toBe(false);
