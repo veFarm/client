@@ -1,51 +1,46 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
+  import { wallet } from "@/stores/wallet";
+  import { tradeForecast } from "@/stores/trade-forecast";
   import { formatUnits } from "@/utils/format-units";
   import { StatItem } from "@/components/stat-item";
 
   type RawStats = {
-    /** Number of registered accounts */
-    accountsCount: number;
-    /** Number of swap operations performed by the protocol */
+    /** Target account. */
+    account: string;
+    /** Number of swap operations performed by the target account. */
     swapsCount: number;
-    /** Total VET amount transacted by the protocol */
+    /** Total VET amount transacted by the target account. */
     vetTotal: string;
-    /** Total VTHO amount transacted by the protocol */
+    /** Total VTHO amount transacted by the target account. */
     vthoTotal: string;
   };
 
   type Stats = {
-    accountsCount: number;
     swapsCount: number;
     vetTotal: BigNumber;
     vthoTotal: BigNumber;
   };
 
-  /**
-   * Array of swap transactions performed by the Trader
-   * contract in behalf of the current logged in account.
-   */
-  let stats: Stats = {
-    accountsCount: 0,
-    swapsCount: 0,
-    vetTotal: bn(0),
-    vthoTotal: bn(0),
-  };
+  /** Account stats. */
+  let stats: Stats | undefined;
   /** Error message if any. */
   let error: string | undefined;
 
   /**
-   * Fetch protocol stats.
+   * Fetch account stats for the given account.
+   * @param {Address} account Target account
+   * @return {Promise<void>}
    */
-  async function fetchStats() {
+  async function fetchStats(account: Address): Promise<void> {
     try {
-      const response = await fetch(chain.getStatsEndpoint);
+      const response = await fetch(
+        `${chain.getAccountStatsEndpoint}?account=${account}`,
+      );
       const json = (await response.json()) as RawStats;
       stats = {
-        accountsCount: json.accountsCount,
         swapsCount: json.swapsCount,
         vetTotal: bn(json.vetTotal),
         vthoTotal: bn(json.vthoTotal),
@@ -55,11 +50,25 @@
     }
   }
 
-  onMount(fetchStats);
+  $: {
+    if ($wallet.connected) {
+      fetchStats($wallet.account);
+    }
+  }
 </script>
 
-{#if !error}
+{#if stats != null && $tradeForecast.fetched}
   <StatItem value={stats.swapsCount} label="Trades" />
   <StatItem value={formatUnits(stats.vetTotal, 2)} label="VET volume" />
-  <StatItem value={stats.accountsCount} label="Accounts" />
+  <StatItem
+    value={formatUnits(
+      $tradeForecast.solutions[$tradeForecast.solutions.length - 1]
+        .totalProfitVET,
+      2,
+    )}
+    label="VET early profit"
+  />
+{/if}
+{#if error != null}
+  <p class="text-danger">ERROR: {error}</p>
 {/if}

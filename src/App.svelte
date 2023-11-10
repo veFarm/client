@@ -73,7 +73,7 @@
           and increasing your potential gains.
         </p>
         <div
-          class="hidden lg:grid lg:grid-cols-3 lg:row-gap-8 lg:mt-10 lg:mx-auto"
+          class="hidden lg:flex lg:flex-row lg:justify-center lg:space-x-16 lg:mt-10"
         >
           <Stats />
         </div>
@@ -138,7 +138,6 @@
     </div>
 
     {#if $wallet.connected}
-      <Divider />
       <TradesHistory />
     {/if}
   </div>
