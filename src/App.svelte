@@ -8,7 +8,6 @@
   import { formatUnits } from "@/utils/format-units";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
-  import { Divider } from "@/components/divider";
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
