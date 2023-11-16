@@ -168,6 +168,7 @@
     label="Reserve Balance"
     placeholder={formatUnits($trader.reserveBalance)}
     autocomplete="off"
+    autofocus
     currency="VTHO"
     subtext={`Balance: ${
       $balance.current != null ? formatUnits($balance.current.vtho, 2) : "0"

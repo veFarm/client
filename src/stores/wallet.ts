@@ -39,9 +39,6 @@ const initialState: State = {
   baseGasPrice: undefined,
 };
 
-// Observation: not sure if this is the best abstraction for handling
-// wallet related logic.
-
 function createStore() {
   const store = writable<State>({ ...initialState });
 
