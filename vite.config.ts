@@ -48,8 +48,6 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
     // jest like globals
     globals: true,
     environment: "jsdom",
-    // in-source testing
-    includeSource: ["src/**/*.{js,ts,svelte}"],
     // Add @testing-library/jest-dom matchers & mocks of SvelteKit modules
     setupFiles: ["./setupTest.ts"],
     // Exclude files in v8
@@ -57,7 +55,8 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
       provider: "istanbul",
       // you can include other reporters, but 'json-summary' is required, json is recommended
       reporter: ["text", "json-summary", "json", "lcov"],
-      // exclude: ['setupTest.ts']
+      all: true,
+      include: ["src/**/*.{ts,svelte}", "!src/tests"],
     },
     // Exclude playwright tests folder
     exclude: [...configDefaults.exclude, "tests"],
