@@ -8,9 +8,9 @@
 
 <Button
   {...$$props}
-   disabled={$walletModal.isOpen}
-    on:click={walletModal.open}
-    data-cy="connect-wallet-button"
-  >
+  disabled={$walletModal.isOpen}
+  on:click={walletModal.open}
+  data-cy="connect-wallet-button"
+>
   Connect wallet
 </Button>
