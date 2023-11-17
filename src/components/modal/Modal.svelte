@@ -5,7 +5,9 @@
 
   export let isOpen = false;
 
-  let dialog: HTMLDialogElement;
+  let dialog: HTMLDialogElement & {
+    "data-cy"?: string;
+  };
 
   const dispatch = createEventDispatcher();
 
@@ -39,7 +41,7 @@
 
 {#if isOpen}
   <div class="backdrop" on:click={hide} />
-  <dialog bind:this={dialog} on:keydown={handleKeyDown} on:cancel={hide}>
+  <dialog bind:this={dialog} on:keydown={handleKeyDown} on:cancel={hide} {...$$restProps}>
     <!-- Header -->
     <div class="flex items-end px-6 py-4">
       <h3 class="text-body flex-1 text-center ml-6">

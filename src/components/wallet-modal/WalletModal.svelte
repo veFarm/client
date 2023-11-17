@@ -37,7 +37,7 @@
   }
 </script>
 
-<Modal isOpen={$walletModal.isOpen} on:close={handleClose}>
+<Modal isOpen={$walletModal.isOpen} on:close={handleClose} data-cy="wallet-modal">
   <svelte:fragment slot="header">Connect wallet</svelte:fragment>
   <svelte:fragment slot="body">
     <p class="text-sm text-body">
@@ -63,7 +63,7 @@
     </div>
 
     {#if error != null}
-      <p class="text-sm text-danger" data-cy="wallet-modal-error-message">
+      <p class="text-sm text-danger" data-cy="wallet-modal-error">
         ERROR: {error}
       </p>
     {/if}

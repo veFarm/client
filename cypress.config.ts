@@ -6,4 +6,6 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
+  // Enable cross-domain iframe access
+  chromeWebSecurity: false,
 });
