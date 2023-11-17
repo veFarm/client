@@ -15,7 +15,8 @@
     "build-storybook": "storybook build",
     "format": "prettier --write  --plugin prettier-plugin-svelte .",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "cypress": "npx cypress open"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.1.1",
