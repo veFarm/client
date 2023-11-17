@@ -8,6 +8,7 @@
   type $$Props = HTMLButtonAttributes &
     ButtonVariantProps & {
       loading?: boolean;
+      "data-cy"?: string;
     };
 
   export let intent: ButtonVariantProps["intent"] = "secondary";

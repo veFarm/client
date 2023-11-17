@@ -59,8 +59,8 @@
     "
     >
       <section class="basis-1/2 self-start">
-        <h1>Grow your VET balance.</h1>
-        <p class="text-gray-300 mt-4">
+        <h1 data-cy="title">Grow your VET balance.</h1>
+        <p class="text-gray-300 mt-4" data-cy="description">
           <!-- Automatically swap VTHO for VET using optimized strategies. How does it work?
           Set your reserve balance and allow the VeFarm contract to spend your VTHO.
           Afterward, the contract will periodically withdraw VTHO from your account,

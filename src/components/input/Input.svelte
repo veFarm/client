@@ -9,6 +9,7 @@
     hint?: string;
     error?: string;
     subtext?: string;
+    "data-cy"?: string;
   };
 
   export let id: string;

@@ -180,6 +180,7 @@
     on:input={() => {
       clearFieldErrors("reserveBalance");
     }}
+    data-cy="reserve-input"
   />
 
   <FundsWarning />

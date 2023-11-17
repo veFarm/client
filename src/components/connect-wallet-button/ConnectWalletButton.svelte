@@ -6,6 +6,11 @@
   type $$Props = ComponentProps<Button>;
 </script>
 
-<Button {...$$props} disabled={$walletModal.isOpen} on:click={walletModal.open}>
+<Button
+  {...$$props}
+   disabled={$walletModal.isOpen}
+    on:click={walletModal.open}
+    data-cy="connect-wallet-button"
+  >
   Connect wallet
 </Button>
