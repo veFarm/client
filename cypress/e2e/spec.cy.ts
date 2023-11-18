@@ -1,4 +1,4 @@
-const getIframeDocument = () => {
+const getIframeDocument = (): Cypress.Chainable => {
   return cy
   .get('iframe')
   .eq(1)
@@ -15,7 +15,7 @@ const getIframeBody = () => {
   // get the document
   return getIframeDocument()
   // automatically retries until body is loaded
-  .its('body').should('not.be.undefined')
+  .its('body').should('be.visible')
   // wraps "body" DOM element to allow
   // chaining more Cypress commands, like ".find(...)"
   .then(cy.wrap)
@@ -26,7 +26,7 @@ describe("App", () => {
 
   beforeEach(() => {
     cy.viewport("macbook-15");
-    cy.visit("http://127.0.0.1:5173/");
+    cy.visit("/");
   });
 
   context("hero section", () => {
@@ -45,7 +45,7 @@ describe("App", () => {
 
     it("displays the connect wallet button when the user is NOT connected", () => {
       cy.getByData("connect-wallet-button").should("be.visible");
-      cy.getByData("connect-wallet-button").should("not.be.disabled");
+      cy.getByData("connect-wallet-button").should("be.enabled");
     });
 
     it("opens the connect wallet modal when the user clicks the connect button", () => {
@@ -103,30 +103,14 @@ describe("App", () => {
       // Act
       cy.getByData("wallet-provider-button-sync2").click();
 
-      // Assert
-      // cy.get('iframe')
-      // .eq(1)
-      // .should('contain', 'Try out Sync2-lite')
         getIframeBody()
         .find('div.footer')
-        .should('not.be.undefined')
+        // .should('not.be.undefined')
         .find('div')
-        .should('not.be.undefined')
-        .eq(1)
-        .should('not.be.undefined')
         .find('a')
-        .eq(0) // .get('a').eq(0).should('have.text', 'Try out Sync2-lite').click()
-        // getIframeBody().find('#result').should('include.text', '"delectus aut autem"')
-
-        //         getIframeBody()
-        // .find('div.footer')
-        // // .should('not.be.undefined')
-        // .find('div')
-        // .find('a')
-        // .eq(0)
-        // .should('contain', 'Try out Sync2-lite')
-        // .click()
-
+        .eq(0)
+        .should('contain', 'Try out Sync2-lite')
+        .click()
 
         // Account
         // 0x356D86Fa8Ed7611Da4bF2C8E1B76f06F961Be644
