@@ -37,7 +37,11 @@
   }
 </script>
 
-<Modal isOpen={$walletModal.isOpen} on:close={handleClose} data-cy="wallet-modal">
+<Modal
+  isOpen={$walletModal.isOpen}
+  on:close={handleClose}
+  data-cy="wallet-modal"
+>
   <svelte:fragment slot="header">Connect wallet</svelte:fragment>
   <svelte:fragment slot="body">
     <p class="text-sm text-body">
