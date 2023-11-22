@@ -2,13 +2,16 @@
 
 describe("App - Logged out account journey", () => {
   before(() => {
-    // Ensure account is NOT logged in.
-    cy.clearLocalStorage();
   });
 
   beforeEach(() => {
     cy.viewport("macbook-15");
     cy.visit("/");
+
+    // Ensure account is NOT logged in.
+    cy.clearLocalStorage();
+    // ^ Actually this is not required; Cypress does this
+    // by default when test isolation is enabled.
 
     cy.getByData("reserve-input").as("reserve-input");
     cy.getByData("connect-wallet-button").as("connect-button");

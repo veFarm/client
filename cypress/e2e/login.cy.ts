@@ -3,7 +3,7 @@ import { Connex } from "@vechain/connex";
 const getIframeDocument = (): Cypress.Chainable => {
   return (
     cy
-      .get("iframe")
+      .get("iframe", {timeout: 10_000})
       .eq(1)
       // Cypress yields jQuery element, which has the real
       // DOM element under property "0".
@@ -65,7 +65,6 @@ describe("App", () => {
     // cy.stub(Connex.Vendor, "sign", )
 
     cy.window().then((win) => {
-      cy.log("here");
       cy.stub(win.connex?.vendor.sign)
         // .throws()
         .resolves(

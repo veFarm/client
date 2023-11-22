@@ -2,10 +2,17 @@ import { Connex } from "@vechain/connex"
 import bn from "bignumber.js"
 // import * as configModule from "../../src/config/get-env-vars";
 // import { CHAINS } from "../../src/config/index"
-import { ConnexUtils } from "../../src/blockchain/connex-utils";
+// import { ConnexUtils } from "../../src/blockchain/connex-utils";
 // import { wallet } from "../../src/stores/wallet"
 // import * as walletModule from "../../src/stores/wallet"
 import * as testMod from "../../src/config/test-module"
+// import testMod from "../../src/config/test-module"
+
+// const obj = {
+// importMod() {
+//   return 3
+// }
+// }
 
 describe("App - Logged in account journey", () => {
   before(() => {
@@ -20,11 +27,18 @@ describe("App - Logged in account journey", () => {
     const account = "0x4f2b95775434b297a7205cb609ccab56752fc0b3"
     localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
-    cy.getByData("reserve-input").as("reserve-input");
+    console.log({'props': testMod})
+
+    // cy.stub(testMod, 'importMod').returns(5)
+    cy.stub(testMod, 'importMod').returns(5)
+    // cy.getByData("reserve-input").as("reserve-input");
   });
 
   context("Hero section", () => {
     it("displays the title of the app and a short description", () => {
+      // Arrange
+
+      // Assert
       cy.getByData("title").should("be.visible");
       cy.getByData("description").should("be.visible");
     });
@@ -36,20 +50,19 @@ describe("App - Logged in account journey", () => {
       // cy.stub(getEnvVars).returns({ CHAIN_ID: 100010 })
       // Cypress.env('VITE_CHAIN_ID', 100010)
       // cy.stub(configModule, "getEnvVars").returns({ VITE_CHAIN_ID: 100010 })
-      cy.stub(testMod, 'importMod', () => 5)
 
       const res = testMod.importMod()
       console.log({res})
 
-      const walletId = "sync2"
+      // const walletId = "sync2"
 
-      const connex = new Connex({
-        node: "https://testnet.veblocks.net/",
-        network: "test",
-        noExtension: walletId === "sync2",
-      });
+      // const connex = new Connex({
+      //   node: "https://testnet.veblocks.net/",
+      //   network: "test",
+      //   noExtension: walletId === "sync2",
+      // });
 
-      const connexUtils = new ConnexUtils(connex)
+      // const connexUtils = new ConnexUtils(connex)
 
       // cy.stub(walletModule, "wallet").returns({
       //   connexUtils,
