@@ -22,6 +22,9 @@ import obj from "../../src/config/test-module"
 // }
 // }
 
+const walletId = "sync2"
+const account = "0x4f2b95775434b297a7205cb609ccab56752fc0b3"
+
 describe("App - Logged in account journey", () => {
   before(() => {
   });
@@ -31,8 +34,6 @@ describe("App - Logged in account journey", () => {
     cy.visit("/");
 
     // Ensure account is connected
-    const walletId = "sync2"
-    const account = "0x4f2b95775434b297a7205cb609ccab56752fc0b3"
     localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
     // console.log({'props': testMod})
@@ -69,13 +70,26 @@ describe("App - Logged in account journey", () => {
       console.log({res})
 
       // spying and response stubbing
-      cy.intercept('GET', 'https://testnet.veblocks.net/accounts/*', {
+      cy.intercept('GET', `https://testnet.veblocks.net/accounts/${account}*`, {
         statusCode: 200,
         body: {
           balance: "0x0000000000000000000", //"0x197ae6a1354ccd2e103",
           energy:"0x00000000000000000", // "0x12e492627f439cdc8"
           hasCode: false,
         },
+      })
+
+      cy.intercept('GET', `**/getaccountstats?account=${account}*`, {fixture: 'account-stats.json'
+})
+//       cy.intercept('GET', `/getaccountstats?account=${account}*`, (req) => {
+//   req.reply({
+//     statusCode: 200,
+//     fixture: 'account-stats.json'
+//   })
+// })
+
+      cy.intercept('GET', `**/getaccountswaps?account=${account}*`,  {
+          fixture: 'account-swaps.json'
       })
 
       // Request URL:
