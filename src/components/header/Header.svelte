@@ -1,9 +1,11 @@
 <script lang="ts">
   import { Popover } from "svelte-smooth-popover";
-  import { wallet } from "@/stores/wallet";
+  import walletStore from "@/stores/wallet";
   import { shortenAddress } from "@/utils/shorten-address";
   import { formatUnits } from "@/utils/format-units";
   import ChevronDown from "@/assets/ChevronDown.svelte";
+
+  const { wallet } = walletStore
 
   /** Popover state. */
   let isOpen = false;

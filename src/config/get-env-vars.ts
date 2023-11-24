@@ -4,8 +4,9 @@
  * CHAIN_ID: string,
  * }} Environment variables
  */
-export function getEnvVars() {
-  const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
+function getEnvVars() {
+  // const CHAIN_ID = import.meta.env.VITE_CHAIN_ID || 100011;
+  const CHAIN_ID = 100011;
 
   if (CHAIN_ID == null) {
     throw new Error("Missing env var CHAIN_ID");
@@ -14,4 +15,8 @@ export function getEnvVars() {
   return {
     CHAIN_ID,
   };
+}
+
+export default {
+  getEnvVars,
 }

@@ -8,7 +8,7 @@ import { ConnexUtils } from "@/blockchain/connex-utils";
 
 type State =
   | {
-      connexUtils: ConnexUtils;
+      // connexUtils: ConnexUtils;
       loading: boolean;
       error: string | undefined;
       connected: true;
@@ -18,7 +18,7 @@ type State =
       baseGasPrice: BigNumber;
     }
   | {
-      connexUtils: ConnexUtils | undefined;
+      // connexUtils: ConnexUtils | undefined;
       loading: boolean;
       error: string | undefined;
       connected: false;
@@ -29,7 +29,7 @@ type State =
     };
 
 const initialState: State = {
-  connexUtils: undefined,
+  // connexUtils: undefined,
   loading: false,
   error: undefined,
   connected: false,
@@ -105,7 +105,7 @@ function createStore() {
         console.log({balance})
 
         store.set({
-          connexUtils,
+          // connexUtils,
           loading: false,
           error: undefined,
           connected: true,
@@ -157,7 +157,7 @@ function createStore() {
         const balance = await connexUtils.fetchBalance(account);
 
         store.set({
-          connexUtils,
+          // connexUtils,
           loading: false,
           error: undefined,
           connected: true,
@@ -187,7 +187,15 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const { connexUtils, account } = data;
+        const { walletId, account } = data;
+
+        const connex = new Connex({
+          node: chain.rpc[0],
+          network: chain.network,
+          noExtension: walletId === "sync2",
+        });
+
+        const connexUtils = new ConnexUtils(connex);
 
         const balance = await connexUtils.fetchBalance(account);
 
@@ -214,7 +222,16 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const { connexUtils, account } = data;
+        const { walletId, account } = data;
+
+        const connex = new Connex({
+          node: chain.rpc[0],
+          network: chain.network,
+          noExtension: walletId === "sync2",
+        });
+
+        const connexUtils = new ConnexUtils(connex);
+
 
         return connexUtils.signTx(clauses, account, comment);
       } catch (error: unknown) {
@@ -235,7 +252,15 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const { connexUtils } = data;
+        const { walletId } = data;
+
+                const connex = new Connex({
+          node: chain.rpc[0],
+          network: chain.network,
+          noExtension: walletId === "sync2",
+        });
+
+        const connexUtils = new ConnexUtils(connex);
 
         return connexUtils.waitForReceipt(txId);
       } catch (error: unknown) {
@@ -249,4 +274,7 @@ function createStore() {
   };
 }
 
-export const wallet = createStore();
+// export const wallet = createStore();
+export default {
+  wallet: createStore(),
+}

@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { Connex } from "@vechain/connex";
+  import { ConnexUtils } from "@/blockchain/connex-utils";
   import { chain } from "@/config/index";
-  import { wallet } from "@/stores/wallet";
+  import walletStore from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
@@ -15,6 +17,8 @@
   import { TradesHistory } from "@/components/trades-history";
   import { TradesForecast } from "@/components/trades-forecast";
   import { FundsWarning } from "@/components/funds-warning";
+
+  const { wallet } = walletStore
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
@@ -33,7 +37,17 @@
   // Update account balance with every new tick.
   $: {
     if ($wallet.connected) {
-      const ticker = $wallet.connexUtils.ticker();
+      const { walletId } = $wallet;
+
+         const connex = new Connex({
+          node: chain.rpc[0],
+          network: chain.network,
+          noExtension: walletId === "sync2",
+        });
+
+                const connexUtils = new ConnexUtils(connex);
+
+      const ticker = connexUtils.ticker();
 
       void (async () => {
         for (;;) {
@@ -65,7 +79,7 @@
           Set your reserve balance and allow the VeFarm contract to spend your VTHO.
           Afterward, the contract will periodically withdraw VTHO from your account,
           execute a swap for VET tokens through a DEX, and return the resulting tokens
-          to your wallet. You don&apos;t need to worry about finding the best exchange rate
+          to your wallet.store. You don&apos;t need to worry about finding the best exchange rate
           or the right time to trade; we&apos;ll take care of that. -->
           With your VET holdings, you automatically accumulate VTHO tokens in your
           account. VeFarm takes care of exchanging these VTHO tokens for additional

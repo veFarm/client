@@ -1,5 +1,7 @@
 import bn from "bignumber.js";
-import { getEnvVars } from "@/config/get-env-vars";
+import config from "@/config/get-env-vars";
+
+const { getEnvVars } = config
 
 const { CHAIN_ID } = getEnvVars();
 

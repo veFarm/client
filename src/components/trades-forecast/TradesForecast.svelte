@@ -2,7 +2,7 @@
   import { fly } from "svelte/transition";
   // import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
-  import { wallet } from "@/stores/wallet";
+  // import walletStore from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import type { Sol } from "@/stores/trade-forecast";
   import { tradeForecast } from "@/stores/trade-forecast";
@@ -14,6 +14,8 @@
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
   import QuestionMark from "@/assets/QuestionMark.svelte";
   import Spinner from "../spinner/Spinner.svelte";
+
+  // const { wallet } = walletStore
 
   export let reserveBalance: BigNumber;
 

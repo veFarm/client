@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-Cypress.Commands.add("getByData", (selector): Cypress.Chainable => {
+Cypress.Commands.add("getByCy", (selector): Cypress.Chainable => {
   return cy.get(`[data-cy=${selector}]`);
 });
 

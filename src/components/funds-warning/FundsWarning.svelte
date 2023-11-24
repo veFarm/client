@@ -1,6 +1,8 @@
 <script lang="ts">
   import { chain } from "@/config/index";
-  import { wallet } from "@/stores/wallet";
+  import walletStore from "@/stores/wallet";
+
+  const { wallet } = walletStore
 </script>
 
 {#if $wallet.connected && $wallet.balance.vet.eq(0) && $wallet.triggerBalance != null && $wallet.triggerBalance.lt($wallet.balance.vtho)}

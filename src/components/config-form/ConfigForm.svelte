@@ -1,7 +1,7 @@
 <script lang="ts">
   import bn from "bignumber.js";
   import { chain, MAX_UINT256 } from "@/config/index";
-  import { wallet } from "@/stores/wallet";
+  import walletStore from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
@@ -14,6 +14,8 @@
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { FundsWarning } from "@/components/funds-warning";
+
+  const { wallet } = walletStore
 
   type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "UPDATE_CONFIG";
 

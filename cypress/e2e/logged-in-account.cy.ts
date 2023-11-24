@@ -1,12 +1,20 @@
-import { Connex } from "@vechain/connex"
+/// <reference types="cypress" />
+
+// import { Connex } from "@vechain/connex"
 import bn from "bignumber.js"
-// import * as configModule from "../../src/config/get-env-vars";
+import config from "../../src/config/get-env-vars";
 // import { CHAINS } from "../../src/config/index"
 // import { ConnexUtils } from "../../src/blockchain/connex-utils";
-// import { wallet } from "../../src/stores/wallet"
+import walletStore from "../../src/stores/wallet"
 // import * as walletModule from "../../src/stores/wallet"
-import * as testMod from "../../src/config/test-module"
+// import * as testMod from "../../src/config/test-module"
+// import * as testMod from "../../src/config/test-module"
 // import testMod from "../../src/config/test-module"
+// import importMod from "../../src/config/test-module"
+// import {obj} from "../../src/config/test-module"
+import obj from "../../src/config/test-module"
+
+// const { wallet } = walletStore
 
 // const obj = {
 // importMod() {
@@ -27,10 +35,14 @@ describe("App - Logged in account journey", () => {
     const account = "0x4f2b95775434b297a7205cb609ccab56752fc0b3"
     localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
-    console.log({'props': testMod})
+    // console.log({'props': testMod})
+    console.log({'props': obj})
+    // console.log({'props': importMod})
 
     // cy.stub(testMod, 'importMod').returns(5)
-    cy.stub(testMod, 'importMod').returns(5)
+    // cy.stub(testMod, 'importMod').returns(5)
+    cy.stub(obj, 'importMod').returns(5)
+    // cy.stub(importMod).returns(5)
     // cy.getByData("reserve-input").as("reserve-input");
   });
 
@@ -39,8 +51,8 @@ describe("App - Logged in account journey", () => {
       // Arrange
 
       // Assert
-      cy.getByData("title").should("be.visible");
-      cy.getByData("description").should("be.visible");
+      cy.getByCy("title").should("be.visible");
+      cy.getByCy("description").should("be.visible");
     });
   });
 
@@ -49,23 +61,59 @@ describe("App - Logged in account journey", () => {
       // Arrange
       // cy.stub(getEnvVars).returns({ CHAIN_ID: 100010 })
       // Cypress.env('VITE_CHAIN_ID', 100010)
-      // cy.stub(configModule, "getEnvVars").returns({ VITE_CHAIN_ID: 100010 })
+      // cy.stub(config, "getEnvVars").returns({ VITE_CHAIN_ID: 100010 })
 
-      const res = testMod.importMod()
+      // const res = testMod.importMod()
+      const res = obj.importMod()
+      // const res = importMod()
       console.log({res})
 
+      // spying and response stubbing
+      cy.intercept('GET', 'https://testnet.veblocks.net/accounts/*', {
+        statusCode: 200,
+        body: {
+          balance: "0x0000000000000000000", //"0x197ae6a1354ccd2e103",
+          energy:"0x00000000000000000", // "0x12e492627f439cdc8"
+          hasCode: false,
+        },
+      })
+
+      // Request URL:
+// res {}
+
+
       // const walletId = "sync2"
+
+      // cy.stub(walletStore, "wallet").returns({
+      //   // connexUtils,
+      //   loading: false,
+      //   error: undefined,
+      //   connected: true,
+      //   account: "0x2b0b892F1fa5568d9268de59b9C9d8d5a8b41707",
+      //   balance: {
+      //     vet: bn(0),
+      //     vtho: bn(0),
+      //   },
+      //   walletId,
+      //   baseGasPrice: bn(1000),
+      // })
+
+
+      // try {
 
       // const connex = new Connex({
       //   node: "https://testnet.veblocks.net/",
       //   network: "test",
       //   noExtension: walletId === "sync2",
       // });
+      // } catch (error) {
+      //   console.error(error)
+      // }
 
       // const connexUtils = new ConnexUtils(connex)
 
-      // cy.stub(walletModule, "wallet").returns({
-      //   connexUtils,
+      // cy.stub(walletStore, "wallet").returns({
+      //   // connexUtils,
       //   loading: false,
       //   error: undefined,
       //   connected: true,
@@ -77,6 +125,10 @@ describe("App - Logged in account journey", () => {
       //   walletId,
       //   baseGasPrice: bn(1000),
       // })
+
+      // const { wallet } = walletStore
+
+      // console.log({account: wallet.account})
       // cy.wait(3_000)
       // TODO: mock balance, Trader.reserveBalance and VTHO.allowance
 
@@ -87,7 +139,7 @@ describe("App - Logged in account journey", () => {
 
     it("Does NOT show the connect wallet button", () => {
       // Assert
-      cy.getByData("connect-wallet-button").should("not.exist");
+      cy.getByCy("connect-wallet-button").should("not.exist");
     })
 
     // xit("Opens the connect wallet modal when the connect button is clicked", () => {

@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { WalletId } from "@/typings/types";
-  import { wallet } from "@/stores/wallet";
+  import walletStore from "@/stores/wallet";
   import { walletModal } from "@/stores/wallet-modal";
   import { Modal } from "@/components/modal";
   import { Button } from "@/components/button";
   import Sync2Icon from "@/assets/Sync2.svg";
   import VeWorldIcon from "@/assets/VeWorld.svg";
+
+  const { wallet } = walletStore
 
   const WALLET_PROVIDERS: {
     id: WalletId;

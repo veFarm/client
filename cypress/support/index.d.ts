@@ -1,6 +1,6 @@
 declare namespace Cypress {
   interface Chainable {
-    getByData(string): Chainable;
+    getByCy(string): Chainable;
     clickOutside(): void;
   }
 }
