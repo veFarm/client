@@ -19,4 +19,4 @@ function getEnvVars() {
 
 export default {
   getEnvVars,
-}
+};

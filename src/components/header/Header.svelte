@@ -1,11 +1,10 @@
 <script lang="ts">
   import { Popover } from "svelte-smooth-popover";
-  import walletStore from "@/stores/wallet";
+  import {wallet} from "@/stores/wallet";
+  import {balance} from "@/stores/balance"
   import { shortenAddress } from "@/utils/shorten-address";
   import { formatUnits } from "@/utils/format-units";
   import ChevronDown from "@/assets/ChevronDown.svelte";
-
-  const { wallet } = walletStore
 
   /** Popover state. */
   let isOpen = false;
@@ -30,9 +29,9 @@
     VeFarm
   </a>
 
-  {#if $wallet.connected}
+  {#if $wallet.connected && $balance.current != null}
     <div>
-      {formatUnits($wallet.balance.vet, 2)}&nbsp;VET&nbsp;
+      {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
 
       <button class="inline-block">
         {shortenAddress($wallet.account)}

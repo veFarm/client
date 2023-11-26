@@ -5,9 +5,7 @@ import { chain } from "@/config/index";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
-import walletStore from "@/stores/wallet";
-
-const { wallet } = walletStore
+import {wallet} from "@/stores/wallet";
 
 type State = {
   connexUtils: ConnexUtils | undefined;

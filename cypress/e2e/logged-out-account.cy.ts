@@ -1,8 +1,7 @@
 /// <reference types="cypress" />
 
 describe("App - Logged out account journey", () => {
-  before(() => {
-  });
+  before(() => {});
 
   beforeEach(() => {
     cy.viewport("macbook-15");

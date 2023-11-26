@@ -39,49 +39,49 @@ describe("App", () => {
 
   context("hero section", () => {
     it("displays the title of the app and a short description", () => {
-      cy.getByData("title").should("be.visible");
-      cy.getByData("description").should("be.visible");
+      cy.getByCy("title").should("be.visible");
+      cy.getByCy("description").should("be.visible");
     });
   });
 
   context("form section user is NOT connected", () => {
     it("disables the reserve balance field when the user is NOT connected", () => {
       // TODO: Arrange user is not connected
-      cy.getByData("reserve-input").should("be.visible");
-      cy.getByData("reserve-input").should("be.disabled");
+      cy.getByCy("reserve-input").should("be.visible");
+      cy.getByCy("reserve-input").should("be.disabled");
     });
 
     it("displays the connect wallet button when the user is NOT connected", () => {
-      cy.getByData("connect-wallet-button").should("be.visible");
-      cy.getByData("connect-wallet-button").should("be.enabled");
+      cy.getByCy("connect-wallet-button").should("be.visible");
+      cy.getByCy("connect-wallet-button").should("be.enabled");
     });
 
     it("opens the connect wallet modal when the user clicks the connect button", () => {
       // TODO: Arrange user is not connected
 
       // Act
-      cy.getByData("connect-wallet-button").click();
+      cy.getByCy("connect-wallet-button").click();
 
       // Assert
-      cy.getByData("wallet-modal").should("be.visible");
+      cy.getByCy("wallet-modal").should("be.visible");
     });
 
     it("closes the connect wallet modal when the user clicks the close button", () => {
       // Arrange
-      cy.getByData("connect-wallet-button").click();
-      cy.getByData("wallet-modal").should("be.visible");
+      cy.getByCy("connect-wallet-button").click();
+      cy.getByCy("wallet-modal").should("be.visible");
 
       // Act
-      cy.getByData("close-modal-button").click();
+      cy.getByCy("close-modal-button").click();
 
       // Assert
-      cy.getByData("wallet-modal").should("not.exist");
+      cy.getByCy("wallet-modal").should("not.exist");
     });
 
     it("closes the connect wallet modal when the user clicks on the backdrop", () => {
       // Arrange
-      cy.getByData("connect-wallet-button").click();
-      cy.getByData("wallet-modal").as("wallet-modal");
+      cy.getByCy("connect-wallet-button").click();
+      cy.getByCy("wallet-modal").as("wallet-modal");
       cy.get("@wallet-modal").should("be.visible");
 
       // Act
@@ -93,14 +93,14 @@ describe("App", () => {
 
     it("closes the connect wallet modal when the user hits ESC", () => {
       // Arrange
-      cy.getByData("connect-wallet-button").click();
-      cy.getByData("wallet-modal").should("be.visible");
+      cy.getByCy("connect-wallet-button").click();
+      cy.getByCy("wallet-modal").should("be.visible");
 
       // Act
       cy.get("body").type("{esc}");
 
       // Assert
-      cy.getByData("wallet-modal").should("not.exist");
+      cy.getByCy("wallet-modal").should("not.exist");
     });
 
     it.only("pops up sync2 when the user clicks on the connect sync2 button", () => {
@@ -123,10 +123,10 @@ describe("App", () => {
       //   res.setDelay(20_000)
       // })
       // })
-      cy.getByData("connect-wallet-button").click();
+      cy.getByCy("connect-wallet-button").click();
 
       // Act
-      cy.getByData("wallet-provider-button-sync2").click();
+      cy.getByCy("wallet-provider-button-sync2").click();
 
       // cy.stub(Connex.Vendor, "sign", )
 
@@ -168,7 +168,7 @@ describe("App", () => {
 
       // cy.visit('/')
       cy.wait(5000);
-      cy.getByData("reserve-input").should("be.disabled");
+      cy.getByCy("reserve-input").should("be.disabled");
 
       // cy.get("button").eq(1).click()
       // rpc: https://testnet.veblocks.net/
@@ -204,11 +204,11 @@ describe("App", () => {
       global.window.vechain = undefined;
 
       // Act
-      cy.getByData("connect-wallet-button").click();
-      cy.getByData("wallet-provider-button-veworld").click();
+      cy.getByCy("connect-wallet-button").click();
+      cy.getByCy("wallet-provider-button-veworld").click();
 
       // Assert
-      cy.getByData("wallet-modal-error")
+      cy.getByCy("wallet-modal-error")
         .should("be.visible")
         .and("contain", "VeWorld extension not detected.");
     });

@@ -3,7 +3,7 @@ import { Connex } from "@vechain/connex";
 const getIframeDocument = (): Cypress.Chainable => {
   return (
     cy
-      .get("iframe", {timeout: 10_000})
+      .get("iframe", { timeout: 10_000 })
       .eq(1)
       // Cypress yields jQuery element, which has the real
       // DOM element under property "0".
@@ -78,9 +78,7 @@ describe("App", () => {
       cy.spy(win, "open").as("windowOpen");
     });
 
-    getIframeBody()
-      .contains("Try out Sync2-lite")
-      .click();
+    getIframeBody().contains("Try out Sync2-lite").click();
 
     cy.wait(2000);
 

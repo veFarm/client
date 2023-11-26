@@ -3,7 +3,7 @@
   import { Connex } from "@vechain/connex";
   import { ConnexUtils } from "@/blockchain/connex-utils";
   import { chain } from "@/config/index";
-  import walletStore from "@/stores/wallet";
+  import {wallet} from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
@@ -17,8 +17,6 @@
   import { TradesHistory } from "@/components/trades-history";
   import { TradesForecast } from "@/components/trades-forecast";
   import { FundsWarning } from "@/components/funds-warning";
-
-  const { wallet } = walletStore
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
@@ -39,13 +37,13 @@
     if ($wallet.connected) {
       const { walletId } = $wallet;
 
-         const connex = new Connex({
-          node: chain.rpc[0],
-          network: chain.network,
-          noExtension: walletId === "sync2",
-        });
+      const connex = new Connex({
+        node: chain.rpc[0],
+        network: chain.network,
+        noExtension: walletId === "sync2",
+      });
 
-                const connexUtils = new ConnexUtils(connex);
+      const connexUtils = new ConnexUtils(connex);
 
       const ticker = connexUtils.ticker();
 

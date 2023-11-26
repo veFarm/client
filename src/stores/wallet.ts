@@ -8,33 +8,33 @@ import { ConnexUtils } from "@/blockchain/connex-utils";
 
 type State =
   | {
-      // connexUtils: ConnexUtils;
+      connexUtils: ConnexUtils;
       loading: boolean;
       error: string | undefined;
       connected: true;
       account: Address;
-      balance: Balance;
+      // balance: Balance;
       walletId: WalletId;
       baseGasPrice: BigNumber;
     }
   | {
-      // connexUtils: ConnexUtils | undefined;
+      connexUtils: ConnexUtils | undefined;
       loading: boolean;
       error: string | undefined;
       connected: false;
       account: undefined;
-      balance: undefined;
+      // balance: undefined;
       walletId: WalletId | undefined;
       baseGasPrice: undefined;
     };
 
 const initialState: State = {
-  // connexUtils: undefined,
+  connexUtils: undefined,
   loading: false,
   error: undefined,
   connected: false,
   account: undefined,
-  balance: undefined,
+  // balance: undefined,
   walletId: undefined,
   baseGasPrice: undefined,
 };
@@ -101,16 +101,16 @@ function createStore() {
         // Remember user.
         localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
-        const balance = await connexUtils.fetchBalance(account);
-        console.log({balance})
+        // const balance = await connexUtils.fetchBalance(account);
+        // console.log({ balance });
 
         store.set({
-          // connexUtils,
+          connexUtils,
           loading: false,
           error: undefined,
           connected: true,
           account,
-          balance,
+          // balance,
           walletId,
           baseGasPrice: await connexUtils.fetchBaseGasPrice(),
         });
@@ -154,15 +154,15 @@ function createStore() {
 
         const connexUtils = new ConnexUtils(connex);
 
-        const balance = await connexUtils.fetchBalance(account);
+        // const balance = await connexUtils.fetchBalance(account);
 
         store.set({
-          // connexUtils,
+          connexUtils,
           loading: false,
           error: undefined,
           connected: true,
           account,
-          balance,
+          // balance,
           walletId,
           baseGasPrice: await connexUtils.fetchBaseGasPrice(),
         });
@@ -179,38 +179,38 @@ function createStore() {
     /**
      * Fetch user balance (VET and VTHO).
      */
-    fetchBalance: async function (): Promise<void> {
-      try {
-        const data = get(store);
+    // fetchBalance: async function (): Promise<void> {
+    //   try {
+    //     const data = get(store);
 
-        if (!data.connected) {
-          throw new Error("Wallet is not connected.");
-        }
+    //     if (!data.connected) {
+    //       throw new Error("Wallet is not connected.");
+    //     }
 
-        const { walletId, account } = data;
+    //     const { walletId, account } = data;
 
-        const connex = new Connex({
-          node: chain.rpc[0],
-          network: chain.network,
-          noExtension: walletId === "sync2",
-        });
+    //     const connex = new Connex({
+    //       node: chain.rpc[0],
+    //       network: chain.network,
+    //       noExtension: walletId === "sync2",
+    //     });
 
-        const connexUtils = new ConnexUtils(connex);
+    //     const connexUtils = new ConnexUtils(connex);
 
-        const balance = await connexUtils.fetchBalance(account);
+    //     const balance = await connexUtils.fetchBalance(account);
 
-        store.update(() => ({
-          ...data,
-          balance,
-        }));
-      } catch (error: unknown) {
-        store.update((s) => ({
-          ...s,
-          error:
-            error instanceof Error ? error.message : "Unknown error occurred.",
-        }));
-      }
-    },
+    //     store.update(() => ({
+    //       ...data,
+    //       balance,
+    //     }));
+    //   } catch (error: unknown) {
+    //     store.update((s) => ({
+    //       ...s,
+    //       error:
+    //         error instanceof Error ? error.message : "Unknown error occurred.",
+    //     }));
+    //   }
+    // },
     signTx: async function (
       clauses: Connex.VM.Clause[],
       comment: string,
@@ -222,16 +222,7 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const { walletId, account } = data;
-
-        const connex = new Connex({
-          node: chain.rpc[0],
-          network: chain.network,
-          noExtension: walletId === "sync2",
-        });
-
-        const connexUtils = new ConnexUtils(connex);
-
+        const { connexUtils, account } = data;
 
         return connexUtils.signTx(clauses, account, comment);
       } catch (error: unknown) {
@@ -254,7 +245,7 @@ function createStore() {
 
         const { walletId } = data;
 
-                const connex = new Connex({
+        const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
           noExtension: walletId === "sync2",
@@ -274,7 +265,4 @@ function createStore() {
   };
 }
 
-// export const wallet = createStore();
-export default {
-  wallet: createStore(),
-}
+export const wallet = createStore();

@@ -2,13 +2,11 @@
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
-  import walletStore from "@/stores/wallet";
+  import {wallet} from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { formatUnits } from "@/utils/format-units";
   import { PastTrade } from "@/components/past-trade";
   import { Spinner } from "@/components/spinner";
-
-  const { wallet } = walletStore
 
   type RawSwapDoc = {
     account: Address;

@@ -3,9 +3,7 @@ import { chain } from "@/config/index";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as energyArtifact from "@/artifacts/Energy.json";
-import walletStore from "@/stores/wallet";
-
-const { wallet } = walletStore
+import {wallet} from "@/stores/wallet";
 
 /**
  * Observation: we use VTHO and Energy interchangeably. They both refer to

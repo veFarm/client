@@ -1,9 +1,7 @@
 import { writable, get } from "svelte/store";
 import type { Balance } from "@/typings/types";
 import type { ConnexUtils } from "@/blockchain/connex-utils";
-import walletStore from "@/stores/wallet";
-
-const { wallet } = walletStore
+import {wallet} from "@/stores/wallet";
 
 type State =
   | {
