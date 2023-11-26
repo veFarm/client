@@ -2,52 +2,73 @@
 
 /**
  * user journeys:
- * 1. New account (zero balance) lands on the app, logs in and registers.
+ * 1. Happy path: new account, zero balance, lands on the app, logs in and registers, updates reserve balance, revokes approval and logs out.
+ * 2. Happy path: new account, non-zero balance, lands on the app, logs in and registers, updates reserve balance, revokes approval and logs out.
  * It should see:
  * - no trades
  * - zero stats
- * - grab test tokens from faucet alert
+ * - [grab test tokens from faucet alert] // only applies to journey #1
  * - reserve balance input should be enabled
+ * When reserve balance input is filled she should see:
+ * - trades forecast
  * After registration she should see:
  * - Success message
  * - update reserve button
  * - revoke approval
- * On reload she should get re connected
  * On logout she should see the initial page
+ * 3. Logged in accounts refreshes the page and should stay logged in.
  */
 
 const walletId = "sync2";
 const account = "0x4f2b95775434b297a7205cb609ccab56752fc0b3";
 
-describe("App - Logged in account journey", () => {
+describe("Logged in, non registered, zero balance account", () => {
   before(() => {});
 
   beforeEach(() => {
     cy.viewport("macbook-15");
     cy.visit("/");
 
-    // Ensure account is connected
+    // Ensure account is connected.
     localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
-    // cy.getByData("reserve-input").as("reserve-input");
+    // Stub fetch account balance. Return zero balance.
+    cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account}*`, {
+      statusCode: 200,
+      body: {
+        balance: "0x0000000000000000000", //"0x197ae6a1354ccd2e103",
+        energy: "0x00000000000000000", // "0x12e492627f439cdc8"
+        hasCode: false,
+      },
+    });
+
+    // Stub account record. Given the fact that the account has not given approval for
+    // token spending in the VTHO contract, it is not yet in out DB.
+    cy.intercept("GET", `**/getaccountstats?account=${account}*`, {
+      statusCode: 404,
+    });
+      //       cy.intercept('GET', `/getaccountstats?account=${account}*`, (req) => {
+      //   req.reply({
+      //     statusCode: 200,
+      //     fixture: 'account-stats.json'
+      //   })
+      // })
+
+      cy.intercept("GET", `**/getaccountswaps?account=${account}*`, {
+        fixture: "account-swaps.json",
+      });
+    // cy.getByCy("reserve-input").as("reserve-input");
   });
 
-  context("Not registered account", () => {
-    it.only("Shows the reserve balance field as enabled", () => {
-      // Arrange
-      // cy.stub(getEnvVars).returns({ CHAIN_ID: 100010 })
-      // Cypress.env('VITE_CHAIN_ID', 100010)
-      // cy.stub(config, "getEnvVars").returns({ VITE_CHAIN_ID: 100010 })
+  // Integration tests
+  context("", () => {
+    it.only("shows me the title and description of the app", () => {
+      cy.getByCy("title").should("be.visible");
+      cy.getByCy("description").should("be.visible");
+    })
 
-      // spying and response stubbing
-      cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account}*`, {
-        statusCode: 200,
-        body: {
-          balance: "0x0000000000000000000", //"0x197ae6a1354ccd2e103",
-          energy: "0x00000000000000000", // "0x12e492627f439cdc8"
-          hasCode: false,
-        },
-      });
+    it("Happy path new (logged in) account zero balance", () => {
+      // Arrange
 
       cy.intercept("GET", `**/getaccountstats?account=${account}*`, {
         fixture: "account-stats.json",
@@ -79,25 +100,25 @@ describe("App - Logged in account journey", () => {
     //   cy.get("@connect-button").click();
 
     //   // Assert
-    //   cy.getByData("wallet-modal").should("be.visible");
+    //   cy.getByCy("wallet-modal").should("be.visible");
     // });
 
     // xit("Closes the connect wallet modal when the close button is clicked", () => {
     //   // Arrange
     //   cy.get("@connect-button").click();
-    //   cy.getByData("wallet-modal").should("be.visible");
+    //   cy.getByCy("wallet-modal").should("be.visible");
 
     //   // Act
-    //   cy.getByData("close-modal-button").click();
+    //   cy.getByCy("close-modal-button").click();
 
     //   // Assert
-    //   cy.getByData("wallet-modal").should("not.exist");
+    //   cy.getByCy("wallet-modal").should("not.exist");
     // });
 
     // xit("Closes the connect wallet modal when the backdrop is clicked", () => {
     //   // Arrange
     //   cy.get("@connect-button").click();
-    //   cy.getByData("wallet-modal").as("wallet-modal");
+    //   cy.getByCy("wallet-modal").as("wallet-modal");
     //   cy.get("@wallet-modal").should("be.visible");
 
     //   // Act
@@ -110,13 +131,13 @@ describe("App - Logged in account journey", () => {
     // xit("Closes the connect wallet modal when the ESC key is pressed", () => {
     //   // Arrange
     //   cy.get("@connect-button").click();
-    //   cy.getByData("wallet-modal").should("be.visible");
+    //   cy.getByCy("wallet-modal").should("be.visible");
 
     //   // Act
     //   cy.get("body").type("{esc}");
 
     //   // Assert
-    //   cy.getByData("wallet-modal").should("not.exist");
+    //   cy.getByCy("wallet-modal").should("not.exist");
     // });
 
     // xit("Displays an error message when VeWorld extension is not detected", () => {
@@ -125,21 +146,18 @@ describe("App - Logged in account journey", () => {
 
     //   // Act
     //   cy.get("@connect-button").click();
-    //   cy.getByData("wallet-provider-button-veworld").click();
+    //   cy.getByCy("wallet-provider-button-veworld").click();
 
     //   // Assert
-    //   cy.getByData("wallet-modal-error")
+    //   cy.getByCy("wallet-modal-error")
     //     .should("be.visible")
     //     .and("contain", "VeWorld extension not detected.");
     // });
-  });
   context("Hero section", () => {
     it("displays the title of the app and a short description", () => {
       // Arrange
 
       // Assert
-      cy.getByCy("title").should("be.visible");
-      cy.getByCy("description").should("be.visible");
     });
   });
 
@@ -246,25 +264,25 @@ describe("App - Logged in account journey", () => {
     //   cy.get("@connect-button").click();
 
     //   // Assert
-    //   cy.getByData("wallet-modal").should("be.visible");
+    //   cy.getByCy("wallet-modal").should("be.visible");
     // });
 
     // xit("Closes the connect wallet modal when the close button is clicked", () => {
     //   // Arrange
     //   cy.get("@connect-button").click();
-    //   cy.getByData("wallet-modal").should("be.visible");
+    //   cy.getByCy("wallet-modal").should("be.visible");
 
     //   // Act
-    //   cy.getByData("close-modal-button").click();
+    //   cy.getByCy("close-modal-button").click();
 
     //   // Assert
-    //   cy.getByData("wallet-modal").should("not.exist");
+    //   cy.getByCy("wallet-modal").should("not.exist");
     // });
 
     // xit("Closes the connect wallet modal when the backdrop is clicked", () => {
     //   // Arrange
     //   cy.get("@connect-button").click();
-    //   cy.getByData("wallet-modal").as("wallet-modal");
+    //   cy.getByCy("wallet-modal").as("wallet-modal");
     //   cy.get("@wallet-modal").should("be.visible");
 
     //   // Act
@@ -277,13 +295,13 @@ describe("App - Logged in account journey", () => {
     // xit("Closes the connect wallet modal when the ESC key is pressed", () => {
     //   // Arrange
     //   cy.get("@connect-button").click();
-    //   cy.getByData("wallet-modal").should("be.visible");
+    //   cy.getByCy("wallet-modal").should("be.visible");
 
     //   // Act
     //   cy.get("body").type("{esc}");
 
     //   // Assert
-    //   cy.getByData("wallet-modal").should("not.exist");
+    //   cy.getByCy("wallet-modal").should("not.exist");
     // });
 
     // xit("Displays an error message when VeWorld extension is not detected", () => {
@@ -292,10 +310,10 @@ describe("App - Logged in account journey", () => {
 
     //   // Act
     //   cy.get("@connect-button").click();
-    //   cy.getByData("wallet-provider-button-veworld").click();
+    //   cy.getByCy("wallet-provider-button-veworld").click();
 
     //   // Assert
-    //   cy.getByData("wallet-modal-error")
+    //   cy.getByCy("wallet-modal-error")
     //     .should("be.visible")
     //     .and("contain", "VeWorld extension not detected.");
     // });
