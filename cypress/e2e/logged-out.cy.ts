@@ -120,7 +120,14 @@ describe("App", () => {
         .and("contain", "VeWorld extension not detected.");
     });
 
-    it.only("shows me the connect sync2 buddy when trying to connect with Sync2", () => {
+
+    xit("shows me a spinner when I click the connect sync2 button", () => {
+    })
+
+    xit("shows me a spinner when I click the connect VeWorld button", () => {
+    })
+
+    it("shows me the connect sync2 buddy when trying to connect with Sync2", () => {
       // Arrange
 
       // Act
