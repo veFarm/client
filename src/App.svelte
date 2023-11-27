@@ -145,7 +145,7 @@
         {/if}
 
         <p class="text-center text-accent">Chain: {chain.name}</p>
-<button on:click={trader.fetchConfig}>REFETCH</button>
+        <button on:click={trader.fetchConfig}>REFETCH</button>
       </section>
     </div>
 

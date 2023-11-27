@@ -227,4 +227,3 @@
     <p class="text-danger">ERROR: {errors.network[0]}</p>
   {/if}
 </form>
-
