@@ -26,6 +26,14 @@ const account = "0x4f2b95775434b297a7205cb609ccab56752fc0b3";
 describe("Logged in NOT registered account", () => {
   beforeEach(() => {
     cy.viewport("macbook-15");
+
+    // const stub = cy.stub().as('open')
+
+    // cy.visit("/", {
+    //   onBeforeLoad(win) {
+    //     cy.stub(win, 'open').callsFake(stub)
+    //       }
+    // });
     cy.visit("/");
 
     // Simulate a logged in account.
@@ -103,8 +111,6 @@ describe("Logged in NOT registered account", () => {
           hasCode: false,
         },
       });
-
-      // cy.getByCy("reserve-balance-input").as("reserve-balance-input");
     });
 
     it("shows me the title of the app and a short description", () => {
@@ -163,7 +169,7 @@ describe("Logged in NOT registered account", () => {
       // Arrange
 
       // Act
-      cy.visit("/");
+      cy.reload();
 
       // Assert
       cy.getByCy("navigation-bar").contains("0.00 VET");
@@ -190,6 +196,32 @@ describe("Logged in NOT registered account", () => {
 
       // Assert
       cy.getByCy("submit-form-button").should("be.enabled");
+    });
+
+    it("shows me a 'lack of funds' alert and a link to the faucet", () => {
+      // Arrange
+
+      // Act
+
+      // Assert
+      cy.getByCy("lack-of-funds-alert").should("be.visible");
+      cy.getByCy("faucet-link").should("be.visible");
+    });
+
+    it.skip("shows me a 'lack of funds' alert and a link to the faucet", () => {
+      // Arrange
+
+      // Act
+      cy.getByCy("faucet-link").click();
+
+      // Assert
+      cy.get("@open")
+        .should("have.been.calledOnce")
+        .its("firstCall.args.0")
+        .should("deep.equal", {
+          target: "_blank",
+          url: chain.faucets[0],
+        });
     });
 
     it.skip("Shows the reserve balance field as enabled", () => {

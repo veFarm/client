@@ -1,6 +1,8 @@
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
 
+import type { ChainId } from "./types";
+
 /*
  * https://vitejs.dev/guide/env-and-mode.html#intellisense-for-typescript
  */
@@ -51,7 +53,8 @@ interface ImportMetaEnv {
    * ```
    *
    */
-  readonly VITE_CHAIN_ID: `${keyof typeof import("src/config/index").CHAINS}`;
+  // readonly VITE_CHAIN_ID: `${keyof typeof import("src/config/index").CHAINS}`;
+  readonly VITE_CHAIN_ID: ChainId;
 }
 
 interface ImportMeta {

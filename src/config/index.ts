@@ -1,14 +1,12 @@
 import bn from "bignumber.js";
 import config from "@/config/get-env-vars";
+import type { ChainId } from "@/typings/types";
 
 const { getEnvVars } = config;
 
 const { CHAIN_ID } = getEnvVars();
 
 // TODO: see devnet config https://docs.vechain.org/connex/connex#or-connect-to-a-private-network
-
-type ChainId = 100009 | 100010 | 100011;
-// ^ 100009 = production, 100010 = staging, 100011 = development
 
 /**
  * JavaScript CAIP-2 representation object.
