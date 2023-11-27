@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Popover } from "svelte-smooth-popover";
-  import {wallet} from "@/stores/wallet";
-  import {balance} from "@/stores/balance"
+  import { wallet } from "@/stores/wallet";
+  import { balance } from "@/stores/balance";
   import { shortenAddress } from "@/utils/shorten-address";
   import { formatUnits } from "@/utils/format-units";
   import ChevronDown from "@/assets/ChevronDown.svelte";
@@ -23,6 +23,7 @@
     flex flex-wrap items-center justify-between
     text-sm text-gray-300 md:text-base
   "
+  data-cy="navigation-bar"
 >
   <a href="/">
     <!-- <img src={SvelteLogo} width="32" height="32" alt="Svelte logo" /> -->
@@ -33,7 +34,7 @@
     <div>
       {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
 
-      <button class="inline-block">
+      <button class="inline-block" data-cy="open-dropdown-button">
         {shortenAddress($wallet.account)}
         <ChevronDown class="inline-block text-inherit" />
 
@@ -50,9 +51,13 @@
           }}
         >
           <div class="bg-highlight border border-muted rounded-md px-4 py-3">
-            <button class="text-sm md:text-base" on:click={handleDisconnect}
-              >Disconnect Wallet</button
+            <button
+              class="text-sm md:text-base"
+              on:click={handleDisconnect}
+              data-cy="disconnect-wallet-button"
             >
+              Disconnect Wallet
+            </button>
           </div>
         </Popover>
       </button>

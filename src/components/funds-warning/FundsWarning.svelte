@@ -1,6 +1,6 @@
 <script lang="ts">
   import { chain } from "@/config/index";
-  import {balance} from "@/stores/balance"
+  import { balance } from "@/stores/balance";
 </script>
 
 {#if $balance.current != null && $balance.current.vet.eq(0) && $balance.current.vtho.eq(0)}

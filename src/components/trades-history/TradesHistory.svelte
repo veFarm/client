@@ -2,7 +2,7 @@
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
-  import {wallet} from "@/stores/wallet";
+  import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { formatUnits } from "@/utils/format-units";
   import { PastTrade } from "@/components/past-trade";

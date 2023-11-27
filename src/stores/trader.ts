@@ -5,7 +5,7 @@ import { chain } from "@/config/index";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as traderArtifact from "@/artifacts/Trader.json";
-import {wallet} from "@/stores/wallet";
+import { wallet } from "@/stores/wallet";
 
 type State = {
   connexUtils: ConnexUtils | undefined;
@@ -80,7 +80,9 @@ function createStore() {
         chain.trader,
       );
 
+      console.log("fetch reserve balance")
       const reserveBalance = await fetchReserveBalance(contract, account);
+      console.log("fetch reserve balance DONE", reserveBalance.toFixed())
 
       store.set({
         connexUtils,

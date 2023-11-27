@@ -3,7 +3,7 @@ import { chain } from "@/config/index";
 import type { AbiItem } from "@/typings/types";
 import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
 import * as energyArtifact from "@/artifacts/Energy.json";
-import {wallet} from "@/stores/wallet";
+import { wallet } from "@/stores/wallet";
 
 /**
  * Observation: we use VTHO and Energy interchangeably. They both refer to
@@ -34,13 +34,13 @@ function createStore() {
 
   // Update vtho store based on wallet store changes.
   wallet.subscribe(async (data) => {
-    // No connex present means wallet is disconnected.
-    if (data.connexUtils == null) {
+    // Wallet is NOT connected.
+    if (!data.connected) {
       store.set({ ...initialState });
       return;
     }
 
-    // wallet is connected.
+    // Wallet IS connected.
     try {
       const { connexUtils, account } = data;
 

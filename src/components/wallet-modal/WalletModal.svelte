@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { WalletId } from "@/typings/types";
-  import {wallet} from "@/stores/wallet";
+  import { wallet } from "@/stores/wallet";
   import { walletModal } from "@/stores/wallet-modal";
   import { Modal } from "@/components/modal";
   import { Button } from "@/components/button";

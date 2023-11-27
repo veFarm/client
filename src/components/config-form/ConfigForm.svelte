@@ -1,7 +1,7 @@
 <script lang="ts">
   import bn from "bignumber.js";
   import { chain, MAX_UINT256 } from "@/config/index";
-  import {wallet} from "@/stores/wallet";
+  import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
@@ -128,7 +128,7 @@
       );
       await wallet.waitForReceipt(response!.txid);
       await trader.fetchConfig();
-      await wallet.fetchBalance();
+      await balance.fetchBalance();
     } catch (error: any) {
       console.error(error);
       errors.network.push(error?.message || "Unknown error occurred.");
@@ -180,7 +180,7 @@
     on:input={() => {
       clearFieldErrors("reserveBalance");
     }}
-    data-cy="reserve-input"
+    data-cy="reserve-balance-input"
   />
 
   <FundsWarning />
@@ -227,3 +227,4 @@
     <p class="text-danger">ERROR: {errors.network[0]}</p>
   {/if}
 </form>
+

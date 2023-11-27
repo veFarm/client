@@ -3,14 +3,13 @@
   import { Connex } from "@vechain/connex";
   import { ConnexUtils } from "@/blockchain/connex-utils";
   import { chain } from "@/config/index";
-  import {wallet} from "@/stores/wallet";
+  import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
   import { formatUnits } from "@/utils/format-units";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
-  import { Divider } from "@/components/divider";
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
@@ -146,6 +145,7 @@
         {/if}
 
         <p class="text-center text-accent">Chain: {chain.name}</p>
+<button on:click={trader.fetchConfig}>REFETCH</button>
       </section>
     </div>
 
