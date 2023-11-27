@@ -200,6 +200,7 @@
       disabled={disabled || inputsEmpty}
       loading={disabled}
       fullWidth
+      data-cy="submit-form-button"
     >
       Approve Spending
     </Button>

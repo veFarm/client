@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 import { chain } from "@/config/index";
 
-console.log({ vtho: chain.vtho, trader: chain.trader });
 /**
  * user journeys:
  * 1. Happy path: new account, zero balance, lands on the app, logs in and registers, updates reserve balance, revokes approval and logs out.
@@ -48,6 +47,7 @@ describe("Logged in NOT registered account", () => {
       "https://testnet.veblocks.net/accounts/*?revision=*",
       (req) => {
         const to = req?.body?.clauses[0]?.to;
+
         // Stub VTHO allowance lookup.
         if (to.toLowerCase() === chain.vtho.toLowerCase()) {
           req.reply({
@@ -63,9 +63,12 @@ describe("Logged in NOT registered account", () => {
               },
             ],
           });
+
+          return;
         }
+
         // Stub Trader reserve balance lookup.
-        else if (to.toLowerCase() === chain.trader.toLowerCase()) {
+        if (to.toLowerCase() === chain.trader.toLowerCase()) {
           req.reply({
             statusCode: 200,
             body: [
@@ -79,54 +82,14 @@ describe("Logged in NOT registered account", () => {
               },
             ],
           });
+
+          return;
         }
+
         // Forward all other requests to the original endpoint.
         req.continue();
       },
     );
-
-    // TODO: mock VTHO allowance
-    // cy.intercept("POST", 'https://testnet.veblocks.net/accounts/*?revision=*', {
-    //   statusCode: 200,
-    //   headers: {
-    //     "Content-Type":	"application/json"
-    //   },
-    //   // body: [{"data":"0x000000000000000000000000000000000000000000000000d02ab486cedc0000","events":[],"transfers":[],"gasUsed":936,"reverted":false,"vmError":""}]
-    //   body: [{"data":"0x0000000000000000000000000000000000000000000000000000000000000000","events":[],"transfers":[],"gasUsed":936,"reverted":false,"vmError":""}],
-    // })
-    // //req {"clauses":[{"to":"0x0000000000000000000000000000456e65726779","value":"0","data":"0xdd62ed3e0000000000000000000000004f2b95775434b297a7205cb609ccab56752fc0b30000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305"}]}
-    // //res [{"data":"0xffffffffffffffffffffffffffffffffffffffffffffffed06c636612547ffff","events":[],"transfers":[],"gasUsed":904,"reverted":false,"vmError":""}]
-
-    // cy.intercept("POST", 'https://testnet.veblocks.net/accounts/*?revision=0x0104f2cd45037c1b5174e65342ed128e7e308c50246493b98d3d0c58bae65414', {
-    //   statusCode: 500,
-    //   headers: {
-    //     "Content-Type":	"application/json"
-    //   },
-    //   // body: [{"data":"0x000000000000000000000000000000000000000000000000d02ab486cedc0000","events":[],"transfers":[],"gasUsed":936,"reverted":false,"vmError":""}]
-    //   // body: [{"data":"0x0000000000000000000000000000000000000000000000000000000000000000","events":[],"transfers":[],"gasUsed":936,"reverted":false,"vmError":""}],
-    // })
-    // cy.intercept("POST", 'Request URL: https://testnet.veblocks.net/accounts/\*?revision=*', {
-    //   statusCode: 500,
-    //   headers: {
-    //     "Content-Type":	"application/json"
-    //   },
-    //   // body: [{"data":"0x000000000000000000000000000000000000000000000000d02ab486cedc0000","events":[],"transfers":[],"gasUsed":936,"reverted":false,"vmError":""}]
-    //   // body: [{"data":"0x0000000000000000000000000000000000000000000000000000000000000000","events":[],"transfers":[],"gasUsed":936,"reverted":false,"vmError":""}],
-    // })
-    // cy.intercept("POST", 'https://testnet.veblocks.net/accounts/*', {
-    //   statusCode: 200,
-    //   headers
-    //   "clauses":[{"to":"0x0317b19b8b94ae1d5bfb4727b9064fe8118aa305","value":"0","data":"0xd66bd5240000000000000000000000004f2b95775434b297a7205cb609ccab56752fc0b3"}]
-    //   // body: [{"data":"0x000000000000000000000000000000000000000000000000d02ab486cedc0000","events":[],"transfers":[],"gasUsed":936,"reverted":false,"vmError":""}]
-    //   // body: [{"data":"0x0000000000000000000000000000000000000000000000000000000000000000","events":[],"transfers":[],"gasUsed":936,"reverted":false,"vmError":""}],
-    // })
-    // cy.intercept({
-    //   method: "POST",
-    //   url: "https://testnet.veblocks.net/accounts/\*?revision=*",
-
-    //         "clauses":[{"to":"0x0317b19b8b94ae1d5bfb4727b9064fe8118aa305","value":"0","data":"0xd66bd5240000000000000000000000004f2b95775434b297a7205cb609ccab56752fc0b3"}]
-
-    // })
   });
 
   context("Zero balance account", () => {
@@ -207,7 +170,7 @@ describe("Logged in NOT registered account", () => {
       cy.getByCy("open-dropdown-button").contains("0x4f2b…c0b3");
     });
 
-    it.only("allows me to enter a reserve balance amount", () => {
+    it("allows me to enter a reserve balance amount", () => {
       // Arrange
 
       // Act
@@ -215,6 +178,18 @@ describe("Logged in NOT registered account", () => {
       // Assert
       cy.getByCy("reserve-balance-input").should("be.visible");
       cy.getByCy("reserve-balance-input").should("be.enabled");
+    });
+
+    it("does NOT allow me to submit the form until I enter a reserve balance amount", () => {
+      // Arrange
+      cy.getByCy("submit-form-button").should("be.visible");
+      cy.getByCy("submit-form-button").should("be.disabled");
+
+      // Act
+      cy.getByCy("reserve-balance-input").type("10");
+
+      // Assert
+      cy.getByCy("submit-form-button").should("be.enabled");
     });
 
     it.skip("Shows the reserve balance field as enabled", () => {
