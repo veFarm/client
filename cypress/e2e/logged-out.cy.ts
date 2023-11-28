@@ -140,6 +140,24 @@ describe("Logged out account", () => {
     });
   });
 
+  it("sends a sign cert request after hitting the Sync2 button", () => {
+    // Arrange
+    cy.intercept("POST", "https://tos.vecha.in/*").as("signCert");
+
+    // Act
+    cy.get("@connect-button").click();
+    cy.getByCy("wallet-provider-button-sync2").click();
+
+    // Assert
+    cy.wait("@signCert").then((interception) => {
+      const { type, payload } = interception.request.body;
+
+      expect(type).to.eq("cert");
+      expect(payload.message.purpose).to.equal("identification");
+      expect(payload.message.payload.content).to.equal("Sign a certificate to prove your identity.");
+    });
+  });
+
   it("shows me the connect sync2 buddy when trying to connect with Sync2", () => {
     // Arrange
 

@@ -293,18 +293,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     });
   });
 
-  it("opens the wallet after submitting the form", () => {
-    // Arrange
-    cy.getByCy("reserve-balance-input").type("10");
-
-    // Act
-    cy.getByCy("submit-form-button").click();
-
-    // Assert
-    getSync2Iframe().contains("Try out Sync2-lite");
-  });
-
-  it.only("sends a sign tx request after submitting the form", () => {
+  it("sends a sign tx request after submitting the form", () => {
     // Arrange
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTx");
     cy.getByCy("reserve-balance-input").type("5");
@@ -334,4 +323,16 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
       });
     });
   });
+
+  it("opens up the wallet after submitting the form", () => {
+    // Arrange
+    cy.getByCy("reserve-balance-input").type("10");
+
+    // Act
+    cy.getByCy("submit-form-button").click();
+
+    // Assert
+    getSync2Iframe().contains("Try out Sync2-lite");
+  });
+
 });
