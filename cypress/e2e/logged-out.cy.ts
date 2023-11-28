@@ -1,12 +1,6 @@
 /// <reference types="cypress" />
 
-const getSync2Iframe = (): Cypress.Chainable => {
-  return cy
-    .get("iframe", { timeout: 10_000 })
-    .eq(1)
-    .its("0.contentDocument.body")
-    .then(cy.wrap);
-};
+import { getSync2Iframe } from "../support/utils"
 
 describe("Logged out account", () => {
   before(() => {});
@@ -117,9 +111,34 @@ describe("Logged out account", () => {
       .and("contain", "VeWorld extension not detected.");
   });
 
-  xit("shows me a spinner when I click the connect sync2 button", () => {});
+  it("shows me a spinner when I click the connect sync2 button", () => {
+    // Arrange
 
-  xit("shows me a spinner when I click the connect VeWorld button", () => {});
+    // Act
+    cy.get("@connect-button").click();
+    cy.getByCy("wallet-provider-button-sync2").click();
+
+    // Assert
+    cy.getByCy("wallet-provider-button-sync2").should("be.disabled")
+    cy.getByCy("wallet-provider-button-sync2").within(() => {
+      cy.getByCy("spinner").should("be.visible")
+    })
+  });
+
+  xit("shows me a spinner when I click the connect VeWorld button", () => {
+    // Arrange
+    window.vechain = {} // should be stub it?
+
+    // Act
+    cy.get("@connect-button").click();
+    cy.getByCy("wallet-provider-button-veworld").click();
+
+    // Assert
+    cy.getByCy("wallet-provider-button-veworld").should("be.disabled")
+    cy.getByCy("wallet-provider-button-veworld").within(() => {
+      cy.getByCy("spinner").should("be.visible")
+    })
+  });
 
   it("shows me the connect sync2 buddy when trying to connect with Sync2", () => {
     // Arrange

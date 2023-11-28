@@ -49,7 +49,11 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    if ($balance.current != null && $tradeForecast.fetched && $tradeForecast.solutions.length > 0) {
+    if (
+      $balance.current != null &&
+      $tradeForecast.fetched &&
+      $tradeForecast.solutions.length > 0
+    ) {
       const { txFee, solutions } = $tradeForecast;
       // ^ Replace store with http call
 
