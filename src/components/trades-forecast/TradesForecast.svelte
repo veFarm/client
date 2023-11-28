@@ -49,7 +49,7 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    if ($balance.current != null && $tradeForecast.fetched) {
+    if ($balance.current != null && $tradeForecast.fetched && $tradeForecast.solutions.length > 0) {
       const { txFee, solutions } = $tradeForecast;
       // ^ Replace store with http call
 
@@ -141,7 +141,7 @@
   <p><Spinner /> Computing an optimized strategy...</p>
 {:else if firstTrade != null && $tradeForecast.txFee != null}
   <div>
-    <table class="w-full text-sm md:text-base">
+    <table class="w-full text-sm md:text-base" data-cy="trades-forecast-table">
       <!-- <caption class="text-sm">Upcoming Trades (estimated)</caption> -->
       <thead>
         <tr>

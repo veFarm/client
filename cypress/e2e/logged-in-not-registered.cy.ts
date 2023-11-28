@@ -21,7 +21,7 @@ import { chain } from "@/config/index";
  */
 
 const walletId = "sync2";
-const account = "0x4f2b95775434b297a7205cb609ccab56752fc0b3";
+const account = "0x2057ca7412E6C0828501CB7b335E166f81c58D26";
 
 describe("Logged in NOT registered account", () => {
   beforeEach(() => {
@@ -47,6 +47,11 @@ describe("Logged in NOT registered account", () => {
 
     cy.intercept("GET", `**/getaccountswaps?account=${account}*`, {
       statusCode: 404,
+    });
+
+    cy.intercept("GET", `**/gettradeforecast?account=${account}*`, {
+      statusCode: 200,
+      body: { txFee: "2688830000000000000", solutions: [] },
     });
 
     // Stub RPC method calls.
@@ -130,7 +135,7 @@ describe("Logged in NOT registered account", () => {
 
       // Assert
       cy.getByCy("navigation-bar").contains("0.00 VET");
-      cy.getByCy("open-dropdown-button").contains("0x4f2b…c0b3");
+      cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
     });
 
     it("shows me the disconnect wallet button as enabled", () => {
@@ -173,7 +178,7 @@ describe("Logged in NOT registered account", () => {
 
       // Assert
       cy.getByCy("navigation-bar").contains("0.00 VET");
-      cy.getByCy("open-dropdown-button").contains("0x4f2b…c0b3");
+      cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
     });
 
     it("allows me to enter a reserve balance amount", () => {
@@ -207,6 +212,25 @@ describe("Logged in NOT registered account", () => {
       cy.getByCy("lack-of-funds-alert").should("be.visible");
       cy.getByCy("faucet-link").should("be.visible");
     });
+
+    it("does NOT show me the trades forecast after entering the reserve balance", () => {
+      // Arrange
+
+      // Act
+      cy.getByCy("reserve-balance-input").type("10")
+
+      // Assert
+      cy.getByCy("trades-forecast-table").should("not.exist")
+    });
+
+    it("shows me 'You don't have any past trades'", () => {
+      // Arrange
+
+      // Act
+
+      // Assert
+      cy.getByCy("trades-history-section").contains("You don't have any past trades")
+    })
 
     it.skip("shows me a 'lack of funds' alert and a link to the faucet", () => {
       // Arrange
