@@ -318,12 +318,12 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
       expect(type).to.eq("tx");
       expect(payload.message[0]).to.deep.equal({
-        to: chain.trader,
+        to: chain.trader.toLowerCase(),
         value: "0",
         data: "0x4b0bbaa40000000000000000000000000000000000000000000000004563918244f40000",
       });
       expect(payload.message[1]).to.deep.equal({
-        to: chain.vtho,
+        to: chain.vtho.toLowerCase(),
         value: "0",
         data: "0x095ea7b30000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
       });
