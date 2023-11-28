@@ -108,7 +108,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
 
   xit("does NOT show me the stats", () => {
     // TODO
-  })
+  });
 
   it("shows me the header with my VET balance and address", () => {
     // Arrange
@@ -171,6 +171,15 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Assert
     cy.getByCy("reserve-balance-input").should("be.visible");
     cy.getByCy("reserve-balance-input").should("be.enabled");
+  });
+
+  it("shows me my VTHO balance inside the reserve balance input field", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("subtext").contains("Balance: 0.00");
   });
 
   it("does NOT allow me to submit the form if I enter 0 as the reserve balance amount", () => {

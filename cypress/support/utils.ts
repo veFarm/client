@@ -1,4 +1,3 @@
-
 /// <reference types="cypress" />
 
 export function getSync2Iframe(): Cypress.Chainable {
@@ -7,4 +6,4 @@ export function getSync2Iframe(): Cypress.Chainable {
     .eq(1)
     .its("0.contentDocument.body")
     .then(cy.wrap);
-};
+}

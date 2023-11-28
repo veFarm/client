@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { getSync2Iframe } from "../support/utils"
+import { getSync2Iframe } from "../support/utils";
 
 describe("Logged out account", () => {
   before(() => {});
@@ -119,25 +119,25 @@ describe("Logged out account", () => {
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    cy.getByCy("wallet-provider-button-sync2").should("be.disabled")
+    cy.getByCy("wallet-provider-button-sync2").should("be.disabled");
     cy.getByCy("wallet-provider-button-sync2").within(() => {
-      cy.getByCy("spinner").should("be.visible")
-    })
+      cy.getByCy("spinner").should("be.visible");
+    });
   });
 
   xit("shows me a spinner when I click the connect VeWorld button", () => {
     // Arrange
-    window.vechain = {} // should be stub it?
+    window.vechain = {}; // should be stub it?
 
     // Act
     cy.get("@connect-button").click();
     cy.getByCy("wallet-provider-button-veworld").click();
 
     // Assert
-    cy.getByCy("wallet-provider-button-veworld").should("be.disabled")
+    cy.getByCy("wallet-provider-button-veworld").should("be.disabled");
     cy.getByCy("wallet-provider-button-veworld").within(() => {
-      cy.getByCy("spinner").should("be.visible")
-    })
+      cy.getByCy("spinner").should("be.visible");
+    });
   });
 
   it("shows me the connect sync2 buddy when trying to connect with Sync2", () => {
