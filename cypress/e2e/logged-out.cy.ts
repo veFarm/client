@@ -129,7 +129,7 @@ describe("Logged out account", () => {
 
   xit("shows me a spinner when I click the connect VeWorld button", () => {
     // Arrange
-    window.vechain = {}; // should be stub it?
+    window.vechain = {}; // should we stub it?
 
     // Act
     cy.get("@connect-button").click();
@@ -142,7 +142,38 @@ describe("Logged out account", () => {
     });
   });
 
-  it("sends a sign cert request after hitting the Sync2 button and gets a VALID cert as a response", () => {
+  it("sends a sign cert request after hitting the Sync2 button", () => {
+    // Arrange
+    cy.intercept("POST", "https://tos.vecha.in/*").as("signCertReq");
+
+    // Act
+    cy.get("@connect-button").click();
+    cy.getByCy("wallet-provider-button-sync2").click();
+
+    // Assert
+    cy.wait("@signCertReq").then((interception) => {
+      const { type, payload } = interception.request.body;
+
+      expect(type).to.eq("cert");
+      expect(payload.message.purpose).to.equal("identification");
+      expect(payload.message.payload.content).to.equal(
+        "Sign a certificate to prove your identity.",
+      );
+    });
+  });
+
+  it("opens the sync2 buddy when trying to connect with Sync2", () => {
+    // Arrange
+
+    // Act
+    cy.get("@connect-button").click();
+    cy.getByCy("wallet-provider-button-sync2").click();
+
+    // Assert
+    getSync2Iframe().contains("Try out Sync2-lite");
+  });
+
+  it("logs me in after signing the certificate", () => {
     // Arrange
     cy.intercept("POST", "https://tos.vecha.in/*").as("signCertReq");
     cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
@@ -167,20 +198,12 @@ describe("Logged out account", () => {
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    cy.wait("@signCertReq").then((interception) => {
-      const { type, payload } = interception.request.body;
-
-      expect(type).to.eq("cert");
-      expect(payload.message.purpose).to.equal("identification");
-      expect(payload.message.payload.content).to.equal(
-        "Sign a certificate to prove your identity.",
-      );
-    });
+    cy.wait("@signCertReq")
     cy.contains("Your Trades")
     // ^ Indicates that the account logged in successfully
   });
 
-  it("sends a sign cert request after hitting the Sync2 button and gets a INVALID cert as a response", () => {
+  it("errors if I provide an INVALID certificate", () => {
     // Arrange
     cy.intercept("POST", "https://tos.vecha.in/*").as("signCertReq");
     cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
@@ -206,26 +229,8 @@ describe("Logged out account", () => {
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    cy.wait("@signCertReq").then((interception) => {
-      const { type, payload } = interception.request.body;
-
-      expect(type).to.eq("cert");
-      expect(payload.message.purpose).to.equal("identification");
-      expect(payload.message.payload.content).to.equal(
-        "Sign a certificate to prove your identity.",
-      );
-    });
-    cy.getByCy("wallet-modal-error").contains("invalid point")
+    cy.wait("@signCertReq")
+        cy.getByCy("wallet-modal-error").contains("invalid point")
   });
 
-  it("shows me the connect sync2 buddy when trying to connect with Sync2", () => {
-    // Arrange
-
-    // Act
-    cy.get("@connect-button").click();
-    cy.getByCy("wallet-provider-button-sync2").click();
-
-    // Assert
-    getSync2Iframe().contains("Try out Sync2-lite");
-  });
 });
