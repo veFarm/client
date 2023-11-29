@@ -334,5 +334,4 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Assert
     getSync2Iframe().contains("Try out Sync2-lite");
   });
-
 });

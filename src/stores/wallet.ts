@@ -69,13 +69,11 @@ function createStore() {
           throw new Error("VeWorld extension not detected.");
         }
 
-        console.log("BEFORE connex instance");
         const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
           noExtension: walletId === "sync2",
         });
-        console.log("AFTER connex instance");
 
         const connexUtils = new ConnexUtils(connex);
 
@@ -87,16 +85,12 @@ function createStore() {
           },
         };
 
-        console.log({ message: JSON.stringify(message) });
-
         const cert = await connexUtils.signCert(message);
 
-        console.log({ cert: JSON.stringify(cert) });
         // This should throw if cert isn't valid.
         Certificate.verify(cert);
 
         const account = cert.signer as Address;
-        console.log({ account });
 
         // Remember user.
         localStorage.setItem("user", JSON.stringify({ walletId, account }));
