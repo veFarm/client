@@ -96,6 +96,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
         // Stub VTHO allowance lookup.
         if (to.toLowerCase() === chain.vtho.toLowerCase()) {
+          console.log("FETCH VTHO ALLOWANCE");
           req.reply({
             statusCode: 200,
             body: [
@@ -115,6 +116,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
         // Stub Trader reserve balance lookup.
         if (to.toLowerCase() === chain.trader.toLowerCase()) {
+          console.log("FETCH TRADER RESERVE BALANCE");
           req.reply({
             statusCode: 200,
             body: [
@@ -293,7 +295,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     });
   });
 
-  it("sends a sign tx request after submitting the form", () => {
+  it.only("sends a sign tx request after submitting the form", () => {
     // Arrange
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTx");
     cy.getByCy("reserve-balance-input").type("5");
@@ -334,4 +336,6 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Assert
     getSync2Iframe().contains("Try out Sync2-lite");
   });
+
+  it("shows me success message after the tx is processed", () => {});
 });

@@ -198,8 +198,9 @@ describe("Logged out account", () => {
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    cy.wait("@signCertReq")
-    cy.contains("Your Trades")
+    cy.wait("@signCertReq");
+    cy.wait("@signCertRes");
+    cy.contains("Your Trades");
     // ^ Indicates that the account logged in successfully
   });
 
@@ -229,8 +230,8 @@ describe("Logged out account", () => {
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    cy.wait("@signCertReq")
-        cy.getByCy("wallet-modal-error").contains("invalid point")
+    cy.wait("@signCertReq");
+    cy.wait("@signCertRes");
+    cy.getByCy("wallet-modal-error").contains("invalid point");
   });
-
 });
