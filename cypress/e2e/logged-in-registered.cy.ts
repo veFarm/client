@@ -225,8 +225,8 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       });
     });
 
-      it.only("opens up the wallet after submitting the form", () => {
-        // Arrange
+    it.only("opens up the wallet after submitting the form", () => {
+      // Arrange
       cy.wait("@fetchContract");
       cy.getByCy("goto-update-reserve-balance-button").click();
 
@@ -235,10 +235,9 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       cy.getByCy("reserve-balance-input").type("10");
       cy.getByCy("reserve-balance-input").type("{enter}");
 
-
-    // Assert
-    getSync2Iframe().contains("Try out Sync2-lite");
-  });
+      // Assert
+      getSync2Iframe().contains("Try out Sync2-lite");
+    });
 
     it("shows me a new success message after the tx has been mined", () => {
       // Arrange
@@ -408,7 +407,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       });
     });
   });
-
 
   it("shows me success message after the tx is mined", () => {
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
