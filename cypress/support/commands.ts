@@ -21,4 +21,4 @@ Cypress.Commands.add("clickOutside", (): Cypress.Chainable => {
   return cy.get("body").click(0, 0); // 0,0 here are the x and y coordinates
 });
 
-export {}
+export {};

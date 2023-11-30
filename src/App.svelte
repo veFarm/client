@@ -112,7 +112,9 @@
               <p>
                 VeFarm is configured to periodically exchange VTHO for VET while
                 maintaining a reserve balance of
-                <b>{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b> in your account.
+                <b data-cy="reserve-balance-amount"
+                  >{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b
+                > in your account.
               </p>
               <TradesForecast reserveBalance={$trader.reserveBalance} />
             </div>
@@ -148,7 +150,6 @@
         {/if}
 
         <p class="text-center text-accent">Chain: {chain.name}</p>
-        <button on:click={trader.fetchConfig}>REFETCH</button>
       </section>
     </div>
 

@@ -24,14 +24,18 @@ describe("Logged in NOT registered ZERO balance account", () => {
     });
 
     // Simulate a zero balance account.
-    cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`, {
-      statusCode: 200,
-      body: {
-        balance: "0x0000000000000000000",
-        energy: "0x00000000000000000",
-        hasCode: false,
+    cy.intercept(
+      "GET",
+      `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`,
+      {
+        statusCode: 200,
+        body: {
+          balance: "0x0000000000000000000",
+          energy: "0x00000000000000000",
+          hasCode: false,
+        },
       },
-    }).as("fetchBalance");
+    ).as("fetchBalance");
 
     // Stub RPC method calls.
     cy.intercept(
@@ -109,7 +113,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Act
 
     // Assert
-    cy.wait("@fetchBalance")
+    cy.wait("@fetchBalance");
     cy.getByCy("navigation-bar").contains("0.00 VET");
     cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
   });
@@ -153,7 +157,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.reload();
 
     // Assert
-    cy.wait("@fetchBalance")
+    cy.wait("@fetchBalance");
     cy.getByCy("navigation-bar").contains("0.00 VET");
     cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
   });
@@ -174,7 +178,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Act
 
     // Assert
-    cy.wait("@fetchBalance")
+    cy.wait("@fetchBalance");
     cy.getByCy("subtext").contains("Balance: 0.00");
   });
 

@@ -25,14 +25,18 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     });
 
     // Simulate a positive balance account.
-    cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`, {
-      statusCode: 200,
-      body: {
-        balance: "0x140330221654a06b3e9",
-        energy:  "0x66b7d9428d2c776f6",
-        hasCode: false,
+    cy.intercept(
+      "GET",
+      `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`,
+      {
+        statusCode: 200,
+        body: {
+          balance: "0x140330221654a06b3e9",
+          energy: "0x66b7d9428d2c776f6",
+          hasCode: false,
+        },
       },
-    }).as("fetchBalance");
+    ).as("fetchBalance");
 
     // Stub RPC method calls.
     let counters: Record<"allowance" | "reserveBalance", number> = {
@@ -53,7 +57,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
             counters.allowance === 0
               ? "0x0000000000000000000000000000000000000000000000000000000000000000"
               : "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-              // ^ 2^256 - 1 VHTO
+          // ^ 2^256 - 1 VHTO
 
           // ^ allowance is not 2^256 - 1
           req.reply({
@@ -81,7 +85,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
             counters.reserveBalance === 0
               ? "0x0000000000000000000000000000000000000000000000000000000000000000"
               : "0x0000000000000000000000000000000000000000000000004563918244f40000";
-              // ^ 5 VTHO
+          // ^ 5 VTHO
 
           req.reply({
             statusCode: 200,
@@ -132,7 +136,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Act
 
     // Assert
-    cy.wait("@fetchBalance")
+    cy.wait("@fetchBalance");
     cy.getByCy("navigation-bar").contains("5906.63 VET");
     cy.getByCy("open-dropdown-button").contains("0x9702…90e0");
   });
@@ -187,7 +191,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.reload();
 
     // Assert
-    cy.wait("@fetchBalance")
+    cy.wait("@fetchBalance");
     cy.getByCy("navigation-bar").contains("5906.63 VET");
     cy.getByCy("open-dropdown-button").contains("0x9702…90e0");
   });
@@ -208,7 +212,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Act
 
     // Assert
-    cy.wait("@fetchBalance")
+    cy.wait("@fetchBalance");
     cy.getByCy("subtext").contains("Balance: 118.42");
   });
 
@@ -312,7 +316,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     getSync2Iframe().contains("Try out Sync2-lite");
   });
 
-  it("shows me a success message after the tx is mined", () => {
+  it("shows me a success message after the tx has been mined", () => {
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
     cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
       req.reply({
@@ -377,7 +381,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
         });
       },
     ).as("signTxReceipt");
-    cy.getByCy("protocol-is-enabled-message").should("not.exist")
+    cy.getByCy("protocol-is-enabled-message").should("not.exist");
     cy.getByCy("reserve-balance-input").type("5");
 
     // Act
@@ -385,7 +389,9 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
     // Assert
     cy.wait(["@signTxReq", "@signTxRes"]);
-    cy.getByCy("protocol-is-enabled-message", { timeout: 20_000 }).should("be.visible")
+    cy.getByCy("protocol-is-enabled-message", { timeout: 20_000 }).should(
+      "be.visible",
+    );
   });
 
   it.only("shows and error message if the tx is rejected", () => {
@@ -453,7 +459,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
         });
       },
     ).as("signTxReceipt");
-    cy.getByCy("protocol-is-enabled-message").should("not.exist")
+    cy.getByCy("protocol-is-enabled-message").should("not.exist");
     cy.getByCy("reserve-balance-input").type("5");
 
     // Act
@@ -461,6 +467,8 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
     // Assert
     cy.wait(["@signTxReq", "@signTxRes"]);
-    cy.getByCy("network-error", { timeout: 20_000 }).contains("The transaction has been reverted.")
-  })
+    cy.getByCy("network-error", { timeout: 20_000 }).contains(
+      "The transaction has been reverted.",
+    );
+  });
 });

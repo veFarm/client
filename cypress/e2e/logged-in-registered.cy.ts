@@ -1,4 +1,3 @@
-
 /// <reference types="cypress" />
 
 import { chain } from "@/config/index";
@@ -26,16 +25,25 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     }).as("getTradesForecast");
 
     // Simulate a positive balance account.
-    cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`, {
-      statusCode: 200,
-      body: {
-        balance: "0x140330221654a06b3e9",
-        energy:  "0x66b7d9428d2c776f6",
-        hasCode: false,
+    cy.intercept(
+      "GET",
+      `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`,
+      {
+        statusCode: 200,
+        body: {
+          balance: "0x140330221654a06b3e9",
+          energy: "0x66b7d9428d2c776f6",
+          hasCode: false,
+        },
       },
-    }).as("fetchBalance");
+    ).as("fetchBalance");
 
     // Stub RPC method calls.
+    let counters: Record<"allowance" | "reserveBalance", number> = {
+      allowance: 0,
+      reserveBalance: 0,
+    };
+
     cy.intercept(
       "POST",
       "https://testnet.veblocks.net/accounts/*?revision=*",
@@ -48,7 +56,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
             statusCode: 200,
             body: [
               {
-                data:  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
                 events: [],
                 transfers: [],
                 gasUsed: 904,
@@ -63,11 +71,19 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
         // Stub Trader reserve balance lookup.
         if (to.toLowerCase() === chain.trader.toLowerCase()) {
+          console.log("FETCH TRADER RESERVE BALANCE", counters.reserveBalance);
+          const data =
+            counters.reserveBalance === 0
+              ? "0x0000000000000000000000000000000000000000000000004563918244f40000"
+              : // ^ 5 VTHO
+                "0x0000000000000000000000000000000000000000000000008ac7230489e80000";
+          // ^ 10 VTHO
+
           req.reply({
             statusCode: 200,
             body: [
               {
-                data:  "0x0000000000000000000000000000000000000000000000004563918244f40000",
+                data,
                 events: [],
                 transfers: [],
                 gasUsed: 936,
@@ -76,6 +92,8 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
               },
             ],
           });
+
+          counters.reserveBalance += 1;
 
           return;
         }
@@ -93,18 +111,21 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me a success message", () => {
     // Arrange
-    cy.wait("@fetchContract")
+    cy.wait("@fetchContract");
 
     // Act
 
     // Assert
-    cy.getByCy("protocol-is-enabled-message").should("be.visible")
+    cy.getByCy("protocol-is-enabled-message").should("be.visible");
+    cy.getByCy("protocol-is-enabled-message").within(() => {
+      cy.getByCy("reserve-balance-amount").contains("5 VTHO");
+    });
   });
 
   it("shows me the trades forecast", () => {
     // Arrange
-    cy.wait("@fetchContract")
-    cy.wait("@getTradesForecast")
+    cy.wait("@fetchContract");
+    cy.wait("@getTradesForecast");
 
     // Act
 
@@ -114,7 +135,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the update reserve balance button", () => {
     // Arrange
-    cy.wait("@fetchContract")
+    cy.wait("@fetchContract");
 
     // Act
 
@@ -125,7 +146,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the revoke allowance button", () => {
     // Arrange
-    cy.wait("@fetchContract")
+    cy.wait("@fetchContract");
 
     // Act
 
@@ -136,7 +157,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the update reserve balance form after hitting the update reserve balance button", () => {
     // Arrange
-    cy.wait("@fetchContract")
+    cy.wait("@fetchContract");
 
     // Act
     cy.getByCy("goto-update-reserve-balance-button").click();
@@ -147,64 +168,133 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   });
 
   context("update reserve balance form", () => {
-  it("shows me a cancel button that takes me to the back to success massage screen", () => {
-    // Arrange
-    cy.wait("@fetchContract")
-    cy.getByCy("goto-update-reserve-balance-button").click();
+    it("shows me a cancel button that takes me to the back to success massage screen", () => {
+      // Arrange
+      cy.wait("@fetchContract");
+      cy.getByCy("goto-update-reserve-balance-button").click();
 
-    // Act
-    cy.getByCy("cancel-reserve-balance-update-button").click()
+      // Act
+      cy.getByCy("cancel-reserve-balance-update-button").click();
 
-    // Assert
-    cy.getByCy("protocol-is-enabled-message").should("be.visible")
-  })
+      // Assert
+      cy.getByCy("protocol-is-enabled-message").should("be.visible");
+    });
 
-  it("does NOT allow me to submit the form until I enter a new reserve balance amount", () => {
-    // Arrange
-    cy.wait("@fetchContract")
-    cy.getByCy("goto-update-reserve-balance-button").click();
-    cy.getByCy("update-reserve-balance-button").should("be.disabled")
+    it("does NOT allow me to submit the form until I enter a new reserve balance amount", () => {
+      // Arrange
+      cy.wait("@fetchContract");
+      cy.getByCy("goto-update-reserve-balance-button").click();
+      cy.getByCy("update-reserve-balance-button").should("be.disabled");
 
-    // Act
-    cy.getByCy("reserve-balance-input").clear()
-    cy.getByCy("reserve-balance-input").type("10")
+      // Act
+      cy.getByCy("reserve-balance-input").clear();
+      cy.getByCy("reserve-balance-input").type("10");
 
-    // Assert
-    cy.getByCy("update-reserve-balance-button").should("be.enabled")
-  });
+      // Assert
+      cy.getByCy("update-reserve-balance-button").should("be.enabled");
+    });
 
-  it.only("sends me a sign tx request after submitting the form with the new reserve balance amount", () => {
-    // Arrange
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
-    cy.wait("@fetchContract")
-    cy.getByCy("goto-update-reserve-balance-button").click();
-    cy.getByCy("update-reserve-balance-button").should("be.disabled")
+    it("sends me a sign tx request after submitting the form with the new reserve balance amount", () => {
+      // Arrange
+      cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
+      cy.wait("@fetchContract");
+      cy.getByCy("goto-update-reserve-balance-button").click();
+      cy.getByCy("update-reserve-balance-button").should("be.disabled");
 
-    // Act
-    cy.getByCy("reserve-balance-input").clear()
-    cy.getByCy("reserve-balance-input").type("10")
-    cy.getByCy("reserve-balance-input").type("{enter}")
+      // Act
+      cy.getByCy("reserve-balance-input").clear();
+      cy.getByCy("reserve-balance-input").type("10");
+      cy.getByCy("reserve-balance-input").type("{enter}");
 
-    // Assert
-    cy.wait("@signTxReq").then((interception) => {
-      const { type, payload } = interception.request.body;
-      console.log({body: interception.request.body})
+      // Assert
+      cy.wait("@signTxReq").then((interception) => {
+        const { type, payload } = interception.request.body;
+        console.log({ body: interception.request.body });
 
-      expect(type).to.eq("tx");
-      expect(payload.message[0]).to.deep.equal({
-        to: chain.trader.toLowerCase(),
-        value: "0",
-        data: "0x4b0bbaa40000000000000000000000000000000000000000000000008ac7230489e80000",
-      });
-      expect(payload.options).to.deep.equal({
-        signer: account.toLowerCase(),
-        comment:
-        "Please approve the following action(s):Save reserve balance into the VeFarm contract."
+        expect(type).to.eq("tx");
+        expect(payload.message[0]).to.deep.equal({
+          to: chain.trader.toLowerCase(),
+          value: "0",
+          data: "0x4b0bbaa40000000000000000000000000000000000000000000000008ac7230489e80000",
+        });
+        expect(payload.options).to.deep.equal({
+          signer: account.toLowerCase(),
+          comment:
+            "Please approve the following action(s):Save reserve balance into the VeFarm contract.",
+        });
       });
     });
-  })
-  })
 
+    it.only("shows me a new success message after the tx has been mined", () => {
+      // Arrange
+      cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
+      cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
+        req.reply({
+          statusCode: 200,
+          body: {
+            payload: {
+              txid: "0x30bb88830703234154f04c3dcff9b861e23523e543133aa875857243f006076b",
+              signer: account,
+            },
+          },
+        });
+      }).as("signTxRes");
+      cy.intercept(
+        "GET",
+        "https://testnet.veblocks.net/transactions/0x30bb88830703234154f04c3dcff9b861e23523e543133aa875857243f006076b/receipt?head=*",
+        (req) => {
+          req.reply({
+            gasUsed: 28938,
+            gasPayer: account,
+            paid: "0x4041593a91a4000",
+            reward: "0x1346cdf7f87e000",
+            reverted: false,
+            meta: {
+              blockID:
+                "0x010576bc63c0198ac62c2114479551346178550dba3bee19a4a8c118ede80550",
+              blockNumber: 17135292,
+              blockTimestamp: 1701384290,
+              txID: "0x30bb88830703234154f04c3dcff9b861e23523e543133aa875857243f006076b",
+              txOrigin: account,
+            },
+            outputs: [
+              {
+                contractAddress: null,
+                events: [
+                  {
+                    address: chain.trader,
+                    topics: [
+                      "0x7cf7f245e0ac9ee076d209114cedb03ee23c22f397ad7c400bfc99bbfa885933",
+                      "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                    ],
+                    data: "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+                  },
+                ],
+                transfers: [],
+              },
+            ],
+          });
+        },
+      ).as("signTxReceipt");
+      cy.wait("@fetchContract");
+      cy.getByCy("goto-update-reserve-balance-button").click();
+      cy.getByCy("update-reserve-balance-button").should("be.disabled");
+
+      // Act
+      cy.getByCy("reserve-balance-input").clear();
+      cy.getByCy("reserve-balance-input").type("10");
+      cy.getByCy("reserve-balance-input").type("{enter}");
+
+      // Assert
+      cy.wait(["@signTxReq", "@signTxRes", "@fetchContract"]);
+      cy.getByCy("protocol-is-enabled-message", { timeout: 20_000 }).should(
+        "be.visible",
+      );
+      cy.getByCy("protocol-is-enabled-message").within(() => {
+        cy.getByCy("reserve-balance-amount").contains("10 VTHO");
+      });
+    });
+  });
 
   it("sends a sign tx request after submitting the form", () => {
     // Arrange
@@ -313,7 +403,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
         });
       },
     ).as("signTxReceipt");
-    cy.getByCy("protocol-is-enabled-message").should("not.exist")
+    cy.getByCy("protocol-is-enabled-message").should("not.exist");
     cy.getByCy("reserve-balance-input").type("5");
 
     // Act
@@ -321,7 +411,9 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     // Assert
     cy.wait(["@signTxReq", "@signTxRes"]);
-    cy.getByCy("protocol-is-enabled-message", { timeout: 20_000 }).should("be.visible")
+    cy.getByCy("protocol-is-enabled-message", { timeout: 20_000 }).should(
+      "be.visible",
+    );
   });
 
   it("shows and error message if the tx is rejected", () => {
@@ -389,7 +481,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
         });
       },
     ).as("signTxReceipt");
-    cy.getByCy("protocol-is-enabled-message").should("not.exist")
+    cy.getByCy("protocol-is-enabled-message").should("not.exist");
     cy.getByCy("reserve-balance-input").type("5");
 
     // Act
@@ -397,6 +489,8 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     // Assert
     cy.wait(["@signTxReq", "@signTxRes"]);
-    cy.getByCy("network-error", { timeout: 20_000 }).contains("The transaction has been reverted.")
-  })
+    cy.getByCy("network-error", { timeout: 20_000 }).contains(
+      "The transaction has been reverted.",
+    );
+  });
 });
