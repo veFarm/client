@@ -8,18 +8,6 @@ describe("Logged in NOT registered ZERO balance account", () => {
   beforeEach(() => {
     cy.viewport("macbook-15");
 
-    // const stub = cy.stub().as('open')
-
-    // cy.visit("/", {
-    //   onBeforeLoad(win) {
-    //     cy.stub(win, 'open').callsFake(stub)
-    //       }
-    // });
-    cy.visit("/");
-
-    // Simulate a logged in account.
-    localStorage.setItem("user", JSON.stringify({ walletId, account }));
-
     // Intercept backend calls to simulate a not registered account
     // (account record not found on DB).
     cy.intercept("GET", `**/getaccountstats?account=${account}*`, {
@@ -36,14 +24,14 @@ describe("Logged in NOT registered ZERO balance account", () => {
     });
 
     // Simulate a zero balance account.
-    cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account}*`, {
+    cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`, {
       statusCode: 200,
       body: {
-        balance: "0x0000000000000000000", //"0x197ae6a1354ccd2e103",
-        energy: "0x00000000000000000", // "0x12e492627f439cdc8"
+        balance: "0x0000000000000000000",
+        energy: "0x00000000000000000",
         hasCode: false,
       },
-    });
+    }).as("fetchBalance");
 
     // Stub RPC method calls.
     cy.intercept(
@@ -94,6 +82,11 @@ describe("Logged in NOT registered ZERO balance account", () => {
         req.continue();
       },
     );
+
+    // Simulate a logged in account.
+    localStorage.setItem("user", JSON.stringify({ walletId, account }));
+
+    cy.visit("/");
   });
 
   it("shows me the title of the app and a short description", () => {
@@ -116,6 +109,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Act
 
     // Assert
+    cy.wait("@fetchBalance")
     cy.getByCy("navigation-bar").contains("0.00 VET");
     cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
   });
@@ -159,6 +153,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.reload();
 
     // Assert
+    cy.wait("@fetchBalance")
     cy.getByCy("navigation-bar").contains("0.00 VET");
     cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
   });
@@ -179,6 +174,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Act
 
     // Assert
+    cy.wait("@fetchBalance")
     cy.getByCy("subtext").contains("Balance: 0.00");
   });
 

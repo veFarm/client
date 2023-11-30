@@ -9,12 +9,13 @@ describe("Logged out account", () => {
 
   beforeEach(() => {
     cy.viewport("macbook-15");
-    cy.visit("/");
 
     // Ensure account is NOT connected.
     cy.clearLocalStorage();
     // ^ Actually this is not required; Cypress does this
     // by default when test isolation is enabled.
+
+    cy.visit("/");
 
     cy.getByCy("reserve-balance-input").as("reserve-balance-input");
     cy.getByCy("connect-wallet-button").as("connect-button");

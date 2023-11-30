@@ -10,18 +10,6 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
   beforeEach(() => {
     cy.viewport("macbook-15");
 
-    // const stub = cy.stub().as('open')
-
-    // cy.visit("/", {
-    //   onBeforeLoad(win) {
-    //     cy.stub(win, 'open').callsFake(stub)
-    //       }
-    // });
-    cy.visit("/");
-
-    // Simulate a logged in account.
-    localStorage.setItem("user", JSON.stringify({ walletId, account }));
-
     // Intercept backend calls to simulate a not registered account
     // (account record not found on DB).
     cy.intercept("GET", `**/getaccountstats?account=${account}*`, {
@@ -33,61 +21,25 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     });
 
     cy.intercept("GET", `**/gettradeforecast?account=${account}*`, {
-      statusCode: 200,
-      body: {
-        txFee: "2688830000000000000",
-        solutions: [
-          {
-            protocolFee: "186933510000000000",
-            dexFee: "186372709470000000",
-            amountInWithFees: "61937863780530000000",
-            deltaVET: "846378938892496129.55211548879635803739",
-            stepsCount: 14,
-            withdrawAmount: "65000000000000000000",
-            totalProfitVET: "11849305144494945813.72961684314901252346",
-          },
-          {
-            protocolFee: "201933510000000000",
-            dexFee: "201327709470000000",
-            amountInWithFees: "66907908780530000000",
-            deltaVET: "913694219064712040.63479537812498586253",
-            stepsCount: 13,
-            withdrawAmount: "70000000000000000000",
-            totalProfitVET: "11878024847841256528.25233991562481621289",
-          },
-          {
-            protocolFee: "336933510000000000",
-            dexFee: "335922709470000000",
-            amountInWithFees: "111638313780530000000",
-            deltaVET: "1515577829048343790.99517372255491032448",
-            stepsCount: 8,
-            withdrawAmount: "115000000000000000000",
-            totalProfitVET: "12124622632386750327.96138978043928259584",
-          },
-          {
-            protocolFee: "456933510000000000",
-            dexFee: "455562709470000000",
-            amountInWithFees: "151398673780530000000",
-            deltaVET: "2044680506719324509.06225691968801652127",
-            stepsCount: 6,
-            withdrawAmount: "155000000000000000000",
-            totalProfitVET: "12268083040315947054.37354151812809912762",
-          },
-        ],
-      },
+      fixture: "trades-forecast.json",
     });
 
-    // Simulate a zero balance account.
-    cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account}*`, {
+    // Simulate a positive balance account.
+    cy.intercept("GET", `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`, {
       statusCode: 200,
       body: {
         balance: "0x140330221654a06b3e9",
-        energy: "0x66b7d9428d2c776f6",
+        energy:  "0x66b7d9428d2c776f6",
         hasCode: false,
       },
-    });
+    }).as("fetchBalance");
 
-    // Stub RPC method calls.
+    // Stub the first 2 RPC method calls.
+    let counters: Record<"allowance" | "reserveBalance", number> = {
+      allowance: 0,
+      reserveBalance: 0,
+    };
+
     cy.intercept(
       "POST",
       "https://testnet.veblocks.net/accounts/*?revision=*",
@@ -96,12 +48,19 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
         // Stub VTHO allowance lookup.
         if (to.toLowerCase() === chain.vtho.toLowerCase()) {
-          console.log("FETCH VTHO ALLOWANCE");
+          console.log("FETCH VTHO ALLOWANCE", counters.allowance);
+          const data =
+            counters.allowance === 0
+              ? "0x0000000000000000000000000000000000000000000000000000000000000000"
+              : "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+              // ^ 2^256 - 1 VHTO
+
+          // ^ allowance is not 2^256 - 1
           req.reply({
             statusCode: 200,
             body: [
               {
-                data: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                data,
                 events: [],
                 transfers: [],
                 gasUsed: 904,
@@ -111,17 +70,24 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
             ],
           });
 
+          counters.allowance += 1;
           return;
         }
 
         // Stub Trader reserve balance lookup.
         if (to.toLowerCase() === chain.trader.toLowerCase()) {
-          console.log("FETCH TRADER RESERVE BALANCE");
+          console.log("FETCH TRADER RESERVE BALANCE", counters.reserveBalance);
+          const data =
+            counters.reserveBalance === 0
+              ? "0x0000000000000000000000000000000000000000000000000000000000000000"
+              : "0x0000000000000000000000000000000000000000000000004563918244f40000";
+              // ^ 5 VTHO
+
           req.reply({
             statusCode: 200,
             body: [
               {
-                data: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                data,
                 events: [],
                 transfers: [],
                 gasUsed: 936,
@@ -131,13 +97,19 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
             ],
           });
 
+          counters.reserveBalance += 1;
           return;
         }
 
         // Forward all other requests to the original endpoint.
         req.continue();
       },
-    );
+    ).as("fetchContract");
+
+    // Simulate a logged in account.
+    localStorage.setItem("user", JSON.stringify({ walletId, account }));
+
+    cy.visit("/");
   });
 
   it("shows me the title of the app and a short description", () => {
@@ -160,6 +132,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Act
 
     // Assert
+    cy.wait("@fetchBalance")
     cy.getByCy("navigation-bar").contains("5906.63 VET");
     cy.getByCy("open-dropdown-button").contains("0x9702…90e0");
   });
@@ -214,6 +187,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.reload();
 
     // Assert
+    cy.wait("@fetchBalance")
     cy.getByCy("navigation-bar").contains("5906.63 VET");
     cy.getByCy("open-dropdown-button").contains("0x9702…90e0");
   });
@@ -234,7 +208,8 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Act
 
     // Assert
-    cy.getByCy("subtext").contains("Balance: 0.00");
+    cy.wait("@fetchBalance")
+    cy.getByCy("subtext").contains("Balance: 118.42");
   });
 
   it("does NOT allow me to submit the form if I enter 0 as the reserve balance amount", () => {
@@ -295,16 +270,16 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     });
   });
 
-  it.only("sends a sign tx request after submitting the form", () => {
+  it("sends a sign tx request after submitting the form", () => {
     // Arrange
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signTx");
+    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
     cy.getByCy("reserve-balance-input").type("5");
 
     // Act
     cy.getByCy("reserve-balance-input").type("{enter}");
 
     // Assert
-    cy.wait("@signTx").then((interception) => {
+    cy.wait("@signTxReq").then((interception) => {
       const { type, payload } = interception.request.body;
 
       expect(type).to.eq("tx");
@@ -337,5 +312,79 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     getSync2Iframe().contains("Try out Sync2-lite");
   });
 
-  it("shows me success message after the tx is processed", () => {});
+  it("shows me success message after the tx is processed", () => {
+    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
+    cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
+      req.reply({
+        statusCode: 200,
+        body: {
+          payload: {
+            txid: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
+            signer: account,
+          },
+        },
+      });
+    }).as("signTxRes");
+    cy.intercept(
+      "GET",
+      "https://testnet.veblocks.net/transactions/0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223/receipt?head=*",
+      (req) => {
+        req.reply({
+          gasUsed: 86147,
+          gasPayer: account,
+          paid: "0xbf48e6696a7e000",
+          reward: "0x3962ab860659000",
+          reverted: false,
+          meta: {
+            blockID:
+              "0x010553ef49b3bea9b39ecfc7066504f5632f4889cbf68cbd051281d69bea7ad2",
+            blockNumber: 17126383,
+            blockTimestamp: 1701295200,
+            txID: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
+            txOrigin: account,
+          },
+          outputs: [
+            {
+              contractAddress: null,
+              events: [
+                {
+                  address: chain.trader,
+                  topics: [
+                    "0x7cf7f245e0ac9ee076d209114cedb03ee23c22f397ad7c400bfc99bbfa885933",
+                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                  ],
+                  data: "0x0000000000000000000000000000000000000000000000004563918244f40000",
+                },
+              ],
+              transfers: [],
+            },
+            {
+              contractAddress: null,
+              events: [
+                {
+                  address: chain.vtho,
+                  topics: [
+                    "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                    "0x0000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305",
+                  ],
+                  data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                },
+              ],
+              transfers: [],
+            },
+          ],
+        });
+      },
+    ).as("signTxReceipt");
+    cy.getByCy("protocol-is-enabled-message").should("not.exist")
+    cy.getByCy("reserve-balance-input").type("5");
+
+    // Act
+    cy.getByCy("reserve-balance-input").type("{enter}");
+
+    // Assert
+    cy.wait(["@signTxReq", "@signTxRes"]);
+    cy.getByCy("protocol-is-enabled-message", { timeout: 20_000 }).should("be.visible")
+  });
 });

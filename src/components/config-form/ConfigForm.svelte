@@ -128,7 +128,8 @@
       );
       await wallet.waitForReceipt(response!.txid);
       await trader.fetchConfig();
-      await balance.fetchBalance();
+      await vtho.fetchAllowance();
+      // await balance.fetchBalance();
     } catch (error: any) {
       console.error(error);
       errors.network.push(error?.message || "Unknown error occurred.");
