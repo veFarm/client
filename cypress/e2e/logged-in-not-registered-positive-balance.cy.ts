@@ -312,7 +312,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     getSync2Iframe().contains("Try out Sync2-lite");
   });
 
-  it("shows me success message after the tx is processed", () => {
+  it("shows me success message after the tx is mined", () => {
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
     cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
       req.reply({
@@ -387,4 +387,80 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.wait(["@signTxReq", "@signTxRes"]);
     cy.getByCy("protocol-is-enabled-message", { timeout: 20_000 }).should("be.visible")
   });
+
+  it.only("shows and error message if the tx is rejected", () => {
+    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
+    cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
+      req.reply({
+        statusCode: 200,
+        body: {
+          payload: {
+            txid: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
+            signer: account,
+          },
+        },
+      });
+    }).as("signTxRes");
+    cy.intercept(
+      "GET",
+      "https://testnet.veblocks.net/transactions/0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223/receipt?head=*",
+      (req) => {
+        req.reply({
+          gasUsed: 86147,
+          gasPayer: account,
+          paid: "0xbf48e6696a7e000",
+          reward: "0x3962ab860659000",
+          reverted: true, // <-- tx has been rejected
+          meta: {
+            blockID:
+              "0x010553ef49b3bea9b39ecfc7066504f5632f4889cbf68cbd051281d69bea7ad2",
+            blockNumber: 17126383,
+            blockTimestamp: 1701295200,
+            txID: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
+            txOrigin: account,
+          },
+          outputs: [
+            {
+              contractAddress: null,
+              events: [
+                {
+                  address: chain.trader,
+                  topics: [
+                    "0x7cf7f245e0ac9ee076d209114cedb03ee23c22f397ad7c400bfc99bbfa885933",
+                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                  ],
+                  data: "0x0000000000000000000000000000000000000000000000004563918244f40000",
+                },
+              ],
+              transfers: [],
+            },
+            {
+              contractAddress: null,
+              events: [
+                {
+                  address: chain.vtho,
+                  topics: [
+                    "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                    "0x0000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305",
+                  ],
+                  data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                },
+              ],
+              transfers: [],
+            },
+          ],
+        });
+      },
+    ).as("signTxReceipt");
+    cy.getByCy("protocol-is-enabled-message").should("not.exist")
+    cy.getByCy("reserve-balance-input").type("5");
+
+    // Act
+    cy.getByCy("reserve-balance-input").type("{enter}");
+
+    // Assert
+    cy.wait(["@signTxReq", "@signTxRes"]);
+    cy.getByCy("network-error", { timeout: 20_000 }).contains("The transaction has been reverted.")
+  })
 });

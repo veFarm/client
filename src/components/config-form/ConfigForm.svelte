@@ -226,6 +226,6 @@
     <p class="text-danger">ERROR: {$trader.error}</p>
   {/if}
   {#if errors.network != null && errors.network.length > 0}
-    <p class="text-danger">ERROR: {errors.network[0]}</p>
+    <p class="text-danger" data-cy="network-error">ERROR: {errors.network[0]}</p>
   {/if}
 </form>
