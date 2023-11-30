@@ -225,6 +225,21 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       });
     });
 
+      it.only("opens up the wallet after submitting the form", () => {
+        // Arrange
+      cy.wait("@fetchContract");
+      cy.getByCy("goto-update-reserve-balance-button").click();
+
+      // Act
+      cy.getByCy("reserve-balance-input").clear();
+      cy.getByCy("reserve-balance-input").type("10");
+      cy.getByCy("reserve-balance-input").type("{enter}");
+
+
+    // Assert
+    getSync2Iframe().contains("Try out Sync2-lite");
+  });
+
     it("shows me a new success message after the tx has been mined", () => {
       // Arrange
       cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
@@ -295,7 +310,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       });
     });
 
-    it.only("shows me an error message if the tx is rejected", () => {
+    it("shows me an error message if the tx is rejected", () => {
       // Arrange
       cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
       cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
@@ -394,16 +409,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     });
   });
 
-  it("opens up the wallet after submitting the form", () => {
-    // Arrange
-    cy.getByCy("reserve-balance-input").type("10");
-
-    // Act
-    cy.getByCy("submit-form-button").click();
-
-    // Assert
-    getSync2Iframe().contains("Try out Sync2-lite");
-  });
 
   it("shows me success message after the tx is mined", () => {
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
