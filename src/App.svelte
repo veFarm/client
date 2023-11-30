@@ -123,6 +123,7 @@
               on:click={() => {
                 view = "UPDATE_CONFIG";
               }}
+              data-cy="goto-update-reserve-balance-button"
             >
               Update Reserve
             </Button>
@@ -139,6 +140,7 @@
               on:click={() => {
                 view = "SUMMARY";
               }}
+              data-cy="cancel-reserve-balance-update-button"
             >
               Cancel
             </Button>

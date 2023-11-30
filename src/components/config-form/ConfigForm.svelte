@@ -214,6 +214,7 @@
       disabled={disabled || inputsEmpty || inputsMatchStore}
       loading={disabled}
       fullWidth
+      data-cy="update-reserve-balance-button"
     >
       Update Reserve
     </Button>
