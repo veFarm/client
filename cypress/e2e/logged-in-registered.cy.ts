@@ -155,6 +155,48 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.getByCy("revoke-allowance-button").should("be.enabled");
   });
 
+  it("sends me a sign tx request after I click the revoke allowance button", () => {
+    // Arrange
+    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
+    cy.wait("@fetchContract");
+
+    // Act
+    cy.getByCy("revoke-allowance-button").click();
+
+    // Assert
+    cy.wait("@signTxReq").then((interception) => {
+      const { type, payload } = interception.request.body;
+
+      expect(type).to.eq("tx");
+      expect(payload.message[0]).to.deep.equal({
+        to: chain.vtho.toLowerCase(),
+        value: "0",
+        data: "0x095ea7b30000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa3050000000000000000000000000000000000000000000000000000000000000000",
+      });
+      expect(payload.options).to.deep.equal({
+        comment:
+          "The VeFarm contract will no longer be able to spend your VTHO in exchange for VET.",
+      });
+    });
+  });
+
+  it("shows me a spinner after I click the revoke allowance button", () => {
+    // Arrange
+    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
+    cy.wait("@fetchContract");
+    cy.getByCy("revoke-allowance-button").should("be.enabled");
+
+    // Act
+    cy.getByCy("revoke-allowance-button").click();
+
+    // Assert
+    cy.wait("@signTxReq");
+    cy.getByCy("revoke-allowance-button").should("be.disabled");
+    cy.getByCy("revoke-allowance-button").within(() => {
+      cy.getByCy("spinner").should("be.visible");
+    });
+  });
+
   it("shows me the update reserve balance form after hitting the update reserve balance button", () => {
     // Arrange
     cy.wait("@fetchContract");
@@ -209,7 +251,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       // Assert
       cy.wait("@signTxReq").then((interception) => {
         const { type, payload } = interception.request.body;
-        console.log({ body: interception.request.body });
 
         expect(type).to.eq("tx");
         expect(payload.message[0]).to.deep.equal({
@@ -225,7 +266,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       });
     });
 
-    it.only("opens up the wallet after submitting the form", () => {
+    it("opens up the wallet after submitting the form", () => {
       // Arrange
       cy.wait("@fetchContract");
       cy.getByCy("goto-update-reserve-balance-button").click();
@@ -375,192 +416,5 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
         "The transaction has been reverted.",
       );
     });
-  });
-
-  it("sends a sign tx request after submitting the form", () => {
-    // Arrange
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
-    cy.getByCy("reserve-balance-input").type("5");
-
-    // Act
-    cy.getByCy("reserve-balance-input").type("{enter}");
-
-    // Assert
-    cy.wait("@signTxReq").then((interception) => {
-      const { type, payload } = interception.request.body;
-
-      expect(type).to.eq("tx");
-      expect(payload.message[0]).to.deep.equal({
-        to: chain.trader.toLowerCase(),
-        value: "0",
-        data: "0x4b0bbaa40000000000000000000000000000000000000000000000004563918244f40000",
-      });
-      expect(payload.message[1]).to.deep.equal({
-        to: chain.vtho.toLowerCase(),
-        value: "0",
-        data: "0x095ea7b30000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      });
-      expect(payload.options).to.deep.equal({
-        signer: account.toLowerCase(),
-        comment:
-          "Please approve the following action(s):Allow the VeFarm contract to spend your VTHO in exchange for VET. Save reserve balance into the VeFarm contract.",
-      });
-    });
-  });
-
-  it("shows me success message after the tx is mined", () => {
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
-    cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
-      req.reply({
-        statusCode: 200,
-        body: {
-          payload: {
-            txid: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
-            signer: account,
-          },
-        },
-      });
-    }).as("signTxRes");
-    cy.intercept(
-      "GET",
-      "https://testnet.veblocks.net/transactions/0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223/receipt?head=*",
-      (req) => {
-        req.reply({
-          gasUsed: 86147,
-          gasPayer: account,
-          paid: "0xbf48e6696a7e000",
-          reward: "0x3962ab860659000",
-          reverted: false,
-          meta: {
-            blockID:
-              "0x010553ef49b3bea9b39ecfc7066504f5632f4889cbf68cbd051281d69bea7ad2",
-            blockNumber: 17126383,
-            blockTimestamp: 1701295200,
-            txID: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
-            txOrigin: account,
-          },
-          outputs: [
-            {
-              contractAddress: null,
-              events: [
-                {
-                  address: chain.trader,
-                  topics: [
-                    "0x7cf7f245e0ac9ee076d209114cedb03ee23c22f397ad7c400bfc99bbfa885933",
-                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
-                  ],
-                  data: "0x0000000000000000000000000000000000000000000000004563918244f40000",
-                },
-              ],
-              transfers: [],
-            },
-            {
-              contractAddress: null,
-              events: [
-                {
-                  address: chain.vtho,
-                  topics: [
-                    "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
-                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
-                    "0x0000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305",
-                  ],
-                  data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                },
-              ],
-              transfers: [],
-            },
-          ],
-        });
-      },
-    ).as("signTxReceipt");
-    cy.getByCy("protocol-is-enabled-message").should("not.exist");
-    cy.getByCy("reserve-balance-input").type("5");
-
-    // Act
-    cy.getByCy("reserve-balance-input").type("{enter}");
-
-    // Assert
-    cy.wait(["@signTxReq", "@signTxRes"]);
-    cy.getByCy("protocol-is-enabled-message", { timeout: 20_000 }).should(
-      "be.visible",
-    );
-  });
-
-  it("shows and error message if the tx is rejected", () => {
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
-    cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
-      req.reply({
-        statusCode: 200,
-        body: {
-          payload: {
-            txid: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
-            signer: account,
-          },
-        },
-      });
-    }).as("signTxRes");
-    cy.intercept(
-      "GET",
-      "https://testnet.veblocks.net/transactions/0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223/receipt?head=*",
-      (req) => {
-        req.reply({
-          gasUsed: 86147,
-          gasPayer: account,
-          paid: "0xbf48e6696a7e000",
-          reward: "0x3962ab860659000",
-          reverted: true, // <-- tx has been rejected
-          meta: {
-            blockID:
-              "0x010553ef49b3bea9b39ecfc7066504f5632f4889cbf68cbd051281d69bea7ad2",
-            blockNumber: 17126383,
-            blockTimestamp: 1701295200,
-            txID: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
-            txOrigin: account,
-          },
-          outputs: [
-            {
-              contractAddress: null,
-              events: [
-                {
-                  address: chain.trader,
-                  topics: [
-                    "0x7cf7f245e0ac9ee076d209114cedb03ee23c22f397ad7c400bfc99bbfa885933",
-                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
-                  ],
-                  data: "0x0000000000000000000000000000000000000000000000004563918244f40000",
-                },
-              ],
-              transfers: [],
-            },
-            {
-              contractAddress: null,
-              events: [
-                {
-                  address: chain.vtho,
-                  topics: [
-                    "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
-                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
-                    "0x0000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305",
-                  ],
-                  data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-                },
-              ],
-              transfers: [],
-            },
-          ],
-        });
-      },
-    ).as("signTxReceipt");
-    cy.getByCy("protocol-is-enabled-message").should("not.exist");
-    cy.getByCy("reserve-balance-input").type("5");
-
-    // Act
-    cy.getByCy("reserve-balance-input").type("{enter}");
-
-    // Assert
-    cy.wait(["@signTxReq", "@signTxRes"]);
-    cy.getByCy("network-error", { timeout: 20_000 }).contains(
-      "The transaction has been reverted.",
-    );
   });
 });
