@@ -77,7 +77,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
               ? "0x0000000000000000000000000000000000000000000000004563918244f40000"
               : // ^ 5 VTHO
                 "0x0000000000000000000000000000000000000000000000008ac7230489e80000";
-                // ^ 10 VTHO
+          // ^ 10 VTHO
 
           req.reply({
             statusCode: 200,
@@ -196,36 +196,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       cy.getByCy("spinner").should("be.visible");
     });
   });
-
-  xit("shows me the initial screen after revoking allowance", () => {
-    // Arrange
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
-      cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
-        req.reply({
-          statusCode: 200,
-          body: ,
-        });
-      }).as("signTxRes");
-      cy.intercept(
-        "GET",
-        "https://testnet.veblocks.net/transactions/0x30bb88830703234154f04c3dcff9b861e23523e543133aa875857243f006076b/receipt?head=*",
-        (req) => {
-          req.reply();
-        },
-      ).as("signTxReceipt");
-    cy.wait("@fetchContract");
-    cy.getByCy("revoke-allowance-button").should("be.enabled");
-
-    // Act
-    cy.getByCy("revoke-allowance-button").click();
-
-    // Assert
-    cy.wait("@signTxReq");
-    cy.getByCy("revoke-allowance-button").should("be.disabled");
-    cy.getByCy("revoke-allowance-button").within(() => {
-      cy.getByCy("spinner").should("be.visible");
-    });
-  })
 
   it("shows me the update reserve balance form after hitting the update reserve balance button", () => {
     // Arrange
