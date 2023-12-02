@@ -39,5 +39,5 @@
 </Button>
 
 {#if $vtho.error != null && $vtho.error.length > 0}
-  <p class="text-danger">ERROR: {$vtho.error}</p>
+  <p class="text-danger" data-cy="error-message">ERROR: {$vtho.error}</p>
 {/if}

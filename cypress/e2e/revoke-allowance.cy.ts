@@ -202,4 +202,70 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     });
     cy.getByCy("submit-form-button").should("be.visible");
   });
+
+  // TODO: VTHO allowance should not change in this case, should stay at 2^256 - 1
+    it("shows me an error message if the tx is requested", () => {
+    // Arrange
+    cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
+    cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
+      req.reply({
+        statusCode: 200,
+        body: {
+          payload: {
+            txid: "0xce47958b8c14484f5a39f361d02f244396f15dab0c73d49fc0a0bbaeceff3d98",
+            signer: account,
+          },
+        },
+      });
+    }).as("signTxRes");
+    cy.intercept(
+      "GET",
+      "https://testnet.veblocks.net/transactions/0xce47958b8c14484f5a39f361d02f244396f15dab0c73d49fc0a0bbaeceff3d98/receipt?head=*",
+      (req) => {
+        req.reply({
+          gasUsed: 26485,
+          gasPayer: account,
+          paid: "0x3acefabf8c32000",
+          reward: "0x11a47e6caa0f000",
+          reverted: true, // <-- tx has been rejected
+          meta: {
+            blockID:
+              "0x01059f3449f47f2016aee233fe2409266877b0ef7f327f5da5c224e1d5b6dc07",
+            blockNumber: 17145652,
+            blockTimestamp: 1701487890,
+            txID: "0xce47958b8c14484f5a39f361d02f244396f15dab0c73d49fc0a0bbaeceff3d98",
+            txOrigin: account,
+          },
+          outputs: [
+            {
+              contractAddress: null,
+              events: [
+                {
+                  address: chain.vtho,
+                  topics: [
+                    "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                    "0x0000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305",
+                  ],
+                  data: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                },
+              ],
+              transfers: [],
+            },
+          ],
+        });
+      },
+    ).as("signTxReceipt");
+    cy.wait("@fetchContract");
+    cy.getByCy("revoke-allowance-button").should("be.enabled");
+
+    // Act
+    cy.getByCy("revoke-allowance-button").click();
+
+    // Assert
+    cy.wait(["@signTxReq", "@signTxRes", "@signTxReceipt"], {
+      timeout: 20_000,
+    });
+    cy.getByCy("error-message").contains("The transaction has been reverted.")
+  });
 });
