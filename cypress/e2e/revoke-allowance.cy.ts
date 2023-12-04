@@ -57,7 +57,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
               ? "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
               : // ^ 2^256 -1 VTHO
                 "0x0000000000000000000000000000000000000000000000000000000000000000";
-                // ^ 0 VTHO
+          // ^ 0 VTHO
 
           req.reply({
             statusCode: 200,
@@ -204,7 +204,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   });
 
   // TODO: VTHO allowance should not change in this case, should stay at 2^256 - 1
-    it("shows me an error message if the tx is requested", () => {
+  it("shows me an error message if the tx is requested", () => {
     // Arrange
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
     cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
@@ -266,6 +266,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.wait(["@signTxReq", "@signTxRes", "@signTxReceipt"], {
       timeout: 20_000,
     });
-    cy.getByCy("error-message").contains("The transaction has been reverted.")
+    cy.getByCy("error-message").contains("The transaction has been reverted.");
   });
 });
