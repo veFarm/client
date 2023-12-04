@@ -68,8 +68,6 @@ export class Connex {
         }
 
         // Forward all other requests down the pipe.
-        console.log("PASS VTHO")
-        // req.continue();
       },
     )
   }
@@ -115,9 +113,7 @@ export class Connex {
           return;
         }
 
-        console.log("PASS Trader")
         // Forward all other requests down the pipe.
-        // req.continue();
       },
     )
   }

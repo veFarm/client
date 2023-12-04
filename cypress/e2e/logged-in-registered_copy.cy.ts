@@ -18,6 +18,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   beforeEach(() => {
     cy.viewport("macbook-15");
 
+    // TODO: stats should be visible
     api.mockGetAccountStats({statusCode: 404}).as("getAccountStats")
     api.mockGetAccountSwaps({statusCode: 404}).as("getAccountSwaps")
     api.mockGetTradeForecast({fixture: "trades-forecast.json"}).as("getTradesForecast")
@@ -34,7 +35,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me a success message", () => {
     // Arrange
-    // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
@@ -49,8 +49,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   it("shows me the trades forecast", () => {
     // Arrange
     cy.wait(["@getTradesForecast", "@fetchAllowance", "@fetchReserveBalance"]);
-    // cy.wait("@fetchContract");
-    // cy.wait("@getTradesForecast");
 
     // Act
 
@@ -60,7 +58,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the update reserve balance button", () => {
     // Arrange
-    // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
@@ -72,7 +69,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the revoke allowance button", () => {
     // Arrange
-    // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
@@ -85,7 +81,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   it("sends me a sign tx request after I click the revoke allowance button", () => {
     // Arrange
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
-    // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
@@ -111,7 +106,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   it("shows me a spinner after I click the revoke allowance button", () => {
     // Arrange
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
-    // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
     cy.getByCy("revoke-allowance-button").should("be.enabled");
 
@@ -128,7 +122,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the update reserve balance form after hitting the update reserve balance button", () => {
     // Arrange
-    // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
@@ -142,7 +135,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   context("update reserve balance form", () => {
     it("shows me a cancel button that takes me to the back to success massage screen", () => {
       // Arrange
-      // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
 
@@ -155,7 +147,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     it("does NOT allow me to submit the form until I enter a new reserve balance amount", () => {
       // Arrange
-      // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
       cy.getByCy("update-reserve-balance-button").should("be.disabled");
@@ -171,7 +162,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     it("sends me a sign tx request after submitting the form with the new reserve balance amount", () => {
       // Arrange
       cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
-      // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
       cy.getByCy("update-reserve-balance-button").should("be.disabled");
@@ -201,7 +191,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     it("opens up the wallet after submitting the form", () => {
       // Arrange
-      // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
 
@@ -265,7 +254,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
           });
         },
       ).as("signTxReceipt");
-      // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
       cy.getByCy("update-reserve-balance-button").should("be.disabled");
@@ -336,7 +324,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
           });
         },
       ).as("signTxReceipt");
-      // cy.wait("@fetchContract");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
       cy.getByCy("update-reserve-balance-button").should("be.disabled");
