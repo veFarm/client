@@ -394,7 +394,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     );
   });
 
-  it.only("shows and error message if the tx is rejected", () => {
+  it("shows and error message if the tx is rejected", () => {
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
     cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
       req.reply({

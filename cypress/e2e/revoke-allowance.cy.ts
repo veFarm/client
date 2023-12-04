@@ -57,7 +57,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
               ? "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
               : // ^ 2^256 -1 VTHO
                 "0x0000000000000000000000000000000000000000000000000000000000000000";
-          // ^ 0 VTHO
+                // ^ 0 VTHO
 
           req.reply({
             statusCode: 200,
@@ -113,7 +113,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.visit("/");
   });
 
-  it("sends me a sign tx request after I click the revoke allowance button", () => {
+  it("sends me a sign tx request after clicking the revoke allowance button", () => {
     // Arrange
     cy.intercept("POST", "https://tos.vecha.in/*").as("signTxReq");
     cy.wait("@fetchContract");
