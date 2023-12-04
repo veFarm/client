@@ -1,8 +1,11 @@
 /// <reference types="cypress" />
 
-import { getSync2Iframe } from "../support/utils";
+import { Wallet } from "cypress/support/mocks/wallet";
 
+const walletId = "sync2";
 const account = "0x2057ca7412e6c0828501cb7b335e166f81c58d26";
+
+const wallet = new Wallet(walletId, account);
 
 describe("Logged out account", () => {
   before(() => {});
@@ -145,14 +148,14 @@ describe("Logged out account", () => {
 
   it("sends a sign cert request after hitting the Sync2 button", () => {
     // Arrange
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signCertReq");
+    wallet.spyOnSignTxRequest().as("signCertRequest");
 
     // Act
     cy.get("@connect-button").click();
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    cy.wait("@signCertReq").then((interception) => {
+    cy.wait("@signCertRequest").then((interception) => {
       const { type, payload } = interception.request.body;
 
       expect(type).to.eq("cert");
@@ -171,68 +174,35 @@ describe("Logged out account", () => {
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    getSync2Iframe().contains("Try out Sync2-lite");
+    wallet.getSync2Iframe().contains("Try out Sync2-lite");
   });
 
   it("logs me in after signing the certificate", () => {
     // Arrange
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signCertReq");
-    cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
-      req.reply({
-        statusCode: 200,
-        body: {
-          payload: {
-            annex: {
-              domain: "127.0.0.1:5173",
-              signer: account,
-              timestamp: 1701217618,
-            },
-            signature:
-              "0x353d78959165e3fe35b97bcd738d116f5567fab6e4d1c339a02f9aa48a27379b3785356e34886ec9596a53d840e848d4e6caa255d05e84544b777ab501a0a20f01",
-          },
-        },
-      });
-    }).as("signCertRes");
+    wallet.spyOnSignTxRequest().as("signCertRequest");
+    wallet.mockSignCertResponse().as("signCertResponse");
 
     // Act
     cy.get("@connect-button").click();
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    cy.wait("@signCertReq");
-    cy.wait("@signCertRes");
+    cy.wait(["@signCertRequest", "@signCertResponse"]);
     cy.contains("Your Trades");
     // ^ Indicates that the account logged in successfully
   });
 
   it("errors if I provide an INVALID certificate", () => {
     // Arrange
-    cy.intercept("POST", "https://tos.vecha.in/*").as("signCertReq");
-    cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
-      req.reply({
-        statusCode: 200,
-        body: {
-          payload: {
-            annex: {
-              domain: "127.0.0.1:5173",
-              signer: account,
-              timestamp: 1701217618,
-            },
-            signature:
-              "0x053d78959165e3fe35b97bcd738d116f5567fab6e4d1c339a02f9aa48a27379b3785356e34886ec9596a53d840e848d4e6caa255d05e84544b777ab501a0a20f01",
-            // ^ Replaced first digit to make and invalid certificate
-          },
-        },
-      });
-    }).as("signCertRes");
+    wallet.spyOnSignTxRequest().as("signCertRequest");
+    wallet.mockSignCertResponse(false).as("signCertResponse");
 
     // Act
     cy.get("@connect-button").click();
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
-    cy.wait("@signCertReq");
-    cy.wait("@signCertRes");
+    cy.wait(["@signCertRequest", "@signCertResponse"]);
     cy.getByCy("wallet-modal-error").contains("invalid point");
   });
 });

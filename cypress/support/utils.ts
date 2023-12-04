@@ -1,5 +1,8 @@
 /// <reference types="cypress" />
 
+/**
+ * @deprecated
+ */
 export function getSync2Iframe(): Cypress.Chainable {
   return cy
     .get("iframe", { timeout: 10_000 })

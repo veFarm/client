@@ -49,7 +49,7 @@ describe("Update reserve balance accepted", () => {
 
   it("shows me a new success message after the tx has been mined", () => {
     // Arrange
-    wallet.signTx().as("signTxRequest");
+    wallet.spyOnSignTxRequest().as("signTxRequest");
     wallet.mockUpdateReserveBalanceTxResponse().as("signTxResponse");
     connex.mockUpdateReserveBalanceTxReceipt().as("signTxReceipt");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);

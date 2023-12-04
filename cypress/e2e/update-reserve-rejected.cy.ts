@@ -47,7 +47,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me an error message if the tx is rejected", () => {
     // Arrange
-    wallet.signTx().as("signTxRequest");
+    wallet.spyOnSignTxRequest().as("signTxRequest");
     wallet.mockUpdateReserveBalanceTxResponse().as("signTxResponse");
     connex.mockUpdateReserveBalanceTxReceipt(true).as("signTxReceipt");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);

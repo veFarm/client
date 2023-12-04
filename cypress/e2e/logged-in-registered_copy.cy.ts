@@ -92,7 +92,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("sends me a sign tx request after I click the revoke allowance button", () => {
     // Arrange
-    wallet.signTx().as("signTxRequest");
+    wallet.spyOnSignTxRequest().as("signTxRequest");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
@@ -117,7 +117,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me a spinner after I click the revoke allowance button", () => {
     // Arrange
-    wallet.signTx().as("signTxRequest");
+    wallet.spyOnSignTxRequest().as("signTxRequest");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
     cy.getByCy("revoke-allowance-button").should("be.enabled");
 
@@ -172,7 +172,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     it("sends me a sign tx request after submitting the form with the new reserve balance amount", () => {
       // Arrange
-      wallet.signTx().as("signTxRequest");
+      wallet.spyOnSignTxRequest().as("signTxRequest");
       cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
       cy.getByCy("update-reserve-balance-button").should("be.disabled");
