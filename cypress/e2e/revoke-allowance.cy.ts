@@ -32,9 +32,7 @@ describe("Revoke allowance", () => {
       .as("getTradesForecast");
 
     // Simulate a registered account holding a positive balance.
-    connex
-      .mockFetchVTHOAllowance(MAX_ALLOWANCE)
-      .as("fetchAllowance");
+    connex.mockFetchVTHOAllowance(MAX_ALLOWANCE).as("fetchAllowance");
     connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
     connex
       .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
@@ -46,7 +44,7 @@ describe("Revoke allowance", () => {
 
   it("sends me a sign tx request after clicking the revoke allowance button", () => {
     // Arrange
-    wallet.spyOnSignTxRequest().as("signTxRequest");
+    wallet.spyOnSignTxRequest().as("revokeTxRequest");
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
@@ -54,7 +52,7 @@ describe("Revoke allowance", () => {
     cy.getByCy("revoke-allowance-button").click();
 
     // Assert
-    cy.wait("@signTxRequest").then((interception) => {
+    cy.wait("@revokeTxRequest").then((interception) => {
       const { type, payload } = interception.request.body;
 
       expect(type).to.eq("tx");
@@ -76,19 +74,27 @@ describe("Revoke allowance", () => {
       .mockFetchVTHOAllowance([MAX_ALLOWANCE, ZERO_ALLOWANCE])
       .as("fetchAllowance");
     // ^ Replace the existing mock to simulate a revoked allowance situation.
-    wallet.spyOnSignTxRequest().as("signTxRequest");
-    wallet.mockSignTxResponse(REVOKE_ALLOWANCE_TX_ID).as("signTxResponse");
+    wallet.spyOnSignTxRequest().as("revokeTxRequest");
+    wallet.mockSignTxResponse(REVOKE_ALLOWANCE_TX_ID).as("revokeTxResponse");
     connex
       .mockRevokeAllowanceTxReceipt(REVOKE_ALLOWANCE_TX_ID, "mined")
-      .as("signTxReceipt");
+      .as("revokeTxReceipt");
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
     cy.getByCy("revoke-allowance-button").click();
-    cy.wait(["@signTxRequest", "@signTxResponse", "@signTxReceipt", "@fetchAllowance"], {
-      timeout: 20_000,
-    });
+    cy.wait(
+      [
+        "@revokeTxRequest",
+        "@revokeTxResponse",
+        "@revokeTxReceipt",
+        "@fetchAllowance",
+      ],
+      {
+        timeout: 20_000,
+      },
+    );
 
     // Assert
     cy.getByCy("submit-form-button").should("be.visible");
@@ -96,19 +102,27 @@ describe("Revoke allowance", () => {
 
   it("shows me an error message if the tx is reverted", () => {
     // Arrange
-    wallet.spyOnSignTxRequest().as("signTxRequest");
-    wallet.mockSignTxResponse(REVOKE_ALLOWANCE_TX_ID).as("signTxResponse");
+    wallet.spyOnSignTxRequest().as("revokeTxRequest");
+    wallet.mockSignTxResponse(REVOKE_ALLOWANCE_TX_ID).as("revokeTxResponse");
     connex
       .mockRevokeAllowanceTxReceipt(REVOKE_ALLOWANCE_TX_ID, "reverted")
-      .as("signTxReceipt");
+      .as("revokeTxReceipt");
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
     cy.getByCy("revoke-allowance-button").click();
-    cy.wait(["@signTxRequest", "@signTxResponse", "@signTxReceipt", "@fetchAllowance"], {
-      timeout: 20_000,
-    });
+    cy.wait(
+      [
+        "@revokeTxRequest",
+        "@revokeTxResponse",
+        "@revokeTxReceipt",
+        "@fetchAllowance",
+      ],
+      {
+        timeout: 20_000,
+      },
+    );
 
     // Assert
     cy.getByCy("error-message").contains("The transaction has been reverted.");
