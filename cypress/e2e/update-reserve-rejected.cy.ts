@@ -37,9 +37,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
       .as("fetchBalance");
     connex.mockFetchVTHOAllowance(MAX_ALLOWANCE).as("fetchAllowance");
-    connex
-      .mockFetchTraderReserve(FIVE_VTHO)
-      .as("fetchReserveBalance");
+    connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
 
     // Simulate a logged in account.
     localStorage.setItem("user", JSON.stringify({ walletId, account }));
@@ -47,29 +45,29 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.visit("/");
   });
 
-      it("shows me an error message if the tx is rejected", () => {
-        // Arrange
-        wallet.signTx().as("signTxRequest");
-        wallet.mockUpdateReserveBalanceTxResponse().as("signTxResponse");
-        connex.mockUpdateReserveBalanceTxReceipt(true).as("signTxReceipt");
-        cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
-        cy.getByCy("goto-update-reserve-balance-button").click();
-        cy.getByCy("update-reserve-balance-button").should("be.disabled");
+  it("shows me an error message if the tx is rejected", () => {
+    // Arrange
+    wallet.signTx().as("signTxRequest");
+    wallet.mockUpdateReserveBalanceTxResponse().as("signTxResponse");
+    connex.mockUpdateReserveBalanceTxReceipt(true).as("signTxReceipt");
+    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
+    cy.getByCy("goto-update-reserve-balance-button").click();
+    cy.getByCy("update-reserve-balance-button").should("be.disabled");
 
-        // Act
-        cy.getByCy("reserve-balance-input").clear();
-        cy.getByCy("reserve-balance-input").type("10");
-        cy.getByCy("reserve-balance-input").type("{enter}");
+    // Act
+    cy.getByCy("reserve-balance-input").clear();
+    cy.getByCy("reserve-balance-input").type("10");
+    cy.getByCy("reserve-balance-input").type("{enter}");
 
-        // Assert
-        cy.wait([
-          "@signTxRequest",
-          "@signTxResponse",
-          "@fetchAllowance",
-          "@fetchReserveBalance",
-        ]);
-        cy.getByCy("network-error", { timeout: 20_000 }).contains(
-          "The transaction has been reverted.",
-        );
-      });
+    // Assert
+    cy.wait([
+      "@signTxRequest",
+      "@signTxResponse",
+      "@fetchAllowance",
+      "@fetchReserveBalance",
+    ]);
+    cy.getByCy("network-error", { timeout: 20_000 }).contains(
+      "The transaction has been reverted.",
+    );
+  });
 });

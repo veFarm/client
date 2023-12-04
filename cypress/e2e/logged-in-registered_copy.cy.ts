@@ -37,9 +37,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
       .as("fetchBalance");
     connex.mockFetchVTHOAllowance(MAX_ALLOWANCE).as("fetchAllowance");
-    connex
-      .mockFetchTraderReserve(FIVE_VTHO)
-      .as("fetchReserveBalance");
+    connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
 
     // Simulate a logged in account.
     localStorage.setItem("user", JSON.stringify({ walletId, account }));
