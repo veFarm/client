@@ -23,7 +23,8 @@ const wallet = new Wallet(walletId, account);
 
 describe("Logged in REGISTERED POSITIVE balance account", () => {
   beforeEach(() => {
-    cy.viewport("macbook-15");
+    // Simulate a logged in registered account holding a positive balance.
+    wallet.simulateLoggedInAccount();
 
     // TODO: stats should be visible
     api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
@@ -38,9 +39,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       .as("fetchBalance");
     connex.mockFetchVTHOAllowance(MAX_ALLOWANCE).as("fetchAllowance");
     connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
-
-    // Simulate a logged in account.
-    localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
     cy.visit("/");
   });

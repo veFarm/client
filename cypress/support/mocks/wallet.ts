@@ -2,6 +2,8 @@
 
 import type { WalletId } from "@/typings/types";
 
+export type CertStatus = "valid" | "invalid"
+
 /**
  * Class to intercept and mock API calls aimed to the wallet.
  */
@@ -10,6 +12,13 @@ export class Wallet {
     private readonly walletId: WalletId,
     private readonly account: Address,
   ) {}
+
+  /**
+   * Simulate a logged out account.
+   */
+  simulateLoggedOutAccount() {
+    cy.clearLocalStorage();
+  }
 
   /**
    * Simulate a logged in account.
@@ -62,11 +71,12 @@ export class Wallet {
 
   /**
    * Mock a certificate request signature.
-   * @param {boolean} valid. Whether or not the mocked signature should be valid.
-   * It defaults to `true`.
+   * @param {CertStatus} certStatus. Whether or not the mocked signature should be valid.
    * @return Mocked request.
    */
-  mockSignCertResponse(valid = true) {
+  mockSignCertResponse(certStatus: CertStatus) {
+    const valid = certStatus === "valid"
+
     return cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
       req.reply({
         statusCode: 200,

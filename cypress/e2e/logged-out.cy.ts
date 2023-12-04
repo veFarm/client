@@ -11,12 +11,7 @@ describe("Logged out account", () => {
   before(() => {});
 
   beforeEach(() => {
-    cy.viewport("macbook-15");
-
-    // Ensure account is NOT connected.
-    cy.clearLocalStorage();
-    // ^ Actually this is not required; Cypress does this
-    // by default when test isolation is enabled.
+    wallet.simulateLoggedOutAccount()
 
     cy.visit("/");
 
@@ -144,65 +139,5 @@ describe("Logged out account", () => {
     cy.getByCy("wallet-provider-button-veworld").within(() => {
       cy.getByCy("spinner").should("be.visible");
     });
-  });
-
-  it("sends a sign cert request after hitting the Sync2 button", () => {
-    // Arrange
-    wallet.spyOnSignTxRequest().as("signCertRequest");
-
-    // Act
-    cy.get("@connect-button").click();
-    cy.getByCy("wallet-provider-button-sync2").click();
-
-    // Assert
-    cy.wait("@signCertRequest").then((interception) => {
-      const { type, payload } = interception.request.body;
-
-      expect(type).to.eq("cert");
-      expect(payload.message.purpose).to.equal("identification");
-      expect(payload.message.payload.content).to.equal(
-        "Sign a certificate to prove your identity.",
-      );
-    });
-  });
-
-  it("opens the sync2 buddy when trying to connect with Sync2", () => {
-    // Arrange
-
-    // Act
-    cy.get("@connect-button").click();
-    cy.getByCy("wallet-provider-button-sync2").click();
-
-    // Assert
-    wallet.getSync2Iframe().contains("Try out Sync2-lite");
-  });
-
-  it("logs me in after signing the certificate", () => {
-    // Arrange
-    wallet.spyOnSignTxRequest().as("signCertRequest");
-    wallet.mockSignCertResponse().as("signCertResponse");
-
-    // Act
-    cy.get("@connect-button").click();
-    cy.getByCy("wallet-provider-button-sync2").click();
-
-    // Assert
-    cy.wait(["@signCertRequest", "@signCertResponse"]);
-    cy.contains("Your Trades");
-    // ^ Indicates that the account logged in successfully
-  });
-
-  it("errors if I provide an INVALID certificate", () => {
-    // Arrange
-    wallet.spyOnSignTxRequest().as("signCertRequest");
-    wallet.mockSignCertResponse(false).as("signCertResponse");
-
-    // Act
-    cy.get("@connect-button").click();
-    cy.getByCy("wallet-provider-button-sync2").click();
-
-    // Assert
-    cy.wait(["@signCertRequest", "@signCertResponse"]);
-    cy.getByCy("wallet-modal-error").contains("invalid point");
   });
 });

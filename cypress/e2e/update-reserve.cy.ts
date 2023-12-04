@@ -43,9 +43,9 @@ describe("Update reserve balance", () => {
     wallet.spyOnSignTxRequest().as("updateTxRequest");
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
+    cy.getByCy("goto-update-reserve-balance-button").click();
 
     // Act
-    cy.getByCy("goto-update-reserve-balance-button").click();
     cy.getByCy("reserve-balance-input").clear().type("10").type("{enter}");
 
     // Assert
@@ -81,9 +81,9 @@ describe("Update reserve balance", () => {
       .as("updateTxReceipt");
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
+    cy.getByCy("goto-update-reserve-balance-button").click();
 
     // Act
-    cy.getByCy("goto-update-reserve-balance-button").click();
     cy.getByCy("reserve-balance-input").clear().type("10").type("{enter}");
     cy.wait(
       [
@@ -117,9 +117,9 @@ describe("Update reserve balance", () => {
       .as("updateTxReceipt");
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
+    cy.getByCy("goto-update-reserve-balance-button").click();
 
     // Act
-    cy.getByCy("goto-update-reserve-balance-button").click();
     cy.getByCy("reserve-balance-input").clear().type("10").type("{enter}");
     cy.wait(
       [
