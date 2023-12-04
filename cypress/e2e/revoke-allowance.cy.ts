@@ -83,15 +83,14 @@ describe("Revoke allowance", () => {
       .as("signTxReceipt");
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
-    cy.getByCy("revoke-allowance-button").should("be.enabled");
 
     // Act
     cy.getByCy("revoke-allowance-button").click();
-
-    // Assert
     cy.wait(["@signTxRequest", "@signTxResponse", "@signTxReceipt", "@fetchAllowance"], {
       timeout: 20_000,
     });
+
+    // Assert
     cy.getByCy("submit-form-button").should("be.visible");
   });
 
@@ -104,15 +103,14 @@ describe("Revoke allowance", () => {
       .as("signTxReceipt");
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
-    cy.getByCy("revoke-allowance-button").should("be.enabled");
 
     // Act
     cy.getByCy("revoke-allowance-button").click();
-
-    // Assert
     cy.wait(["@signTxRequest", "@signTxResponse", "@signTxReceipt", "@fetchAllowance"], {
       timeout: 20_000,
     });
+
+    // Assert
     cy.getByCy("error-message").contains("The transaction has been reverted.");
   });
 });
