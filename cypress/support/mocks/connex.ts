@@ -7,6 +7,8 @@ export const ZERO_ALLOWANCE =
 export const MAX_ALLOWANCE =
   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
+export type TxStatus = "reverted" | "mined"
+
 /**
  * Class to intercept and mock API calls aimed to the VThor blockchain.
  */
@@ -122,7 +124,15 @@ export class Connex {
     );
   }
 
-  mockUpdateReserveBalanceTxReceipt(reverted = false) {
+  /**
+   * Mock an update reserve balance tx receipt.
+   * @param {string} txId Transaction id.
+   * @param {TxStatus} txStatus Transaction status.
+   * @returns
+   */
+  mockUpdateReserveBalanceTxReceipt(txId: string, txStatus: TxStatus) {
+    const reverted = txStatus === "reverted"
+
     return cy.intercept(
       "GET",
       "https://testnet.veblocks.net/transactions/0x30bb88830703234154f04c3dcff9b861e23523e543133aa875857243f006076b/receipt?head=*",
@@ -138,27 +148,82 @@ export class Connex {
               "0x010576bc63c0198ac62c2114479551346178550dba3bee19a4a8c118ede80550",
             blockNumber: 17135292,
             blockTimestamp: 1701384290,
-            txID: "0x30bb88830703234154f04c3dcff9b861e23523e543133aa875857243f006076b",
+            txID: txId,
             txOrigin: this.account,
           },
-          outputs: [
-            {
-              contractAddress: null,
-              events: [
+          outputs: reverted
+            ? []
+            : [
                 {
-                  address: chain.trader,
-                  topics: [
-                    "0x7cf7f245e0ac9ee076d209114cedb03ee23c22f397ad7c400bfc99bbfa885933",
-                    "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                  contractAddress: null,
+                  events: [
+                    {
+                      address: chain.trader,
+                      topics: [
+                        "0x7cf7f245e0ac9ee076d209114cedb03ee23c22f397ad7c400bfc99bbfa885933",
+                        "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                      ],
+                      data: "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+                    },
                   ],
-                  data: "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+                  transfers: [],
                 },
               ],
-              transfers: [],
-            },
-          ],
         });
       },
     );
+  }
+
+  /**
+   * Mock a revoke allowance tx receipt.
+   * @param {string} txId Transaction id.
+   * @param {TxStatus} txStatus Transaction status.
+   * @returns
+   */
+  mockRevokeAllowanceTxReceipt(txId: string, txStatus: TxStatus) {
+    const reverted = txStatus === "reverted"
+
+    return cy
+      .intercept(
+        "GET",
+        "https://testnet.veblocks.net/transactions/0xce47958b8c14484f5a39f361d02f244396f15dab0c73d49fc0a0bbaeceff3d98/receipt?head=*",
+        (req) => {
+          req.reply({
+            gasUsed: 26485,
+            gasPayer: this.account,
+            paid: "0x3acefabf8c32000",
+            reward: "0x11a47e6caa0f000",
+            reverted,
+            meta: {
+              blockID:
+                "0x01059f3449f47f2016aee233fe2409266877b0ef7f327f5da5c224e1d5b6dc07",
+              blockNumber: 17145652,
+              blockTimestamp: 1701487890,
+              txID: txId,
+              txOrigin: this.account,
+            },
+            outputs: reverted
+              ? []
+              : [
+                  {
+                    contractAddress: null,
+                    events: [
+                      {
+                        address: chain.vtho,
+                        topics: [
+                          "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                          "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                          "0x0000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305",
+                        ],
+                        data: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                      },
+                    ],
+                    transfers: [],
+                  },
+                ],
+          });
+        },
+      )
+      .as("signTxReceipt");
   }
 }

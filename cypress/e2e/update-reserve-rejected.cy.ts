@@ -1,14 +1,8 @@
 /// <reference types="cypress" />
 
-import { chain } from "@/config/index";
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
-import {
-  Connex,
-  ZERO_ALLOWANCE,
-  MAX_ALLOWANCE,
-} from "cypress/support/mocks/connex";
-import { getSync2Iframe } from "cypress/support/utils";
+import { Connex, MAX_ALLOWANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
@@ -47,9 +41,15 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me an error message if the tx is rejected", () => {
     // Arrange
+    const UPDATE_RESERVE_BALANCE_TX_ID =
+      "0x30bb88830703234154f04c3dcff9b861e23523e543133aa875857243f006076b";
     wallet.spyOnSignTxRequest().as("signTxRequest");
-    wallet.mockUpdateReserveBalanceTxResponse().as("signTxResponse");
-    connex.mockUpdateReserveBalanceTxReceipt(true).as("signTxReceipt");
+    wallet
+      .mockSignTxResponse(UPDATE_RESERVE_BALANCE_TX_ID)
+      .as("signTxResponse");
+    connex
+      .mockUpdateReserveBalanceTxReceipt(UPDATE_RESERVE_BALANCE_TX_ID, true)
+      .as("signTxReceipt");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
     cy.getByCy("goto-update-reserve-balance-button").click();
     cy.getByCy("update-reserve-balance-button").should("be.disabled");

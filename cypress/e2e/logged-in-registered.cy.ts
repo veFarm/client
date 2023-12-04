@@ -32,6 +32,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       .mockGetTradeForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
+    // Simulate a registered account with a positive balance
     connex
       .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
       .as("fetchBalance");
@@ -195,7 +196,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
             "Please approve the following action(s):Save reserve balance into the VeFarm contract.",
         });
       });
-    })
+    });
 
     it("opens up the wallet after submitting the form", () => {
       // Arrange

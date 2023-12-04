@@ -24,7 +24,7 @@ export class Wallet {
   }
 
   /**
-   * Intercept a sign tx request and add assertions to it.
+   * Intercept a sign tx request and add assertions on top of it.
    * @return Spied on request.
    */
   spyOnSignTxRequest() {
@@ -32,16 +32,17 @@ export class Wallet {
   }
 
   /**
-   * Mock an update reserve balance request signature.
+   * Mock a sign tx request for the given tx id.
+   * @param {string} txId Transaction id.
    * @return Mocked request.
    */
-  mockUpdateReserveBalanceTxResponse() {
+  mockSignTxResponse(txId: string) {
     return cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
       req.reply({
         statusCode: 200,
         body: {
           payload: {
-            txid: "0x30bb88830703234154f04c3dcff9b861e23523e543133aa875857243f006076b",
+            txid: txId,
             signer: this.account,
           },
         },
