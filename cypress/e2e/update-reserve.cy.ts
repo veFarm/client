@@ -36,28 +36,6 @@ describe("Update reserve balance", () => {
     connex
       .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
       .as("fetchBalance");
-
-    // cy.viewport("macbook-15");
-
-    // // TODO: stats should be visible
-    // api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
-    // api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
-    // api
-    //   .mockGetTradeForecast({ fixture: "trades-forecast.json" })
-    //   .as("getTradesForecast");
-
-    // connex
-    //   .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
-    //   .as("fetchBalance");
-    // connex.mockFetchVTHOAllowance(MAX_ALLOWANCE).as("fetchAllowance");
-    // connex
-    //   .mockFetchTraderReserve([FIVE_VTHO, TEN_VTHO])
-    //   .as("fetchReserveBalance");
-
-    // // Simulate a logged in account.
-    // localStorage.setItem("user", JSON.stringify({ walletId, account }));
-
-    // cy.visit("/");
   });
 
   it("sends me a sign tx request after submitting the form with a new reserve balance amount", () => {

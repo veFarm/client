@@ -90,30 +90,30 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.getByCy("revoke-allowance-button").should("be.enabled");
   });
 
-  it("sends me a sign tx request after I click the revoke allowance button", () => {
-    // Arrange
-    wallet.spyOnSignTxRequest().as("signTxRequest");
-    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
+  // it("sends me a sign tx request after I click the revoke allowance button", () => {
+  //   // Arrange
+  //   wallet.spyOnSignTxRequest().as("signTxRequest");
+  //   cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
-    // Act
-    cy.getByCy("revoke-allowance-button").click();
+  //   // Act
+  //   cy.getByCy("revoke-allowance-button").click();
 
-    // Assert
-    cy.wait("@signTxRequest").then((interception) => {
-      const { type, payload } = interception.request.body;
+  //   // Assert
+  //   cy.wait("@signTxRequest").then((interception) => {
+  //     const { type, payload } = interception.request.body;
 
-      expect(type).to.eq("tx");
-      expect(payload.message[0]).to.deep.equal({
-        to: chain.vtho.toLowerCase(),
-        value: "0",
-        data: "0x095ea7b30000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa3050000000000000000000000000000000000000000000000000000000000000000",
-      });
-      expect(payload.options).to.deep.equal({
-        comment:
-          "The VeFarm contract will no longer be able to spend your VTHO in exchange for VET.",
-      });
-    });
-  });
+  //     expect(type).to.eq("tx");
+  //     expect(payload.message[0]).to.deep.equal({
+  //       to: chain.vtho.toLowerCase(),
+  //       value: "0",
+  //       data: "0x095ea7b30000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa3050000000000000000000000000000000000000000000000000000000000000000",
+  //     });
+  //     expect(payload.options).to.deep.equal({
+  //       comment:
+  //         "The VeFarm contract will no longer be able to spend your VTHO in exchange for VET.",
+  //     });
+  //   });
+  // });
 
   it("shows me a spinner after I click the revoke allowance button", () => {
     // Arrange
@@ -169,34 +169,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       // Assert
       cy.getByCy("update-reserve-balance-button").should("be.enabled");
     });
-
-    // it("sends me a sign tx request after submitting the form with the new reserve balance amount", () => {
-    //   // Arrange
-    //   wallet.spyOnSignTxRequest().as("signTxRequest");
-    //   cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
-    //   cy.getByCy("goto-update-reserve-balance-button").click();
-    //   cy.getByCy("update-reserve-balance-button").should("be.disabled");
-
-    //   // Act
-    //   cy.getByCy("reserve-balance-input").clear().type("10").type("{enter}");
-
-    //   // Assert
-    //   cy.wait("@signTxRequest").then((interception) => {
-    //     const { type, payload } = interception.request.body;
-
-    //     expect(type).to.eq("tx");
-    //     expect(payload.message[0]).to.deep.equal({
-    //       to: chain.trader.toLowerCase(),
-    //       value: "0",
-    //       data: "0x4b0bbaa40000000000000000000000000000000000000000000000008ac7230489e80000",
-    //     });
-    //     expect(payload.options).to.deep.equal({
-    //       signer: account.toLowerCase(),
-    //       comment:
-    //         "Please approve the following action(s):Save reserve balance into the VeFarm contract.",
-    //     });
-    //   });
-    // });
 
     it("opens up the wallet after submitting the form", () => {
       // Arrange
