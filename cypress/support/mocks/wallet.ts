@@ -15,7 +15,10 @@ export class Wallet {
    * Simulate a logged in account.
    */
   simulateLoggedInAccount() {
-    localStorage.setItem("user", JSON.stringify({ walletId: this.walletId, account: this.account }));
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ walletId: this.walletId, account: this.account }),
+    );
   }
 
   /**

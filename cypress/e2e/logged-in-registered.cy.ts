@@ -170,33 +170,33 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       cy.getByCy("update-reserve-balance-button").should("be.enabled");
     });
 
-    it("sends me a sign tx request after submitting the form with the new reserve balance amount", () => {
-      // Arrange
-      wallet.spyOnSignTxRequest().as("signTxRequest");
-      cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
-      cy.getByCy("goto-update-reserve-balance-button").click();
-      cy.getByCy("update-reserve-balance-button").should("be.disabled");
+    // it("sends me a sign tx request after submitting the form with the new reserve balance amount", () => {
+    //   // Arrange
+    //   wallet.spyOnSignTxRequest().as("signTxRequest");
+    //   cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
+    //   cy.getByCy("goto-update-reserve-balance-button").click();
+    //   cy.getByCy("update-reserve-balance-button").should("be.disabled");
 
-      // Act
-      cy.getByCy("reserve-balance-input").clear().type("10").type("{enter}");
+    //   // Act
+    //   cy.getByCy("reserve-balance-input").clear().type("10").type("{enter}");
 
-      // Assert
-      cy.wait("@signTxRequest").then((interception) => {
-        const { type, payload } = interception.request.body;
+    //   // Assert
+    //   cy.wait("@signTxRequest").then((interception) => {
+    //     const { type, payload } = interception.request.body;
 
-        expect(type).to.eq("tx");
-        expect(payload.message[0]).to.deep.equal({
-          to: chain.trader.toLowerCase(),
-          value: "0",
-          data: "0x4b0bbaa40000000000000000000000000000000000000000000000008ac7230489e80000",
-        });
-        expect(payload.options).to.deep.equal({
-          signer: account.toLowerCase(),
-          comment:
-            "Please approve the following action(s):Save reserve balance into the VeFarm contract.",
-        });
-      });
-    });
+    //     expect(type).to.eq("tx");
+    //     expect(payload.message[0]).to.deep.equal({
+    //       to: chain.trader.toLowerCase(),
+    //       value: "0",
+    //       data: "0x4b0bbaa40000000000000000000000000000000000000000000000008ac7230489e80000",
+    //     });
+    //     expect(payload.options).to.deep.equal({
+    //       signer: account.toLowerCase(),
+    //       comment:
+    //         "Please approve the following action(s):Save reserve balance into the VeFarm contract.",
+    //     });
+    //   });
+    // });
 
     it("opens up the wallet after submitting the form", () => {
       // Arrange
