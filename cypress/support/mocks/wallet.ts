@@ -12,6 +12,13 @@ export class Wallet {
   ) {}
 
   /**
+   * Simulate a logged in account.
+   */
+  simulateLoggedInAccount() {
+    localStorage.setItem("user", JSON.stringify({ walletId: this.walletId, account: this.account }));
+  }
+
+  /**
    * Look for the Sync2 Buddy iframe.
    * @return Iframe cypress subject
    */

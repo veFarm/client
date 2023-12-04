@@ -38,8 +38,7 @@ describe("Revoke allowance", () => {
       .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
       .as("fetchBalance");
 
-    // Simulate a logged in account.
-    localStorage.setItem("user", JSON.stringify({ walletId, account }));
+    wallet.simulateLoggedInAccount()
   });
 
   it("sends me a sign tx request after clicking the revoke allowance button", () => {
