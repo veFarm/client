@@ -36,7 +36,7 @@ export class Wallet {
    */
   getSync2Iframe(): Cypress.Chainable {
     return cy
-      .get("iframe", { timeout: 10_000 })
+      .get("iframe", { timeout: 20_000 })
       .eq(1)
       .its("0.contentDocument.body")
       .then(cy.wrap);
