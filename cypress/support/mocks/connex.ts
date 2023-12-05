@@ -121,7 +121,7 @@ export class Connex {
   }
 
   /**
-   * Mock an update reserve balance tx receipt.
+   * Mock update reserve balance tx receipt.
    * @param {string} txId Transaction id.
    * @param {TxStatus} txStatus Transaction status.
    * @returns
@@ -171,7 +171,7 @@ export class Connex {
   }
 
   /**
-   * Mock a revoke allowance tx receipt.
+   * Mock revoke allowance tx receipt.
    * @param {string} txId Transaction id.
    * @param {TxStatus} txStatus Transaction status.
    * @returns
@@ -222,7 +222,7 @@ export class Connex {
   }
 
   /**
-   * Mock a registration tx receipt.
+   * Mock register tx receipt.
    * @param {string} txId Transaction id.
    * @param {TxStatus} txStatus Transaction status.
    * @returns
@@ -265,6 +265,57 @@ export class Connex {
                   ],
                   transfers: [],
                 },
+                {
+                  contractAddress: null,
+                  events: [
+                    {
+                      address: chain.vtho,
+                      topics: [
+                        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                        "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                        "0x0000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305",
+                      ],
+                      data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                    },
+                  ],
+                  transfers: [],
+                },
+              ],
+        });
+      },
+    );
+  }
+
+  /**
+   * Mock approve allowance tx receipt.
+   * @param {string} txId Transaction id.
+   * @param {TxStatus} txStatus Transaction status.
+   * @returns
+   */
+  mockApproveAllowanceTxReceipt(txId: string, txStatus: TxStatus) {
+    const reverted = txStatus === "reverted";
+
+    return cy.intercept(
+      "GET",
+      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      (req) => {
+        req.reply({
+          gasUsed: 47209,
+          gasPayer: this.account,
+          paid: "0x68d335a9003a000",
+          reward: "0x1f72901919ab000",
+          reverted,
+          meta: {
+            blockID:
+              "0x0106032640c2767e7a2e418d7835a7812d246f5b9915fd914558787a6d22196d",
+            blockNumber: 17171238,
+            blockTimestamp: 1701743750,
+            txID: txId,
+            txOrigin: "0x73c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+          },
+          outputs: reverted
+            ? []
+            : [
                 {
                   contractAddress: null,
                   events: [
