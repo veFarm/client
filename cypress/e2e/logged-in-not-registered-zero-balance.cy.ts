@@ -1,96 +1,43 @@
 /// <reference types="cypress" />
-import { chain } from "@/config/index";
+
+import {chain} from "@/config/index"
+import { Wallet } from "cypress/support/mocks/wallet";
+import { API } from "cypress/support/mocks/api";
+import { Connex, ZERO_ALLOWANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x2057ca7412E6C0828501CB7b335E166f81c58D26";
 
+const ZERO_VTHO =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+const api = new API(account);
+const connex = new Connex(account);
+const wallet = new Wallet(walletId, account);
+
 describe("Logged in NOT registered ZERO balance account", () => {
-  beforeEach(() => {
-    cy.viewport("macbook-15");
+    beforeEach(() => {
+    // Simulate a logged in NOT registered account holding a positive balance.
+    wallet.simulateLoggedInAccount();
 
-    // Intercept backend calls to simulate a not registered account
-    // (account record not found on DB).
-    cy.intercept("GET", `**/getaccountstats?account=${account}*`, {
-      statusCode: 404,
-    });
-
-    cy.intercept("GET", `**/getaccountswaps?account=${account}*`, {
-      statusCode: 404,
-    });
-
-    cy.intercept("GET", `**/gettradeforecast?account=${account}*`, {
+    // TODO: stats should be visible
+    api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
+    api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
+    api
+      .mockGetTradeForecast({
       statusCode: 200,
       body: { txFee: "2688830000000000000", solutions: [] },
-    });
+    })
+      .as("getTradesForecast");
 
-    // Simulate a zero balance account.
-    cy.intercept(
-      "GET",
-      `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`,
-      {
-        statusCode: 200,
-        body: {
-          balance: "0x0000000000000000000",
-          energy: "0x00000000000000000",
-          hasCode: false,
-        },
-      },
-    ).as("fetchBalance");
-
-    // Stub RPC method calls.
-    cy.intercept(
-      "POST",
-      "https://testnet.veblocks.net/accounts/*?revision=*",
-      (req) => {
-        const to = req?.body?.clauses[0]?.to;
-
-        // Stub VTHO allowance lookup.
-        if (to.toLowerCase() === chain.vtho.toLowerCase()) {
-          req.reply({
-            statusCode: 200,
-            body: [
-              {
-                data: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                events: [],
-                transfers: [],
-                gasUsed: 904,
-                reverted: false,
-                vmError: "",
-              },
-            ],
-          });
-
-          return;
-        }
-
-        // Stub Trader reserve balance lookup.
-        if (to.toLowerCase() === chain.trader.toLowerCase()) {
-          req.reply({
-            statusCode: 200,
-            body: [
-              {
-                data: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                events: [],
-                transfers: [],
-                gasUsed: 936,
-                reverted: false,
-                vmError: "",
-              },
-            ],
-          });
-
-          return;
-        }
-
-        // Forward all other requests to the original endpoint.
-        req.continue();
-      },
-    );
-
-    // Simulate a logged in account.
-    localStorage.setItem("user", JSON.stringify({ walletId, account }));
+    connex.mockFetchVTHOAllowance(ZERO_ALLOWANCE).as("fetchAllowance");
+    connex.mockFetchTraderReserve(ZERO_VTHO).as("fetchReserveBalance");
+    connex
+      .mockFetchBalance("0x0000000000000000000", "0x00000000000000000")
+      .as("fetchBalance");
 
     cy.visit("/");
+    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
   });
 
   it("shows me the title of the app and a short description", () => {
@@ -113,7 +60,6 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Act
 
     // Assert
-    cy.wait("@fetchBalance");
     cy.getByCy("navigation-bar").contains("0.00 VET");
     cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
   });
@@ -155,9 +101,9 @@ describe("Logged in NOT registered ZERO balance account", () => {
 
     // Act
     cy.reload();
+    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Assert
-    cy.wait("@fetchBalance");
     cy.getByCy("navigation-bar").contains("0.00 VET");
     cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
   });
@@ -178,7 +124,6 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Act
 
     // Assert
-    cy.wait("@fetchBalance");
     cy.getByCy("subtext").contains("Balance: 0.00");
   });
 
@@ -188,7 +133,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("submit-form-button").should("be.disabled");
 
     // Act
-    cy.getByCy("reserve-balance-input").type("0");
+    cy.getByCy("reserve-balance-input").clear().type("0");
 
     // Assert
     cy.getByCy("submit-form-button").should("be.disabled");
@@ -200,7 +145,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("submit-form-button").should("be.disabled");
 
     // Act
-    cy.getByCy("reserve-balance-input").type("10");
+    cy.getByCy("reserve-balance-input").clear().type("10");
 
     // Assert
     cy.getByCy("submit-form-button").should("be.enabled");
@@ -220,7 +165,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Arrange
 
     // Act
-    cy.getByCy("reserve-balance-input").type("10");
+    cy.getByCy("reserve-balance-input").clear().type("10");
 
     // Assert
     cy.getByCy("trades-forecast-table").should("not.exist");
