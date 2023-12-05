@@ -2,7 +2,7 @@
 
 import type { WalletId } from "@/typings/types";
 
-export type CertStatus = "valid" | "invalid"
+export type CertStatus = "valid" | "invalid";
 
 /**
  * Class to intercept and mock API calls aimed to the wallet.
@@ -75,7 +75,7 @@ export class Wallet {
    * @return Mocked request.
    */
   mockSignCertResponse(certStatus: CertStatus) {
-    const valid = certStatus === "valid"
+    const valid = certStatus === "valid";
 
     return cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
       req.reply({

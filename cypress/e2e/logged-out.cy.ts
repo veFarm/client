@@ -11,7 +11,7 @@ describe("Logged out account", () => {
   before(() => {});
 
   beforeEach(() => {
-    wallet.simulateLoggedOutAccount()
+    wallet.simulateLoggedOutAccount();
 
     cy.visit("/");
 

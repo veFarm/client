@@ -220,4 +220,69 @@ export class Connex {
       },
     );
   }
+
+  /**
+   * Mock a registration tx receipt.
+   * @param {string} txId Transaction id.
+   * @param {TxStatus} txStatus Transaction status.
+   * @returns
+   */
+  mockRegisterTxReceipt(txId: string, txStatus: TxStatus) {
+    const reverted = txStatus === "reverted";
+
+    return cy.intercept(
+      "GET",
+      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      (req) => {
+        req.reply({
+          gasUsed: 86147,
+          gasPayer: this.account,
+          paid: "0xbf48e6696a7e000",
+          reward: "0x3962ab860659000",
+          reverted,
+          meta: {
+            blockID:
+              "0x010553ef49b3bea9b39ecfc7066504f5632f4889cbf68cbd051281d69bea7ad2",
+            blockNumber: 17126383,
+            blockTimestamp: 1701295200,
+            txID: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
+            txOrigin: this.account,
+          },
+          outputs: reverted
+            ? []
+            : [
+                {
+                  contractAddress: null,
+                  events: [
+                    {
+                      address: chain.trader,
+                      topics: [
+                        "0x7cf7f245e0ac9ee076d209114cedb03ee23c22f397ad7c400bfc99bbfa885933",
+                        "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                      ],
+                      data: "0x0000000000000000000000000000000000000000000000004563918244f40000",
+                    },
+                  ],
+                  transfers: [],
+                },
+                {
+                  contractAddress: null,
+                  events: [
+                    {
+                      address: chain.vtho,
+                      topics: [
+                        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+                        "0x00000000000000000000000073c6ad04b4cea2840a6f0c69e4ecace694d3444d",
+                        "0x0000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa305",
+                      ],
+                      data: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                    },
+                  ],
+                  transfers: [],
+                },
+              ],
+        });
+      },
+    );
+  }
 }

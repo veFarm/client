@@ -189,9 +189,9 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
     // Act
     cy.reload();
+    cy.wait("@fetchBalance");
 
     // Assert
-    cy.wait("@fetchBalance");
     cy.getByCy("navigation-bar").contains("5906.63 VET");
     cy.getByCy("open-dropdown-button").contains("0x9702…90e0");
   });
@@ -262,10 +262,9 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
   it("disables the submit button and shows a spinner after submitting the form", () => {
     // Arrange
-    cy.getByCy("reserve-balance-input").type("10");
 
     // Act
-    cy.getByCy("reserve-balance-input").type("{enter}");
+    cy.getByCy("reserve-balance-input").type("10").type("{enter}");
 
     // Assert
     cy.getByCy("submit-form-button").should("be.disabled");

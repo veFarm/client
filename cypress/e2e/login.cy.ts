@@ -9,7 +9,7 @@ const wallet = new Wallet(walletId, account);
 
 describe("Login", () => {
   beforeEach(() => {
-    wallet.simulateLoggedOutAccount()
+    wallet.simulateLoggedOutAccount();
   });
 
   it("sends a sign cert request after hitting the Sync2 button", () => {
