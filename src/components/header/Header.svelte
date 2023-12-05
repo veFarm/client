@@ -27,7 +27,7 @@
 >
   <a href="/">
     <!-- <img src={SvelteLogo} width="32" height="32" alt="Svelte logo" /> -->
-    VeFarm
+    vEarn
   </a>
 
   {#if $wallet.connected && $balance.current != null}

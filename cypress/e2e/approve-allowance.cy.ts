@@ -63,12 +63,12 @@ describe("Approve allowance", () => {
       expect(payload.options).to.deep.equal({
         signer: account.toLowerCase(),
         comment:
-          "Please approve the following action(s):Allow the VeFarm contract to spend your VTHO in exchange for VET.",
+          "Please approve the following action(s):Allow the vEarn contract to spend your VTHO in exchange for VET.",
       });
     });
   });
 
-  it("shows me a success message after the tx has been mined", () => {
+  it("shows a success message after the tx is mined", () => {
     // Arrange
     connex
       .mockFetchVTHOAllowance([ZERO_ALLOWANCE, MAX_ALLOWANCE])
@@ -102,7 +102,7 @@ describe("Approve allowance", () => {
     });
   });
 
-  it.only("shows and error message if the tx is rejected", () => {
+  it("shows an error message if the tx is rejected", () => {
     wallet.spyOnSignTxRequest().as("approveTxRequest");
     wallet.mockSignTxResponse(APPROVE_TX_ID).as("approveTxResponse");
     connex

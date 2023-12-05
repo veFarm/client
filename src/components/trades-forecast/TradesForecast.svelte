@@ -206,7 +206,7 @@
           >
         </tr>
         <tr>
-          <td class="title">VeFarm Fee</td>
+          <td class="title">vEarn Fee</td>
           <td class="value">{formatUnits(firstTrade.protocolFee, 2)} VTHO</td>
           <td class="value"
             >{secondTrade != null

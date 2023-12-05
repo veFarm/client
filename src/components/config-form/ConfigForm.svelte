@@ -110,14 +110,14 @@
           trader.getClause("saveConfig")!([reserveBalanceWei.toFixed()]),
         );
 
-        comments.push("Save reserve balance into the VeFarm contract.");
+        comments.push("Save reserve balance into the vEarn contract.");
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
         clauses.push(vtho.getClause("approve")!([chain.trader, MAX_UINT256]));
 
         comments.push(
-          "Allow the VeFarm contract to spend your VTHO in exchange for VET.",
+          "Allow the vEarn contract to spend your VTHO in exchange for VET.",
         );
       }
 
