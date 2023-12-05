@@ -1,11 +1,9 @@
 /// <reference types="cypress" />
 
-import { chain } from "@/config/index";
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
 import {
   Connex,
-  ZERO_ALLOWANCE,
   MAX_ALLOWANCE,
 } from "cypress/support/mocks/connex";
 
@@ -41,11 +39,11 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
 
     cy.visit("/");
+    cy.wait(["@getTradesForecast", "@fetchAllowance", "@fetchReserveBalance"]);
   });
 
   it("shows me a success message", () => {
     // Arrange
-    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
 
@@ -58,7 +56,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the trades forecast", () => {
     // Arrange
-    cy.wait(["@getTradesForecast", "@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
 
@@ -68,7 +65,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the update reserve balance button", () => {
     // Arrange
-    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
 
@@ -79,7 +75,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the revoke allowance button", () => {
     // Arrange
-    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
 
@@ -88,36 +83,9 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.getByCy("revoke-allowance-button").should("be.enabled");
   });
 
-  // it("sends me a sign tx request after I click the revoke allowance button", () => {
-  //   // Arrange
-  //   wallet.spyOnSignTxRequest().as("signTxRequest");
-  //   cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
-
-  //   // Act
-  //   cy.getByCy("revoke-allowance-button").click();
-
-  //   // Assert
-  //   cy.wait("@signTxRequest").then((interception) => {
-  //     const { type, payload } = interception.request.body;
-
-  //     expect(type).to.eq("tx");
-  //     expect(payload.message[0]).to.deep.equal({
-  //       to: chain.vtho.toLowerCase(),
-  //       value: "0",
-  //       data: "0x095ea7b30000000000000000000000000317b19b8b94ae1d5bfb4727b9064fe8118aa3050000000000000000000000000000000000000000000000000000000000000000",
-  //     });
-  //     expect(payload.options).to.deep.equal({
-  //       comment:
-  //         "The vEarn contract will no longer be able to spend your VTHO in exchange for VET.",
-  //     });
-  //   });
-  // });
-
   it("shows me a spinner after I click the revoke allowance button", () => {
     // Arrange
     wallet.spyOnSignTxRequest().as("signTxRequest");
-    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
-    cy.getByCy("revoke-allowance-button").should("be.enabled");
 
     // Act
     cy.getByCy("revoke-allowance-button").click();
@@ -132,7 +100,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows me the update reserve balance form after hitting the update reserve balance button", () => {
     // Arrange
-    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
 
     // Act
     cy.getByCy("goto-update-reserve-balance-button").click();
@@ -145,7 +112,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   context("update reserve balance form", () => {
     it("shows me a cancel button that takes me to the back to success massage screen", () => {
       // Arrange
-      cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
 
       // Act
@@ -157,7 +123,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     it("does NOT allow me to submit the form until I enter a new reserve balance amount", () => {
       // Arrange
-      cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
       cy.getByCy("update-reserve-balance-button").should("be.disabled");
 
@@ -170,7 +135,6 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     it("opens up the wallet after submitting the form", () => {
       // Arrange
-      cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
       cy.getByCy("goto-update-reserve-balance-button").click();
 
       // Act
