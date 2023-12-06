@@ -174,7 +174,7 @@
     subtext={`Balance: ${
       $balance.current != null ? formatUnits($balance.current.vtho, 2) : "0"
     }`}
-    hint="Minimum balance to be maintained in your account after the swap"
+    hint="Minimum balance to be maintained in your account at all times"
     disabled={disabled || !$wallet.connected}
     error={errors.reserveBalance[0]}
     bind:value={reserveBalance}
