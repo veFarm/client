@@ -3,9 +3,9 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/fdd1d0c953b7d5565216/test_coverage)](https://codeclimate.com/github/veFarm/client/test_coverage)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c6966685-9414-4895-85f8-10b42cd3bc43/deploy-status)](https://app.netlify.com/sites/symphonious-macaron-41163f/deploys)
 
-# vEarn Interface
+# vearn Interface
 
-Interface for the vEarn Protocol supporting Connex instances for VeWorld and Sync2.
+Interface for the vearn Protocol supporting Connex instances for VeWorld and Sync2.
 
 Live version (testnet): [https://main--symphonious-macaron-41163f.netlify.app/](https://main--symphonious-macaron-41163f.netlify.app/)
 

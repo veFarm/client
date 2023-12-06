@@ -61,7 +61,7 @@ describe("Update reserve balance", () => {
       expect(payload.options).to.deep.equal({
         signer: account.toLowerCase(),
         comment:
-          "Please approve the following action(s):Save reserve balance into the vEarn contract.",
+          "Please approve the following action(s):Save reserve balance into the vearn contract.",
       });
     });
   });

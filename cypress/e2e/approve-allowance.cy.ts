@@ -63,7 +63,7 @@ describe("Approve allowance", () => {
       expect(payload.options).to.deep.equal({
         signer: account.toLowerCase(),
         comment:
-          "Please approve the following action(s):Allow the vEarn contract to spend your VTHO in exchange for VET.",
+          "Please approve the following action(s):Allow the vearn contract to spend your VTHO in exchange for VET.",
       });
     });
   });

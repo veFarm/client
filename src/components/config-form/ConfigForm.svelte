@@ -110,14 +110,14 @@
           trader.getClause("saveConfig")!([reserveBalanceWei.toFixed()]),
         );
 
-        comments.push("Save reserve balance into the vEarn contract.");
+        comments.push("Save reserve balance into the vearn contract.");
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
         clauses.push(vtho.getClause("approve")!([chain.trader, MAX_UINT256]));
 
         comments.push(
-          "Allow the vEarn contract to spend your VTHO in exchange for VET.",
+          "Allow the vearn contract to spend your VTHO in exchange for VET.",
         );
       }
 
@@ -174,7 +174,7 @@
     subtext={`Balance: ${
       $balance.current != null ? formatUnits($balance.current.vtho, 2) : "0"
     }`}
-    hint="Minimum balance to be maintained in your account after the swap"
+    hint="Minimum balance to be maintained in your account at all times"
     disabled={disabled || !$wallet.connected}
     error={errors.reserveBalance[0]}
     bind:value={reserveBalance}
