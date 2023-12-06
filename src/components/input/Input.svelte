@@ -9,6 +9,7 @@
     hint?: string;
     error?: string;
     subtext?: string;
+    "data-cy"?: string;
   };
 
   export let id: string;
@@ -43,12 +44,16 @@
       <div
         class="absolute top-5 right-2 text-lg font-medium bg-gray-200 px-1.5 rounded-sm"
         class:bg-gray-300={$$restProps.disabled}
+        data-cy="currency"
       >
         {currency}
       </div>
     {/if}
     {#if subtext.length > 0}
-      <div class="absolute bottom-1 right-2 text-sm text-accent px-1.5">
+      <div
+        class="absolute bottom-1 right-2 text-sm text-accent px-1.5"
+        data-cy="subtext"
+      >
         {subtext}
       </div>
     {/if}

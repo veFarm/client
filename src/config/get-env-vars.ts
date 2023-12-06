@@ -1,11 +1,15 @@
+import type { ChainId } from "@/typings/types";
+
 /**
  * Utility function to read and validate environment variables.
  * @return {{
  * CHAIN_ID: string,
  * }} Environment variables
  */
-export function getEnvVars() {
-  const CHAIN_ID = import.meta.env.VITE_CHAIN_ID;
+function getEnvVars() {
+  const CHAIN_ID: ChainId = window.Cypress
+    ? (100011 as const)
+    : import.meta.env.VITE_CHAIN_ID;
 
   if (CHAIN_ID == null) {
     throw new Error("Missing env var CHAIN_ID");
@@ -15,3 +19,7 @@ export function getEnvVars() {
     CHAIN_ID,
   };
 }
+
+export default {
+  getEnvVars,
+};

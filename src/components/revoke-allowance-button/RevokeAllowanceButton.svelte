@@ -30,13 +30,14 @@
   on:click={() => {
     handleClick(
       "0",
-      "The VeFarm contract will no longer be able to spend your VTHO in exchange for VET.",
+      "The vEarn contract will no longer be able to spend your VTHO in exchange for VET.",
     );
   }}
+  data-cy="revoke-allowance-button"
 >
   Revoke Spending
 </Button>
 
 {#if $vtho.error != null && $vtho.error.length > 0}
-  <p class="text-danger">ERROR: {$vtho.error}</p>
+  <p class="text-danger" data-cy="error-message">ERROR: {$vtho.error}</p>
 {/if}

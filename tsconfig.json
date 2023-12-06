@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": false,
     "rootDir": "./src",
     "outDir": "./dist",
-    "verbatimModuleSyntax": true,
+    // "verbatimModuleSyntax": true,
     "ignoreDeprecations": "5.0",
     /**
      * Typecheck JS in `.svelte` and `.js` files by default.

@@ -45,6 +45,8 @@
         `${chain.getAccountSwapsEndpoint}?account=${account}`,
       );
 
+      if (response.status === 404) return;
+
       const json = (await response.json()) as RawSwapDoc[];
 
       swapTxs = json.map((tx) => ({
@@ -86,7 +88,7 @@
   }
 </script>
 
-<section class="flex flex-col space-y-4">
+<section class="flex flex-col space-y-4" data-cy="trades-history-section">
   <h2>Your Trades</h2>
 
   {#if error != null && error.length > 0}

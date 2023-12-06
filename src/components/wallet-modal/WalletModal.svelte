@@ -37,7 +37,11 @@
   }
 </script>
 
-<Modal isOpen={$walletModal.isOpen} on:close={handleClose}>
+<Modal
+  isOpen={$walletModal.isOpen}
+  on:close={handleClose}
+  data-cy="wallet-modal"
+>
   <svelte:fragment slot="header">Connect wallet</svelte:fragment>
   <svelte:fragment slot="body">
     <p class="text-sm text-body">
@@ -54,6 +58,7 @@
           on:click={() => {
             handleConnect(id);
           }}
+          data-cy={`wallet-provider-button-${id}`}
         >
           <img src={icon} class="h-5" alt={`${label} icon`} />
           <span class="text-center">{label}</span>
@@ -62,7 +67,7 @@
     </div>
 
     {#if error != null}
-      <p class="text-sm text-danger">
+      <p class="text-sm text-danger" data-cy="wallet-modal-error">
         ERROR: {error}
       </p>
     {/if}

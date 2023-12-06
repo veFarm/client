@@ -13,7 +13,6 @@ type State =
       error: string | undefined;
       connected: true;
       account: Address;
-      balance: Balance;
       walletId: WalletId;
       baseGasPrice: BigNumber;
     }
@@ -23,7 +22,6 @@ type State =
       error: string | undefined;
       connected: false;
       account: undefined;
-      balance: undefined;
       walletId: WalletId | undefined;
       baseGasPrice: undefined;
     };
@@ -34,7 +32,6 @@ const initialState: State = {
   error: undefined,
   connected: false,
   account: undefined,
-  balance: undefined,
   walletId: undefined,
   baseGasPrice: undefined,
 };
@@ -66,7 +63,7 @@ function createStore() {
 
         // VeWorld injects window.vechain which can serve as detection utility.
         if (walletId === "veworld" && !window.vechain) {
-          throw new Error("VeWorld extension not found.");
+          throw new Error("VeWorld extension not detected.");
         }
 
         const connex = new Connex({
@@ -95,15 +92,12 @@ function createStore() {
         // Remember user.
         localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
-        const balance = await connexUtils.fetchBalance(account);
-
         store.set({
           connexUtils,
           loading: false,
           error: undefined,
           connected: true,
           account,
-          balance,
           walletId,
           baseGasPrice: await connexUtils.fetchBaseGasPrice(),
         });
@@ -147,15 +141,12 @@ function createStore() {
 
         const connexUtils = new ConnexUtils(connex);
 
-        const balance = await connexUtils.fetchBalance(account);
-
         store.set({
           connexUtils,
           loading: false,
           error: undefined,
           connected: true,
           account,
-          balance,
           walletId,
           baseGasPrice: await connexUtils.fetchBaseGasPrice(),
         });
@@ -167,33 +158,6 @@ function createStore() {
         });
       } finally {
         store.update((s) => ({ ...s, loading: false }));
-      }
-    },
-    /**
-     * Fetch user balance (VET and VTHO).
-     */
-    fetchBalance: async function (): Promise<void> {
-      try {
-        const data = get(store);
-
-        if (!data.connected) {
-          throw new Error("Wallet is not connected.");
-        }
-
-        const { connexUtils, account } = data;
-
-        const balance = await connexUtils.fetchBalance(account);
-
-        store.update(() => ({
-          ...data,
-          balance,
-        }));
-      } catch (error: unknown) {
-        store.update((s) => ({
-          ...s,
-          error:
-            error instanceof Error ? error.message : "Unknown error occurred.",
-        }));
       }
     },
     signTx: async function (
@@ -228,7 +192,15 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const { connexUtils } = data;
+        const { walletId } = data;
+
+        const connex = new Connex({
+          node: chain.rpc[0],
+          network: chain.network,
+          noExtension: walletId === "sync2",
+        });
+
+        const connexUtils = new ConnexUtils(connex);
 
         return connexUtils.waitForReceipt(txId);
       } catch (error: unknown) {

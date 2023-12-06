@@ -8,6 +8,7 @@
   type $$Props = HTMLButtonAttributes &
     ButtonVariantProps & {
       loading?: boolean;
+      "data-cy"?: string;
     };
 
   export let intent: ButtonVariantProps["intent"] = "secondary";
@@ -89,6 +90,6 @@
     class: $$props.class,
   })}
 >
-  {#if loading}<Spinner />{/if}
+  {#if loading}<Spinner data-cy="spinner" />{/if}
   <slot />
 </button>

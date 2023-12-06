@@ -2,7 +2,6 @@
   import { fly } from "svelte/transition";
   // import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
-  import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import type { Sol } from "@/stores/trade-forecast";
   import { tradeForecast } from "@/stores/trade-forecast";
@@ -50,7 +49,11 @@
   let firstTrade: Trade | undefined;
 
   $: {
-    if ($balance.current != null && $tradeForecast.fetched) {
+    if (
+      $balance.current != null &&
+      $tradeForecast.fetched &&
+      $tradeForecast.solutions.length > 0
+    ) {
       const { txFee, solutions } = $tradeForecast;
       // ^ Replace store with http call
 
@@ -142,7 +145,7 @@
   <p><Spinner /> Computing an optimized strategy...</p>
 {:else if firstTrade != null && $tradeForecast.txFee != null}
   <div>
-    <table class="w-full text-sm md:text-base">
+    <table class="w-full text-sm md:text-base" data-cy="trades-forecast-table">
       <!-- <caption class="text-sm">Upcoming Trades (estimated)</caption> -->
       <thead>
         <tr>
@@ -203,7 +206,7 @@
           >
         </tr>
         <tr>
-          <td class="title">VeFarm Fee</td>
+          <td class="title">vEarn Fee</td>
           <td class="value">{formatUnits(firstTrade.protocolFee, 2)} VTHO</td>
           <td class="value"
             >{secondTrade != null

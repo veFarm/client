@@ -4,6 +4,7 @@ import type { UserConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { configDefaults } from "vitest/config";
 import type { UserConfig as VitestConfig } from "vitest/config";
+import istanbul from "vite-plugin-istanbul";
 // import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 // import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
 // You don't need to add this to deps, it's included by @esbuild-plugins/node-modules-polyfill
@@ -14,6 +15,12 @@ import type { UserConfig as VitestConfig } from "vitest/config";
 const config: UserConfig & { test: VitestConfig["test"] } = {
   plugins: [
     svelte(),
+    istanbul({
+      cypress: true,
+      requireEnv: false,
+      nycrcPath: "./.nycrc.json",
+      forceBuildInstrument: true, // Instrument the source code for cypress runs
+    }),
     // , visualizer()
   ],
   resolve: {
@@ -48,8 +55,6 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
     // jest like globals
     globals: true,
     environment: "jsdom",
-    // in-source testing
-    includeSource: ["src/**/*.{js,ts,svelte}"],
     // Add @testing-library/jest-dom matchers & mocks of SvelteKit modules
     setupFiles: ["./setupTest.ts"],
     // Exclude files in v8
@@ -57,7 +62,9 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
       provider: "istanbul",
       // you can include other reporters, but 'json-summary' is required, json is recommended
       reporter: ["text", "json-summary", "json", "lcov"],
-      // exclude: ['setupTest.ts']
+      reportsDirectory: "./unit-coverage",
+      all: true,
+      include: ["src/**/*.{ts,svelte}", "!src/tests"],
     },
     // Exclude playwright tests folder
     exclude: [...configDefaults.exclude, "tests"],

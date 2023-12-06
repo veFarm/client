@@ -34,13 +34,13 @@ function createStore() {
 
   // Update vtho store based on wallet store changes.
   wallet.subscribe(async (data) => {
-    // No connex present means wallet is disconnected.
-    if (data.connexUtils == null) {
+    // Wallet is NOT connected.
+    if (!data.connected) {
       store.set({ ...initialState });
       return;
     }
 
-    // wallet is connected.
+    // Wallet IS connected.
     try {
       const { connexUtils, account } = data;
 

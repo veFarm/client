@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 coverage
+e2e-coverage
+unit-coverage
+.nyc_out
+cypress/snapshots
 
 # Editor directories and files
 .vscode/*
