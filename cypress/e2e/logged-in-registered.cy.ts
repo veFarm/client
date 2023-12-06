@@ -2,10 +2,7 @@
 
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
-import {
-  Connex,
-  MAX_ALLOWANCE,
-} from "cypress/support/mocks/connex";
+import { Connex, MAX_ALLOWANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";

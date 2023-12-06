@@ -2,33 +2,26 @@
   "all": true,
   "extends": "@istanbuljs/nyc-config-typescript",
   "check-coverage": false,
-  "include": [
-      "src/**/*.ts",
-      "src/**/*.tsx"
-    ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [
-      "cypress/**/*.*",
-      "**/*.d.ts",
-      "**/*.cy.tsx",
-      "**/*.cy.ts",
-      "./coverage/**",
-      "./cypress/**",
-      "./dist/**",
-      "**/*.cy.ts",
-      "./lighthouse/**",
-      "./e2e-coverage/**",
-      "./unit-coverage/**",
-      "./src/environments/**",
-      "**/*@globalwebindex/**",
-      "./config/jest/**",
-      "./public/vendor/**",
-      "./scripts/**",
-      "node_modules"
-    ],
+    "cypress/**/*.*",
+    "**/*.d.ts",
+    "**/*.cy.tsx",
+    "**/*.cy.ts",
+    "./coverage/**",
+    "./cypress/**",
+    "./dist/**",
+    "**/*.cy.ts",
+    "./lighthouse/**",
+    "./e2e-coverage/**",
+    "./unit-coverage/**",
+    "./src/environments/**",
+    "**/*@globalwebindex/**",
+    "./config/jest/**",
+    "./public/vendor/**",
+    "./scripts/**",
+    "node_modules"
+  ],
   "report-dir": "e2e-coverage",
-  "reporter": [
-      "json",
-      "lcov",
-      "json-summary"
-    ]
+  "reporter": ["json", "lcov", "json-summary"]
 }

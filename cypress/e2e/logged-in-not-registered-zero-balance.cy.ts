@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {chain} from "@/config/index"
+import { chain } from "@/config/index";
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
 import { Connex, ZERO_ALLOWANCE } from "cypress/support/mocks/connex";
@@ -16,7 +16,7 @@ const connex = new Connex(account);
 const wallet = new Wallet(walletId, account);
 
 describe("Logged in NOT registered ZERO balance account", () => {
-    beforeEach(() => {
+  beforeEach(() => {
     // Simulate a logged in NOT registered account holding a positive balance.
     wallet.simulateLoggedInAccount();
 
@@ -25,9 +25,9 @@ describe("Logged in NOT registered ZERO balance account", () => {
     api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
     api
       .mockGetTradeForecast({
-      statusCode: 200,
-      body: { txFee: "2688830000000000000", solutions: [] },
-    })
+        statusCode: 200,
+        body: { txFee: "2688830000000000000", solutions: [] },
+      })
       .as("getTradesForecast");
 
     connex.mockFetchVTHOAllowance(ZERO_ALLOWANCE).as("fetchAllowance");

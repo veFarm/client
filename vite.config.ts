@@ -18,9 +18,9 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
     istanbul({
       cypress: true,
       requireEnv: false,
-      nycrcPath: './.nycrc.json',
-      forceBuildInstrument: true // Instrument the source code for cypress runs
-  }),
+      nycrcPath: "./.nycrc.json",
+      forceBuildInstrument: true, // Instrument the source code for cypress runs
+    }),
     // , visualizer()
   ],
   resolve: {
@@ -62,7 +62,7 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
       provider: "istanbul",
       // you can include other reporters, but 'json-summary' is required, json is recommended
       reporter: ["text", "json-summary", "json", "lcov"],
-      reportsDirectory: './unit-coverage',
+      reportsDirectory: "./unit-coverage",
       all: true,
       include: ["src/**/*.{ts,svelte}", "!src/tests"],
     },
