@@ -73,13 +73,13 @@
         <h1 data-cy="title">Grow your VET balance.</h1>
         <p class="text-gray-300 mt-4" data-cy="description">
           <!-- Automatically swap VTHO for VET using optimized strategies. How does it work?
-          Set your reserve balance and allow the vEarn contract to spend your VTHO.
+          Set your reserve balance and allow the vearn contract to spend your VTHO.
           Afterward, the contract will periodically withdraw VTHO from your account,
           execute a swap for VET tokens through a DEX, and return the resulting tokens
           to your wallet.store. You don&apos;t need to worry about finding the best exchange rate
           or the right time to trade; we&apos;ll take care of that. -->
           With your VET holdings, you automatically accumulate VTHO tokens in your
-          account. vEarn takes care of exchanging these VTHO tokens for additional
+          account. vearn takes care of exchanging these VTHO tokens for additional
           VET tokens at strategically optimized moments, boosting your VET balance
           and increasing your potential gains.
         </p>
@@ -110,7 +110,7 @@
                 Great! We&apos;re&nbsp;all&nbsp;set.
               </h2>
               <p>
-                vEarn is configured to periodically exchange VTHO for VET while
+                vearn is configured to periodically exchange VTHO for VET while
                 maintaining a reserve balance of
                 <b data-cy="reserve-balance-amount"
                   >{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b
