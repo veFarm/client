@@ -114,7 +114,6 @@ function createStore() {
       }));
 
       const { txFee, solutions } = await fetchTradeForecast(account);
-      console.log({ txFee, solutions });
 
       store.set({
         fetched: true,
