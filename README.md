@@ -7,7 +7,7 @@
 
 Interface for the vearn Protocol supporting Connex instances for VeWorld and Sync2.
 
-Live version (testnet): [https://main--symphonious-macaron-41163f.netlify.app/](https://main--symphonious-macaron-41163f.netlify.app/)
+Live version (testnet): [https://vearn.finance](https://vearn.finance)
 
 This DApp was built with Svelte.
 
@@ -16,7 +16,7 @@ This DApp was built with Svelte.
 Clone the project:
 
 ```
-git clone git@github.com:veFarm/client.git
+git clone git@github.com:vearnfi/client.git
 ```
 
 Copy `.env.example` into `.env` and set your environmental variables:
@@ -54,6 +54,7 @@ npm run preview
 ```
 npm test
 npm run coverage
+npm run cy:e2e-run
 ```
 
 ## Storybook
