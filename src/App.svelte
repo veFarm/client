@@ -83,9 +83,7 @@
           VET tokens at strategically optimized moments, boosting your VET balance
           and increasing your potential gains.
         </p>
-        <div
-          class="hidden lg:flex lg:flex-row lg:justify-center lg:space-x-16 lg:mt-10"
-        >
+        <div class="hidden lg:block">
           <Stats />
         </div>
       </section>

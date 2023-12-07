@@ -69,6 +69,7 @@
     }
   }
 
+  // Refetch swaps whenever VET balance gets updated
   $: {
     if (
       $balance.current != null &&

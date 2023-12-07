@@ -11,7 +11,7 @@ const api = new API(account);
 const connex = new Connex(account);
 const wallet = new Wallet(walletId, account);
 
-describe("Logged in NOT registered POSITIVE balance account", () => {
+describe("Update balance", () => {
   beforeEach(() => {
     // Simulate a logged in NOT registered account holding a positive balance.
     wallet.simulateLoggedInAccount();
@@ -34,7 +34,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"]);
   });
 
-  it("shows me when the balance get updated", () => {
+  it("shows when the balance gets updated", () => {
     // Arrange
     cy.getByCy("navigation-bar").contains("5906.63 VET");
 
