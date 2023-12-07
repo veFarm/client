@@ -14,7 +14,7 @@ dist-ssr
 coverage
 e2e-coverage
 unit-coverage
-.nyc_out
+.nyc_output
 cypress/snapshots
 
 # Editor directories and files
