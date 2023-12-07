@@ -68,20 +68,6 @@ export class Connex {
       },
     );
   }
-  // mockFetchBalance(vet: string, vtho: string) {
-  //   return cy.intercept(
-  //     "GET",
-  //     `https://testnet.veblocks.net/accounts/${this.account.toLowerCase()}*`,
-  //     {
-  //       statusCode: 200,
-  //       body: {
-  //         balance: vet,
-  //         energy: vtho,
-  //         hasCode: false,
-  //       },
-  //     },
-  //   );
-  // }
 
   /**
    * Mock VTHO allowance lookup.
