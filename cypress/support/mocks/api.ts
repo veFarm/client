@@ -26,8 +26,8 @@ export class API {
 
         req.reply(res);
 
-        counter++
-        return
+        counter++;
+        return;
       },
     );
   }
@@ -52,8 +52,8 @@ export class API {
 
         req.reply(res);
 
-        counter++
-        return
+        counter++;
+        return;
       },
     );
   }
@@ -78,8 +78,8 @@ export class API {
 
         req.reply(res);
 
-        counter++
-        return
+        counter++;
+        return;
       },
     );
   }

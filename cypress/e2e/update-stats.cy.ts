@@ -29,7 +29,9 @@ describe("Update stats", () => {
       .as("getTradesForecast");
 
     // Simulate a registered account with a positive balance
-    connex.mockFetchBalance([BALANCE.POSITIVE, BALANCE.UPDATED]).as("fetchBalance");
+    connex
+      .mockFetchBalance([BALANCE.POSITIVE, BALANCE.UPDATED])
+      .as("fetchBalance");
     // ^ Simulate a balance update.
     connex.mockFetchVTHOAllowance(VTHO_AMOUNT.MAX).as("fetchAllowance");
     connex.mockFetchTraderReserve(VTHO_AMOUNT.FIVE).as("fetchReserveBalance");
@@ -46,7 +48,7 @@ describe("Update stats", () => {
   });
 
   it("shows latest stats when balance gets updated", () => {
-        // Arrange
+    // Arrange
     cy.getByCy("stats").should("be.visible");
     cy.getByCy("stats").within(($stats) => {
       cy.wrap($stats).contains("11");
@@ -55,7 +57,7 @@ describe("Update stats", () => {
     });
 
     // Act
-    cy.wait([      "@fetchBalance",      "@getAccountStats",    ], {timeout: 20_000});
+    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 20_000 });
 
     // Assert
     cy.getByCy("stats").should("be.visible");

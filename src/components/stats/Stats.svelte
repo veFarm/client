@@ -3,7 +3,7 @@
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
-  import {balance} from "@/stores/balance"
+  import { balance } from "@/stores/balance";
   import { tradeForecast } from "@/stores/trade-forecast";
   import { formatUnits } from "@/utils/format-units";
   import { StatItem } from "@/components/stat-item";
