@@ -2,11 +2,32 @@
 
 import { chain } from "@/config/index";
 
-export const ZERO_ALLOWANCE =
+export const ZERO_VTHO =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
-export const MAX_ALLOWANCE =
+export const FIVE_VTHO =
+  "0x0000000000000000000000000000000000000000000000004563918244f40000";
+export const TEN_VTHO =
+  "0x0000000000000000000000000000000000000000000000008ac7230489e80000";
+export const MAX_VTHO =
   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
+export const POSITIVE_BALANCE = {
+  vet: "0x140330221654a06b3e9",
+  vtho: "0x66b7d9428d2c776f6",
+};
+export const UPDATED_BALANCE = {
+  vet: "0x1b1ae4d6e2ef500000",
+  vtho: "0x2b0d094b561bcf000",
+};
+export const ZERO_BALANCE = {
+  vet: "0x0000000000000000000",
+  vtho: "0x00000000000000000",
+};
+
+export type Balance = {
+  vet: string;
+  vtho: string;
+};
 export type TxStatus = "reverted" | "mined";
 
 /**
@@ -15,20 +36,52 @@ export type TxStatus = "reverted" | "mined";
 export class Connex {
   constructor(private readonly account: Address) {}
 
-  mockFetchBalance(vet: string, vtho: string) {
+  /**
+   * Mock account balance lookup.
+   * @param {Balance | [Balance,Balance]} balance. Mocked balance or balance array to simulate a change of state.
+   * @returns
+   */
+  mockFetchBalance(balance: Balance | [Balance, Balance]) {
+    let counter = 0;
+
     return cy.intercept(
       "GET",
       `https://testnet.veblocks.net/accounts/${this.account.toLowerCase()}*`,
-      {
-        statusCode: 200,
-        body: {
-          balance: vet,
-          energy: vtho,
-          hasCode: false,
-        },
+      (req) => {
+        const { vet, vtho } = !Array.isArray(balance)
+          ? balance
+          : counter === 0
+          ? balance[0]
+          : balance[1];
+
+        req.reply({
+          statusCode: 200,
+          body: {
+            balance: vet,
+            energy: vtho,
+            hasCode: false,
+          },
+        });
+
+        counter++;
+        return;
       },
     );
   }
+  // mockFetchBalance(vet: string, vtho: string) {
+  //   return cy.intercept(
+  //     "GET",
+  //     `https://testnet.veblocks.net/accounts/${this.account.toLowerCase()}*`,
+  //     {
+  //       statusCode: 200,
+  //       body: {
+  //         balance: vet,
+  //         energy: vtho,
+  //         hasCode: false,
+  //       },
+  //     },
+  //   );
+  // }
 
   /**
    * Mock VTHO allowance lookup.

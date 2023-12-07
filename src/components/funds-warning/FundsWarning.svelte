@@ -14,10 +14,8 @@
         href={chain.faucets[0]}
         target="_blank"
         class="underline"
-        data-cy="faucet-link"
-      >
-        faucet
-      </a>.
+        data-cy="faucet-link">faucet</a
+      >.
     {/if}
   </div>
 {/if}

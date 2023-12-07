@@ -2,13 +2,15 @@
 
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
-import { Connex, MAX_ALLOWANCE } from "cypress/support/mocks/connex";
+import {
+  Connex,
+  FIVE_VTHO,
+  MAX_VTHO,
+  POSITIVE_BALANCE,
+} from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
-
-const FIVE_VTHO =
-  "0x0000000000000000000000000000000000000000000000004563918244f40000";
 
 const api = new API(account);
 const connex = new Connex(account);
@@ -27,10 +29,8 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       .as("getTradesForecast");
 
     // Simulate a registered account with a positive balance
-    connex
-      .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
-      .as("fetchBalance");
-    connex.mockFetchVTHOAllowance(MAX_ALLOWANCE).as("fetchAllowance");
+    connex.mockFetchBalance(POSITIVE_BALANCE).as("fetchBalance");
+    connex.mockFetchVTHOAllowance(MAX_VTHO).as("fetchAllowance");
     connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
 
     cy.visit("/");

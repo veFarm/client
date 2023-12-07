@@ -5,17 +5,13 @@ import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
 import {
   Connex,
-  ZERO_ALLOWANCE,
-  MAX_ALLOWANCE,
+  ZERO_VTHO,
+  POSITIVE_BALANCE,
 } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
 
-const ZERO_VTHO =
-  "0x0000000000000000000000000000000000000000000000000000000000000000";
-const FIVE_VTHO =
-  "0x0000000000000000000000000000000000000000000000004563918244f40000";
 const REGISTER_TX_ID =
   "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223";
 
@@ -35,11 +31,9 @@ describe("Register", () => {
       .mockGetTradeForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
-    connex.mockFetchVTHOAllowance(ZERO_ALLOWANCE).as("fetchAllowance");
+    connex.mockFetchVTHOAllowance(ZERO_VTHO).as("fetchAllowance");
     connex.mockFetchTraderReserve(ZERO_VTHO).as("fetchReserveBalance");
-    connex
-      .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
-      .as("fetchBalance");
+    connex.mockFetchBalance(POSITIVE_BALANCE).as("fetchBalance");
   });
 
   it("sends a sign tx request after submitting the form", () => {

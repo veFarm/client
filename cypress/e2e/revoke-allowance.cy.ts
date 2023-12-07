@@ -5,15 +5,15 @@ import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
 import {
   Connex,
-  ZERO_ALLOWANCE,
-  MAX_ALLOWANCE,
+  ZERO_VTHO,
+  FIVE_VTHO,
+  MAX_VTHO,
+  POSITIVE_BALANCE,
 } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
 
-const FIVE_VTHO =
-  "0x0000000000000000000000000000000000000000000000004563918244f40000";
 const REVOKE_ALLOWANCE_TX_ID =
   "0xce47958b8c14484f5a39f361d02f244396f15dab0c73d49fc0a0bbaeceff3d98";
 
@@ -33,11 +33,9 @@ describe("Revoke allowance", () => {
       .mockGetTradeForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
-    connex.mockFetchVTHOAllowance(MAX_ALLOWANCE).as("fetchAllowance");
+    connex.mockFetchVTHOAllowance(MAX_VTHO).as("fetchAllowance");
     connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
-    connex
-      .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
-      .as("fetchBalance");
+    connex.mockFetchBalance(POSITIVE_BALANCE).as("fetchBalance");
   });
 
   it("sends me a sign tx request after clicking the revoke allowance button", () => {
@@ -68,9 +66,7 @@ describe("Revoke allowance", () => {
 
   it("shows me the initial screen after revoking allowance", () => {
     // Arrange
-    connex
-      .mockFetchVTHOAllowance([MAX_ALLOWANCE, ZERO_ALLOWANCE])
-      .as("fetchAllowance");
+    connex.mockFetchVTHOAllowance([MAX_VTHO, ZERO_VTHO]).as("fetchAllowance");
     // ^ Replace the existing mock to simulate a revoke allowance flow.
     wallet.spyOnSignTxRequest().as("revokeTxRequest");
     wallet.mockSignTxResponse(REVOKE_ALLOWANCE_TX_ID).as("revokeTxResponse");
