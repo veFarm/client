@@ -3,7 +3,7 @@
 import { chain } from "@/config/index";
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
-import { Connex, ZERO_VTHO, ZERO_BALANCE } from "cypress/support/mocks/connex";
+import { Connex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x2057ca7412E6C0828501CB7b335E166f81c58D26";
@@ -27,9 +27,9 @@ describe("Logged in NOT registered ZERO balance account", () => {
       })
       .as("getTradesForecast");
 
-    connex.mockFetchVTHOAllowance(ZERO_VTHO).as("fetchAllowance");
-    connex.mockFetchTraderReserve(ZERO_VTHO).as("fetchReserveBalance");
-    connex.mockFetchBalance(ZERO_BALANCE).as("fetchBalance");
+    connex.mockFetchVTHOAllowance(VTHO_AMOUNT.ZERO).as("fetchAllowance");
+    connex.mockFetchTraderReserve(VTHO_AMOUNT.ZERO).as("fetchReserveBalance");
+    connex.mockFetchBalance(BALANCE.ZERO).as("fetchBalance");
 
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);

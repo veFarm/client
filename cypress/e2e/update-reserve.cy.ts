@@ -3,13 +3,7 @@
 import { chain } from "@/config/index";
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
-import {
-  Connex,
-  FIVE_VTHO,
-  TEN_VTHO,
-  MAX_VTHO,
-  POSITIVE_BALANCE,
-} from "cypress/support/mocks/connex";
+import { Connex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
@@ -33,9 +27,9 @@ describe("Update reserve balance", () => {
       .mockGetTradeForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
-    connex.mockFetchVTHOAllowance(MAX_VTHO).as("fetchAllowance");
-    connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
-    connex.mockFetchBalance(POSITIVE_BALANCE).as("fetchBalance");
+    connex.mockFetchVTHOAllowance(VTHO_AMOUNT.MAX).as("fetchAllowance");
+    connex.mockFetchTraderReserve(VTHO_AMOUNT.FIVE).as("fetchReserveBalance");
+    connex.mockFetchBalance(BALANCE.POSITIVE).as("fetchBalance");
   });
 
   it("sends me a sign tx request after submitting the form with a new reserve balance amount", () => {
@@ -69,7 +63,7 @@ describe("Update reserve balance", () => {
   it("shows me a new success message after the tx has been mined", () => {
     // Arrange
     connex
-      .mockFetchTraderReserve([FIVE_VTHO, TEN_VTHO])
+      .mockFetchTraderReserve([VTHO_AMOUNT.FIVE, VTHO_AMOUNT.TEN])
       .as("fetchReserveBalance");
     // ^ Replace the existing mock to simulate an update reserve balance flow.
     wallet.spyOnSignTxRequest().as("updateTxRequest");
