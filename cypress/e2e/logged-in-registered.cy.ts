@@ -19,7 +19,9 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     api
       .mockGetAccountStats({ fixture: "account-stats.json" })
       .as("getAccountStats");
-    api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
+    api
+      .mockGetAccountSwaps({ fixture: "account-swaps.json" })
+      .as("getAccountSwaps");
     api
       .mockGetTradeForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
@@ -50,6 +52,24 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       cy.wrap($stats).contains("11");
       cy.wrap($stats).contains("14.82");
       cy.wrap($stats).contains("12.26");
+    });
+  });
+
+  it("shows trades history", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("trades-history").should("be.visible");
+    cy.getByCy("trades-history").within(($swaps) => {
+      cy.wrap($swaps)
+        .find("a")
+        .eq(0)
+        .contains(
+          "TX: 0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7",
+        );
+      cy.wrap($swaps).find("a").eq(1).should("not.exist");
     });
   });
 
@@ -106,13 +126,13 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows a spinner after the revoke allowance button is clicked", () => {
     // Arrange
-    wallet.spyOnSignTxRequest().as("signTxRequest");
+    wallet.spyOnSignTxRequest().as("revokeTxRequest");
 
     // Act
     cy.getByCy("revoke-allowance-button").click();
 
     // Assert
-    cy.wait("@signTxRequest");
+    cy.wait("@revokeTxRequest");
     cy.getByCy("revoke-allowance-button").should("be.disabled");
     cy.getByCy("revoke-allowance-button").within(() => {
       cy.getByCy("spinner").should("be.visible");
