@@ -3,17 +3,11 @@
 import { chain } from "@/config/index";
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
-import {
-  Connex,
-  ZERO_ALLOWANCE,
-  MAX_ALLOWANCE,
-} from "cypress/support/mocks/connex";
+import { Connex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
 
-const FIVE_VTHO =
-  "0x0000000000000000000000000000000000000000000000004563918244f40000";
 const APPROVE_TX_ID =
   "0x60de9334fe2f261861c1bb11a2d44e86437d23040755cc7b8e976f24e5c8cc54";
 
@@ -34,11 +28,9 @@ describe("Approve allowance", () => {
       .mockGetTradeForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
-    connex.mockFetchVTHOAllowance(ZERO_ALLOWANCE).as("fetchAllowance");
-    connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
-    connex
-      .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
-      .as("fetchBalance");
+    connex.mockFetchVTHOAllowance(VTHO_AMOUNT.ZERO).as("fetchAllowance");
+    connex.mockFetchTraderReserve(VTHO_AMOUNT.FIVE).as("fetchReserveBalance");
+    connex.mockFetchBalance(BALANCE.POSITIVE).as("fetchBalance");
   });
 
   it("sends a sign tx request after submitting the form", () => {
@@ -71,7 +63,7 @@ describe("Approve allowance", () => {
   it("shows a success message after the tx is mined", () => {
     // Arrange
     connex
-      .mockFetchVTHOAllowance([ZERO_ALLOWANCE, MAX_ALLOWANCE])
+      .mockFetchVTHOAllowance([VTHO_AMOUNT.ZERO, VTHO_AMOUNT.MAX])
       .as("fetchAllowance");
     // ^ Replace the existing mock to simulate an approve allowance flow.
     wallet.spyOnSignTxRequest().as("approveTxRequest");

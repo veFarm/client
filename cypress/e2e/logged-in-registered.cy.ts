@@ -2,13 +2,10 @@
 
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
-import { Connex, MAX_ALLOWANCE } from "cypress/support/mocks/connex";
+import { Connex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
-
-const FIVE_VTHO =
-  "0x0000000000000000000000000000000000000000000000004563918244f40000";
 
 const api = new API(account);
 const connex = new Connex(account);
@@ -19,25 +16,74 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     // Simulate a logged in registered account holding a positive balance.
     wallet.simulateLoggedInAccount();
 
-    // TODO: stats should be visible
-    api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
-    api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
+    api
+      .mockGetAccountStats({ fixture: "account-stats.json" })
+      .as("getAccountStats");
+    api
+      .mockGetAccountSwaps({ fixture: "account-swaps.json" })
+      .as("getAccountSwaps");
     api
       .mockGetTradeForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
     // Simulate a registered account with a positive balance
-    connex
-      .mockFetchBalance("0x140330221654a06b3e9", "0x66b7d9428d2c776f6")
-      .as("fetchBalance");
-    connex.mockFetchVTHOAllowance(MAX_ALLOWANCE).as("fetchAllowance");
-    connex.mockFetchTraderReserve(FIVE_VTHO).as("fetchReserveBalance");
+    connex.mockFetchBalance(BALANCE.POSITIVE).as("fetchBalance");
+    connex.mockFetchVTHOAllowance(VTHO_AMOUNT.MAX).as("fetchAllowance");
+    connex.mockFetchTraderReserve(VTHO_AMOUNT.FIVE).as("fetchReserveBalance");
 
     cy.visit("/");
-    cy.wait(["@getTradesForecast", "@fetchAllowance", "@fetchReserveBalance"]);
+    cy.wait([
+      "@getAccountStats",
+      "@getAccountSwaps",
+      "@getTradesForecast",
+      "@fetchAllowance",
+      "@fetchReserveBalance",
+    ]);
   });
 
-  it("shows me a success message", () => {
+  it("shows the stats", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("stats").should("be.visible");
+    cy.getByCy("stats").within(($stats) => {
+      cy.wrap($stats).contains("11");
+      cy.wrap($stats).contains("14.82");
+      cy.wrap($stats).contains("12.26");
+    });
+  });
+
+  it("shows trades history", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("trades-history").should("be.visible");
+    cy.getByCy("trades-history").within(($swaps) => {
+      cy.wrap($swaps)
+        .find("a")
+        .eq(0)
+        .contains(
+          "TX: 0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7",
+        );
+      cy.wrap($swaps).find("a").eq(1).should("not.exist");
+    });
+  });
+
+  it("does NOT shows the stats on mobile", () => {
+    // Arrange
+    cy.viewport("iphone-8");
+
+    // Act
+
+    // Assert
+    cy.getByCy("stats").should("not.exist");
+  });
+
+  it("shows that the protocol is enabled", () => {
     // Arrange
 
     // Act
@@ -49,7 +95,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     });
   });
 
-  it("shows me the trades forecast", () => {
+  it("shows the trades forecast table", () => {
     // Arrange
 
     // Act
@@ -58,7 +104,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.getByCy("trades-forecast-table").should("be.visible");
   });
 
-  it("shows me the update reserve balance button", () => {
+  it("shows the update reserve balance button", () => {
     // Arrange
 
     // Act
@@ -68,7 +114,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.getByCy("goto-update-reserve-balance-button").should("be.enabled");
   });
 
-  it("shows me the revoke allowance button", () => {
+  it("shows the revoke allowance button", () => {
     // Arrange
 
     // Act
@@ -78,22 +124,22 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.getByCy("revoke-allowance-button").should("be.enabled");
   });
 
-  it("shows me a spinner after I click the revoke allowance button", () => {
+  it("shows a spinner after the revoke allowance button is clicked", () => {
     // Arrange
-    wallet.spyOnSignTxRequest().as("signTxRequest");
+    wallet.spyOnSignTxRequest().as("revokeTxRequest");
 
     // Act
     cy.getByCy("revoke-allowance-button").click();
 
     // Assert
-    cy.wait("@signTxRequest");
+    cy.wait("@revokeTxRequest");
     cy.getByCy("revoke-allowance-button").should("be.disabled");
     cy.getByCy("revoke-allowance-button").within(() => {
       cy.getByCy("spinner").should("be.visible");
     });
   });
 
-  it("shows me the update reserve balance form after hitting the update reserve balance button", () => {
+  it("shows the update reserve balance form", () => {
     // Arrange
 
     // Act
@@ -105,7 +151,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
   });
 
   context("update reserve balance form", () => {
-    it("shows me a cancel button that takes me to the back to success massage screen", () => {
+    it("shows a cancel button", () => {
       // Arrange
       cy.getByCy("goto-update-reserve-balance-button").click();
 
@@ -116,7 +162,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       cy.getByCy("protocol-is-enabled-message").should("be.visible");
     });
 
-    it("does NOT allow me to submit the form until I enter a new reserve balance amount", () => {
+    it("does NOT allow the form to be submitted until a new reserve balance amount is entered", () => {
       // Arrange
       cy.getByCy("goto-update-reserve-balance-button").click();
       cy.getByCy("update-reserve-balance-button").should("be.disabled");

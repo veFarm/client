@@ -3,13 +3,10 @@
 import { chain } from "@/config/index";
 import { Wallet } from "cypress/support/mocks/wallet";
 import { API } from "cypress/support/mocks/api";
-import { Connex, ZERO_ALLOWANCE } from "cypress/support/mocks/connex";
+import { Connex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x2057ca7412E6C0828501CB7b335E166f81c58D26";
-
-const ZERO_VTHO =
-  "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 const api = new API(account);
 const connex = new Connex(account);
@@ -30,11 +27,9 @@ describe("Logged in NOT registered ZERO balance account", () => {
       })
       .as("getTradesForecast");
 
-    connex.mockFetchVTHOAllowance(ZERO_ALLOWANCE).as("fetchAllowance");
-    connex.mockFetchTraderReserve(ZERO_VTHO).as("fetchReserveBalance");
-    connex
-      .mockFetchBalance("0x0000000000000000000", "0x00000000000000000")
-      .as("fetchBalance");
+    connex.mockFetchVTHOAllowance(VTHO_AMOUNT.ZERO).as("fetchAllowance");
+    connex.mockFetchTraderReserve(VTHO_AMOUNT.ZERO).as("fetchReserveBalance");
+    connex.mockFetchBalance(BALANCE.ZERO).as("fetchBalance");
 
     cy.visit("/");
     cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
@@ -50,8 +45,13 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("description").should("be.visible");
   });
 
-  xit("does NOT show me the stats", () => {
-    // TODO
+  it("does NOT show me the stats", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("stats").should("not.exist");
   });
 
   it("shows me the header with my VET balance and address", () => {
@@ -171,13 +171,13 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("trades-forecast-table").should("not.exist");
   });
 
-  it("shows me 'You don't have any past trades'", () => {
+  it.only("shows me 'You don't have any past trades'", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("trades-history-section").contains(
+    cy.getByCy("trades-history").contains(
       "You don't have any past trades",
     );
   });

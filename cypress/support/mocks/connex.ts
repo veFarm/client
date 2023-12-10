@@ -1,11 +1,34 @@
 /// <reference types="cypress" />
 
 import { chain } from "@/config/index";
+import { responseHandler } from "cypress/support/utils";
 
-export const ZERO_ALLOWANCE =
-  "0x0000000000000000000000000000000000000000000000000000000000000000";
-export const MAX_ALLOWANCE =
-  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+export const VTHO_AMOUNT = {
+  ZERO: "0x0000000000000000000000000000000000000000000000000000000000000000",
+  FIVE: "0x0000000000000000000000000000000000000000000000004563918244f40000",
+  TEN: "0x0000000000000000000000000000000000000000000000008ac7230489e80000",
+  MAX: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+};
+
+export const BALANCE = {
+  ZERO: {
+    vet: "0x0000000000000000000",
+    vtho: "0x00000000000000000",
+  },
+  POSITIVE: {
+    vet: "0x140330221654a06b3e9",
+    vtho: "0x66b7d9428d2c776f6",
+  },
+  UPDATED: {
+    vet: "0x1b1ae4d6e2ef500000",
+    vtho: "0x2b0d094b561bcf000",
+  },
+};
+
+export type Balance = {
+  vet: string;
+  vtho: string;
+};
 
 export type TxStatus = "reverted" | "mined";
 
@@ -15,28 +38,42 @@ export type TxStatus = "reverted" | "mined";
 export class Connex {
   constructor(private readonly account: Address) {}
 
-  mockFetchBalance(vet: string, vtho: string) {
+  /**
+   * Mock account balance lookup.
+   * @param {Balance | [Balance,Balance]} balance. Mocked balance or balance array to simulate a change of state.
+   * @returns
+   */
+  mockFetchBalance(balance: Balance | [Balance, Balance]) {
+    let index = 0;
+
     return cy.intercept(
       "GET",
       `https://testnet.veblocks.net/accounts/${this.account.toLowerCase()}*`,
-      {
-        statusCode: 200,
-        body: {
-          balance: vet,
-          energy: vtho,
-          hasCode: false,
-        },
+      (req) => {
+        const { vet, vtho } = responseHandler(balance, index);
+
+        req.reply({
+          statusCode: 200,
+          body: {
+            balance: vet,
+            energy: vtho,
+            hasCode: false,
+          },
+        });
+
+        index++;
+        return;
       },
     );
   }
 
   /**
    * Mock VTHO allowance lookup.
-   * @param {string | [string, string]} allowance
+   * @param {string | [string, string]} allowance Allowance to be returned by the mock.
    * @return Mocked request
    */
   mockFetchVTHOAllowance(allowance: string | [string, string]) {
-    let counter = 0;
+    let index = 0;
 
     return cy.intercept(
       "POST",
@@ -45,12 +82,7 @@ export class Connex {
         const to = req?.body?.clauses[0]?.to;
 
         if (to.toLowerCase() === chain.vtho.toLowerCase()) {
-          const data =
-            typeof allowance === "string"
-              ? allowance
-              : counter === 0
-              ? allowance[0]
-              : allowance[1];
+          const data = responseHandler(allowance, index);
 
           req.reply({
             statusCode: 200,
@@ -66,7 +98,7 @@ export class Connex {
             ],
           });
 
-          counter++;
+          index++;
           return;
         }
 
@@ -77,11 +109,11 @@ export class Connex {
 
   /**
    * Mock Trader reserveBalance lookup.
-   * @param {string | [string, string]} allowance
+   * @param {string | [string, string]} reserveBalance Reserve balance to be returned by the mock.
    * @return Mocked request
    */
   mockFetchTraderReserve(reserveBalance: string | [string, string]) {
-    let counter = 0;
+    let index = 0;
 
     return cy.intercept(
       "POST",
@@ -90,12 +122,7 @@ export class Connex {
         const to = req?.body?.clauses[0]?.to;
 
         if (to.toLowerCase() === chain.trader.toLowerCase()) {
-          const data =
-            typeof reserveBalance === "string"
-              ? reserveBalance
-              : counter === 0
-              ? reserveBalance[0]
-              : reserveBalance[1];
+          const data = responseHandler(reserveBalance, index);
 
           req.reply({
             statusCode: 200,
@@ -111,7 +138,7 @@ export class Connex {
             ],
           });
 
-          counter++;
+          index++;
           return;
         }
 
