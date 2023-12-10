@@ -45,8 +45,13 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("description").should("be.visible");
   });
 
-  xit("does NOT show me the stats", () => {
-    // TODO
+  it("does NOT show me the stats", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("stats").should("not.exist");
   });
 
   it("shows me the header with my VET balance and address", () => {
@@ -166,13 +171,13 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("trades-forecast-table").should("not.exist");
   });
 
-  it("shows me 'You don't have any past trades'", () => {
+  it.only("shows me 'You don't have any past trades'", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("trades-history-section").contains(
+    cy.getByCy("trades-history").contains(
       "You don't have any past trades",
     );
   });

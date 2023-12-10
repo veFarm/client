@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import { chain } from "@/config/index";
+import { responseHandler } from "cypress/support/utils";
 
 export const VTHO_AMOUNT = {
   ZERO: "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -43,17 +44,13 @@ export class Connex {
    * @returns
    */
   mockFetchBalance(balance: Balance | [Balance, Balance]) {
-    let counter = 0;
+    let index = 0;
 
     return cy.intercept(
       "GET",
       `https://testnet.veblocks.net/accounts/${this.account.toLowerCase()}*`,
       (req) => {
-        const { vet, vtho } = !Array.isArray(balance)
-          ? balance
-          : counter === 0
-          ? balance[0]
-          : balance[1];
+        const { vet, vtho } = responseHandler(balance, index);
 
         req.reply({
           statusCode: 200,
@@ -64,7 +61,7 @@ export class Connex {
           },
         });
 
-        counter++;
+        index++;
         return;
       },
     );
@@ -72,11 +69,11 @@ export class Connex {
 
   /**
    * Mock VTHO allowance lookup.
-   * @param {string | [string, string]} allowance
+   * @param {string | [string, string]} allowance Allowance to be returned by the mock.
    * @return Mocked request
    */
   mockFetchVTHOAllowance(allowance: string | [string, string]) {
-    let counter = 0;
+    let index = 0;
 
     return cy.intercept(
       "POST",
@@ -85,12 +82,7 @@ export class Connex {
         const to = req?.body?.clauses[0]?.to;
 
         if (to.toLowerCase() === chain.vtho.toLowerCase()) {
-          const data =
-            typeof allowance === "string"
-              ? allowance
-              : counter === 0
-              ? allowance[0]
-              : allowance[1];
+          const data = responseHandler(allowance, index);
 
           req.reply({
             statusCode: 200,
@@ -106,7 +98,7 @@ export class Connex {
             ],
           });
 
-          counter++;
+          index++;
           return;
         }
 
@@ -117,11 +109,11 @@ export class Connex {
 
   /**
    * Mock Trader reserveBalance lookup.
-   * @param {string | [string, string]} allowance
+   * @param {string | [string, string]} reserveBalance Reserve balance to be returned by the mock.
    * @return Mocked request
    */
   mockFetchTraderReserve(reserveBalance: string | [string, string]) {
-    let counter = 0;
+    let index = 0;
 
     return cy.intercept(
       "POST",
@@ -130,12 +122,7 @@ export class Connex {
         const to = req?.body?.clauses[0]?.to;
 
         if (to.toLowerCase() === chain.trader.toLowerCase()) {
-          const data =
-            typeof reserveBalance === "string"
-              ? reserveBalance
-              : counter === 0
-              ? reserveBalance[0]
-              : reserveBalance[1];
+          const data = responseHandler(reserveBalance, index);
 
           req.reply({
             statusCode: 200,
@@ -151,7 +138,7 @@ export class Connex {
             ],
           });
 
-          counter++;
+          index++;
           return;
         }
 

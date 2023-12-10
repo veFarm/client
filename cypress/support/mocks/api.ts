@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { responseHandler } from "cypress/support/utils";
+
 /**
  * Class to intercept and mock API calls aimed to our BE.
  */
@@ -11,22 +13,18 @@ export class API {
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  mockGetAccountStats(response?: Object | [Object, Object]) {
-    let counter = 0;
+  mockGetAccountStats(response: Object | [Object, Object]) {
+    let index = 0;
 
     return cy.intercept(
       "GET",
       `**/getaccountstats?account=${this.account}*`,
       (req) => {
-        const res = !Array.isArray(response)
-          ? response
-          : counter === 0
-          ? response[0]
-          : response[1];
+        const res = responseHandler(response, index);
 
         req.reply(res);
 
-        counter++;
+        index++;
         return;
       },
     );
@@ -37,22 +35,18 @@ export class API {
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  mockGetAccountSwaps(response?: Object | [Object, Object]) {
-    let counter = 0;
+  mockGetAccountSwaps(response: Object | [Object, Object]) {
+    let index = 0;
 
     return cy.intercept(
       "GET",
       `**/getaccountswaps?account=${this.account}*`,
       (req) => {
-        const res = !Array.isArray(response)
-          ? response
-          : counter === 0
-          ? response[0]
-          : response[1];
+        const res = responseHandler(response, index);
 
         req.reply(res);
 
-        counter++;
+        index++;
         return;
       },
     );
@@ -63,22 +57,18 @@ export class API {
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  mockGetTradeForecast(response?: Object | [Object, Object]) {
-    let counter = 0;
+  mockGetTradeForecast(response: Object | [Object, Object]) {
+    let index = 0;
 
     return cy.intercept(
       "GET",
       `**/gettradeforecast?account=${this.account}*`,
       (req) => {
-        const res = !Array.isArray(response)
-          ? response
-          : counter === 0
-          ? response[0]
-          : response[1];
+        const res = responseHandler(response, index);
 
         req.reply(res);
 
-        counter++;
+        index++;
         return;
       },
     );
