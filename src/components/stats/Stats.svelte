@@ -94,7 +94,7 @@
           .totalProfitVET,
         2,
       )}
-      label="VET early profit"
+      label="VET yearly profit"
     />
   </div>
 {/if}
