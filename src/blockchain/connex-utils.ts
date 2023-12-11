@@ -8,12 +8,12 @@ import * as paramsArtifact from "@/artifacts/Params.json";
 
 export type Contract = {
   methods: {
-    constant: Record<string, (args: any[]) => Promise<any>>;
+    constant: Record<string, (...args: any[]) => Promise<any>>;
     signed: Record<
       string,
-      (args: any[], comment: string) => Promise<Connex.Vendor.TxResponse>
+      (...args: any[]) => (comment: string) => Promise<Connex.Vendor.TxResponse>
     >;
-    clause: Record<string, (args: any[]) => Connex.VM.Clause>;
+    clause: Record<string, (...args: any[]) => Connex.VM.Clause>;
   };
   events: Record<string, Connex.Thor.Account.Event>;
 };
@@ -38,8 +38,8 @@ export class ConnexUtils {
   private defineConstant(
     address: Address,
     method: AbiItem,
-  ): (args: any[]) => Promise<Record<string | number, any>> {
-    return async (args: any[]) => {
+  ): (...args: any[]) => Promise<Record<string | number, any>> {
+    return async (...args: any[]) => {
       const res = await this.connex.thor
         .account(address)
         .method(method)
@@ -58,15 +58,21 @@ export class ConnexUtils {
   private defineSignedRequest(
     address: Address,
     method: AbiItem,
-  ): (args: any[], comment: string) => Promise<Connex.Vendor.TxResponse> {
-    return async (args: any[], comment: string) => {
-      const clause = this.connex.thor
-        .account(address)
-        .method(method)
-        .asClause(...args);
+  ): (
+    ...args: any[]
+  ) => (comment: string) => Promise<Connex.Vendor.TxResponse> {
+    return (...args: any[]) =>
+      async (comment: string) => {
+        const clause = this.connex.thor
+          .account(address)
+          .method(method)
+          .asClause(...args);
 
-      return this.connex.vendor.sign("tx", [clause]).comment(comment).request();
-    };
+        return this.connex.vendor
+          .sign("tx", [clause])
+          .comment(comment)
+          .request();
+      };
   }
 
   /**
@@ -78,8 +84,8 @@ export class ConnexUtils {
   defineClause(
     address: Address,
     method: AbiItem,
-  ): (args: any[]) => Connex.VM.Clause {
-    return (args: any[]) => {
+  ): (...args: any[]) => Connex.VM.Clause {
+    return (...args: any[]) => {
       return this.connex.thor
         .account(address)
         .method(method)
@@ -260,10 +266,10 @@ export class ConnexUtils {
       "0x0000000000000000000000000000506172616d73",
     );
 
-    const decoded = await contract.methods.constant.get([
+    const decoded = await contract.methods.constant.get(
       // 0x000000…696365 is the key of baseGasPrice https://docs.vechain.org/others/miscellaneous.html#key-of-governance-params
       "0x000000000000000000000000000000000000626173652d6761732d7072696365",
-    ]);
+    );
 
     return bn(decoded[0]);
   }

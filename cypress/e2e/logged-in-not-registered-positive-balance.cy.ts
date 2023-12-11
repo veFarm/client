@@ -98,9 +98,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Act
 
     // Assert
-    cy.getByCy("trades-history").contains(
-      "You don't have any past trades",
-    );
+    cy.getByCy("trades-history").contains("You don't have any past trades");
   });
 
   it("keeps me connected when I refresh the page", () => {

@@ -53,7 +53,7 @@ async function fetchReserveBalance(
   contract: Contract,
   account: Address,
 ): Promise<BigNumber> {
-  const decoded = await contract.methods.constant.reserves([account]);
+  const decoded = await contract.methods.constant.reserves(account);
   return bn(decoded[0]);
 }
 

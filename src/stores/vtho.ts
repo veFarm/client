@@ -49,10 +49,10 @@ function createStore() {
         chain.vtho,
       );
 
-      const decoded = await contract.methods.constant.allowance([
+      const decoded = await contract.methods.constant.allowance(
         account,
         chain.trader,
-      ]);
+      );
 
       store.set({
         connexUtils,
@@ -82,10 +82,10 @@ function createStore() {
 
         const { contract, account } = data;
 
-        const decoded = await contract.methods.constant.allowance([
+        const decoded = await contract.methods.constant.allowance(
           account,
           chain.trader,
-        ]);
+        );
 
         store.update((s) => ({
           ...s,
@@ -115,9 +115,9 @@ function createStore() {
         const { connexUtils, contract } = data;
 
         const response = await contract.methods.signed.approve(
-          [chain.trader, amount],
-          comment,
-        );
+          chain.trader,
+          amount,
+        )(comment);
 
         await connexUtils.waitForReceipt(response.txid);
         await this.fetchAllowance();

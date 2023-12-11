@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 import { chain } from "@/config/index";
-import type { Balance } from "@/typings/types"
 import { responseHandler } from "cypress/support/utils";
 
 export const VTHO_AMOUNT = {
@@ -11,7 +10,12 @@ export const VTHO_AMOUNT = {
   MAX: "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
 };
 
-export const BALANCE = {
+type Balance = {
+  vet: string;
+  vtho: string;
+};
+
+export const BALANCE: Record<string, Balance> = {
   ZERO: {
     vet: "0x0000000000000000000",
     vtho: "0x00000000000000000",
