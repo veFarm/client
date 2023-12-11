@@ -3,7 +3,7 @@ import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
 import type BigNumber from "bignumber.js";
 import { chain } from "@/config";
-import type { WalletId, Balance } from "@/typings/types";
+import type { WalletId } from "@/typings/types";
 import { ConnexUtils } from "@/blockchain/connex-utils";
 
 type State =

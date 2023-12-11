@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import { chain } from "@/config/index";
+import type { Balance } from "@/typings/types"
 import { responseHandler } from "cypress/support/utils";
 
 export const VTHO_AMOUNT = {
@@ -23,11 +24,6 @@ export const BALANCE = {
     vet: "0x1b1ae4d6e2ef500000",
     vtho: "0x2b0d094b561bcf000",
   },
-};
-
-export type Balance = {
-  vet: string;
-  vtho: string;
 };
 
 export type TxStatus = "reverted" | "mined";
