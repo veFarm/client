@@ -1,6 +1,5 @@
 import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
-import { Certificate } from "thor-devkit";
 import type { BigNumber } from "bignumber.js";
 import { WrappedConnex } from "@vearnfi/wrapped-connex";
 import { chain } from "@/config";
@@ -85,7 +84,7 @@ function createStore() {
         const cert = await wConnex.signCert(message);
 
         // This should throw if cert isn't valid.
-        Certificate.verify(cert);
+        wConnex.verifyCert(cert);
 
         const account = cert.signer as Address;
 
