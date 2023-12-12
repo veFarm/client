@@ -66,6 +66,7 @@
     "vitest": "^0.34.3"
   },
   "dependencies": {
+    "@vearnfi/config": "^1.0.0",
     "@vearnfi/wrapped-connex": "^1.0.1",
     "@vechain/connex": "^2.1.0",
     "bignumber.js": "^9.1.1",
