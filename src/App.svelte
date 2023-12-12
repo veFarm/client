@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Connex } from "@vechain/connex";
-  import { WrappedConnex } from "@vearnfi/wrapped-connex"
+  import { WrappedConnex } from "@vearnfi/wrapped-connex";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";

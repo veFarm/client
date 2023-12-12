@@ -40,10 +40,10 @@
     return d + h + m === 0
       ? "5 mins"
       : d > 0
-      ? `${d} days`
-      : h > 0
-      ? `${h} hours`
-      : `${m} minutes`;
+        ? `${d} days`
+        : h > 0
+          ? `${h} hours`
+          : `${m} minutes`;
   }
 
   let firstTrade: Trade | undefined;

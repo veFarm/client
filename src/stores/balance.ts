@@ -1,5 +1,5 @@
 import { writable, get } from "svelte/store";
-import type { WrappedConnex, Balance } from "@vearnfi/wrapped-connex"
+import type { WrappedConnex, Balance } from "@vearnfi/wrapped-connex";
 import { wallet } from "@/stores/wallet";
 
 type State =

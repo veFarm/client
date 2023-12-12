@@ -23,13 +23,14 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
     }),
     // , visualizer()
   ],
-  // build: {
-  //   rollupOptions: {
-  //     external: [
-  //       "@vearnfi/wrapped-connex",
-  //     ],
-  //   },
-  // },
+  build: {
+    rollupOptions: {
+      external: [
+        "@vearnfi/wrapped-connex",
+        // ^ Required while linking local packages.
+      ],
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve("./src"),
