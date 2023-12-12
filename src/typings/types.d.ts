@@ -1,3 +1,5 @@
+/// <reference types="svelte" />
+
 import type { BigNumber } from "bignumber.js";
 
 export type ChainId = 100009 | 100010 | 100011;

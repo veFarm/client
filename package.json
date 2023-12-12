@@ -36,6 +36,7 @@
     "@testing-library/jest-dom": "^6.1.2",
     "@testing-library/svelte": "^4.0.3",
     "@testing-library/user-event": "^14.4.3",
+    "@tsconfig/cypress": "^1.0.1",
     "@tsconfig/svelte": "^3.0.0",
     "@types/big.js": "^6.1.6",
     "@vitest/coverage-istanbul": "^0.34.3",
