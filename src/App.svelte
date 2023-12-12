@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Connex } from "@vechain/connex";
-  import { ConnexUtils } from "@/blockchain/connex-utils";
+  import { WrappedConnex } from "@vearnfi/wrapped-connex"
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
@@ -39,12 +39,12 @@
       const connex = new Connex({
         node: chain.rpc[0],
         network: chain.network,
-        noExtension: walletId === "sync2",
+        signer: "sync2",
       });
 
-      const connexUtils = new ConnexUtils(connex);
+      const wConnex = new WrappedConnex(connex);
 
-      const ticker = connexUtils.ticker();
+      const ticker = wConnex.ticker();
 
       void (async () => {
         for (;;) {

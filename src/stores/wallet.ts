@@ -1,14 +1,14 @@
 import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
-import type BigNumber from "bignumber.js";
+import type { BigNumber } from "bignumber.js";
+import { WrappedConnex } from "@vearnfi/wrapped-connex";
 import { chain } from "@/config";
 import type { WalletId } from "@/typings/types";
-import { ConnexUtils } from "@/blockchain/connex-utils";
 
 type State =
   | {
-      connexUtils: ConnexUtils;
+      wConnex: WrappedConnex;
       loading: boolean;
       error: string | undefined;
       connected: true;
@@ -17,7 +17,7 @@ type State =
       baseGasPrice: BigNumber;
     }
   | {
-      connexUtils: ConnexUtils | undefined;
+      wConnex: WrappedConnex | undefined;
       loading: boolean;
       error: string | undefined;
       connected: false;
@@ -27,7 +27,7 @@ type State =
     };
 
 const initialState: State = {
-  connexUtils: undefined,
+  wConnex: undefined,
   loading: false,
   error: undefined,
   connected: false,
@@ -69,10 +69,10 @@ function createStore() {
         const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
-          noExtension: walletId === "sync2",
+          signer: "sync2",
         });
 
-        const connexUtils = new ConnexUtils(connex);
+        const wConnex = new WrappedConnex(connex);
 
         const message: Connex.Vendor.CertMessage = {
           purpose: "identification",
@@ -82,7 +82,7 @@ function createStore() {
           },
         };
 
-        const cert = await connexUtils.signCert(message);
+        const cert = await wConnex.signCert(message);
 
         // This should throw if cert isn't valid.
         Certificate.verify(cert);
@@ -93,13 +93,13 @@ function createStore() {
         localStorage.setItem("user", JSON.stringify({ walletId, account }));
 
         store.set({
-          connexUtils,
+          wConnex,
           loading: false,
           error: undefined,
           connected: true,
           account,
           walletId,
-          baseGasPrice: await connexUtils.fetchBaseGasPrice(),
+          baseGasPrice: await wConnex.fetchBaseGasPrice(),
         });
       } catch (error: unknown) {
         store.set({
@@ -136,19 +136,19 @@ function createStore() {
         const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
-          noExtension: walletId === "sync2",
+          signer: "sync2",
         });
 
-        const connexUtils = new ConnexUtils(connex);
+        const wConnex = new WrappedConnex(connex);
 
         store.set({
-          connexUtils,
+          wConnex,
           loading: false,
           error: undefined,
           connected: true,
           account,
           walletId,
-          baseGasPrice: await connexUtils.fetchBaseGasPrice(),
+          baseGasPrice: await wConnex.fetchBaseGasPrice(),
         });
       } catch (error: unknown) {
         store.set({
@@ -171,9 +171,9 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const { connexUtils, account } = data;
+        const { wConnex, account } = data;
 
-        return connexUtils.signTx(clauses, account, comment);
+        return wConnex.signTx(clauses, account, comment);
       } catch (error: unknown) {
         store.update((s) => ({
           ...s,
@@ -197,12 +197,12 @@ function createStore() {
         const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
-          noExtension: walletId === "sync2",
+          signer: "sync2",
         });
 
-        const connexUtils = new ConnexUtils(connex);
+        const wConnex = new WrappedConnex(connex);
 
-        return connexUtils.waitForReceipt(txId);
+        return wConnex.waitForReceipt(txId);
       } catch (error: unknown) {
         store.update((s) => ({
           ...s,
