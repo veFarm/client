@@ -26,6 +26,7 @@ const config: UserConfig & { test: VitestConfig["test"] } = {
   build: {
     rollupOptions: {
       external: [
+        "@vearnfi/config",
         "@vearnfi/wrapped-connex",
         // ^ Required while linking local packages.
       ],

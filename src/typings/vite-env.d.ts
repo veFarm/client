@@ -1,7 +1,7 @@
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
 
-import type { ChainId } from "./types";
+import type { ChainId } from "@vearnfi/config"
 
 /*
  * https://vitejs.dev/guide/env-and-mode.html#intellisense-for-typescript

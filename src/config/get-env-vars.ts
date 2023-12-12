@@ -1,4 +1,4 @@
-import type { ChainId } from "@/typings/types";
+import type { ChainId } from "@vearnfi/config"
 
 /**
  * Utility function to read and validate environment variables.
