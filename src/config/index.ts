@@ -1,8 +1,6 @@
 import bn from "bignumber.js";
 import { getChainData } from "@vearnfi/config"
-import config from "@/config/get-env-vars";
-
-const { getEnvVars } = config;
+import { getEnvVars } from "@/config/get-env-vars";
 
 const { CHAIN_ID } = getEnvVars();
 

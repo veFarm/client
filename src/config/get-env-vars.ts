@@ -6,7 +6,7 @@ import type { ChainId } from "@vearnfi/config"
  * CHAIN_ID: string,
  * }} Environment variables
  */
-function getEnvVars() {
+export function getEnvVars() {
   const CHAIN_ID: ChainId = window.Cypress
     ? (100011 as const)
     : import.meta.env.VITE_CHAIN_ID;
@@ -19,7 +19,3 @@ function getEnvVars() {
     CHAIN_ID,
   };
 }
-
-export default {
-  getEnvVars,
-};
