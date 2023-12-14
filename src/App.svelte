@@ -44,7 +44,7 @@
 
       const wConnex = new WrappedConnex(connex);
 
-      const ticker = wConnex.ticker();
+      const ticker = wConnex.getTicker();
 
       void (async () => {
         for (;;) {

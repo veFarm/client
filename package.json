@@ -13,7 +13,7 @@
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "format": "prettier --write  --plugin prettier-plugin-svelte .",
+    "format": "prettier --write --plugin prettier-plugin-svelte .",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "cy:open": "npx cypress open",
@@ -66,11 +66,12 @@
     "vitest": "^0.34.3"
   },
   "dependencies": {
-    "@vearnfi/config": "^1.0.0",
-    "@vearnfi/wrapped-connex": "^1.1.0",
+    "@vearnfi/config": "^1.1.1",
+    "@vearnfi/wrapped-connex": "^1.1.1",
     "@vechain/connex": "^2.1.0",
     "bignumber.js": "^9.1.1",
     "class-variance-authority": "^0.7.0",
-    "svelte-smooth-popover": "^1.0.8"
+    "svelte-smooth-popover": "^1.0.8",
+    "thor-devkit": "^2.0.9"
   }
 }

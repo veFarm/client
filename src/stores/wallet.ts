@@ -1,6 +1,7 @@
 import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
-import type { BigNumber } from "bignumber.js";
+import { Certificate } from "thor-devkit";
+// import type { BigNumber } from "bignumber.js";
 import { WrappedConnex } from "@vearnfi/wrapped-connex";
 import { chain } from "@/config";
 import type { WalletId } from "@/typings/types";
@@ -13,7 +14,7 @@ type State =
       connected: true;
       account: Address;
       walletId: WalletId;
-      baseGasPrice: BigNumber;
+      // baseGasPrice: BigNumber;
     }
   | {
       wConnex: WrappedConnex | undefined;
@@ -22,7 +23,7 @@ type State =
       connected: false;
       account: undefined;
       walletId: WalletId | undefined;
-      baseGasPrice: undefined;
+      // baseGasPrice: undefined;
     };
 
 const initialState: State = {
@@ -32,7 +33,7 @@ const initialState: State = {
   connected: false,
   account: undefined,
   walletId: undefined,
-  baseGasPrice: undefined,
+  // baseGasPrice: undefined,
 };
 
 function createStore() {
@@ -84,7 +85,7 @@ function createStore() {
         const cert = await wConnex.signCert(message);
 
         // This should throw if cert isn't valid.
-        wConnex.verifyCert(cert);
+        Certificate.verify(cert);
 
         const account = cert.signer as Address;
 
@@ -98,7 +99,7 @@ function createStore() {
           connected: true,
           account,
           walletId,
-          baseGasPrice: await wConnex.fetchBaseGasPrice(),
+          // baseGasPrice: await wConnex.fetchBaseGasPrice(),
         });
       } catch (error: unknown) {
         store.set({
@@ -147,7 +148,7 @@ function createStore() {
           connected: true,
           account,
           walletId,
-          baseGasPrice: await wConnex.fetchBaseGasPrice(),
+          // baseGasPrice: await wConnex.fetchBaseGasPrice(),
         });
       } catch (error: unknown) {
         store.set({
