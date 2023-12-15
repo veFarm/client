@@ -119,8 +119,8 @@ describe("Register", () => {
         "@registerTxRequest",
         "@registerTxResponse",
         "@registerTxReceipt",
-        "@fetchAllowance",
-        "@fetchReserveBalance",
+        // "@fetchAllowance",
+        // "@fetchReserveBalance",
       ],
       { timeout: 20_000 },
     );

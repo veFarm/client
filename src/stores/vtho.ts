@@ -117,9 +117,7 @@ function createStore() {
           chain.trader,
           amount,
         )(comment);
-
         await wConnex.waitForReceipt(response.txid);
-        await this.fetchAllowance();
       } catch (error: unknown) {
         store.update((s) => ({
           ...s,

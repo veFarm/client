@@ -127,9 +127,8 @@
           comments.reverse().join(" "),
       );
       await wallet.waitForReceipt(response!.txid);
-      await trader.fetchConfig();
+      await trader.fetchConfig()
       await vtho.fetchAllowance();
-      // await balance.fetchBalance();
     } catch (error: any) {
       console.error(error);
       errors.network.push(error?.message || "Unknown error occurred.");
