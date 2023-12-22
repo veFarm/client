@@ -1,15 +1,15 @@
 /// <reference types="cypress" />
 
-import { Wallet } from "cypress/support/mocks/wallet";
-import { API } from "cypress/support/mocks/api";
-import { Connex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
+import { makeWallet } from "cypress/support/mocks/wallet";
+import { makeApi } from "cypress/support/mocks/api";
+import { makeConnex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
 
-const api = new API(account);
-const connex = new Connex(account);
-const wallet = new Wallet(walletId, account);
+const api = makeApi(account);
+const connex = makeConnex(account);
+const wallet = makeWallet(walletId, account);
 
 describe("Logged in NOT registered POSITIVE balance account", () => {
   beforeEach(() => {

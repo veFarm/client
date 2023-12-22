@@ -3,22 +3,26 @@
 import { responseHandler } from "cypress/support/utils";
 
 /**
- * Class to intercept and mock API calls aimed to our BE.
+ * Factory to intercept and mock API calls aimed to our BE.
  */
-export class API {
-  constructor(private readonly account: Address) {}
+export function makeApi(account: Address) {
+  return Object.freeze({
+    mockGetAccountStats,
+    mockGetAccountSwaps,
+    mockGetTradeForecast,
+  })
 
   /**
    * Mock getaccountstats api call.
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  mockGetAccountStats(response: Object | [Object, Object]) {
+  function mockGetAccountStats(response: Object | [Object, Object]) {
     let index = 0;
 
     return cy.intercept(
       "GET",
-      `**/getaccountstats?account=${this.account}*`,
+      `**/getaccountstats?account=${account}*`,
       (req) => {
         const res = responseHandler(response, index);
 
@@ -35,12 +39,12 @@ export class API {
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  mockGetAccountSwaps(response: Object | [Object, Object]) {
+  function mockGetAccountSwaps(response: Object | [Object, Object]) {
     let index = 0;
 
     return cy.intercept(
       "GET",
-      `**/getaccountswaps?account=${this.account}*`,
+      `**/getaccountswaps?account=${account}*`,
       (req) => {
         const res = responseHandler(response, index);
 
@@ -57,12 +61,12 @@ export class API {
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  mockGetTradeForecast(response: Object | [Object, Object]) {
+  function mockGetTradeForecast(response: Object | [Object, Object]) {
     let index = 0;
 
     return cy.intercept(
       "GET",
-      `**/gettradeforecast?account=${this.account}*`,
+      `**/gettradeforecast?account=${account}*`,
       (req) => {
         const res = responseHandler(response, index);
 

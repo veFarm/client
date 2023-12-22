@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 import { chain } from "@/config/index";
-import type { Balance } from "@/typings/types"
 import { responseHandler } from "cypress/support/utils";
 
 export const VTHO_AMOUNT = {
@@ -28,23 +27,36 @@ export const BALANCE = {
 
 export type TxStatus = "reverted" | "mined";
 
+type Balance = {
+  vet: string,
+  vtho: string,
+}
+
 /**
- * Class to intercept and mock API calls aimed to the VThor blockchain.
+ * Factory to intercept and mock API calls aimed to the VThor blockchain.
  */
-export class Connex {
-  constructor(private readonly account: Address) {}
+export function makeConnex(account: Address) {
+  return Object.freeze({
+    mockFetchBalance,
+    mockFetchVTHOAllowance,
+    mockFetchTraderReserve,
+    mockUpdateReserveBalanceTxReceipt,
+    mockRevokeAllowanceTxReceipt,
+    mockRegisterTxReceipt,
+    mockApproveAllowanceTxReceipt,
+  })
 
   /**
    * Mock account balance lookup.
    * @param {Balance | [Balance,Balance]} balance. Mocked balance or balance array to simulate a change of state.
    * @returns
    */
-  mockFetchBalance(balance: Balance | [Balance, Balance]) {
+  function mockFetchBalance(balance: Balance | [Balance, Balance]) {
     let index = 0;
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/accounts/${this.account.toLowerCase()}*`,
+      `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`,
       (req) => {
         const { vet, vtho } = responseHandler(balance, index);
 
@@ -68,7 +80,7 @@ export class Connex {
    * @param {string | [string, string]} allowance Allowance to be returned by the mock.
    * @return Mocked request
    */
-  mockFetchVTHOAllowance(allowance: string | [string, string]) {
+  function mockFetchVTHOAllowance(allowance: string | [string, string]) {
     let index = 0;
 
     return cy.intercept(
@@ -108,7 +120,7 @@ export class Connex {
    * @param {string | [string, string]} reserveBalance Reserve balance to be returned by the mock.
    * @return Mocked request
    */
-  mockFetchTraderReserve(reserveBalance: string | [string, string]) {
+  function mockFetchTraderReserve(reserveBalance: string | [string, string]) {
     let index = 0;
 
     return cy.intercept(
@@ -149,7 +161,7 @@ export class Connex {
    * @param {TxStatus} txStatus Transaction status.
    * @returns
    */
-  mockUpdateReserveBalanceTxReceipt(txId: string, txStatus: TxStatus) {
+  function mockUpdateReserveBalanceTxReceipt(txId: string, txStatus: TxStatus) {
     const reverted = txStatus === "reverted";
 
     return cy.intercept(
@@ -158,7 +170,7 @@ export class Connex {
       (req) => {
         req.reply({
           gasUsed: 28938,
-          gasPayer: this.account,
+          gasPayer: account,
           paid: "0x4041593a91a4000",
           reward: "0x1346cdf7f87e000",
           reverted,
@@ -168,7 +180,7 @@ export class Connex {
             blockNumber: 17135292,
             blockTimestamp: 1701384290,
             txID: txId,
-            txOrigin: this.account,
+            txOrigin: account,
           },
           outputs: reverted
             ? []
@@ -199,7 +211,7 @@ export class Connex {
    * @param {TxStatus} txStatus Transaction status.
    * @returns
    */
-  mockRevokeAllowanceTxReceipt(txId: string, txStatus: TxStatus) {
+  function mockRevokeAllowanceTxReceipt(txId: string, txStatus: TxStatus) {
     const reverted = txStatus === "reverted";
 
     return cy.intercept(
@@ -208,7 +220,7 @@ export class Connex {
       (req) => {
         req.reply({
           gasUsed: 26485,
-          gasPayer: this.account,
+          gasPayer: account,
           paid: "0x3acefabf8c32000",
           reward: "0x11a47e6caa0f000",
           reverted,
@@ -218,7 +230,7 @@ export class Connex {
             blockNumber: 17145652,
             blockTimestamp: 1701487890,
             txID: txId,
-            txOrigin: this.account,
+            txOrigin: account,
           },
           outputs: reverted
             ? []
@@ -250,7 +262,7 @@ export class Connex {
    * @param {TxStatus} txStatus Transaction status.
    * @returns
    */
-  mockRegisterTxReceipt(txId: string, txStatus: TxStatus) {
+  function mockRegisterTxReceipt(txId: string, txStatus: TxStatus) {
     const reverted = txStatus === "reverted";
 
     return cy.intercept(
@@ -259,7 +271,7 @@ export class Connex {
       (req) => {
         req.reply({
           gasUsed: 86147,
-          gasPayer: this.account,
+          gasPayer: account,
           paid: "0xbf48e6696a7e000",
           reward: "0x3962ab860659000",
           reverted,
@@ -269,7 +281,7 @@ export class Connex {
             blockNumber: 17126383,
             blockTimestamp: 1701295200,
             txID: "0x5eec87fb2abcf21e14a93618dd9c613aa510ee84a2e3514caa3caab67e340223",
-            txOrigin: this.account,
+            txOrigin: account,
           },
           outputs: reverted
             ? []
@@ -315,7 +327,7 @@ export class Connex {
    * @param {TxStatus} txStatus Transaction status.
    * @returns
    */
-  mockApproveAllowanceTxReceipt(txId: string, txStatus: TxStatus) {
+  function mockApproveAllowanceTxReceipt(txId: string, txStatus: TxStatus) {
     const reverted = txStatus === "reverted";
 
     return cy.intercept(
@@ -324,7 +336,7 @@ export class Connex {
       (req) => {
         req.reply({
           gasUsed: 47209,
-          gasPayer: this.account,
+          gasPayer: account,
           paid: "0x68d335a9003a000",
           reward: "0x1f72901919ab000",
           reverted,

@@ -5,28 +5,32 @@ import type { WalletId } from "@/typings/types";
 export type CertStatus = "valid" | "invalid";
 
 /**
- * Class to intercept and mock API calls aimed to the wallet.
+ * Factory to intercept and mock API calls aimed to the wallet.
  */
-export class Wallet {
-  constructor(
-    private readonly walletId: WalletId,
-    private readonly account: Address,
-  ) {}
+export function makeWallet(walletId: WalletId, account: Address) {
+  return Object.freeze({
+    simulateLoggedOutAccount,
+    simulateLoggedInAccount,
+    getSync2Iframe,
+    spyOnSignTxRequest,
+    mockSignTxResponse,
+    mockSignCertResponse,
+  })
 
   /**
    * Simulate a logged out account.
    */
-  simulateLoggedOutAccount() {
+  function simulateLoggedOutAccount() {
     cy.clearLocalStorage();
   }
 
   /**
    * Simulate a logged in account.
    */
-  simulateLoggedInAccount() {
+  function simulateLoggedInAccount() {
     localStorage.setItem(
       "user",
-      JSON.stringify({ walletId: this.walletId, account: this.account }),
+      JSON.stringify({ walletId, account }),
     );
   }
 
@@ -34,7 +38,7 @@ export class Wallet {
    * Look for the Sync2 Buddy iframe.
    * @return Iframe cypress subject
    */
-  getSync2Iframe(): Cypress.Chainable {
+  function getSync2Iframe(): Cypress.Chainable {
     return cy
       .get("iframe", { timeout: 20_000 })
       .eq(1)
@@ -46,7 +50,7 @@ export class Wallet {
    * Intercept a sign tx request and add assertions on top of it.
    * @return Spied on request.
    */
-  spyOnSignTxRequest() {
+  function spyOnSignTxRequest() {
     return cy.intercept("POST", "https://tos.vecha.in/*");
   }
 
@@ -55,14 +59,14 @@ export class Wallet {
    * @param {string} txId Transaction id.
    * @return Mocked request.
    */
-  mockSignTxResponse(txId: string) {
+  function mockSignTxResponse(txId: string) {
     return cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
       req.reply({
         statusCode: 200,
         body: {
           payload: {
             txid: txId,
-            signer: this.account,
+            signer: account,
           },
         },
       });
@@ -74,7 +78,7 @@ export class Wallet {
    * @param {CertStatus} certStatus. Whether or not the mocked signature should be valid.
    * @return Mocked request.
    */
-  mockSignCertResponse(certStatus: CertStatus) {
+  function mockSignCertResponse(certStatus: CertStatus) {
     const valid = certStatus === "valid";
 
     return cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
@@ -84,7 +88,7 @@ export class Wallet {
           payload: {
             annex: {
               domain: "127.0.0.1:5173",
-              signer: this.account,
+              signer: account,
               timestamp: 1701217618,
             },
             signature: valid

@@ -1,9 +1,9 @@
 /// <reference types="cypress" />
 
 import { chain } from "@/config/index";
-import { Wallet } from "cypress/support/mocks/wallet";
-import { API } from "cypress/support/mocks/api";
-import { Connex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
+import { makeWallet } from "cypress/support/mocks/wallet";
+import { makeApi } from "cypress/support/mocks/api";
+import { makeConnex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
@@ -11,9 +11,9 @@ const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
 const APPROVE_TX_ID =
   "0x60de9334fe2f261861c1bb11a2d44e86437d23040755cc7b8e976f24e5c8cc54";
 
-const api = new API(account);
-const connex = new Connex(account);
-const wallet = new Wallet(walletId, account);
+const api = makeApi(account);
+const connex = makeConnex(account);
+const wallet = makeWallet(walletId, account);
 
 describe("Approve allowance", () => {
   beforeEach(() => {
