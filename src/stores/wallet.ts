@@ -2,7 +2,8 @@ import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
 // import type { BigNumber } from "bignumber.js";
-import { WrappedConnex } from "@vearnfi/wrapped-connex";
+import { wrapConnex } from "@vearnfi/wrapped-connex";
+import type { WrappedConnex } from "@vearnfi/wrapped-connex"
 import { chain } from "@/config";
 import type { WalletId } from "@/typings/types";
 
@@ -69,10 +70,10 @@ function createStore() {
         const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
-          signer: "sync2",
+          noExtension: walletId === "sync2"
         });
 
-        const wConnex = new WrappedConnex(connex);
+        const wConnex = wrapConnex(connex);
 
         const message: Connex.Vendor.CertMessage = {
           purpose: "identification",
@@ -136,10 +137,10 @@ function createStore() {
         const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
-          signer: "sync2",
+          noExtension: walletId === "sync2"
         });
 
-        const wConnex = new WrappedConnex(connex);
+        const wConnex = wrapConnex(connex);
 
         store.set({
           wConnex,
@@ -192,15 +193,7 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const { walletId } = data;
-
-        const connex = new Connex({
-          node: chain.rpc[0],
-          network: chain.network,
-          signer: "sync2",
-        });
-
-        const wConnex = new WrappedConnex(connex);
+        const { wConnex } = data;
 
         return wConnex.waitForReceipt(txId);
       } catch (error: unknown) {
