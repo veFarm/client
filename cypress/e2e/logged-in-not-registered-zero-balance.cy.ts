@@ -171,15 +171,13 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("trades-forecast-table").should("not.exist");
   });
 
-  it.only("shows me 'You don't have any past trades'", () => {
+  it("shows me 'You don't have any past trades'", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("trades-history").contains(
-      "You don't have any past trades",
-    );
+    cy.getByCy("trades-history").contains("You don't have any past trades");
   });
 
   it.skip("shows me a 'lack of funds' alert and a link to the faucet", () => {

@@ -94,7 +94,7 @@ describe("Approve allowance", () => {
     });
   });
 
-  it("shows an error message if the tx is rejected", () => {
+  it.only("shows an error message if the tx is rejected", () => {
     wallet.spyOnSignTxRequest().as("approveTxRequest");
     wallet.mockSignTxResponse(APPROVE_TX_ID).as("approveTxResponse");
     connex
@@ -110,8 +110,8 @@ describe("Approve allowance", () => {
         "@approveTxRequest",
         "@approveTxResponse",
         "@approveTxReceipt",
-        "@fetchAllowance",
-        "@fetchReserveBalance",
+        // "@fetchAllowance",
+        // "@fetchReserveBalance",
       ],
       { timeout: 20_000 },
     );

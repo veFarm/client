@@ -107,14 +107,14 @@
       // TODO: get clause and comment from store
       if (!inputsMatchStore) {
         clauses.push(
-          trader.getClause("saveConfig")!([reserveBalanceWei.toFixed()]),
+          trader.getClause("saveConfig")!(reserveBalanceWei.toFixed()),
         );
 
         comments.push("Save reserve balance into the vearn contract.");
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
-        clauses.push(vtho.getClause("approve")!([chain.trader, MAX_UINT256]));
+        clauses.push(vtho.getClause("approve")!(chain.trader, MAX_UINT256));
 
         comments.push(
           "Allow the vearn contract to spend your VTHO in exchange for VET.",
@@ -127,9 +127,8 @@
           comments.reverse().join(" "),
       );
       await wallet.waitForReceipt(response!.txid);
-      await trader.fetchConfig();
+      await trader.fetchConfig()
       await vtho.fetchAllowance();
-      // await balance.fetchBalance();
     } catch (error: any) {
       console.error(error);
       errors.network.push(error?.message || "Unknown error occurred.");

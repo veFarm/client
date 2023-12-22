@@ -1,24 +1,23 @@
 import { writable, get } from "svelte/store";
-import type { Balance } from "@/typings/types";
-import type { ConnexUtils } from "@/blockchain/connex-utils";
+import type { WrappedConnex, Balance } from "@vearnfi/wrapped-connex";
 import { wallet } from "@/stores/wallet";
 
 type State =
   | {
-      connexUtils: ConnexUtils;
+      wConnex: WrappedConnex;
       account: Address;
       current: Balance;
       previous: Balance | undefined;
     }
   | {
-      connexUtils: undefined;
+      wConnex: undefined;
       account: undefined;
       current: undefined;
       previous: undefined;
     };
 
 const initialState: State = {
-  connexUtils: undefined,
+  wConnex: undefined,
   account: undefined,
   current: undefined,
   previous: undefined,
@@ -36,12 +35,12 @@ function createStore() {
 
     // Wallet is connected.
     try {
-      const { connexUtils, account } = data;
+      const { wConnex, account } = data;
 
-      const balance = await connexUtils.fetchBalance(account);
+      const balance = await wConnex.fetchBalance(account);
 
       store.set({
-        connexUtils,
+        wConnex,
         account,
         current: balance,
         previous: get(store).current,
@@ -62,13 +61,13 @@ function createStore() {
       try {
         const data = get(store);
 
-        if (data?.connexUtils == null || data?.account == null) {
+        if (data?.wConnex == null || data?.account == null) {
           throw new Error("Wallet is not connected.");
         }
 
-        const { connexUtils, account } = data;
+        const { wConnex, account } = data;
 
-        const balance = await connexUtils.fetchBalance(account);
+        const balance = await wConnex.fetchBalance(account);
 
         store.set({
           ...data,

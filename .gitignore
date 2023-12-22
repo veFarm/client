@@ -15,7 +15,7 @@ coverage
 e2e-coverage
 unit-coverage
 .nyc_output
-cypress/snapshots
+cypress/screenshots
 
 # Editor directories and files
 .vscode/*

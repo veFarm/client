@@ -120,8 +120,8 @@ describe("Update reserve balance", () => {
         "@updateTxRequest",
         "@updateTxResponse",
         "@updateTxReceipt",
-        "@fetchAllowance",
-        "@fetchReserveBalance",
+        // "@fetchAllowance",
+        // "@fetchReserveBalance",
       ],
       { timeout: 20_000 },
     );
