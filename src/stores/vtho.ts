@@ -111,7 +111,7 @@ function createStore() {
           throw new Error("Wallet is not connected.");
         }
 
-        const { wConnex: wConnex, contract } = data;
+        const { wConnex, contract } = data;
 
         const response = await contract.methods.signed.approve(
           chain.trader,

@@ -1,5 +1,5 @@
 import type { BigNumber } from "bignumber.js";
-import type { Sol } from "@/stores/trade-forecast";
+import type { Sol } from "@/stores/trades-forecast";
 
 /**
  * Choose the 'best' withdraw amount for the given vtho balance.

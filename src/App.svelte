@@ -41,7 +41,6 @@
       void (async () => {
         for (;;) {
           await ticker.next();
-          console.log("ticker")
           await balance.fetchBalance();
         }
       })();

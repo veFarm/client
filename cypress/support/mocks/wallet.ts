@@ -15,7 +15,7 @@ export function makeWallet(walletId: WalletId, account: Address) {
     spyOnSignTxRequest,
     mockSignTxResponse,
     mockSignCertResponse,
-  })
+  });
 
   /**
    * Simulate a logged out account.
@@ -28,10 +28,7 @@ export function makeWallet(walletId: WalletId, account: Address) {
    * Simulate a logged in account.
    */
   function simulateLoggedInAccount() {
-    localStorage.setItem(
-      "user",
-      JSON.stringify({ walletId, account }),
-    );
+    localStorage.setItem("user", JSON.stringify({ walletId, account }));
   }
 
   /**

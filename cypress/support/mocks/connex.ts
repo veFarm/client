@@ -33,9 +33,9 @@ export const BALANCE: Record<string, Balance> = {
 export type TxStatus = "reverted" | "mined";
 
 type Balance = {
-  vet: string,
-  vtho: string,
-}
+  vet: string;
+  vtho: string;
+};
 
 /**
  * Factory to intercept and mock API calls aimed to the VThor blockchain.
@@ -49,7 +49,7 @@ export function makeConnex(account: Address) {
     mockRevokeAllowanceTxReceipt,
     mockRegisterTxReceipt,
     mockApproveAllowanceTxReceipt,
-  })
+  });
 
   /**
    * Mock account balance lookup.

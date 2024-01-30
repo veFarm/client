@@ -9,8 +9,8 @@ export function makeApi(account: Address) {
   return Object.freeze({
     mockGetAccountStats,
     mockGetAccountSwaps,
-    mockGetTradeForecast,
-  })
+    mockGetTradeForecast: mockGetTradesForecast,
+  });
 
   /**
    * Mock getaccountstats api call.
@@ -57,16 +57,16 @@ export function makeApi(account: Address) {
   }
 
   /**
-   * Mock gettradeforecast api call.
+   * Mock gettradesforecast api call.
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  function mockGetTradeForecast(response: Object | [Object, Object]) {
+  function mockGetTradesForecast(response: Object | [Object, Object]) {
     let index = 0;
 
     return cy.intercept(
       "GET",
-      `**/gettradeforecast?account=${account}*`,
+      `**/gettradesforecast?account=${account}*`,
       (req) => {
         const res = responseHandler(response, index);
 

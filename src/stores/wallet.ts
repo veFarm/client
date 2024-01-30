@@ -3,7 +3,7 @@ import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
 // import type { BigNumber } from "bignumber.js";
 import { wrapConnex } from "@vearnfi/wrapped-connex";
-import type { WrappedConnex } from "@vearnfi/wrapped-connex"
+import type { WrappedConnex } from "@vearnfi/wrapped-connex";
 import { chain } from "@/config";
 import type { WalletId } from "@/typings/types";
 
@@ -70,7 +70,7 @@ function createStore() {
         const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
-          noExtension: walletId === "sync2"
+          noExtension: walletId === "sync2",
         });
 
         const wConnex = wrapConnex(connex);
@@ -137,7 +137,7 @@ function createStore() {
         const connex = new Connex({
           node: chain.rpc[0],
           network: chain.network,
-          noExtension: walletId === "sync2"
+          noExtension: walletId === "sync2",
         });
 
         const wConnex = wrapConnex(connex);
