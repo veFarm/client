@@ -41,8 +41,6 @@
         `${chain.getAccountStatsEndpoint}?account=${account}`,
       );
 
-      if (response.status === 404) return;
-
       const json = (await response.json()) as RawStats;
 
       stats = {

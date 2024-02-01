@@ -55,7 +55,6 @@
       $tradesForecast.solutions.length > 0
     ) {
       const { txFee, solutions } = $tradesForecast;
-      // ^ Replace store with http call
 
       const sol = chooseSolution(
         $balance.current.vtho,

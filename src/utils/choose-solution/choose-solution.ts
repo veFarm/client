@@ -28,3 +28,41 @@ export function chooseSolution(
 
   return sol;
 }
+// export type FindExecutableTrade = (
+//   balance: Balance,
+//   reserveBalance: BigNumber,
+//   solutions: Sol[],
+// ) => Sol | undefined;
+
+// /**
+//  * Look for a solution with the highest withdraw amount
+//  * that could be executed right now based on the account's data.
+//  * @param {Balance} balance Account balance.
+//  * @param {BigNumber} reserveBalance Reserve balance.
+//  * @param {Sol[]} solutions Set of optimized solutions associated to
+//  * the given account.
+//  * @return {Sol | undefined} Highest solution or undefined in case
+//  * solutions could not be executed right now.
+//  */
+// export function findExecutableTrade(
+//   balance: Balance,
+//   reserveBalance: BigNumber,
+//   solutions: Sol[],
+// ): Sol | undefined {
+//   let solution: Sol | undefined;
+
+//   for (const sol of solutions) {
+//     const isExecutable = balance.vtho.gte(
+//       sol.withdrawAmount.plus(reserveBalance),
+//     );
+
+//     const isHigher =
+//       solution == undefined || sol.withdrawAmount.gt(solution.withdrawAmount);
+
+//     if (isExecutable && isHigher) {
+//       solution = sol;
+//     }
+//   }
+
+//   return solution;
+// }
