@@ -3,8 +3,8 @@
   // import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { balance } from "@/stores/balance";
-  import type { Sol } from "@/stores/trade-forecast";
-  import { tradeForecast } from "@/stores/trade-forecast";
+  import type { Sol } from "@/stores/trades-forecast";
+  import { tradesForecast } from "@/stores/trades-forecast";
   import { formatUnits } from "@/utils/format-units";
   // import { calcNextTrade } from "@/utils/calc-next-trade.txt";
   // import type { Trade } from "@/utils/calc-next-trade";
@@ -40,10 +40,10 @@
     return d + h + m === 0
       ? "5 mins"
       : d > 0
-      ? `${d} days`
-      : h > 0
-      ? `${h} hours`
-      : `${m} minutes`;
+        ? `${d} days`
+        : h > 0
+          ? `${h} hours`
+          : `${m} minutes`;
   }
 
   let firstTrade: Trade | undefined;
@@ -51,11 +51,10 @@
   $: {
     if (
       $balance.current != null &&
-      $tradeForecast.fetched &&
-      $tradeForecast.solutions.length > 0
+      $tradesForecast.fetched &&
+      $tradesForecast.solutions.length > 0
     ) {
-      const { txFee, solutions } = $tradeForecast;
-      // ^ Replace store with http call
+      const { txFee, solutions } = $tradesForecast;
 
       const sol = chooseSolution(
         $balance.current.vtho,
@@ -87,10 +86,10 @@
   $: {
     if (
       $balance.current != null &&
-      $tradeForecast.fetched &&
+      $tradesForecast.fetched &&
       firstTrade != null
     ) {
-      const { txFee, solutions } = $tradeForecast;
+      const { txFee, solutions } = $tradesForecast;
 
       // VTHO balance after the first trade occurred.
       const remainingBalanceVTHO = $balance.current.vtho.gte(
@@ -141,9 +140,9 @@
   }
 </script>
 
-{#if $tradeForecast.loading}
+{#if $tradesForecast.loading}
   <p><Spinner /> Computing an optimized strategy...</p>
-{:else if firstTrade != null && $tradeForecast.txFee != null}
+{:else if firstTrade != null && $tradesForecast.txFee != null}
   <div>
     <table class="w-full text-sm md:text-base" data-cy="trades-forecast-table">
       <!-- <caption class="text-sm">Upcoming Trades (estimated)</caption> -->
@@ -200,9 +199,9 @@
       <table transition:fly={{ duration: 200 }}>
         <tr>
           <td class="title">TX Fee</td>
-          <td class="value">{formatUnits($tradeForecast.txFee, 2)} VTHO</td>
+          <td class="value">{formatUnits($tradesForecast.txFee, 2)} VTHO</td>
           <td class="value"
-            >{secondTrade != null ? formatUnits($tradeForecast.txFee, 2) : "0"} VTHO</td
+            >{secondTrade != null ? formatUnits($tradesForecast.txFee, 2) : "0"} VTHO</td
           >
         </tr>
         <tr>

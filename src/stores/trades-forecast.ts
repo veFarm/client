@@ -55,15 +55,15 @@ const initialState: State = {
 };
 
 /**
- * Fetch trade forecast for the given account.
+ * Fetch trades forecast for the given account.
  * @param {Address} account Target account.
  * @return {{txFee: BigNumber, solutions: Sol[]}}
  */
-async function fetchTradeForecast(
+async function fetchTradesForecast(
   account: Address,
 ): Promise<{ solutions: Sol[]; txFee: BigNumber }> {
   const response = await fetch(
-    `${chain.getTradeForecastEndpoint}?account=${account}`,
+    `${chain.getTradesForecastEndpoint}?account=${account}`,
   );
 
   const json = (await response.json()) as ApiResponse;
@@ -83,7 +83,7 @@ async function fetchTradeForecast(
 }
 
 /**
- * Fetch trade forecast for the current logged in account.
+ * Fetch trades forecast for the current logged in account.
  */
 function createStore() {
   const store = writable<State>({ ...initialState });
@@ -113,7 +113,7 @@ function createStore() {
         loading: true,
       }));
 
-      const { txFee, solutions } = await fetchTradeForecast(account);
+      const { txFee, solutions } = await fetchTradesForecast(account);
 
       store.set({
         fetched: true,
@@ -138,4 +138,4 @@ function createStore() {
   };
 }
 
-export const tradeForecast = createStore();
+export const tradesForecast = createStore();

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Connex } from "@vechain/connex";
-  import { ConnexUtils } from "@/blockchain/connex-utils";
+  import { wrapConnex } from "@vearnfi/wrapped-connex";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
@@ -34,17 +34,9 @@
   // Update account balance with every new tick.
   $: {
     if ($wallet.connected) {
-      const { walletId } = $wallet;
+      const { wConnex } = $wallet;
 
-      const connex = new Connex({
-        node: chain.rpc[0],
-        network: chain.network,
-        noExtension: walletId === "sync2",
-      });
-
-      const connexUtils = new ConnexUtils(connex);
-
-      const ticker = connexUtils.ticker();
+      const ticker = wConnex.getTicker();
 
       void (async () => {
         for (;;) {

@@ -16,6 +16,7 @@
     loading = true;
 
     await vtho.setAllowance(amount, comment);
+    await vtho.fetchAllowance();
 
     disabled = false;
     loading = false;

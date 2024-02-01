@@ -4,13 +4,13 @@
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
-  import { tradeForecast } from "@/stores/trade-forecast";
+  import { tradesForecast } from "@/stores/trades-forecast";
   import { formatUnits } from "@/utils/format-units";
   import { StatItem } from "@/components/stat-item";
 
   type RawStats = {
     /** Target account. */
-    account: string;
+    // account: string;
     /** Number of swap operations performed by the target account. */
     swapsCount: number;
     /** Total VET amount transacted by the target account. */
@@ -40,8 +40,6 @@
       const response = await fetch(
         `${chain.getAccountStatsEndpoint}?account=${account}`,
       );
-
-      if (response.status === 404) return;
 
       const json = (await response.json()) as RawStats;
 
@@ -81,7 +79,7 @@
   }
 </script>
 
-{#if stats != null && $tradeForecast.fetched}
+{#if stats != null && $tradesForecast.fetched}
   <div
     class="lg:flex lg:flex-row lg:justify-center lg:space-x-16 lg:mt-10"
     data-cy="stats"
@@ -90,7 +88,7 @@
     <StatItem value={formatUnits(stats.vetTotal, 2)} label="VET volume" />
     <StatItem
       value={formatUnits(
-        $tradeForecast.solutions[$tradeForecast.solutions.length - 1]
+        $tradesForecast.solutions[$tradesForecast.solutions.length - 1]
           .totalProfitVET,
         2,
       )}

@@ -1,16 +1,16 @@
 /// <reference types="cypress" />
 
 import { chain } from "@/config/index";
-import { Wallet } from "cypress/support/mocks/wallet";
-import { API } from "cypress/support/mocks/api";
-import { Connex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
+import { makeWallet } from "cypress/support/mocks/wallet";
+import { makeApi } from "cypress/support/mocks/api";
+import { makeConnex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
 const account = "0x2057ca7412E6C0828501CB7b335E166f81c58D26";
 
-const api = new API(account);
-const connex = new Connex(account);
-const wallet = new Wallet(walletId, account);
+const api = makeApi(account);
+const connex = makeConnex(account);
+const wallet = makeWallet(walletId, account);
 
 describe("Logged in NOT registered ZERO balance account", () => {
   beforeEach(() => {
@@ -171,15 +171,13 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("trades-forecast-table").should("not.exist");
   });
 
-  it.only("shows me 'You don't have any past trades'", () => {
+  it("shows me 'You don't have any past trades'", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("trades-history").contains(
-      "You don't have any past trades",
-    );
+    cy.getByCy("trades-history").contains("You don't have any past trades");
   });
 
   it.skip("shows me a 'lack of funds' alert and a link to the faucet", () => {

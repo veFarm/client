@@ -1,7 +1,6 @@
 import { writable, get } from "svelte/store";
 import { chain } from "@/config/index";
-import type { AbiItem } from "@/typings/types";
-import type { ConnexUtils, Contract } from "@/blockchain/connex-utils";
+import type { WrappedConnex, Contract, AbiItem } from "@vearnfi/wrapped-connex";
 import * as energyArtifact from "@/artifacts/Energy.json";
 import { wallet } from "@/stores/wallet";
 
@@ -11,7 +10,7 @@ import { wallet } from "@/stores/wallet";
  */
 
 type State = {
-  connexUtils: ConnexUtils | undefined;
+  wConnex: WrappedConnex | undefined;
   contract: Contract | undefined;
   account: Address | undefined;
   allowed: boolean;
@@ -19,7 +18,7 @@ type State = {
 };
 
 const initialState: State = {
-  connexUtils: undefined,
+  wConnex: undefined,
   contract: undefined,
   account: undefined,
   allowed: false,
@@ -42,20 +41,20 @@ function createStore() {
 
     // Wallet IS connected.
     try {
-      const { connexUtils, account } = data;
+      const { wConnex, account } = data;
 
-      const contract = connexUtils.getContract(
+      const contract = wConnex.getContract(
         energyArtifact.abi as AbiItem[],
         chain.vtho,
       );
 
-      const decoded = await contract.methods.constant.allowance([
+      const decoded = await contract.methods.constant.allowance(
         account,
         chain.trader,
-      ]);
+      );
 
       store.set({
-        connexUtils,
+        wConnex,
         contract,
         account,
         allowed: decoded[0] !== "0",
@@ -82,10 +81,10 @@ function createStore() {
 
         const { contract, account } = data;
 
-        const decoded = await contract.methods.constant.allowance([
+        const decoded = await contract.methods.constant.allowance(
           account,
           chain.trader,
-        ]);
+        );
 
         store.update((s) => ({
           ...s,
@@ -108,19 +107,17 @@ function createStore() {
       try {
         const data = get(store);
 
-        if (data?.connexUtils == null || data?.contract == null) {
+        if (data?.wConnex == null || data?.contract == null) {
           throw new Error("Wallet is not connected.");
         }
 
-        const { connexUtils, contract } = data;
+        const { wConnex, contract } = data;
 
         const response = await contract.methods.signed.approve(
-          [chain.trader, amount],
-          comment,
-        );
-
-        await connexUtils.waitForReceipt(response.txid);
-        await this.fetchAllowance();
+          chain.trader,
+          amount,
+        )(comment);
+        await wConnex.waitForReceipt(response.txid);
       } catch (error: unknown) {
         store.update((s) => ({
           ...s,
