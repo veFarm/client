@@ -25,7 +25,7 @@ describe("Update stats", () => {
     // ^ Simulate a stats update.
     api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
     api
-      .mockGetTradeForecast({ fixture: "trades-forecast.json" })
+      .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
     // Simulate a registered account with a positive balance

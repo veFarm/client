@@ -23,7 +23,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       .mockGetAccountSwaps({ fixture: "account-swaps.json" })
       .as("getAccountSwaps");
     api
-      .mockGetTradeForecast({ fixture: "trades-forecast.json" })
+      .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
     // Simulate a registered account with a positive balance

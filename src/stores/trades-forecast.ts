@@ -15,7 +15,7 @@ type ApiResponse = {
     withdrawAmount: string;
     totalProfitVET: string;
   }[];
-};
+} | null;
 
 export type Sol = {
   protocolFee: BigNumber;
@@ -64,9 +64,29 @@ async function fetchTradesForecast(
 ): Promise<{ solutions: Sol[]; txFee: BigNumber }> {
   const response = await fetch(
     `${chain.getTradesForecastEndpoint}?account=${account}`,
+    {
+      cache: "no-cache",
+      headers: {
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+        Expires: 0,
+      },
+    },
+    // TODO: Avoid caching the response coming from the server.
+    // Ideally we should pass the balance together with the
+    // account in order to trigger a re-calculation every time
+    // there is a change in the account balance and cache that
+    // response instead.
   );
 
   const json = (await response.json()) as ApiResponse;
+
+  if (json == null) {
+    return {
+      txFee: bn(0),
+      solutions: [],
+    };
+  }
 
   return {
     txFee: bn(json.txFee),

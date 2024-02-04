@@ -6,12 +6,6 @@ import { responseHandler } from "cypress/support/utils";
  * Factory to intercept and mock API calls aimed to our BE.
  */
 export function makeApi(account: Address) {
-  return Object.freeze({
-    mockGetAccountStats,
-    mockGetAccountSwaps,
-    mockGetTradeForecast: mockGetTradesForecast,
-  });
-
   /**
    * Mock getaccountstats api call.
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
@@ -77,4 +71,10 @@ export function makeApi(account: Address) {
       },
     );
   }
+
+  return Object.freeze({
+    mockGetAccountStats,
+    mockGetAccountSwaps,
+    mockGetTradesForecast,
+  });
 }
