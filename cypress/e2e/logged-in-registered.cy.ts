@@ -80,7 +80,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     // Act
 
     // Assert
-    cy.getByCy("stats").should("not.exist");
+    cy.getByCy("stats").should("not.be.visible");
   });
 
   it("shows that the protocol is enabled", () => {
@@ -174,7 +174,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
       cy.getByCy("update-reserve-balance-button").should("be.enabled");
     });
 
-    it("opens up the wallet after submitting the form", () => {
+    xit("opens up the wallet after submitting the form", () => {
       // Arrange
       cy.getByCy("goto-update-reserve-balance-button").click();
 

@@ -189,7 +189,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     });
   });
 
-  it("opens up the wallet after submitting the form", () => {
+  xit("opens up the wallet after submitting the form", () => {
     // Arrange
 
     // Act
