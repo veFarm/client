@@ -87,7 +87,7 @@ describe("Update reserve balance", () => {
         "@fetchAllowance",
         "@fetchReserveBalance",
       ],
-      { timeout: 40_000 },
+      { timeout: 20_000 },
     );
 
     // Assert
@@ -123,7 +123,7 @@ describe("Update reserve balance", () => {
         // "@fetchAllowance",
         // "@fetchReserveBalance",
       ],
-      { timeout: 40_000 },
+      { timeout: 20_000 },
     );
 
     // Assert

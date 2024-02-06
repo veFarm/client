@@ -28,7 +28,7 @@ export function makeWallet(walletId: WalletId, account: Address) {
    */
   function getSync2Iframe(): Cypress.Chainable {
     return cy
-      .get("iframe", { timeout: 40_000 })
+      .get("iframe", { timeout: 20_000 })
       .eq(1)
       .its("0.contentDocument.body")
       .then(cy.wrap);
