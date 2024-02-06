@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
-import { Wallet } from "cypress/support/mocks/wallet";
+import { makeWallet } from "cypress/support/mocks/wallet";
 
 const walletId = "sync2";
 const account = "0x2057ca7412e6c0828501cb7b335e166f81c58d26";
 
-const wallet = new Wallet(walletId, account);
+const wallet = makeWallet(walletId, account);
 
 describe("Logged out account", () => {
   before(() => {});

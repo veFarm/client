@@ -17,7 +17,7 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "cy:open": "npx cypress open",
-    "cy:run-e2e": "cypress run --e2e"
+    "cy:e2e": "cypress run --e2e"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.12.13",

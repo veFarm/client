@@ -7,7 +7,7 @@ import type { WrappedConnex } from "@vearnfi/wrapped-connex";
 import { chain } from "@/config";
 import type { WalletId } from "@/typings/types";
 
-type State =
+export type State =
   | {
       wConnex: WrappedConnex;
       loading: boolean;
