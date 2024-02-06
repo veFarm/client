@@ -43,6 +43,14 @@
 
       const response = await fetch(
         `${chain.getAccountSwapsEndpoint}?account=${account}`,
+        {
+          cache: "no-cache",
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        },
       );
 
       if (response.status === 404) return;

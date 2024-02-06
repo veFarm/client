@@ -69,7 +69,7 @@ async function fetchTradesForecast(
       headers: {
         "Cache-Control": "no-cache",
         Pragma: "no-cache",
-        Expires: 0,
+        Expires: "0",
       },
     },
     // TODO: Avoid caching the response coming from the server.
