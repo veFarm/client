@@ -1,9 +1,8 @@
 [![test](https://github.com/veFarm/client/workflows/test/badge.svg)](https://github.com/veFarm/client/actions/workflows/test.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/fdd1d0c953b7d5565216/maintainability)](https://codeclimate.com/github/veFarm/client/maintainability)
-[![Coverage Status](https://coveralls.io/repos/github/vearnfi/client/badge.svg?branch=main)](https://coveralls.io/github/vearnfi/client?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/vearnfi/client/badge.svg?branch=main)](https://coveralls.io/github/vearnfi/client?branch=main) [![Maintainability](https://api.codeclimate.com/v1/badges/fdd1d0c953b7d5565216/maintainability)](https://codeclimate.com/github/veFarm/client/maintainability)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c6966685-9414-4895-85f8-10b42cd3bc43/deploy-status)](https://app.netlify.com/sites/symphonious-macaron-41163f/deploys)
 
-# vearn Interface
+# @vearnfi/client
 
 Interface for the vearn Protocol supporting Connex instances for VeWorld and Sync2.
 
@@ -54,7 +53,7 @@ npm run preview
 ```
 npm test
 npm run coverage
-npm run cy:e2e-run
+npm run cy:e2e
 ```
 
 ## Storybook
