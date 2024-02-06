@@ -26,16 +26,17 @@ jobs:
         env:
           # pass GitHub token to detect new build vs re-run build
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
       - uses: actions/upload-artifact@v4
-          # if: failure()
-          with:
-            name: cypress-screenshots
-            path: cypress/screenshots
+        with:
+          if: failure()
+          name: cypress-screenshots
+          path: cypress/screenshots
       - uses: actions/upload-artifact@v4
-          # if: always()
-          with:
-            name: cypress-videos
-            path: cypress/videos
+        with:
+          if: always()
+          name: cypress-videos
+          path: cypress/videos
 
       # Save coverage report in Coveralls
       - name: Coveralls GitHub Action
