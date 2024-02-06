@@ -20,7 +20,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
     api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
     api
-      .mockGetTradeForecast({ fixture: "trades-forecast.json" })
+      .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
 
     connex.mockFetchVTHOAllowance(VTHO_AMOUNT.ZERO).as("fetchAllowance");

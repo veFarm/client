@@ -8,15 +8,6 @@ export type CertStatus = "valid" | "invalid";
  * Factory to intercept and mock API calls aimed to the wallet.
  */
 export function makeWallet(walletId: WalletId, account: Address) {
-  return Object.freeze({
-    simulateLoggedOutAccount,
-    simulateLoggedInAccount,
-    getSync2Iframe,
-    spyOnSignTxRequest,
-    mockSignTxResponse,
-    mockSignCertResponse,
-  });
-
   /**
    * Simulate a logged out account.
    */
@@ -97,4 +88,29 @@ export function makeWallet(walletId: WalletId, account: Address) {
       });
     });
   }
+
+  /**
+   * Mock a decline certificate request signature.
+   * @return Mocked request.
+   */
+  function mockDeclineSignCertResponse() {
+    return cy.intercept("GET", "https://tos.vecha.in/*", (req) => {
+      req.reply({
+        statusCode: 200,
+        body: {
+          error: "user decline",
+        },
+      });
+    });
+  }
+
+  return Object.freeze({
+    simulateLoggedOutAccount,
+    simulateLoggedInAccount,
+    getSync2Iframe,
+    spyOnSignTxRequest,
+    mockSignTxResponse,
+    mockSignCertResponse,
+    mockDeclineSignCertResponse,
+  });
 }

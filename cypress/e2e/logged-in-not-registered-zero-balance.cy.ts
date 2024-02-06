@@ -21,7 +21,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
     api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
     api
-      .mockGetTradeForecast({
+      .mockGetTradesForecast({
         statusCode: 200,
         body: { txFee: "2688830000000000000", solutions: [] },
       })

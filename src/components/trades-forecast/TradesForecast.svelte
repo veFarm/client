@@ -201,7 +201,8 @@
           <td class="title">TX Fee</td>
           <td class="value">{formatUnits($tradesForecast.txFee, 2)} VTHO</td>
           <td class="value"
-            >{secondTrade != null ? formatUnits($tradesForecast.txFee, 2) : "0"} VTHO</td
+            >{secondTrade != null ? formatUnits($tradesForecast.txFee, 2) : "0"}
+            VTHO</td
           >
         </tr>
         <tr>

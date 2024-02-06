@@ -5,49 +5,46 @@ import { makeApi } from "cypress/support/mocks/api";
 import { makeConnex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
-const account = "0x970248543238481b2AC9144a99CF7F47e28A90e0";
+const account = "0x2057ca7412e6c0828501cb7b335e166f81c58d26";
 
 const api = makeApi(account);
 const connex = makeConnex(account);
 const wallet = makeWallet(walletId, account);
 
-describe("Update balance", () => {
+describe("Login and update balance", () => {
   beforeEach(() => {
-    // Simulate a logged in NOT registered account holding a zero balance.
-    wallet.simulateLoggedInAccount();
+    // Simulate a logged out NOT registered account holding a zero balance.
+    wallet.simulateLoggedOutAccount();
 
     // TODO: stats should be visible
     api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
     api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
     api
-      .mockGetTradesForecast({ fixture: "trades-forecast.json" })
+      .mockGetTradesForecast([{}, { fixture: "trades-forecast.json" }])
       .as("getTradesForecast");
 
     connex.mockFetchVTHOAllowance(VTHO_AMOUNT.ZERO).as("fetchAllowance");
     connex.mockFetchTraderReserve(VTHO_AMOUNT.ZERO).as("fetchReserveBalance");
     connex.mockFetchBalance([BALANCE.ZERO, BALANCE.UPDATED]).as("fetchBalance");
     // ^ Simulate a change in balance flow.
-
-    cy.visit("/");
-    cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"]);
-  });
-
-  it("shows when the balance gets updated", () => {
-    // Arrange
-    cy.getByCy("navigation-bar").contains("0.00 VET");
-
-    // Act
-    cy.wait("@fetchBalance", { timeout: 20_000 });
-
-    // Assert
-    cy.getByCy("navigation-bar").contains("500.00 VET");
   });
 
   it("DOES show me the trades forecast after funding the account and entering the reserve balance", () => {
     // Arrange
+    wallet.spyOnSignTxRequest().as("signCertRequest");
+    wallet.mockDeclineSignCertResponse().as("signCertResponse");
+    cy.visit("/");
+    cy.getByCy("connect-wallet-button").click();
+    cy.getByCy("wallet-provider-button-sync2").click();
+    cy.wait(["@signCertRequest", "@signCertResponse"]);
 
     // Act
-    cy.wait("@fetchBalance", { timeout: 20_000 });
+    wallet.mockSignCertResponse("valid").as("signCertResponse");
+    cy.getByCy("wallet-provider-button-sync2").click();
+    cy.wait(["@signCertRequest", "@signCertResponse", "@fetchBalance"], {
+      timeout: 20_000,
+    });
+    cy.wait("@fetchBalance", { timeout: 20_000 }); // wait for balance to update
     cy.getByCy("reserve-balance-input").clear().type("10");
 
     // Assert

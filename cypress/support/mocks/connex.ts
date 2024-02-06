@@ -41,16 +41,6 @@ type Balance = {
  * Factory to intercept and mock API calls aimed to the VThor blockchain.
  */
 export function makeConnex(account: Address) {
-  return Object.freeze({
-    mockFetchBalance,
-    mockFetchVTHOAllowance,
-    mockFetchTraderReserve,
-    mockUpdateReserveBalanceTxReceipt,
-    mockRevokeAllowanceTxReceipt,
-    mockRegisterTxReceipt,
-    mockApproveAllowanceTxReceipt,
-  });
-
   /**
    * Mock account balance lookup.
    * @param {Balance | [Balance,Balance]} balance. Mocked balance or balance array to simulate a change of state.
@@ -376,4 +366,14 @@ export function makeConnex(account: Address) {
       },
     );
   }
+
+  return Object.freeze({
+    mockFetchBalance,
+    mockFetchVTHOAllowance,
+    mockFetchTraderReserve,
+    mockUpdateReserveBalanceTxReceipt,
+    mockRevokeAllowanceTxReceipt,
+    mockRegisterTxReceipt,
+    mockApproveAllowanceTxReceipt,
+  });
 }
