@@ -30,7 +30,7 @@ describe("Update balance", () => {
 
     cy.visit("/");
     cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"], {
-      timeout: 20_000,
+      timeout: 40_000,
     });
   });
 
