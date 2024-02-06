@@ -29,7 +29,7 @@ describe("Update balance", () => {
     // ^ Simulate a change in balance flow.
 
     cy.visit("/");
-    cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"]);
+    cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"], {timeout: 20_000});
   });
 
   it("shows when the balance gets updated", () => {

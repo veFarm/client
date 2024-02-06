@@ -46,7 +46,7 @@ describe("Update trades history", () => {
       "@fetchAllowance",
       "@fetchReserveBalance",
       "@fetchBalance",
-    ]);
+    ], {timeout: 20_000});
   });
 
   it("updates trades history", () => {

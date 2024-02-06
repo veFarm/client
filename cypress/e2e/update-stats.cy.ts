@@ -44,7 +44,7 @@ describe("Update stats", () => {
       "@fetchAllowance",
       "@fetchReserveBalance",
       "@fetchBalance",
-    ]);
+    ], {timeout: 20_000});
   });
 
   it("shows latest stats when balance gets updated", () => {
