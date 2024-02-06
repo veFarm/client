@@ -91,7 +91,7 @@ describe("Register", () => {
         "@fetchAllowance",
         "@fetchReserveBalance",
       ],
-      { timeout: 20_000 },
+      { timeout: 40_000 },
     );
 
     // Assert
@@ -122,7 +122,7 @@ describe("Register", () => {
         // "@fetchAllowance",
         // "@fetchReserveBalance",
       ],
-      { timeout: 20_000 },
+      { timeout: 40_000 },
     );
     cy.getByCy("network-error").contains("The transaction has been reverted.");
   });

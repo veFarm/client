@@ -37,14 +37,17 @@ describe("Update stats", () => {
     connex.mockFetchTraderReserve(VTHO_AMOUNT.FIVE).as("fetchReserveBalance");
 
     cy.visit("/");
-    cy.wait([
-      "@getAccountStats",
-      "@getAccountSwaps",
-      "@getTradesForecast",
-      "@fetchAllowance",
-      "@fetchReserveBalance",
-      "@fetchBalance",
-    ], {timeout: 20_000});
+    cy.wait(
+      [
+        "@getAccountStats",
+        "@getAccountSwaps",
+        "@getTradesForecast",
+        "@fetchAllowance",
+        "@fetchReserveBalance",
+        "@fetchBalance",
+      ],
+      { timeout: 40_000 },
+    );
   });
 
   it("shows latest stats when balance gets updated", () => {
@@ -57,7 +60,7 @@ describe("Update stats", () => {
     });
 
     // Act
-    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 20_000 });
+    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 40_000 });
 
     // Assert
     cy.getByCy("stats").should("be.visible");

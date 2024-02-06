@@ -28,7 +28,9 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     connex.mockFetchBalance(BALANCE.POSITIVE).as("fetchBalance");
 
     cy.visit("/");
-    cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"], {timeout: 20_000});
+    cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"], {
+      timeout: 20_000,
+    });
   });
 
   it("shows me the title of the app and a short description", () => {

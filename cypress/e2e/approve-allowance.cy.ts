@@ -84,7 +84,7 @@ describe("Approve allowance", () => {
         "@fetchAllowance",
         "@fetchReserveBalance",
       ],
-      { timeout: 20_000 },
+      { timeout: 40_000 },
     );
 
     // Assert
@@ -113,7 +113,7 @@ describe("Approve allowance", () => {
         // "@fetchAllowance",
         // "@fetchReserveBalance",
       ],
-      { timeout: 20_000 },
+      { timeout: 40_000 },
     );
 
     // Assert

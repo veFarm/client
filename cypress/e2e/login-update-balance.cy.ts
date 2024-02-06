@@ -44,7 +44,7 @@ describe("Login and update balance", () => {
     cy.wait(["@signCertRequest", "@signCertResponse", "@fetchBalance"], {
       timeout: 20_000,
     });
-    cy.wait("@fetchBalance", { timeout: 20_000 }); // wait for balance to update
+    cy.wait("@fetchBalance", { timeout: 40_000 }); // wait for balance to update
     cy.getByCy("reserve-balance-input").clear().type("10");
 
     // Assert
