@@ -12,7 +12,6 @@ const connex = makeConnex(account);
 const wallet = makeWallet(walletId, account);
 
 // Skip CI-failing tests
-console.log({env: Cypress.env()})
 const _describe = Cypress.env('IS_CI') === true ? describe.skip : describe
 
 _describe("Update balance", () => {
