@@ -1,16 +1,6 @@
 <script lang="ts">
   import { chain } from "@/config/index";
-<<<<<<< Updated upstream
   import { balance } from "@/stores/balance";
-=======
-  import { wallet } from "@/stores/wallet";
-
-  export let triggerBalance: BigNumber;
-
-  $: {
-    console.log({wallet: $wallet})
-  }
->>>>>>> Stashed changes
 </script>
 
 {#if $balance.current != null && $balance.current.vet.eq(0) && $balance.current.vtho.eq(0)}
@@ -29,5 +19,3 @@
     {/if}
   </div>
 {/if}
-
-<div class="text-black">{JSON.stringify($wallet, null, 2)}</div>
