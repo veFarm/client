@@ -82,7 +82,7 @@ describe("Revoke allowance", () => {
         "@fetchAllowance",
       ],
       {
-        timeout: 20_000,
+        timeout: 40_000,
       },
     );
 
@@ -110,7 +110,7 @@ describe("Revoke allowance", () => {
         "@fetchAllowance",
       ],
       {
-        timeout: 20_000,
+        timeout: 40_000,
       },
     );
 

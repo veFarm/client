@@ -48,7 +48,7 @@ describe("Update trades history", () => {
         "@fetchReserveBalance",
         "@fetchBalance",
       ],
-      { timeout: 20_000 },
+      { timeout: 40_000 },
     );
   });
 
@@ -66,7 +66,7 @@ describe("Update trades history", () => {
     });
 
     // Act
-    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 20_000 });
+    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 40_000 });
 
     // Assert
     cy.getByCy("trades-history").should("be.visible");

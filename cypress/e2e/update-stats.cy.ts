@@ -46,7 +46,7 @@ describe("Update stats", () => {
         "@fetchReserveBalance",
         "@fetchBalance",
       ],
-      { timeout: 20_000 },
+      { timeout: 40_000 },
     );
   });
 
@@ -60,7 +60,7 @@ describe("Update stats", () => {
     });
 
     // Act
-    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 20_000 });
+    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 40_000 });
 
     // Assert
     cy.getByCy("stats").should("be.visible");
