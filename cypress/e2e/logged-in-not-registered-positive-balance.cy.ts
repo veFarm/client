@@ -29,7 +29,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
     cy.visit("/");
     cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"], {
-      timeout: 40_000,
+      timeout: 20_000,
     });
   });
 

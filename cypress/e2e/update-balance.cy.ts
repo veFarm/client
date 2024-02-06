@@ -33,7 +33,7 @@ _describe("Update balance", () => {
 
     cy.visit("/");
     cy.wait(["@fetchBalance", "@fetchAllowance", "@fetchReserveBalance"], {
-      timeout: 40_000,
+      timeout: 20_000,
     });
   });
 
@@ -42,7 +42,7 @@ _describe("Update balance", () => {
     cy.getByCy("navigation-bar").contains("0.00 VET");
 
     // Act
-    cy.wait("@fetchBalance", { timeout: 40_000 });
+    cy.wait("@fetchBalance", { timeout: 20_000 });
 
     // Assert
     cy.getByCy("navigation-bar").contains("500.00 VET");
@@ -52,7 +52,7 @@ _describe("Update balance", () => {
     // Arrange
 
     // Act
-    cy.wait("@fetchBalance", { timeout: 40_000 });
+    cy.wait("@fetchBalance", { timeout: 20_000 });
     cy.getByCy("reserve-balance-input").clear().type("10");
 
     // Assert
