@@ -16,7 +16,7 @@
     "format": "prettier --write --plugin prettier-plugin-svelte .",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "cy:open": "npx cypress open",
+    "cy:open": "CYPRESS_BASE_URL=http://localhost:5173/ npx cypress open",
     "cy:e2e": "cypress run --e2e"
   },
   "devDependencies": {
