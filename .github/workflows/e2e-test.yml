@@ -22,9 +22,13 @@ jobs:
         with:
           build: npm run build
           start: npm run preview
+          record: true
+        env:
+          # pass GitHub token to detect new build vs re-run build
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       # Save coverage report in Coveralls
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@v2.2.3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{secrets.GITHUB_TOKEN}}
