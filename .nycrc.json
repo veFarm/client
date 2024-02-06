@@ -2,7 +2,7 @@
   "all": true,
   "extends": "@istanbuljs/nyc-config-typescript",
   "check-coverage": false,
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.svelte"],
   "exclude": [
     "cypress/**/*.*",
     "**/*.d.ts",
