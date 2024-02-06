@@ -12,6 +12,9 @@ export default defineConfig({
     baseUrl: "http://localhost:4173/",
     viewportWidth: 1440,
     viewportHeight: 900,
+    env: {
+      IS_CI: "",
+    },
     setupNodeEvents(on, config) {
       task(on, config);
       // include any other plugin code...

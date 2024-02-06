@@ -59,21 +59,22 @@ function createStore() {
     subscribe: store.subscribe,
     fetchBalance: async function () {
       try {
-        const data = get(store);
+        const walletData = get(wallet)
+        const balanceData = get(store);
 
-        if (data?.wConnex == null || data?.account == null) {
+        if (walletData?.wConnex == null || walletData?.account == null) {
           throw new Error("Wallet is not connected.");
         }
 
-        const { wConnex, account } = data;
+        const { wConnex, account } = walletData;
 
         const balance = await wConnex.fetchBalance(account);
 
         store.set({
-          ...data,
+          ...walletData,
           account,
           current: balance,
-          previous: data.current,
+          previous: balanceData.current,
         });
       } catch (error) {
         console.error(error);
