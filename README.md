@@ -10,7 +10,7 @@ Live version (testnet): [https://vearn.finance](https://vearn.finance)
 
 This DApp was built with Svelte.
 
-## How it works
+## Overview
 
 1. Users can log in using either Sync2 or VeWorld wallet providers.
 2. Users have the option to set a reserve balance via the UI, indicating the minimum balance that will be retained in their account after swaps.
@@ -26,9 +26,9 @@ This DApp was built with Svelte.
 Clone the project and set your environmental variables based on the provided example:
 
 ```
->> git clone git@github.com:vearnfi/client.git
->> cp .env.example .env
->> npm install
+git clone git@github.com:vearnfi/client.git
+cp .env.example .env
+npm install
 ```
 
 ## Available scripts
