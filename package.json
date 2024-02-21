@@ -14,10 +14,10 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "format": "prettier --write --plugin prettier-plugin-svelte .",
-    "test": "vitest",
+    "test:unit": "vitest",
+    "test:integration": "cypress run --e2e",
     "coverage": "vitest run --coverage",
-    "cy:open": "CYPRESS_BASE_URL=http://localhost:5173/ npx cypress open",
-    "cy:e2e": "cypress run --e2e"
+    "cy:open": "CYPRESS_BASE_URL=http://localhost:5173/ npx cypress open"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.12.13",
