@@ -53,11 +53,23 @@ npm run preview
 
 ## Testing
 
+The app is mainly covered using cypress integration tests. You can run all integration tests in interaction mode via `cy:open`
+
+Start the app in one terminal
+
 ```
-npm test
-npm run coverage
-npm run cy:e2e
+nvm use 18
+npm run build
+npm run preview
 ```
+
+On a second terminal, run the test suit
+
+```
+npm run test:integration
+```
+
+Please, refer to the `e2e-coverage` folder for coverage report.
 
 ## Storybook
 
