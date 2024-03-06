@@ -25,7 +25,7 @@
   name="Default"
   args={{
     withdrawAmount: "490",
-    amountOut: "23.45",
+    amountOutReceived: "23.45",
     txId: "0x123",
     blockTimestamp: 1691481210,
     explorerUrl: "https://some.url",
