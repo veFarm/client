@@ -2,7 +2,7 @@
   {
     "account": "0x4f2b95775434b297a7205cb609ccab56752fc0b3",
     "withdrawAmount": "45000000000000000000",
-    "amountOut": "588565672264484715",
+    "amountOutReceived": "588565672264484715",
     "txId": "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7",
     "blockTimestamp": 1700618110
   }

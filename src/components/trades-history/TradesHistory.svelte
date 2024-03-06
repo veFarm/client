@@ -11,7 +11,7 @@
   type RawSwapDoc = {
     account: Address;
     withdrawAmount: string;
-    amountOut: string;
+    amountOutReceived: string;
     txId: string;
     blockTimestamp: number;
   };
@@ -19,7 +19,7 @@
   type SwapDoc = {
     account: Address;
     withdrawAmount: BigNumber;
-    amountOut: BigNumber;
+    amountOutReceived: BigNumber;
     txId: string;
     blockTimestamp: number;
   };
@@ -60,7 +60,7 @@
       swapTxs = json.map((tx) => ({
         account: tx.account,
         withdrawAmount: bn(tx.withdrawAmount),
-        amountOut: bn(tx.amountOut),
+        amountOutReceived: bn(tx.amountOutReceived),
         txId: tx.txId,
         blockTimestamp: tx.blockTimestamp,
       }));
@@ -110,7 +110,7 @@
     {#each swapTxs as tx}
       <PastTrade
         withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
-        amountOut={formatUnits(tx.amountOut, 5)}
+        amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
         txId={tx.txId}
         blockTimestamp={tx.blockTimestamp}
         explorerUrl={chain.explorers[0].url}

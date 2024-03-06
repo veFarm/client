@@ -1,6 +1,6 @@
 <script lang="ts">
   export let withdrawAmount: string;
-  export let amountOut: string;
+  export let amountOutReceived: string;
   export let txId: string;
   export let blockTimestamp: number;
   export let explorerUrl: string;
@@ -18,7 +18,7 @@
   </span>
   <br />
   <span class="text-base text-primary md:text-lg">
-    {withdrawAmount} VTHO ➡ {amountOut} VET
+    {withdrawAmount} VTHO ➡ {amountOutReceived} VET
   </span>
   <br />
   <span class="text-xs">
