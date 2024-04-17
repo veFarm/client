@@ -6,6 +6,8 @@ import { balance } from "@/stores/balance";
 
 type ApiResponse = {
   txFee: string;
+  reserveIn: string;
+  reserveOut: string;
   solutions: {
     protocolFee: string;
     dexFee: string;
@@ -31,16 +33,20 @@ type State =
   | {
       fetched: true;
       account: Address;
-      solutions: Sol[];
       txFee: BigNumber;
+      reserveIn: BigNumber;
+      reserveOut: BigNumber;
+      solutions: Sol[];
       loading: boolean;
       error: string | undefined;
     }
   | {
       fetched: false;
       account: undefined;
-      solutions: undefined;
       txFee: undefined;
+      reserveIn: undefined;
+      reserveOut: undefined;
+      solutions: undefined;
       loading: boolean;
       error: string | undefined;
     };
@@ -48,8 +54,10 @@ type State =
 const initialState: State = {
   fetched: false,
   account: undefined,
-  solutions: undefined,
   txFee: undefined,
+  reserveIn: undefined,
+  reserveOut: undefined,
+  solutions: undefined,
   loading: false,
   error: undefined,
 };
@@ -57,11 +65,16 @@ const initialState: State = {
 /**
  * Fetch trades forecast for the given account.
  * @param {Address} account Target account.
- * @return {{txFee: BigNumber, solutions: Sol[]}}
+ * @return {{txFee: BigNumber, reserveIn: BigNumber, reserveOut: BigNumber, solutions: Sol[]}}
  */
 async function fetchTradesForecast(
   account: Address,
-): Promise<{ solutions: Sol[]; txFee: BigNumber }> {
+): Promise<{
+  solutions: Sol[];
+  reserveIn: BigNumber;
+  reserveOut: BigNumber;
+  txFee: BigNumber;
+}> {
   const response = await fetch(
     `${chain.getTradesForecastEndpoint}?account=${account}`,
     {
@@ -84,12 +97,16 @@ async function fetchTradesForecast(
   if (json == null) {
     return {
       txFee: bn(0),
+      reserveIn: bn(0),
+      reserveOut: bn(0),
       solutions: [],
     };
   }
 
   return {
     txFee: bn(json.txFee),
+    reserveIn: bn(json.reserveIn),
+    reserveOut: bn(json.reserveOut),
     solutions: json.solutions.map((s) => ({
       protocolFee: bn(s.protocolFee),
       dexFee: bn(s.dexFee),
@@ -133,12 +150,15 @@ function createStore() {
         loading: true,
       }));
 
-      const { txFee, solutions } = await fetchTradesForecast(account);
+      const { txFee, reserveIn, reserveOut, solutions } =
+        await fetchTradesForecast(account);
 
       store.set({
         fetched: true,
         account,
         txFee,
+        reserveIn,
+        reserveOut,
         solutions,
         loading: false,
         error: undefined,

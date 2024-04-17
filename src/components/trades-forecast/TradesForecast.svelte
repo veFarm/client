@@ -10,6 +10,7 @@
   // import type { Trade } from "@/utils/calc-next-trade";
   import { secondsToDHMS } from "@/utils/seconds-to-dhms";
   import { chooseSolution } from "@/utils/choose-solution";
+  import { extendSolution } from "@/utils/extend-solution";
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
   import QuestionMark from "@/assets/QuestionMark.svelte";
   import Spinner from "../spinner/Spinner.svelte";
@@ -54,24 +55,33 @@
       $tradesForecast.fetched &&
       $tradesForecast.solutions.length > 0
     ) {
-      const { txFee, solutions } = $tradesForecast;
+      const { txFee, reserveIn, reserveOut, solutions } = $tradesForecast;
 
       const sol = chooseSolution(
         $balance.current.vtho,
         reserveBalance,
-        solutions,
+        solutions as [Sol, ...Sol[]],
+      );
+
+      const extSol = extendSolution(
+        sol,
+        $balance.current.vtho,
+        reserveBalance,
+        txFee,
+        reserveIn,
+        reserveOut,
       );
 
       const timeLeft = secondsToTrigger(
         $balance.current,
         reserveBalance,
-        sol.withdrawAmount,
+        extSol.withdrawAmount,
       );
 
       if (timeLeft != null) {
         firstTrade = {
-          ...sol,
-          totalFees: txFee.plus(sol.protocolFee).plus(sol.dexFee),
+          ...extSol,
+          totalFees: txFee.plus(extSol.protocolFee).plus(extSol.dexFee),
           timeLeft,
         };
       }
@@ -79,8 +89,6 @@
   }
 
   // Simulate a future trade right after the first one is executed.
-  // TODO: implement MAX_WITHDRAWAL_VTHO_AMOUNT at wallet.balance line.
-  // let secondSol: Sol | undefined;
   let secondTrade: Trade | undefined;
 
   $: {
@@ -89,7 +97,7 @@
       $tradesForecast.fetched &&
       firstTrade != null
     ) {
-      const { txFee, solutions } = $tradesForecast;
+      const { txFee, reserveIn, reserveOut, solutions } = $tradesForecast;
 
       // VTHO balance after the first trade occurred.
       const remainingBalanceVTHO = $balance.current.vtho.gte(
@@ -101,7 +109,16 @@
       const sol = chooseSolution(
         remainingBalanceVTHO,
         reserveBalance,
-        solutions,
+        solutions as [Sol, ...Sol[]],
+      );
+
+      const extSol = extendSolution(
+        sol,
+        remainingBalanceVTHO,
+        reserveBalance,
+        txFee,
+        reserveIn,
+        reserveOut,
       );
 
       const timeLeft = secondsToTrigger(
@@ -110,32 +127,16 @@
           vtho: remainingBalanceVTHO,
         },
         reserveBalance,
-        sol.withdrawAmount,
+        extSol.withdrawAmount,
       );
 
       if (timeLeft != null) {
         secondTrade = {
-          ...sol,
-          totalFees: txFee.plus(sol.protocolFee).plus(sol.dexFee),
+          ...extSol,
+          totalFees: txFee.plus(extSol.protocolFee).plus(extSol.dexFee),
           timeLeft,
         };
       }
-      // secondSol = chooseSolution(
-      //   withdrawAmounts,
-      //   remainingBalanceVTHO,
-      //   reserveBalance,
-      // );
-
-      // secondTrade = calcNextTrade({
-      //   reserveBalance,
-      //   withdrawAmount: secondSol,
-      //   balance: {
-      //     ...balance,
-      //     vtho: remainingBalanceVTHO,
-      //   },
-      //   txFee,
-      //   exchangeRate,
-      // });
     }
   }
 </script>

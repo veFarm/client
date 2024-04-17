@@ -12,7 +12,7 @@ const connex = makeConnex(account);
 const wallet = makeWallet(walletId, account);
 
 // Skip CI-failing tests
-const _describe = Cypress.env('IS_CI') === true ? describe.skip : describe
+const _describe = Cypress.env("IS_CI") === true ? describe.skip : describe;
 
 _describe("Update trades history", () => {
   beforeEach(() => {

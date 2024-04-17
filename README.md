@@ -76,4 +76,3 @@ Please, refer to the `e2e-coverage` folder for coverage report.
 ```
 npm run storybook
 ```
-
