@@ -16,7 +16,7 @@ export function chooseSolution(
 ): Sol {
   // Sort solutions in ascending order of withdraw amount.
   // TODO: check the order
-  const sorted = solutions.sort((a, b) => a.withdrawAmount >= b.withdrawAmount);
+  const sorted = solutions.sort((a, b) => a.withdrawAmount.lt(b.withdrawAmount) ? -1 : 1);
 
   // Default to the solution with the lowest withdraw amount.
   let sol = sorted[0];
