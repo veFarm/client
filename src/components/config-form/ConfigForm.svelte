@@ -110,7 +110,7 @@
           trader.getClause("saveConfig")!(reserveBalanceWei.toFixed()),
         );
 
-        comments.push("Save reserve balance into the vearn contract.");
+        comments.push("Store reserve balance value into the vearn contract.");
       }
 
       if (variant === "CONFIG_AND_APPROVE") {

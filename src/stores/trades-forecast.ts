@@ -67,9 +67,7 @@ const initialState: State = {
  * @param {Address} account Target account.
  * @return {{txFee: BigNumber, reserveIn: BigNumber, reserveOut: BigNumber, solutions: Sol[]}}
  */
-async function fetchTradesForecast(
-  account: Address,
-): Promise<{
+async function fetchTradesForecast(account: Address): Promise<{
   solutions: Sol[];
   reserveIn: BigNumber;
   reserveOut: BigNumber;

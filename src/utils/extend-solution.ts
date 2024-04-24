@@ -1,15 +1,31 @@
 import type { BigNumber } from "bignumber.js";
-import type { Sol } from "@/stores/trades-forecast";
-import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
+import type { Sol } from "./solver";
+import { expandTo18Decimals } from "./expand-to-18-decimals";
 
-const MAX_WITHDRAW_AMOUNT = 5_000;
-const PROTOCOL_FEE_MULTIPLIER = 3;
-const DEX_FEE_MULTIPLIER = 3;
+export const MAX_WITHDRAW_AMOUNT = 5_000;
+export const PROTOCOL_FEE_MULTIPLIER = 3;
+export const DEX_FEE_MULTIPLIER = 3;
 // TODO: read constants from config file
+
+export type ExtendSolution = (
+  sol: Sol,
+  vthoBalance: BigNumber,
+  reserveBalance: BigNumber,
+  txFee: BigNumber,
+  reserveIn: BigNumber,
+  reserveOut: BigNumber,
+) => Sol;
 
 /**
  * Checks whether or not the provided solution can be executed
  * using a larger withdraw amount.
+ * @param {Sol} sol Executable trade / solution.
+ * @param {BigNumber} vthoBalance VTHO balance.
+ * @param {BigNumber} reserveBalance Reserve balance.
+ * @param {BigNumber} txFee Transaction fee.
+ * @param {BigNumber} reserveIn VTHO DEX reserves.
+ * @param {BigNumber} reserveOut VET DEX reserves.
+ * @return {Sol} Extended solution.
  */
 export function extendSolution(
   sol: Sol,
@@ -23,12 +39,13 @@ export function extendSolution(
 
   if (vthoBalance.gt(sol.withdrawAmount.plus(reserveBalance))) {
     // Max out withdraw amount for the given solution (strategy).
-    const withdrawAmount = expandTo18Decimals(MAX_WITHDRAW_AMOUNT).gt(
-      vthoBalance.minus(reserveBalance),
-    )
-      ? vthoBalance.minus(reserveBalance)
-      : expandTo18Decimals(MAX_WITHDRAW_AMOUNT);
+    let withdrawAmount = vthoBalance.minus(reserveBalance);
 
+    if (withdrawAmount.gt(expandTo18Decimals(MAX_WITHDRAW_AMOUNT))) {
+      withdrawAmount = expandTo18Decimals(MAX_WITHDRAW_AMOUNT);
+    }
+
+    // TODO: extract the following logic and add tests
     // Recalculate fees and deltaVET for the new withdraw amount.
     const protocolFee = withdrawAmount
       .minus(txFee)
