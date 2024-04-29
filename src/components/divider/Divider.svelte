@@ -3,5 +3,5 @@
 </script>
 
 <hr
-  class="border-b-1 {theme === 'dark' ? 'border-muted' : 'border-disabled'}"
+  class="border-b-1 {theme === 'dark' ? 'border-highlight' : 'border-disabled'}"
 />

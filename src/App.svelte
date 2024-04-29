@@ -16,6 +16,7 @@
   import { TradesHistory } from "@/components/trades-history";
   import { TradesForecast } from "@/components/trades-forecast";
   import { FundsWarning } from "@/components/funds-warning";
+    import Divider from "./components/divider/Divider.svelte";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
@@ -58,12 +59,12 @@
     <div
       class="
       flex flex-col items-center space-y-8
-      lg:flex-row lg:space-y-0 lg:space-x-8
+      lg:flex-row lg:justify-around lg:space-y-0 lg:space-x-8
     "
     >
-      <section class="basis-1/2 self-start">
+      <section class="basis-1/2">
         <h1 data-cy="title">Grow your VET balance.</h1>
-        <p class="text-gray-300 mt-4" data-cy="description">
+        <p class="text-accent text-base mt-4" data-cy="description">
           <!-- Automatically swap VTHO for VET using optimized strategies. How does it work?
           Set your reserve balance and allow the vearn contract to spend your VTHO.
           Afterward, the contract will periodically withdraw VTHO from your account,
@@ -75,15 +76,21 @@
           VET tokens at strategically optimized moments, boosting your VET balance
           and increasing your potential gains.
         </p>
-        <div class="hidden lg:block">
+        <!-- <div class="hidden lg:block">
           <Stats />
-        </div>
+        </div> -->
       </section>
       <section
-        class="basis-1/2 max-w-lg border border-accent rounded-lg p-3 lg:p-6 bg-white text-black space-y-4"
+        class="basis-1/2 max-w-lg border border-highlight rounded-lg text-accent"
       >
         {#if view === "LOGIN"}
+        <div class=" px-3 py-2 lg:px-6 lg:py-4">
+          <h2 class="text-white font-bold text-lg" >Activate Vearn</h2>
+        </div>
+          <Divider />
+        <div class=" p-3 lg:p-6">
           <ConfigForm variant="LOGIN" />
+          </div>
         {/if}
 
         {#if view === "CONFIG_AND_APPROVE"}
@@ -139,7 +146,7 @@
           </div>
         {/if}
 
-        <p class="text-center text-accent">Chain: {chain.name}</p>
+        <!-- <p class="text-center text-accent">Chain: {chain.name}</p> -->
       </section>
     </div>
 

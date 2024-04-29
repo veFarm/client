@@ -18,7 +18,7 @@
 <nav
   class="
     fixed top-0 w-full mx-auto h-16 z-20
-    bg-background border-b border-muted
+    bg-background border-b md:border-x border-highlight
     px-2 sm:px-4 py-2
     flex flex-wrap items-center justify-between
     text-sm text-gray-300 md:text-base

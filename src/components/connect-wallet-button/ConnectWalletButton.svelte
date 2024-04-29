@@ -12,5 +12,5 @@
   on:click={walletModal.open}
   data-cy="connect-wallet-button"
 >
-  Connect wallet
+  CONNECT WALLET
 </Button>

@@ -11,6 +11,7 @@
   import { isZeroOrEmpty } from "@/utils/is-zero-or-empty";
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
+  import { Divider } from "@/components/divider";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { FundsWarning } from "@/components/funds-warning";
@@ -183,6 +184,7 @@
     data-cy="reserve-balance-input"
   />
 
+  <Divider />
   <FundsWarning />
 
   {#if !inputsEmpty}
@@ -202,7 +204,7 @@
       fullWidth
       data-cy="submit-form-button"
     >
-      Approve Spending
+      ENABLE AUTO SWAP
     </Button>
   {/if}
 
@@ -215,7 +217,7 @@
       fullWidth
       data-cy="update-reserve-balance-button"
     >
-      Update Reserve
+      UPDATE RESERVE
     </Button>
   {/if}
 

@@ -7,7 +7,7 @@
 
 <Template let:args>
   <div class="bg-body p-2">
-    <Input id="test" label="I'm the label" value="Some value" {...args} />
+    <Input id="test" label="Reserve balance" value="18" {...args} />
   </div>
 </Template>
 
@@ -37,7 +37,7 @@
 <Story
   name="Hint"
   args={{
-    hint: "This is a hint",
+    hint: "The lowest amount you want to keep in your account at all times. Anything above that amount will be swapped overtime.",
   }}
 />
 

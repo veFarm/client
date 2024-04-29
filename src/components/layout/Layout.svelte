@@ -6,7 +6,7 @@
 
 <Header />
 
-<main class="px-2 my-8 md:px-4 md:my-16">
+<main class="px-2 my-8 md:px-16 md:my-16 md:border-x border-highlight min-h-screen">
   <slot />
 
   <WalletModal />
@@ -15,5 +15,6 @@
 <style>
   main {
     padding-top: var(--header-height);
+    margin-bottom: -1 * var(--header-height);
   }
 </style>
