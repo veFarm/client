@@ -33,9 +33,9 @@
   <div class="relative">
     <input
       {id}
-      class="bg-gray-50 border {hasError
+      class="h-16 bg-transparent border {hasError
         ? 'border-danger'
-        : 'border-gray-300'} text-background text-xl font-medium rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-5 pb-7 disabled:bg-gray-200"
+        : 'border-color'} text-white text-xl font-bold rounded-lg focus:ring-primary focus:border-primary block w-full p-2 pl-4 disabled:text-disabled"
       {...$$restProps}
       bind:value
       on:input
@@ -49,14 +49,14 @@
         {currency}
       </div>
     {/if}
-    {#if subtext.length > 0}
+    <!-- {#if subtext.length > 0}
       <div
         class="absolute bottom-1 right-2 text-sm text-accent px-1.5"
         data-cy="subtext"
       >
         {subtext}
       </div>
-    {/if}
+    {/if} -->
   </div>
   {#if hint.length > 0 && !hasError}
     <legend class="text-xs text-accent">{hint}</legend>
@@ -65,3 +65,12 @@
     <legend>{error}</legend>
   {/if}
 </label>
+
+<style>
+  .border-color {
+    border-color: rgba(91, 91, 91, 1);
+  }
+  .text-disabled {
+    color: rgba(144, 144, 144, 1);
+  }
+</style>

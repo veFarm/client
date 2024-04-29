@@ -17,24 +17,24 @@
   export let disabled: ButtonVariantProps["disabled"] = false;
   export let loading: boolean = false;
 
-  const buttonVariants = cva(["font-bold"], {
+  const buttonVariants = cva(["font-medium"], {
     variants: {
       intent: {
         primary: [
           "text-black",
           "bg-primary",
-          "border",
-          "border-lime-400", // TODO: add to palette
+          // "border",
+          // "border-lime-400", // TODO: add to palette
           "hover:bg-primary-100",
-          "hover:border-primary",
+          // "hover:border-primary",
         ],
         secondary: [
-          "text-background",
+          "text-white",
           "bg-secondary",
-          "border",
-          "border-violet-400", // TODO: add to palette
+          // "border",
+          // "border-violet-400", // TODO: add to palette
           "hover:bg-secondary-100",
-          "hover:border-secondary",
+          // "hover:border-secondary",
         ],
         danger: [
           "text-danger",
@@ -56,8 +56,8 @@
         ],
       },
       size: {
-        small: ["text-sm", "p-2", "px-3", "rounded-lg"],
-        medium: ["text-base", "md:text-lg", "py-4", "px-6", "rounded-lg"],
+        small: ["text-sm", "p-2", "px-3", "rounded"],
+        medium: ["text-sm", "py-3", "px-5", "rounded"],
       },
       fullWidth: {
         true: ["w-full"],

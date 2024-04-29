@@ -6,7 +6,7 @@
 <Meta title="components/Button" component={Button} />
 
 <Template let:args>
-  <Button {...args}>I&apos;m the label</Button>
+  <Button {...args}>CONNECT WALLET</Button>
 </Template>
 
 <Story
@@ -35,6 +35,7 @@
 <Story
   name="FullWidth"
   args={{
+    intent: "primary",
     fullWidth: true,
   }}
 />

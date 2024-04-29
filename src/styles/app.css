@@ -19,12 +19,12 @@ danger      A color for displaying error messages
   :root {
     --header-height: 72px;
     --app-width: 1200px;
-    --color-primary: 163 230 53; /* lime-400 */
-    --color-primary-100: 190 242 100; /* lime-300 */
-    --color-secondary: 196 181 253; /* violet-300 */
-    --color-secondary-100: 221 214 254; /* violet-200 */
-    --color-body: 255 255 255; /* white */
-    --color-background: 24 28 31; /*  */
+    --color-primary: 255 229 0;
+    --color-primary-100: 255 199 0; /* HOVER */
+    --color-secondary: 28 28 28;
+    --color-secondary-100: 52 52 52; /* HOVER */
+    --color-body: 3 3 3; /* BLACK */
+    --color-background: 13 13 13; /* DARK GRAY */
     --color-highlight: 32 38 42; /* */
     --color-muted: 55 65 81; /* gray-700 */
     --color-accent: 75 85 99; /* gray-600 */
@@ -35,10 +35,34 @@ danger      A color for displaying error messages
   }
 }
 
+.space-grotesk-300 {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+.space-grotesk-500 {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+.space-grotesk-700 {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
 :root {
   @apply font-mono text-lg font-normal leading-6 text-body;
 
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
   font-synthesis: none;
+
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
