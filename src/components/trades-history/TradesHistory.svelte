@@ -98,7 +98,7 @@
 </script>
 
 <section class="flex flex-col space-y-4" data-cy="trades-history">
-  <h2>Your Trades</h2>
+  <h2>Trades History</h2>
 
   {#if error != null && error.length > 0}
     <p class="text-danger">{error}</p>

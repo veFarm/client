@@ -49,7 +49,7 @@
   >
     <!-- Header -->
     <div class="flex items-end px-6 py-4">
-      <h3 class="text-body flex-1 text-center ml-6">
+      <h3 class="text-body flex-1 ml-6">
         <slot name="header" />
       </h3>
 

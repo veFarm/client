@@ -29,7 +29,7 @@
           // "hover:border-primary",
         ],
         secondary: [
-          "text-white",
+          "text-body",
           "bg-secondary",
           // "border",
           // "border-violet-400", // TODO: add to palette
@@ -46,13 +46,13 @@
           "hover:text-body",
         ],
         outline: [
-          "text-background",
-          "bg-body",
+          "text-body",
+          // "bg-body",
           "border",
-          "border-background", // TODO: add to palette
-          "hover:border-lime-400", // TODO: add to palette
-          "hover:bg-primary-100",
-          "hover:border-primary",
+          "border-muted", // TODO: add to palette
+          // "hover:border-lime-400", // TODO: add to palette
+          // "hover:bg-primary-100",
+          // "hover:border-primary",
         ],
       },
       size: {
@@ -67,9 +67,9 @@
           "cursor-not-allowed",
           "bg-disabled",
           "border-gray-400",
-          "text-muted",
+          "text-body",
           "hover:bg-disabled",
-          "hover:text-muted",
+          "hover:text-body",
           "hover:border-gray-400",
         ],
       },

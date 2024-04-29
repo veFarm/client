@@ -23,10 +23,10 @@ danger      A color for displaying error messages
     --color-primary-100: 255 199 0; /* HOVER */
     --color-secondary: 28 28 28;
     --color-secondary-100: 52 52 52; /* HOVER */
-    --color-body: 3 3 3; /* BLACK */
+    --color-body: 255 255 255; /* BLACK */
     --color-background: 13 13 13; /* DARK GRAY */
     --color-highlight: 59 59 59; /* */
-    --color-muted: 55 65 81; /* gray-700 */
+    --color-muted: 49 49 49; /* gray-700 */
     --color-accent: 171 171 171; /* gray-600 */
     --color-disabled: 209 213 219; /* gray-300 */
     --color-danger: 239 68 68; /* red-500 */
@@ -73,7 +73,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  @apply bg-background text-body;
+  @apply bg-black text-body;
 }
 
 #app {
@@ -86,7 +86,7 @@ h1 {
   @apply text-2xl lg:text-3xl xl:text-3xl font-bold text-white;
 }
 h2 {
-  @apply text-2xl text-body font-bold md:text-3xl;
+  @apply text-body font-bold text-lg;
 }
 h3 {
   @apply text-lg text-body font-semibold md:text-xl;
@@ -105,7 +105,7 @@ input:disabled {
 
 /* Dialog */
 dialog {
-  @apply p-0 bg-highlight border border-muted rounded-lg z-10;
+  @apply p-0 bg-black border border-highlight rounded-lg z-10;
   position: fixed;
   top: 50%;
   transform: translate(0%, -50%);

@@ -16,7 +16,6 @@
   import { TradesHistory } from "@/components/trades-history";
   import { TradesForecast } from "@/components/trades-forecast";
   import { FundsWarning } from "@/components/funds-warning";
-    import Divider from "./components/divider/Divider.svelte";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
@@ -81,16 +80,10 @@
         </div> -->
       </section>
       <section
-        class="basis-1/2 max-w-lg border border-highlight rounded-lg text-accent"
+        class="basis-1/2 max-w-lg bg-background border border-highlight rounded-lg text-accent"
       >
         {#if view === "LOGIN"}
-        <div class=" px-3 py-2 lg:px-6 lg:py-4">
-          <h2 class="text-white font-bold text-lg" >Activate Vearn</h2>
-        </div>
-          <Divider />
-        <div class=" p-3 lg:p-6">
           <ConfigForm variant="LOGIN" />
-          </div>
         {/if}
 
         {#if view === "CONFIG_AND_APPROVE"}
@@ -124,15 +117,15 @@
               }}
               data-cy="goto-update-reserve-balance-button"
             >
-              Update Reserve
+              UPDATE RESERVE BALANCE
             </Button>
             <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
           </div>
         {/if}
 
         {#if view === "UPDATE_CONFIG"}
-          <div class="space-y-4">
-            <ConfigForm variant="UPDATE_CONFIG" />
+            <ConfigForm variant="UPDATE_CONFIG">
+              <svelte:fragment slot="additional-button">
             <Button
               intent="outline"
               fullWidth
@@ -141,9 +134,10 @@
               }}
               data-cy="cancel-reserve-balance-update-button"
             >
-              Cancel
+              GO BACK
             </Button>
-          </div>
+              </svelte:fragment>
+          </ConfigForm>
         {/if}
 
         <!-- <p class="text-center text-accent">Chain: {chain.name}</p> -->

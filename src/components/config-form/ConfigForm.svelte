@@ -160,9 +160,27 @@
   let inputsMatchStore: boolean = false;
 
   $: inputsMatchStore = $trader.reserveBalance.eq(reserveBalanceWei);
+
+  let configApproveDisabled: boolean = true;
+
+  $: configApproveDisabled = disabled || inputsEmpty;
+
+  let updateConfigDisabled: boolean = true;
+
+  $: updateConfigDisabled = disabled || inputsEmpty || inputsMatchStore;
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="flex flex-col space-y-4">
+<div class="px-3 py-2 lg:px-6 lg:py-4">
+  {#if variant === "UPDATE_CONFIG"}
+    <h2 class="text-body font-bold text-lg">Update Reserve Balance</h2>
+  {:else}
+    <h2 class="text-body font-bold text-lg">Activate Vearn</h2>
+  {/if}
+</div>
+
+<Divider />
+
+<form on:submit|preventDefault={handleSubmit} class="p-3 lg:p-6 flex flex-col space-y-4">
   <Input
     type="text"
     id="reserveBalance"
@@ -199,27 +217,29 @@
     <Button
       type="submit"
       intent="primary"
-      disabled={disabled || inputsEmpty}
+      disabled={configApproveDisabled}
       loading={disabled}
       fullWidth
       data-cy="submit-form-button"
     >
-      ENABLE AUTO SWAP
+      {configApproveDisabled ? "ENTER RESERVE BALANCE" : "ENABLE AUTO SWAP"}
     </Button>
   {/if}
 
   {#if variant === "UPDATE_CONFIG"}
     <Button
       type="submit"
-      intent="primary"
-      disabled={disabled || inputsEmpty || inputsMatchStore}
+      intent={updateConfigDisabled ? "secondary" : "primary"}
+      disabled={updateConfigDisabled}
       loading={disabled}
       fullWidth
       data-cy="update-reserve-balance-button"
     >
-      UPDATE RESERVE
+      {updateConfigDisabled ? "ENTER NEW AMOUNT" : "UPDATE RESERVE"}
     </Button>
   {/if}
+
+  <slot name="additional-button" />
 
   {#if $wallet.error != null && $wallet.error.length > 0}
     <p class="text-danger">ERROR: {$wallet.error}</p>
