@@ -7,7 +7,7 @@
   export let vetEarned: string;
   export let totalFees: string;
 
-  let isOpen: boolean = false;
+  let isOpen: boolean = true;
 
   function toggle() {
     isOpen = !isOpen;
@@ -70,7 +70,8 @@
     @apply border-l-2 border-highlight mx-2 pl-2;
   }
   .is-open {
-    @apply bg-black -mx-2 -mt-2 p-2;
+    @apply bg-black -mx-2 p-2;
+    /* @apply -mt-2; */
   }
   tr > td {
     @apply pb-2;

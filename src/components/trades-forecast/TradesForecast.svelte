@@ -12,9 +12,11 @@
   import { chooseSolution } from "@/utils/choose-solution";
   import { extendSolution } from "@/utils/extend-solution";
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
+  import { TradeForecastItem } from "@/components/trade-forecast-item";
   import QuestionMark from "@/assets/QuestionMark.svelte";
   import Spinner from "../spinner/Spinner.svelte";
   import Swap1 from "@/assets/Swap1.svelte";
+  import Swap2 from "@/assets/Swap2.svelte";
   import ChevronDown from "@/assets/ChevronDown.svelte";
   import ChevronUp from "@/assets/ChevronUp.svelte";
 
@@ -151,141 +153,30 @@
 {#if $tradesForecast.loading}
   <p><Spinner /> Computing an optimized strategy...</p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
-  <!-- <div class="flex items-center">
-    <Swap1 /><p class="title">Time until the next trade: <span class="value">{formatTime(firstTrade.timeLeft)} Days</span></p><button on:click={toggleFirstTrade}>{#if firstTradeOpen}<ChevronUp />{:else}<ChevronDown />{/if}</button>
-  </div> -->
-  <!-- {#if firstTradeOpen}
-    <div class="flex flex-col space-y-2">
-        <p class="title">VTHO to be spent: <span class="value">{formatUnits(firstTrade.withdrawAmount, 2)} VTHO</span></p>
-        <p class="title">VET to be earned: <span class="value">{formatUnits(firstTrade.deltaVET, 2)} VET</span></p>
-        <p class="title">Transaction fees: <span class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</span></p>
-    </div>
-    {/if} -->
-  <div class:is-open={firstTradeOpen}>
-    <table
-      class="w-full text-xs sm:text-sm font-medium"
-      data-cy="trades-forecast-table"
-    >
-      <tbody>
-        <tr class="cursor-pointer" on:click={toggleFirstTrade}>
-          <td class="title"
-            ><Swap1 class="inline-block" /> Time until the next trade:</td
-          >
-          <td class="value"
-            >{formatTime(firstTrade.timeLeft)}
-            {#if firstTradeOpen}<ChevronUp
-                class="inline-block"
-              />{:else}<ChevronDown class="inline-block" />{/if}</td
-          >
-        </tr>
-      </tbody>
-    </table>
-    {#if firstTradeOpen}
-      <div class="border-style">
-        <table
-          class="w-full text-xs sm:text-sm font-medium"
-          data-cy="trades-forecast-table"
-        >
-          <tbody>
-            <tr>
-              <td class="title">VTHO to be spent:</td>
-              <td class="value"
-                >{formatUnits(firstTrade.withdrawAmount, 2)} VTHO</td
-              >
-            </tr>
-            <tr>
-              <td class="title">VET to be received:</td>
-              <td class="value">{formatUnits(firstTrade.deltaVET, 2)} VET</td>
-            </tr>
-            <tr class="cursor-pointer" on:click={toggleFirstTrade}>
-              <td class="title"> Transaction fees: </td>
-              <td class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    {/if}
-  </div>
-  <div>
-    <table class="w-full text-sm md:text-base" data-cy="trades-forecast-table">
-      <thead>
-        <tr>
-          <th class="title">Next Trades</th>
-          <th class="value">First Trade</th>
-          <th class="value">Second Trade</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="title">Time</td>
-          <td class="value">{formatTime(firstTrade.timeLeft)}</td>
-          <td class="value"
-            >{secondTrade != null
+  <TradeForecastItem
+    timeLeft={formatTime(firstTrade.timeLeft)}
+    vthoSpent={formatUnits(firstTrade.withdrawAmount, 2)}
+    vetEarned={formatUnits(firstTrade.deltaVET, 2)}
+    totalFees={formatUnits(firstTrade.totalFees, 2)}
+  >
+      <svelte:fragment slot="icon">
+    <Swap1 class="inline-block" />
+      </svelte:fragment>
+  </TradeForecastItem>
+  <TradeForecastItem
+    timeLeft={secondTrade != null
               ? formatTime(firstTrade.timeLeft + secondTrade.timeLeft)
-              : "∞ time"}</td
-          >
-        </tr>
-        <tr>
-          <td class="title">Spent</td>
-          <td class="value">{formatUnits(firstTrade.withdrawAmount, 2)} VTHO</td
-          >
-          <td class="value"
-            >{secondTrade != null
+              : "∞ time"}
+    vthoSpent={secondTrade != null
               ? formatUnits(secondTrade.withdrawAmount, 2)
-              : "0"} VTHO</td
-          >
-        </tr>
-        <tr>
-          <td class="title">Received</td>
-          <td class="value">{formatUnits(firstTrade.deltaVET, 2)} VET</td>
-          <td class="value"
-            >{secondTrade != null ? formatUnits(secondTrade.deltaVET, 2) : "0"}
-            VET</td
-          >
-        </tr>
-        <tr class="cursor-pointer" on:click={toggleFirstTrade}>
-          <td class="title">
-            Fees<QuestionMark
-              class="inline-block w-5 h-5 text-inherit scale-75"
-            />&nbsp;&nbsp;&nbsp;
-          </td>
-          <td class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</td>
-          <td class="value"
-            >{secondTrade != null ? formatUnits(secondTrade.totalFees, 2) : "0"}
-            VTHO</td
-          >
-        </tr>
-      </tbody>
-    </table>
-    {#if firstTradeOpen}
-      <table transition:fly={{ duration: 200 }}>
-        <tr>
-          <td class="title">TX Fee</td>
-          <td class="value">{formatUnits($tradesForecast.txFee, 2)} VTHO</td>
-          <td class="value"
-            >{secondTrade != null ? formatUnits($tradesForecast.txFee, 2) : "0"}
-            VTHO</td
-          >
-        </tr>
-        <tr>
-          <td class="title">vearn Fee</td>
-          <td class="value">{formatUnits(firstTrade.protocolFee, 2)} VTHO</td>
-          <td class="value"
-            >{secondTrade != null
-              ? formatUnits(secondTrade.protocolFee, 2)
-              : "0"} VTHO</td
-          >
-        </tr>
-        <tr>
-          <td class="title">DEX Fee</td>
-          <td class="value">{formatUnits(firstTrade.dexFee, 2)} VTHO</td>
-          <td class="value"
-            >{secondTrade != null ? formatUnits(secondTrade.dexFee, 2) : "0"} VTHO</td
-          >
-        </tr>
-      </table>
-    {/if}
-  </div>
+              : "0"}
+    vetEarned={secondTrade != null ? formatUnits(secondTrade.deltaVET, 2) : "0"}
+    totalFees={secondTrade != null ? formatUnits(secondTrade.totalFees, 2) : "0"}
+  >
+      <svelte:fragment slot="icon">
+    <Swap2 class="inline-block" />
+      </svelte:fragment>
+  </TradeForecastItem>
 {/if}
 
 <style lang="postcss">

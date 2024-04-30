@@ -62,19 +62,26 @@
     "
     >
       <section class="basis-1/2">
-        <h1 data-cy="title">Grow your VET balance.</h1>
+        <h1 data-cy="title">VTHO-VET Swaps on Autopilot</h1>
         <p class="text-accent text-base mt-4" data-cy="description">
-          <!-- Automatically swap VTHO for VET using optimized strategies. How does it work?
-          Set your reserve balance and allow the vearn contract to spend your VTHO.
-          Afterward, the contract will periodically withdraw VTHO from your account,
-          execute a swap for VET tokens through a DEX, and return the resulting tokens
-          to your wallet.store. You don&apos;t need to worry about finding the best exchange rate
-          or the right time to trade; we&apos;ll take care of that. -->
-          With your VET holdings, you automatically accumulate VTHO tokens in your
-          account. vearn takes care of exchanging these VTHO tokens for additional
-          VET tokens at strategically optimized moments, boosting your VET balance
-          and increasing your potential gains.
+          Vearn streamlines the process of converting VTHO to VET tokens, automatically executing swaps at strategic intervals.
+          Enjoy peace of mind as Vearn boosts your VET balance without any manual effort required.
         </p>
+        <!-- <h1 data-cy="title">VTHO-VET Swaps on Autopilot</h1>
+        <p>
+          Holding VET tokens in your account generates VTHO, which in turn can be traded for additional VET tokens, boosting your starting balance.
+          Vearn streamlines this process by automatically executing swaps at strategic intervals, maximizing the end result.
+          Did you know? Holding VET in your account produces VTHO tokens that are used
+          to pay for transaction on the VeChain blockchain. Vearn takes care of exchanging
+          these VTHO tokens for additional VET tokens using optimized strategies.
+            VTHO Production: Holding VET tokens generates VTHO tokens continuously at a constant rate.
+            VTHO-VET Swaps: Vearn automatically exchanges the generated VTHO tokens for additional VET tokens via a decentralized exchange (DEX).
+            Increased VET Balance: As a result of the VTHO-VET swaps, the user's initial VET balance increases with the additional VET tokens acquired.
+
+            Overall, the diagram illustrates the continuous cycle of VET producing VTHO, which is then exchanged for additional VET tokens through Vearn's automated process, ultimately leading to an increased VET balance for the user.
+
+            Vearn facilitates a perpetual cycle where VET holdings produce VTHO, subsequently exchanged for additional VET tokens via a decentralized exchange, resulting in a continuous augmentation of the user's VET balance.
+        </p> -->
         <!-- <div class="hidden lg:block">
           <Stats />
         </div> -->

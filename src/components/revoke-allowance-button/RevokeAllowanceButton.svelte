@@ -36,7 +36,7 @@
   }}
   data-cy="revoke-allowance-button"
 >
-  DISABLE AUTO SWAP
+  DISABLE AUTOPILOT
 </Button>
 
 {#if $vtho.error != null && $vtho.error.length > 0}

@@ -227,7 +227,7 @@
       fullWidth
       data-cy="submit-form-button"
     >
-      {configApproveDisabled ? "ENTER RESERVE BALANCE" : "ENABLE AUTO SWAP"}
+      {configApproveDisabled ? "ENTER RESERVE BALANCE" : "ENABLE AUTOPILOT"}
     </Button>
   {/if}
 
