@@ -6,7 +6,9 @@
 
 <Header />
 
-<main class="px-2 my-8 md:px-16 md:my-16 md:border-x border-highlight min-h-screen">
+<main
+  class="px-2 my-8 md:px-16 md:my-16 md:border-x border-highlight min-h-screen"
+>
   <slot />
 
   <WalletModal />

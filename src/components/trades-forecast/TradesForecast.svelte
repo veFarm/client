@@ -14,6 +14,9 @@
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
   import QuestionMark from "@/assets/QuestionMark.svelte";
   import Spinner from "../spinner/Spinner.svelte";
+  import Swap1 from "@/assets/Swap1.svelte";
+  import ChevronDown from "@/assets/ChevronDown.svelte";
+  import ChevronUp from "@/assets/ChevronUp.svelte";
 
   export let reserveBalance: BigNumber;
 
@@ -24,10 +27,14 @@
     timeLeft: number;
   };
 
-  let showMore: boolean = false;
+  let firstTradeOpen: boolean = true;
+  let secondTradeOpen: boolean = false;
 
-  function toggleFees() {
-    showMore = !showMore;
+  function toggleFirstTrade() {
+    firstTradeOpen = !firstTradeOpen;
+  }
+  function toggleSecondTrade() {
+    secondTradeOpen = !secondTradeOpen;
   }
 
   /**
@@ -144,9 +151,63 @@
 {#if $tradesForecast.loading}
   <p><Spinner /> Computing an optimized strategy...</p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
+  <!-- <div class="flex items-center">
+    <Swap1 /><p class="title">Time until the next trade: <span class="value">{formatTime(firstTrade.timeLeft)} Days</span></p><button on:click={toggleFirstTrade}>{#if firstTradeOpen}<ChevronUp />{:else}<ChevronDown />{/if}</button>
+  </div> -->
+  <!-- {#if firstTradeOpen}
+    <div class="flex flex-col space-y-2">
+        <p class="title">VTHO to be spent: <span class="value">{formatUnits(firstTrade.withdrawAmount, 2)} VTHO</span></p>
+        <p class="title">VET to be earned: <span class="value">{formatUnits(firstTrade.deltaVET, 2)} VET</span></p>
+        <p class="title">Transaction fees: <span class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</span></p>
+    </div>
+    {/if} -->
+  <div class:is-open={firstTradeOpen}>
+    <table
+      class="w-full text-xs sm:text-sm font-medium"
+      data-cy="trades-forecast-table"
+    >
+      <tbody>
+        <tr class="cursor-pointer" on:click={toggleFirstTrade}>
+          <td class="title"
+            ><Swap1 class="inline-block" /> Time until the next trade:</td
+          >
+          <td class="value"
+            >{formatTime(firstTrade.timeLeft)}
+            {#if firstTradeOpen}<ChevronUp
+                class="inline-block"
+              />{:else}<ChevronDown class="inline-block" />{/if}</td
+          >
+        </tr>
+      </tbody>
+    </table>
+    {#if firstTradeOpen}
+      <div class="border-style">
+        <table
+          class="w-full text-xs sm:text-sm font-medium"
+          data-cy="trades-forecast-table"
+        >
+          <tbody>
+            <tr>
+              <td class="title">VTHO to be spent:</td>
+              <td class="value"
+                >{formatUnits(firstTrade.withdrawAmount, 2)} VTHO</td
+              >
+            </tr>
+            <tr>
+              <td class="title">VET to be received:</td>
+              <td class="value">{formatUnits(firstTrade.deltaVET, 2)} VET</td>
+            </tr>
+            <tr class="cursor-pointer" on:click={toggleFirstTrade}>
+              <td class="title"> Transaction fees: </td>
+              <td class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    {/if}
+  </div>
   <div>
     <table class="w-full text-sm md:text-base" data-cy="trades-forecast-table">
-      <!-- <caption class="text-sm">Upcoming Trades (estimated)</caption> -->
       <thead>
         <tr>
           <th class="title">Next Trades</th>
@@ -182,7 +243,7 @@
             VET</td
           >
         </tr>
-        <tr class="cursor-pointer" on:click={toggleFees}>
+        <tr class="cursor-pointer" on:click={toggleFirstTrade}>
           <td class="title">
             Fees<QuestionMark
               class="inline-block w-5 h-5 text-inherit scale-75"
@@ -196,7 +257,7 @@
         </tr>
       </tbody>
     </table>
-    {#if showMore}
+    {#if firstTradeOpen}
       <table transition:fly={{ duration: 200 }}>
         <tr>
           <td class="title">TX Fee</td>
@@ -230,9 +291,20 @@
 <style lang="postcss">
   .title {
     @apply w-0 whitespace-nowrap;
+    @apply text-accent;
   }
   .value {
     @apply w-1/2 truncate text-right;
     max-width: 1px;
+    @apply text-body;
+  }
+  .border-style {
+    @apply border-l-2 border-highlight mx-2 pl-2;
+  }
+  .is-open {
+    @apply bg-black -mx-2 p-2;
+  }
+  tr > td {
+    @apply pb-2;
   }
 </style>

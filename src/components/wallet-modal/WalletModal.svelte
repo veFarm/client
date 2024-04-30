@@ -43,7 +43,11 @@
   on:close={handleClose}
   data-cy="wallet-modal"
 >
-  <svelte:fragment slot="header"><p class="text-body font-medium text-base">Connect to a wallet</p></svelte:fragment>
+  <svelte:fragment slot="header"
+    ><p class="text-body font-medium text-base">
+      Connect to a wallet
+    </p></svelte:fragment
+  >
   <svelte:fragment slot="body">
     <!-- <p class="text-sm text-accent">
       Connect with one of our available wallet providers.

@@ -91,6 +91,51 @@
         {/if}
 
         {#if view === "SUMMARY"}
+          <ConfigForm variant="SUMMARY">
+            <svelte:fragment slot="additional-button">
+              <Button
+                intent="secondary"
+                fullWidth
+                on:click={() => {
+                  view = "UPDATE_CONFIG";
+                }}
+                data-cy="goto-update-reserve-balance-button"
+              >
+                EDIT RESERVE BALANCE
+              </Button>
+              <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
+            </svelte:fragment>
+          </ConfigForm>
+        {/if}
+
+        {#if view === "UPDATE_CONFIG"}
+          <ConfigForm variant="UPDATE_CONFIG">
+            <svelte:fragment slot="additional-button">
+              <Button
+                intent="outline"
+                fullWidth
+                on:click={() => {
+                  view = "SUMMARY";
+                }}
+                data-cy="cancel-reserve-balance-update-button"
+              >
+                GO BACK
+              </Button>
+            </svelte:fragment>
+          </ConfigForm>
+        {/if}
+
+        <!-- <p class="text-center text-accent">Chain: {chain.name}</p> -->
+      </section>
+    </div>
+
+    {#if $wallet.connected}
+      <TradesHistory />
+    {/if}
+  </div>
+</Layout>
+
+<!-- {#if view === "SUMMARY"}
           <div class="space-y-4">
             <div
               class="text-green-700 bg-green-50 rounded-t-lg space-y-4 p-3 lg:p-4"
@@ -121,31 +166,4 @@
             </Button>
             <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
           </div>
-        {/if}
-
-        {#if view === "UPDATE_CONFIG"}
-            <ConfigForm variant="UPDATE_CONFIG">
-              <svelte:fragment slot="additional-button">
-            <Button
-              intent="outline"
-              fullWidth
-              on:click={() => {
-                view = "SUMMARY";
-              }}
-              data-cy="cancel-reserve-balance-update-button"
-            >
-              GO BACK
-            </Button>
-              </svelte:fragment>
-          </ConfigForm>
-        {/if}
-
-        <!-- <p class="text-center text-accent">Chain: {chain.name}</p> -->
-      </section>
-    </div>
-
-    {#if $wallet.connected}
-      <TradesHistory />
-    {/if}
-  </div>
-</Layout>
+        {/if} -->

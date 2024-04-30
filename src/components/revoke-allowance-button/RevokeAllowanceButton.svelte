@@ -24,7 +24,7 @@
 </script>
 
 <Button
-  intent="danger"
+  intent="outline"
   {disabled}
   {loading}
   fullWidth
@@ -36,7 +36,7 @@
   }}
   data-cy="revoke-allowance-button"
 >
-  Revoke Spending
+  DISABLE AUTO SWAP
 </Button>
 
 {#if $vtho.error != null && $vtho.error.length > 0}

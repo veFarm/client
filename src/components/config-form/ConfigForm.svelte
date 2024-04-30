@@ -16,7 +16,7 @@
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { FundsWarning } from "@/components/funds-warning";
 
-  type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "UPDATE_CONFIG";
+  type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
   export let variant: Variant;
 
@@ -172,15 +172,20 @@
 
 <div class="px-3 py-2 lg:px-6 lg:py-4">
   {#if variant === "UPDATE_CONFIG"}
-    <h2 class="text-body font-bold text-lg">Update Reserve Balance</h2>
+    <h2>Update Reserve Balance</h2>
+  {:else if variant === "SUMMARY"}
+    <h2>Vearn Activated</h2>
   {:else}
-    <h2 class="text-body font-bold text-lg">Activate Vearn</h2>
+    <h2>Activate Vearn</h2>
   {/if}
 </div>
 
 <Divider />
 
-<form on:submit|preventDefault={handleSubmit} class="p-3 lg:p-6 flex flex-col space-y-4">
+<form
+  on:submit|preventDefault={handleSubmit}
+  class="p-3 lg:p-6 flex flex-col space-y-4"
+>
   <Input
     type="text"
     id="reserveBalance"
