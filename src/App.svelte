@@ -17,18 +17,21 @@
   import { TradesForecast } from "@/components/trades-forecast";
   import { FundsWarning } from "@/components/funds-warning";
 
-  type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
+  type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG"; // TODO: add LOADING
 
   let view: View = "LOGIN";
 
   $: {
+    console.log({connected: $wallet.connected, swapConfig: $trader.swapConfigSet, allowance: $vtho.allowed})
     if (!$wallet.connected) {
       view = "LOGIN";
     } else if (!$trader.swapConfigSet || !$vtho.allowed) {
+      console.log("2")
       view = "CONFIG_AND_APPROVE";
     } else if ($trader.swapConfigSet && $vtho.allowed) {
       view = "SUMMARY";
     }
+    console.log({view})
   }
 
   // Update account balance with every new tick.
@@ -64,8 +67,10 @@
       <section class="basis-1/2">
         <h1 data-cy="title">VTHO-VET Swaps on Autopilot</h1>
         <p class="text-accent text-base mt-4" data-cy="description">
-          Vearn streamlines the process of converting VTHO to VET tokens, automatically executing swaps at strategic intervals.
-          Enjoy peace of mind as Vearn boosts your VET balance without any manual effort required.
+          Vearn streamlines the process of converting VTHO to VET tokens,
+          automatically executing swaps at strategic intervals. Enjoy peace of
+          mind as Vearn boosts your VET balance without any manual effort
+          required.
         </p>
         <!-- <h1 data-cy="title">VTHO-VET Swaps on Autopilot</h1>
         <p>

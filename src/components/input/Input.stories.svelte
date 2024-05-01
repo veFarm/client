@@ -6,7 +6,7 @@
 <Meta title="components/Input" component={Input} />
 
 <Template let:args>
-  <div class="bg-body p-2">
+  <div class="p-2">
     <Input id="test" label="Reserve balance" value="18" {...args} />
   </div>
 </Template>
@@ -28,9 +28,9 @@
 />
 
 <Story
-  name="Subtext"
+  name="Balance"
   args={{
-    subtext: "Balance: 123.45",
+    balance: "123.45 VTHO",
   }}
 />
 

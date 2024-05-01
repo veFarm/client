@@ -1,14 +1,15 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from "svelte/elements";
+  import WalletFull from "@/assets/WalletFull.svelte";
 
   type $$Props = HTMLInputAttributes & {
     id: string;
     label?: string;
     value: any;
     currency?: string;
+    balance?: string;
     hint?: string;
     error?: string;
-    subtext?: string;
     "data-cy"?: string;
   };
 
@@ -16,9 +17,9 @@
   export let label = "";
   export let value: any;
   export let currency = "";
+  export let balance = "";
   export let hint = "";
   export let error = "";
-  export let subtext = "";
 
   let hasError = false;
 
@@ -29,10 +30,19 @@
   for={id}
   class="{hasError
     ? 'text-danger'
-    : 'text-white'} text-sm font-medium space-y-2"
+    : 'text-body'} text-sm font-medium"
 >
   {label}
+  <div class="h-2" />
   <div class="relative">
+    {#if balance.length > 0}
+      <div
+        class="absolute -top-7 right-0 text-xs font-medium text-accent pl-1 flex items-end"
+        data-cy="balance"
+      >
+        <WalletFull class="mr-1" /> {balance}
+      </div>
+    {/if}
     <input
       {id}
       class="h-12 sm:h-14 bg-transparent border {hasError
@@ -51,17 +61,9 @@
         {currency}
       </div>
     {/if}
-    <!-- {#if subtext.length > 0}
-      <div
-        class="absolute bottom-1 right-2 text-sm text-accent px-1.5"
-        data-cy="subtext"
-      >
-        {subtext}
-      </div>
-    {/if} -->
   </div>
   {#if hint.length > 0 && !hasError}
-    <legend class="text-xs text-accent">{hint}</legend>
+    <legend class="text-xs text-accent mt-2">{hint}</legend>
   {/if}
   {#if hasError}
     <legend>{error}</legend>

@@ -13,12 +13,9 @@
   import { extendSolution } from "@/utils/extend-solution";
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
   import { TradeForecastItem } from "@/components/trade-forecast-item";
-  import QuestionMark from "@/assets/QuestionMark.svelte";
   import Spinner from "../spinner/Spinner.svelte";
   import Swap1 from "@/assets/Swap1.svelte";
   import Swap2 from "@/assets/Swap2.svelte";
-  import ChevronDown from "@/assets/ChevronDown.svelte";
-  import ChevronUp from "@/assets/ChevronUp.svelte";
 
   export let reserveBalance: BigNumber;
 
@@ -159,23 +156,25 @@
     vetEarned={formatUnits(firstTrade.deltaVET, 2)}
     totalFees={formatUnits(firstTrade.totalFees, 2)}
   >
-      <svelte:fragment slot="icon">
-    <Swap1 class="inline-block" />
-      </svelte:fragment>
+    <svelte:fragment slot="icon">
+      <Swap1 class="inline-block" />
+    </svelte:fragment>
   </TradeForecastItem>
   <TradeForecastItem
     timeLeft={secondTrade != null
-              ? formatTime(firstTrade.timeLeft + secondTrade.timeLeft)
-              : "∞ time"}
+      ? formatTime(firstTrade.timeLeft + secondTrade.timeLeft)
+      : "∞ time"}
     vthoSpent={secondTrade != null
-              ? formatUnits(secondTrade.withdrawAmount, 2)
-              : "0"}
+      ? formatUnits(secondTrade.withdrawAmount, 2)
+      : "0"}
     vetEarned={secondTrade != null ? formatUnits(secondTrade.deltaVET, 2) : "0"}
-    totalFees={secondTrade != null ? formatUnits(secondTrade.totalFees, 2) : "0"}
+    totalFees={secondTrade != null
+      ? formatUnits(secondTrade.totalFees, 2)
+      : "0"}
   >
-      <svelte:fragment slot="icon">
-    <Swap2 class="inline-block" />
-      </svelte:fragment>
+    <svelte:fragment slot="icon">
+      <Swap2 class="inline-block" />
+    </svelte:fragment>
   </TradeForecastItem>
 {/if}
 

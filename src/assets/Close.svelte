@@ -1,6 +1,6 @@
 <svg
   aria-hidden="true"
-  fill="currentColor"
+  fill="none"
   width="24"
   height="24"
   viewBox="0 0 24 24"

@@ -15,10 +15,16 @@
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { FundsWarning } from "@/components/funds-warning";
+  import History from "@/assets/History.svelte";
 
   type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
   export let variant: Variant;
+
+  $: {
+
+  console.log({variant})
+  }
 
   type ErrorFields = "reserveBalance" | "network";
   type Errors = Record<ErrorFields, string[]>;
@@ -170,13 +176,17 @@
   $: updateConfigDisabled = disabled || inputsEmpty || inputsMatchStore;
 </script>
 
-<div class="px-3 py-2 lg:px-6 lg:py-4">
+<div class="flex items-center justify-between px-3 py-2 lg:px-6 lg:py-4">
   {#if variant === "UPDATE_CONFIG"}
     <h2>Update Reserve Balance</h2>
   {:else if variant === "SUMMARY"}
     <h2>Vearn Activated</h2>
+    <History />
   {:else}
     <h2>Activate Vearn</h2>
+  {/if}
+  {#if ["CONFIG_AND_APPROVE", "SUMMARY"].includes(variant)}
+    <button on:click={() => {}} title="Transaction History"><History /></button>
   {/if}
 </div>
 
@@ -194,10 +204,10 @@
     autocomplete="off"
     autofocus
     currency="VTHO"
-    subtext={`Balance: ${
-      $balance.current != null ? formatUnits($balance.current.vtho, 2) : "0"
-    }`}
-    hint="Minimum balance to be maintained in your account at all times"
+    balance={
+      $balance.current != null ? `${formatUnits($balance.current.vtho, 2)} VTHO` : undefined
+    }
+    hint="Minimum VTHO balance to be maintained in your account at all times"
     disabled={disabled || !$wallet.connected}
     error={errors.reserveBalance[0]}
     bind:value={reserveBalance}
