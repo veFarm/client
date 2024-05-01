@@ -21,11 +21,6 @@
 
   export let variant: Variant;
 
-  $: {
-
-  console.log({variant})
-  }
-
   type ErrorFields = "reserveBalance" | "network";
   type Errors = Record<ErrorFields, string[]>;
 
@@ -205,7 +200,7 @@
     autofocus
     currency="VTHO"
     balance={
-      $balance.current != null ? `${formatUnits($balance.current.vtho, 2)} VTHO` : undefined
+      $balance.current != null ? `${formatUnits($balance.current.vtho, 2)} VTHO` : ""
     }
     hint="Minimum VTHO balance to be maintained in your account at all times"
     disabled={disabled || !$wallet.connected}

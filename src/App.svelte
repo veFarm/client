@@ -22,16 +22,13 @@
   let view: View = "LOGIN";
 
   $: {
-    console.log({connected: $wallet.connected, swapConfig: $trader.swapConfigSet, allowance: $vtho.allowed})
     if (!$wallet.connected) {
       view = "LOGIN";
     } else if (!$trader.swapConfigSet || !$vtho.allowed) {
-      console.log("2")
       view = "CONFIG_AND_APPROVE";
     } else if ($trader.swapConfigSet && $vtho.allowed) {
       view = "SUMMARY";
     }
-    console.log({view})
   }
 
   // Update account balance with every new tick.

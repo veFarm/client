@@ -35,7 +35,7 @@
   {label}
   <div class="h-2" />
   <div class="relative">
-    {#if balance.length > 0}
+    {#if balance != null && balance.length > 0}
       <div
         class="absolute -top-7 right-0 text-xs font-medium text-accent pl-1 flex items-end"
         data-cy="balance"

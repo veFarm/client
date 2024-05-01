@@ -60,8 +60,8 @@
           disabled={$wallet.loading}
           loading={$wallet.walletId === id && $wallet.loading}
           class="flex items-center justify-center space-x-3"
-          on:click={() => {
-            handleConnect(id);
+          on:click={async () => {
+            await handleConnect(id);
           }}
           data-cy={`wallet-provider-button-${id}`}
         >
