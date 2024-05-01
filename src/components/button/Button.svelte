@@ -37,17 +37,18 @@
           // "hover:border-secondary",
         ],
         danger: [
-          "text-danger",
-          "bg-body",
+          "text-body",
           "border",
-          "border-danger",
+          "border-muted", // TODO: add to palette
+          // "hover:border-lime-400", // TODO: add to palette
+          // "hover:bg-primary-100",
+          // "hover:border-primary",
           "hover:border-danger-100",
           "hover:bg-danger",
           "hover:text-body",
         ],
         outline: [
           "text-body",
-          // "bg-body",
           "border",
           "border-muted", // TODO: add to palette
           // "hover:border-lime-400", // TODO: add to palette
@@ -67,7 +68,7 @@
           "cursor-not-allowed",
           "bg-disabled",
           "border-gray-400",
-          "text-body",
+          "text-black",
           "hover:bg-disabled",
           "hover:text-body",
           "hover:border-gray-400",

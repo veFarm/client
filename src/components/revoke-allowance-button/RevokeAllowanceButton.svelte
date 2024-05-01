@@ -24,7 +24,7 @@
 </script>
 
 <Button
-  intent="outline"
+  intent="danger"
   {disabled}
   {loading}
   fullWidth

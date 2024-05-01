@@ -16,6 +16,7 @@
   import { TradesHistory } from "@/components/trades-history";
   import { TradesForecast } from "@/components/trades-forecast";
   import { FundsWarning } from "@/components/funds-warning";
+    import Alert from "./components/alert/Alert.svelte";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG"; // TODO: add LOADING
 
@@ -113,6 +114,10 @@
                 EDIT RESERVE BALANCE
               </Button>
               <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
+              <Alert
+                    title="Autopilot Enabled"
+                    body={`We will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits($trader.reserveBalance)} VTHO in your account.`}
+              />
             </svelte:fragment>
           </ConfigForm>
         {/if}

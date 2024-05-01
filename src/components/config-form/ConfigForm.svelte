@@ -12,6 +12,7 @@
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
   import { Divider } from "@/components/divider";
+  import {Pill} from "@/components/pill";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { FundsWarning } from "@/components/funds-warning";
@@ -169,17 +170,30 @@
   let updateConfigDisabled: boolean = true;
 
   $: updateConfigDisabled = disabled || inputsEmpty || inputsMatchStore;
+
+  let title: string = "";
+
+  const TITLES: Record<Variant, string> = {
+    "LOGIN": "Activate Vearn",
+    "CONFIG_AND_APPROVE": "Activate Vearn",
+    "SUMMARY": "Vearn Activated",
+    "UPDATE_CONFIG": "Update Reserve Balance",
+  }
+
+  $: {
+    title = TITLES[variant] || "";
+  }
 </script>
 
 <div class="flex items-center justify-between px-3 py-2 lg:px-6 lg:py-4">
-  {#if variant === "UPDATE_CONFIG"}
-    <h2>Update Reserve Balance</h2>
-  {:else if variant === "SUMMARY"}
-    <h2>Vearn Activated</h2>
-    <History />
-  {:else}
-    <h2>Activate Vearn</h2>
-  {/if}
+  <div class="flex items-center space-x-2">
+    <h2>
+      {title}
+    </h2>
+    {#if variant === "SUMMARY"}
+      <Pill value="Active" />
+    {/if}
+  </div>
   {#if ["CONFIG_AND_APPROVE", "SUMMARY"].includes(variant)}
     <button on:click={() => {}} title="Transaction History"><History /></button>
   {/if}
@@ -215,7 +229,7 @@
   <Divider />
   <FundsWarning />
 
-  {#if !inputsEmpty}
+  {#if !inputsEmpty && variant !== "UPDATE_CONFIG"}
     <TradesForecast reserveBalance={reserveBalanceWei} />
   {/if}
 
@@ -245,7 +259,7 @@
       fullWidth
       data-cy="update-reserve-balance-button"
     >
-      {updateConfigDisabled ? "ENTER NEW AMOUNT" : "UPDATE RESERVE"}
+      {updateConfigDisabled ? "ENTER NEW AMOUNT" : "UPDATE RESERVE BALANCE"}
     </Button>
   {/if}
 

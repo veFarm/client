@@ -31,6 +31,7 @@ danger      A color for displaying error messages
     --color-disabled: 209 213 219; /* gray-300 */
     --color-danger: 239 68 68; /* red-500 */
     --color-danger-100: 251 113 133; /* red-400 */
+    --color-success: 142 255 140;
     --color-backdrop: 0 0 0; /* transparent */
   }
 }

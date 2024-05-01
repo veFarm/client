@@ -21,7 +21,7 @@
   >
     <tbody>
       <tr class="cursor-pointer" on:click={toggle}>
-        <td class="title"><slot name="icon" /> Time until the next trade:</td>
+        <td class="title"><div class="bg-zinc-900 rounded inline-block mr-1"><slot name="icon" /></div> Time until the next trade:</td>
         <td class="value">
           {timeLeft}
           {#if isOpen}
@@ -67,7 +67,7 @@
     max-width: 1px;
   }
   .border-style {
-    @apply border-l-2 border-highlight mx-2 pl-2;
+    @apply border-l-2 border-highlight mx-3 pl-3;
   }
   .is-open {
     @apply bg-black -mx-2 p-2;
