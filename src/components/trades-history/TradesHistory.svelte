@@ -7,6 +7,7 @@
   import { formatUnits } from "@/utils/format-units";
   import { PastTrade } from "@/components/past-trade";
   import { Spinner } from "@/components/spinner";
+  import { Divider } from "@/components/divider";
 
   type RawSwapDoc = {
     account: Address;
@@ -97,9 +98,14 @@
   }
 </script>
 
-<section class="flex flex-col space-y-4" data-cy="trades-history">
-  <h2>Trades History</h2>
+<section class="bg-background border border-highlight rounded-lg text-accent">
+  <div class="px-3 py-3 lg:px-6 lg:py-4" data-cy="trades-history">
+      <h2>Transaction History</h2>
+  </div>
 
+  <Divider />
+
+  <div class="px-2 py-2 space-y-3">
   {#if error != null && error.length > 0}
     <p class="text-danger">{error}</p>
   {:else if loading}
@@ -117,4 +123,5 @@
       />
     {/each}
   {/if}
+  </div>
 </section>

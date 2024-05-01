@@ -151,6 +151,7 @@
   <p><Spinner /> Computing an optimized strategy...</p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
   <TradeForecastItem
+    label="next trade"
     timeLeft={formatTime(firstTrade.timeLeft)}
     vthoSpent={formatUnits(firstTrade.withdrawAmount, 2)}
     vetEarned={formatUnits(firstTrade.deltaVET, 2)}
@@ -161,6 +162,7 @@
     </svelte:fragment>
   </TradeForecastItem>
   <TradeForecastItem
+    label="trade after"
     timeLeft={secondTrade != null
       ? formatTime(firstTrade.timeLeft + secondTrade.timeLeft)
       : "∞ time"}

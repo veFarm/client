@@ -6,7 +6,7 @@
 <Meta title="components/Input" component={Input} />
 
 <Template let:args>
-  <div class="p-2">
+  <div class="bg-background p-2">
     <Input id="test" label="Reserve balance" value="18" {...args} />
   </div>
 </Template>
@@ -55,3 +55,13 @@
     currency: "VTHO",
   }}
 />
+
+<Story name="Editable">
+  <div class="p-2">
+    <Input id="test" label="Reserve balance" value="18" balance="123.45 VTHO">
+      <svelte:fragment slot="input-right">
+        <button>Edit</button>
+      </svelte:fragment>
+    </Input>
+  </div>
+</Story>

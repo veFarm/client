@@ -17,6 +17,7 @@
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { FundsWarning } from "@/components/funds-warning";
   import History from "@/assets/History.svelte";
+  import Edit from "@/assets/Edit.svelte";
 
   type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
 
@@ -185,7 +186,7 @@
   }
 </script>
 
-<div class="flex items-center justify-between px-3 py-2 lg:px-6 lg:py-4">
+<div class="flex items-center justify-between px-3 py-3 lg:px-6 lg:py-4">
   <div class="flex items-center space-x-2">
     <h2>
       {title}
@@ -205,6 +206,7 @@
   on:submit|preventDefault={handleSubmit}
   class="p-3 lg:p-6 flex flex-col space-y-4"
 >
+<div class="flex">
   <Input
     type="text"
     id="reserveBalance"
@@ -217,14 +219,34 @@
       $balance.current != null ? `${formatUnits($balance.current.vtho, 2)} VTHO` : ""
     }
     hint="Minimum VTHO balance to be maintained in your account at all times"
-    disabled={disabled || !$wallet.connected}
+    disabled={disabled || !$wallet.connected || variant === "SUMMARY"}
     error={errors.reserveBalance[0]}
     bind:value={reserveBalance}
     on:input={() => {
       clearFieldErrors("reserveBalance");
     }}
     data-cy="reserve-balance-input"
-  />
+  >
+              <svelte:fragment slot="input-right">
+
+  {#if variant === "SUMMARY"}
+                <Button
+                intent="secondary"
+                fullWidth
+                class="ml-2 max-w-min"
+                on:click={() => {
+                  // view = "UPDATE_CONFIG";
+                }}
+                data-cy="goto-update-reserve-balance-button"
+              >
+                <div class="flex">
+                <Edit class="inline-block mr-2"/> EDIT
+                </div>
+              </Button>
+              {/if}
+              </svelte:fragment>
+  </Input>
+</div>
 
   <Divider />
   <FundsWarning />
@@ -263,7 +285,7 @@
     </Button>
   {/if}
 
-  <slot name="additional-button" />
+  <slot name="form-bottom" />
 
   {#if $wallet.error != null && $wallet.error.length > 0}
     <p class="text-danger">ERROR: {$wallet.error}</p>

@@ -19,6 +19,7 @@
 <Story
   name="Default"
   args={{
+    label: "next trade",
     timeLeft: "3 Days",
     vthoSpent: "125",
     vetEarned: "1.2",

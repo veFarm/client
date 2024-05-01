@@ -102,8 +102,8 @@
 
         {#if view === "SUMMARY"}
           <ConfigForm variant="SUMMARY">
-            <svelte:fragment slot="additional-button">
-              <Button
+            <svelte:fragment slot="form-bottom">
+              <!-- <Button
                 intent="secondary"
                 fullWidth
                 on:click={() => {
@@ -112,7 +112,7 @@
                 data-cy="goto-update-reserve-balance-button"
               >
                 EDIT RESERVE BALANCE
-              </Button>
+              </Button> -->
               <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
               <Alert
                     title="Autopilot Enabled"
@@ -124,7 +124,7 @@
 
         {#if view === "UPDATE_CONFIG"}
           <ConfigForm variant="UPDATE_CONFIG">
-            <svelte:fragment slot="additional-button">
+            <svelte:fragment slot="form-bottom">
               <Button
                 intent="outline"
                 fullWidth
@@ -133,7 +133,7 @@
                 }}
                 data-cy="cancel-reserve-balance-update-button"
               >
-                GO BACK
+                CANCEL
               </Button>
             </svelte:fragment>
           </ConfigForm>
