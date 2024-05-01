@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import bn from "bignumber.js";
   import { chain, MAX_UINT256 } from "@/config/index";
   import { wallet } from "@/stores/wallet";
@@ -12,7 +13,7 @@
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
   import { Divider } from "@/components/divider";
-  import {Pill} from "@/components/pill";
+  import { Pill } from "@/components/pill";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { FundsWarning } from "@/components/funds-warning";
@@ -141,6 +142,12 @@
     }
   }
 
+  const dispatch = createEventDispatcher();
+
+  function handleEdit() {
+    dispatch("editReserveBalance");
+  }
+
   // Set stored config values on login.
   $: {
     if ($trader.contract != null && $trader.swapConfigSet && !runOnce) {
@@ -175,11 +182,11 @@
   let title: string = "";
 
   const TITLES: Record<Variant, string> = {
-    "LOGIN": "Activate Vearn",
-    "CONFIG_AND_APPROVE": "Activate Vearn",
-    "SUMMARY": "Vearn Activated",
-    "UPDATE_CONFIG": "Update Reserve Balance",
-  }
+    LOGIN: "Activate Vearn",
+    CONFIG_AND_APPROVE: "Activate Vearn",
+    SUMMARY: "Vearn Activated",
+    UPDATE_CONFIG: "Update Reserve Balance",
+  };
 
   $: {
     title = TITLES[variant] || "";
@@ -206,47 +213,44 @@
   on:submit|preventDefault={handleSubmit}
   class="p-3 lg:p-6 flex flex-col space-y-4"
 >
-<div class="flex">
-  <Input
-    type="text"
-    id="reserveBalance"
-    label="Reserve Balance"
-    placeholder={formatUnits($trader.reserveBalance)}
-    autocomplete="off"
-    autofocus
-    currency="VTHO"
-    balance={
-      $balance.current != null ? `${formatUnits($balance.current.vtho, 2)} VTHO` : ""
-    }
-    hint="Minimum VTHO balance to be maintained in your account at all times"
-    disabled={disabled || !$wallet.connected || variant === "SUMMARY"}
-    error={errors.reserveBalance[0]}
-    bind:value={reserveBalance}
-    on:input={() => {
-      clearFieldErrors("reserveBalance");
-    }}
-    data-cy="reserve-balance-input"
-  >
-              <svelte:fragment slot="input-right">
-
-  {#if variant === "SUMMARY"}
-                <Button
-                intent="secondary"
-                fullWidth
-                class="ml-2 max-w-min"
-                on:click={() => {
-                  // view = "UPDATE_CONFIG";
-                }}
-                data-cy="goto-update-reserve-balance-button"
-              >
-                <div class="flex">
-                <Edit class="inline-block mr-2"/> EDIT
-                </div>
-              </Button>
-              {/if}
-              </svelte:fragment>
-  </Input>
-</div>
+  <div class="flex">
+    <Input
+      type="text"
+      id="reserveBalance"
+      label="Reserve Balance"
+      placeholder={formatUnits($trader.reserveBalance)}
+      autocomplete="off"
+      autofocus
+      currency="VTHO"
+      balance={$balance.current != null
+        ? `${formatUnits($balance.current.vtho, 2)} VTHO`
+        : ""}
+      hint="Minimum VTHO balance to be maintained in your account at all times"
+      disabled={disabled || !$wallet.connected || variant === "SUMMARY"}
+      error={errors.reserveBalance[0]}
+      bind:value={reserveBalance}
+      on:input={() => {
+        clearFieldErrors("reserveBalance");
+      }}
+      data-cy="reserve-balance-input"
+    >
+      <svelte:fragment slot="input-right">
+        {#if variant === "SUMMARY"}
+          <Button
+            intent="secondary"
+            fullWidth
+            class="ml-2 max-w-min"
+            on:click={handleEdit}
+            data-cy="goto-update-reserve-balance-button"
+          >
+            <div class="flex">
+              <Edit class="inline-block mr-2" /> EDIT
+            </div>
+          </Button>
+        {/if}
+      </svelte:fragment>
+    </Input>
+  </div>
 
   <Divider />
   <FundsWarning />

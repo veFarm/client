@@ -66,6 +66,7 @@
 <Story
   name="Loading"
   args={{
+    intent: "primary",
     disabled: true,
     loading: true,
   }}

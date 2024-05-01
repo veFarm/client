@@ -22,7 +22,12 @@
   >
     <tbody>
       <tr class="cursor-pointer" on:click={toggle}>
-        <td class="title"><div class="bg-zinc-900 rounded inline-block mr-1"><slot name="icon" /></div> Time until {label}:</td>
+        <td class="title"
+          ><div class="bg-zinc-900 rounded inline-block mr-1">
+            <slot name="icon" />
+          </div>
+          Time until {label}:</td
+        >
         <td class="value">
           {timeLeft}
           {#if isOpen}

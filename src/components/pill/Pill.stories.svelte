@@ -14,6 +14,6 @@
 <Story
   name="Success"
   args={{
-    value: "Active"
+    value: "Active",
   }}
 />

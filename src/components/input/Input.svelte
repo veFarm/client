@@ -28,9 +28,7 @@
 
 <label
   for={id}
-  class="{hasError
-    ? 'text-danger'
-    : 'text-body'} text-sm font-medium w-full"
+  class="{hasError ? 'text-danger' : 'text-body'} text-sm font-medium w-full"
 >
   {label}
   <div class="h-2" />
@@ -40,29 +38,30 @@
         class="absolute -top-7 right-0 text-xs font-medium text-accent pl-1 flex items-end"
         data-cy="balance"
       >
-        <WalletFull class="mr-1" /> {balance}
+        <WalletFull class="mr-1" />
+        {balance}
       </div>
     {/if}
     <div class="flex">
-      <div class="relative">
-      <input
-        {id}
-        class="h-12 sm:h-14 bg-transparent border {hasError
-          ? 'border-danger'
-          : 'border-color'} text-white text-xl font-bold rounded-lg focus:ring-primary focus:border-primary block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled"
-        {...$$restProps}
-        bind:value
-        on:input
-      />
-    {#if currency.length > 0}
-      <div
-        class="absolute top-2.5 right-3 sm:top-3 sm:right-4 bg-black px-3 py-1 rounded-md text-sm sm:text-base font-bold text-white"
-        class:text--disabled={$$restProps.disabled}
-        data-cy="currency"
-      >
-        {currency}
-      </div>
-    {/if}
+      <div class="relative w-full">
+        <input
+          {id}
+          class="h-12 sm:h-14 bg-transparent border {hasError
+            ? 'border-danger'
+            : 'border-color'} text-white text-xl font-bold rounded-lg focus:ring-primary focus:border-primary block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled"
+          {...$$restProps}
+          bind:value
+          on:input
+        />
+        {#if currency.length > 0}
+          <div
+            class="absolute top-2.5 right-3 sm:top-3 sm:right-4 bg-black px-3 py-1 rounded-md text-sm sm:text-base font-bold text-white"
+            class:text--disabled={$$restProps.disabled}
+            data-cy="currency"
+          >
+            {currency}
+          </div>
+        {/if}
       </div>
       <slot name="input-right" />
     </div>

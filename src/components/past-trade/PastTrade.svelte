@@ -1,5 +1,4 @@
 <script lang="ts">
-
   export let withdrawAmount: string;
   export let amountOutReceived: string;
   export let txId: string;
@@ -24,24 +23,30 @@
   <tbody>
     <tr>
       <td class="title">Date:</td>
-      <td class="value">{new Date(blockTimestamp * 1000).toLocaleString().replace(",", " ")}</td>
+      <td class="value"
+        >{new Date(blockTimestamp * 1000)
+          .toLocaleString()
+          .replace(",", " ")}</td
+      >
     </tr>
     <tr>
       <td class="title">Amount:</td>
-      <td class="value">{withdrawAmount} VTHO - <span class="text-primary">{amountOutReceived} VET</span></td>
+      <td class="value"
+        >{withdrawAmount} VTHO -
+        <span class="text-primary">{amountOutReceived} VET</span></td
+      >
     </tr>
     <tr>
       <td class="title">TxID:</td>
       <td class="value">
         <a
-  href={`${explorerUrl}/transactions/${txId}`}
-  target="_blank"
-  rel="noreferrer"
-  title={txId}
->
-
-        {txId}
-      </a>
+          href={`${explorerUrl}/transactions/${txId}`}
+          target="_blank"
+          rel="noreferrer"
+          title={txId}
+        >
+          {txId}
+        </a>
       </td>
     </tr>
   </tbody>

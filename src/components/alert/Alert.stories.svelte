@@ -15,6 +15,6 @@
   name="Success"
   args={{
     title: "Autopilot Enabled",
-    body: "We will periodically exchange VTHO for VET while keeping a balance of 15 VTHO in your account."
+    body: "We will periodically exchange VTHO for VET while keeping a balance of 15 VTHO in your account.",
   }}
 />

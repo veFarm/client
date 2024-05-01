@@ -30,10 +30,14 @@
   </div>
 
   {#if $wallet.connected && $balance.current != null}
-    <div class="flex items-center justify-between p-2 sm:px-6 sm:py-3 border-l border-muted h-full w-80">
+    <div
+      class="flex items-center justify-between p-2 sm:px-6 sm:py-3 border-l border-muted h-full w-80"
+    >
       <div>
         <p class="text-xs font-medium">{shortenAddress($wallet.account)}</p>
-        <p class="text-sm font-bold">{formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;</p>
+        <p class="text-sm font-bold">
+          {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
+        </p>
       </div>
 
       <button
