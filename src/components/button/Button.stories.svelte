@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+  import Sync2 from "@/assets/Sync2.svg";
   import { Button } from ".";
 </script>
 
@@ -71,3 +72,9 @@
     loading: true,
   }}
 />
+
+<Story name="Large">
+  <Button intent="secondary" size="large">
+    <img src={Sync2} class="inline h-7 mr-2 align-top" /> Sync2
+  </Button>
+</Story>

@@ -41,6 +41,7 @@ danger      A color for displaying error messages
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
+  /* @apply text-lg */
 }
 .space-grotesk-500 {
   font-family: "Space Grotesk", sans-serif;

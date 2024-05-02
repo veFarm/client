@@ -43,11 +43,11 @@
   on:close={handleClose}
   data-cy="wallet-modal"
 >
-  <svelte:fragment slot="header"
-    ><p class="text-body font-medium text-base">
-      Connect to a wallet
-    </p></svelte:fragment
-  >
+  <svelte:fragment slot="header">
+    <div class="flex">
+      Connect Wallet
+    </div>
+  </svelte:fragment>
   <svelte:fragment slot="body">
     <!-- <p class="text-sm text-accent">
       Connect with one of our available wallet providers.
@@ -57,16 +57,17 @@
       {#each WALLET_PROVIDERS as { id, label, icon }}
         <Button
           fullWidth
+          size="large"
           disabled={$wallet.loading}
           loading={$wallet.walletId === id && $wallet.loading}
-          class="flex items-center justify-center space-x-3"
+          class="flex items-center justify-start"
           on:click={async () => {
             await handleConnect(id);
           }}
           data-cy={`wallet-provider-button-${id}`}
         >
-          <img src={icon} class="h-5" alt={`${label} icon`} />
-          <span class="text-center">{label}</span>
+          <img src={icon} class="inline h-7 mr-3 align-top" alt={`${label} icon`} />
+          {label}
         </Button>
       {/each}
     </div>

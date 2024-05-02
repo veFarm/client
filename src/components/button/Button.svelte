@@ -59,6 +59,7 @@
       size: {
         small: ["text-sm", "p-2", "px-3", "rounded"],
         medium: ["text-sm", "py-3", "px-5", "rounded"],
+        large: ["text-lg", "font-bold", "py-3", "px-5", "rounded-lg"],
       },
       fullWidth: {
         true: ["w-full"],
@@ -91,6 +92,6 @@
     class: $$props.class,
   })}
 >
-  {#if loading}<Spinner data-cy="spinner" />{/if}
   <slot />
+  {#if loading}<Spinner class="ml-3" data-cy="spinner" />{/if}
 </button>
