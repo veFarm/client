@@ -42,7 +42,7 @@
 {#if isOpen}
   <div class="backdrop" on:click={hide} />
   <dialog
-    class="w-full max-w-sm overflow-auto"
+    class="w-full max-w-sm"
     bind:this={dialog}
     on:keydown={handleKeyDown}
     on:cancel={hide}
@@ -62,7 +62,7 @@
     <Divider />
 
     <!-- Body -->
-    <div class="px-6 py-4">
+    <div class="px-6 py-4 overflow-scroll">
       <slot name="body" />
     </div>
   </dialog>

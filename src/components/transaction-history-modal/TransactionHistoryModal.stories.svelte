@@ -3,7 +3,10 @@
   import { TransactionHistoryModal } from ".";
 </script>
 
-<Meta title="components/TransactionHistoryModal" component={TransactionHistoryModal} />
+<Meta
+  title="components/TransactionHistoryModal"
+  component={TransactionHistoryModal}
+/>
 
 <Template let:args>
   <div class="bg-background p-4">

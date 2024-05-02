@@ -42,9 +42,7 @@
   on:close={handleClose}
   data-cy="wallet-modal"
 >
-  <svelte:fragment slot="header">
-    Connect Wallet
-  </svelte:fragment>
+  <svelte:fragment slot="header">Connect Wallet</svelte:fragment>
   <svelte:fragment slot="body">
     <!-- <p class="text-sm text-accent">
       Connect with one of our available wallet providers.
@@ -62,7 +60,11 @@
           }}
           data-cy={`wallet-provider-button-${id}`}
         >
-          <img src={icon} class="inline h-7 mr-3 align-top" alt={`${label} icon`} />
+          <img
+            src={icon}
+            class="inline h-7 mr-3 align-top"
+            alt={`${label} icon`}
+          />
           {label}
         </Button>
       {/each}

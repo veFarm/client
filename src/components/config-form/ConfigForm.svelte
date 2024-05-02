@@ -16,7 +16,7 @@
   import { Pill } from "@/components/pill";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
-  import {ViewHistoryButton} from "@/components/view-history-button";
+  import { ViewHistoryButton } from "@/components/view-history-button";
   import { FundsWarning } from "@/components/funds-warning";
   import Edit from "@/assets/Edit.svelte";
 

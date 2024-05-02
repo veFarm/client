@@ -4,7 +4,7 @@
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
-  import {historyModal} from "@/stores/history-modal"
+  import { historyModal } from "@/stores/history-modal";
   import { formatUnits } from "@/utils/format-units";
   import { Modal } from "@/components/modal";
   import { PastTrade } from "@/components/past-trade";
@@ -109,30 +109,27 @@
   on:close={handleClose}
   data-cy="history-modal"
 >
-  <svelte:fragment slot="header">
-    Transaction History
-  </svelte:fragment>
+  <svelte:fragment slot="header">Transaction History</svelte:fragment>
   <svelte:fragment slot="body">
-  <div class="space-y-3">
-    {#if error != null && error.length > 0}
-      <p class="text-danger">{error}</p>
-    {:else if loading}
-      <p><Spinner /> Fetching transactions...</p>
-    {:else if swapTxs == null || swapTxs.length === 0}
-      <p>You don&apos;t have any past trades</p>
-    {:else}
-      {#each swapTxs as tx}
-        <PastTrade
-          withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
-          amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
-          txId={tx.txId}
-          blockTimestamp={tx.blockTimestamp}
-          explorerUrl={chain.explorers[0].url}
-        />
-        <Divider />
-      {/each}
-    {/if}
-  </div>
+    <div class="space-y-3">
+      {#if error != null && error.length > 0}
+        <p class="text-danger">{error}</p>
+      {:else if loading}
+        <p><Spinner /> Fetching transactions...</p>
+      {:else if swapTxs == null || swapTxs.length === 0}
+        <p class="text-body">Nothing here yet!</p>
+      {:else}
+        {#each swapTxs as tx}
+          <PastTrade
+            withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
+            amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
+            txId={tx.txId}
+            blockTimestamp={tx.blockTimestamp}
+            explorerUrl={chain.explorers[0].url}
+          />
+          <Divider />
+        {/each}
+      {/if}
+    </div>
   </svelte:fragment>
 </Modal>
-
