@@ -18,3 +18,12 @@
     body: "We will periodically exchange VTHO for VET while keeping a balance of 15 VTHO in your account.",
   }}
 />
+
+<Story
+  name="Closable"
+  args={{
+    title: "Autopilot Enabled",
+    body: "We will periodically exchange VTHO for VET while keeping a balance of 15 VTHO in your account.",
+    closable: true,
+  }}
+/>

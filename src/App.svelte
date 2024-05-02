@@ -121,6 +121,8 @@
                 body={`We will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits(
                   $trader.reserveBalance,
                 )} VTHO in your account.`}
+                closable={true}
+                on:close={() => {}}
               />
             </svelte:fragment>
           </ConfigForm>
