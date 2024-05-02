@@ -5,6 +5,7 @@
   import { shortenAddress } from "@/utils/shorten-address";
   import { formatUnits } from "@/utils/format-units";
   import Logo from "@/assets/Logo.svelte";
+  import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import ChevronDown from "@/assets/ChevronDown.svelte";
 
   /** Popover state. */
@@ -29,10 +30,10 @@
     <Logo alt="Vearn Finance" />
   </div>
 
-  {#if $wallet.connected && $balance.current != null}
     <div
       class="flex items-center justify-between p-2 sm:px-6 sm:py-3 border-l border-muted h-full w-80"
     >
+  {#if $wallet.connected && $balance.current != null}
       <div>
         <p class="text-xs font-medium">{shortenAddress($wallet.account)}</p>
         <p class="text-sm font-bold">
@@ -73,8 +74,10 @@
           </div>
         </Popover>
       </button> -->
-    </div>
+  {:else}
+      <ConnectWalletButton variant="icon" />
   {/if}
+    </div>
 </nav>
 
 <style>
