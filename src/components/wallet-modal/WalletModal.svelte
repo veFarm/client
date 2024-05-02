@@ -54,7 +54,7 @@
           size="large"
           disabled={$wallet.loading}
           loading={$wallet.walletId === id && $wallet.loading}
-          class="flex items-center justify-start"
+          class="flex items-center justify-center"
           on:click={async () => {
             await handleConnect(id);
           }}

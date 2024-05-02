@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { slide } from "svelte/transition"
   import ChevronDown from "@/assets/ChevronDown.svelte";
   import ChevronUp from "@/assets/ChevronUp.svelte";
 
@@ -22,12 +23,12 @@
   >
     <tbody>
       <tr class="cursor-pointer" on:click={toggle}>
-        <td class="title"
-          ><div class="bg-zinc-900 rounded inline-block mr-1">
+        <td class="title">
+          <div class="bg-zinc-900 rounded inline-block mr-1">
             <slot name="icon" />
           </div>
-          Time until {label}:</td
-        >
+          Time until {label}:
+        </td>
         <td class="value">
           {timeLeft}
           {#if isOpen}
@@ -40,7 +41,7 @@
     </tbody>
   </table>
   {#if isOpen}
-    <div class="border-style">
+    <div transition:slide class="border-style">
       <table
         class="w-full text-xs sm:text-sm font-medium"
         data-cy="trades-forecast-table"

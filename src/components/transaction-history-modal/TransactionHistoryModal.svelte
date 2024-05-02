@@ -119,7 +119,7 @@
       {:else if swapTxs == null || swapTxs.length === 0}
         <p class="text-body">Nothing here yet!</p>
       {:else}
-        {#each swapTxs as tx}
+        {#each swapTxs as tx (tx.txId)}
           <PastTrade
             withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
             amountOutReceived={formatUnits(tx.amountOutReceived, 5)}

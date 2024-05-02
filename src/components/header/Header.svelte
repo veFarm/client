@@ -4,7 +4,7 @@
   import { balance } from "@/stores/balance";
   import { shortenAddress } from "@/utils/shorten-address";
   import { formatUnits } from "@/utils/format-units";
-  import LogoDesktop from "@/assets/LogoDesktop.svelte";
+  import Logo from "@/assets/Logo.svelte";
   import ChevronDown from "@/assets/ChevronDown.svelte";
 
   /** Popover state. */
@@ -26,7 +26,7 @@
   data-cy="navigation-bar"
 >
   <div class="p-2 sm:px-6 sm:py-3">
-    <LogoDesktop alt="Vearn Finance" />
+    <Logo alt="Vearn Finance" />
   </div>
 
   {#if $wallet.connected && $balance.current != null}

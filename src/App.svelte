@@ -1,5 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { fade, fly } from "svelte/transition"
+  // import { flip } from "svelte/animate"
+  // import { quintOut } from 'svelte/easing';
   import { Connex } from "@vechain/connex";
   import { wrapConnex } from "@vearnfi/wrapped-connex";
   import { chain } from "@/config/index";
@@ -19,6 +22,7 @@
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG"; // TODO: add LOADING
 
   let view: View = "LOGIN";
+  let show: boolean = false; // animation
 
   $: {
     if (!$wallet.connected) {
@@ -47,6 +51,7 @@
   }
 
   onMount(async () => {
+    show = true;
     // Login user from localStorage if any.
     await wallet.loadStoredAccount();
   });
@@ -56,18 +61,20 @@
   <div class="flex flex-col space-y-8 md:space-y-16">
     <div
       class="
-      flex flex-col items-center space-y-8
+      flex flex-col items-start space-y-8
       lg:flex-row lg:justify-around lg:space-y-0 lg:space-x-8
     "
     >
-      <section class="basis-1/2">
-        <h1 data-cy="title">VTHO-VET Swaps on Autopilot</h1>
-        <p class="text-accent text-base mt-4" data-cy="description">
+      <section class="basis-1/2 lg:mt-20">
+        {#if show}
+        <h1 in:fade={{delay: 200}} data-cy="title">VTHO-VET Swaps on Autopilot</h1>
+        <p in:fade={{delay: 300}} class="text-accent text-base mt-4" data-cy="description">
           Vearn streamlines the process of converting VTHO to VET tokens,
           automatically executing swaps at strategic intervals. Enjoy peace of
           mind as Vearn boosts your VET balance without any manual effort
           required.
         </p>
+        {/if}
         <!-- <h1 data-cy="title">VTHO-VET Swaps on Autopilot</h1>
         <p>
           Holding VET tokens in your account generates VTHO, which in turn can be traded for additional VET tokens, boosting your starting balance.
@@ -87,7 +94,9 @@
           <Stats />
         </div> -->
       </section>
+      {#if show}
       <section
+        in:fly={{x:50, delay: 400}}
         class="basis-1/2 max-w-lg bg-background border border-highlight rounded-lg text-accent"
       >
         {#if view === "LOGIN"}
@@ -136,6 +145,7 @@
 
         <!-- <p class="text-center text-accent">Chain: {chain.name}</p> -->
       </section>
+      {/if}
     </div>
   </div>
 </Layout>
