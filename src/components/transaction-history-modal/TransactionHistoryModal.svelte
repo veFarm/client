@@ -4,7 +4,9 @@
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
+  import {historyModal} from "@/stores/history-modal"
   import { formatUnits } from "@/utils/format-units";
+  import { Modal } from "@/components/modal";
   import { PastTrade } from "@/components/past-trade";
   import { Spinner } from "@/components/spinner";
   import { Divider } from "@/components/divider";
@@ -72,6 +74,10 @@
     }
   }
 
+  function handleClose() {
+    historyModal.close();
+  }
+
   $: {
     if ($wallet.connected) {
       fetchSwaps($wallet.account);
@@ -98,14 +104,16 @@
   }
 </script>
 
-<section class="bg-background border border-highlight rounded-lg text-accent">
-  <div class="px-3 py-3 lg:px-6 lg:py-4" data-cy="trades-history">
-    <h2>Transaction History</h2>
-  </div>
-
-  <Divider />
-
-  <div class="px-2 py-2 space-y-3">
+<Modal
+  isOpen={$historyModal.isOpen}
+  on:close={handleClose}
+  data-cy="history-modal"
+>
+  <svelte:fragment slot="header">
+    Transaction History
+  </svelte:fragment>
+  <svelte:fragment slot="body">
+  <div class="space-y-3">
     {#if error != null && error.length > 0}
       <p class="text-danger">{error}</p>
     {:else if loading}
@@ -121,7 +129,10 @@
           blockTimestamp={tx.blockTimestamp}
           explorerUrl={chain.explorers[0].url}
         />
+        <Divider />
       {/each}
     {/if}
   </div>
-</section>
+  </svelte:fragment>
+</Modal>
+

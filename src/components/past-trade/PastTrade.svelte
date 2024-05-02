@@ -1,4 +1,6 @@
 <script lang="ts">
+  import ChevronRight from "@/assets/ChevronRight.svelte";
+
   export let withdrawAmount: string;
   export let amountOutReceived: string;
   export let txId: string;
@@ -31,10 +33,10 @@
     </tr>
     <tr>
       <td class="title">Amount:</td>
-      <td class="value"
-        >{withdrawAmount} VTHO -
-        <span class="text-primary">{amountOutReceived} VET</span></td
-      >
+      <td class="value">
+        {withdrawAmount} VTHO <ChevronRight class="inline mb-0.5" />
+        <span class="text-primary">{amountOutReceived} VET</span>
+      </td>
     </tr>
     <tr>
       <td class="title">TxID:</td>
@@ -58,9 +60,9 @@
   }
   .value {
     @apply truncate text-sm font-normal text-body;
-    /* max-width: 1px; */
+    max-width: 1px; /* Required for truncate to work :S */
   }
   tr > td {
-    @apply px-4 py-1 truncate;
+    @apply pr-4 py-1 truncate;
   }
 </style>

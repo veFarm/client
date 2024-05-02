@@ -16,8 +16,8 @@
   import { Pill } from "@/components/pill";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
+  import {ViewHistoryButton} from "@/components/view-history-button";
   import { FundsWarning } from "@/components/funds-warning";
-  import History from "@/assets/History.svelte";
   import Edit from "@/assets/Edit.svelte";
 
   type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
@@ -203,7 +203,7 @@
     {/if}
   </div>
   {#if ["CONFIG_AND_APPROVE", "SUMMARY"].includes(variant)}
-    <button on:click={() => {}} title="Transaction History"><History /></button>
+    <ViewHistoryButton />
   {/if}
 </div>
 

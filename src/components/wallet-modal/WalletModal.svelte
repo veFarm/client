@@ -4,7 +4,6 @@
   import { walletModal } from "@/stores/wallet-modal";
   import { Modal } from "@/components/modal";
   import { Button } from "@/components/button";
-  import Wallet from "@/assets/Wallet.svelte";
   import Sync2Icon from "@/assets/Sync2.svg";
   import VeWorldIcon from "@/assets/VeWorld.svg";
 
@@ -44,15 +43,12 @@
   data-cy="wallet-modal"
 >
   <svelte:fragment slot="header">
-    <div class="flex">
-      Connect Wallet
-    </div>
+    Connect Wallet
   </svelte:fragment>
   <svelte:fragment slot="body">
     <!-- <p class="text-sm text-accent">
       Connect with one of our available wallet providers.
     </p> -->
-
     <div class="flex flex-col space-y-3 my-4">
       {#each WALLET_PROVIDERS as { id, label, icon }}
         <Button

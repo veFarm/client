@@ -2,6 +2,7 @@
   import "@/styles/app.css";
   import { Header } from "@/components/header";
   import { WalletModal } from "@/components/wallet-modal";
+  import { TransactionHistoryModal } from "@/components/transaction-history-modal";
 </script>
 
 <Header />
@@ -12,6 +13,7 @@
   <slot />
 
   <WalletModal />
+  <TransactionHistoryModal />
 </main>
 
 <style>

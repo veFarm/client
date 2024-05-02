@@ -13,8 +13,6 @@
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
-  import { TradesHistory } from "@/components/trades-history";
-  import { TradesForecast } from "@/components/trades-forecast";
   import { FundsWarning } from "@/components/funds-warning";
   import Alert from "./components/alert/Alert.svelte";
 
@@ -139,42 +137,5 @@
         <!-- <p class="text-center text-accent">Chain: {chain.name}</p> -->
       </section>
     </div>
-
-    {#if $wallet.connected}
-      <TradesHistory />
-    {/if}
   </div>
 </Layout>
-
-<!-- {#if view === "SUMMARY"}
-          <div class="space-y-4">
-            <div
-              class="text-green-700 bg-green-50 rounded-t-lg space-y-4 p-3 lg:p-4"
-              data-cy="protocol-is-enabled-message"
-            >
-              <h2 class="text-green-700 text-center">
-                Great! We&apos;re&nbsp;all&nbsp;set.
-              </h2>
-              <p>
-                vearn is configured to periodically exchange VTHO for VET while
-                maintaining a reserve balance of
-                <b data-cy="reserve-balance-amount"
-                  >{formatUnits($trader.reserveBalance)}&nbsp;VTHO</b
-                > in your account.
-              </p>
-              <TradesForecast reserveBalance={$trader.reserveBalance} />
-            </div>
-            <FundsWarning />
-            <Button
-              intent="primary"
-              fullWidth
-              on:click={() => {
-                view = "UPDATE_CONFIG";
-              }}
-              data-cy="goto-update-reserve-balance-button"
-            >
-              UPDATE RESERVE BALANCE
-            </Button>
-            <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
-          </div>
-        {/if} -->
