@@ -14,7 +14,7 @@
 </script>
 
 <div
-  class="bg-success bg-opacity-[.14] px-5 py-4 rounded-lg text-success text-sm font-normal border border-success"
+  class="bg-success bg-opacity-10 p-3 sm:px-5 sm:py-4 rounded-lg text-success text-sm font-normal border border-success"
   {...$$restProps}
 >
   <div class="flex items-center justify-between">
