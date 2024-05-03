@@ -55,7 +55,7 @@
         />
         {#if currency.length > 0}
           <div
-            class="absolute top-2.5 right-3 sm:top-3 sm:right-4 bg-black px-3 py-1 rounded-md text-sm sm:text-base font-bold text-white"
+            class="absolute top-2.5 right-3 sm:top-3 sm:right-4 bg-zinc-900 px-3 py-1 rounded-md text-sm sm:text-base font-bold text-white"
             class:text--disabled={$$restProps.disabled}
             data-cy="currency"
           >

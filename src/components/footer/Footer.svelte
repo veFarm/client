@@ -12,10 +12,10 @@
   "
   data-cy="footer"
 >
-  <a href="" target="_blank" title="Twitter">
+  <a href="https://twitter.com/vearn_finance" target="_blank" rel="noreferrer" title="Twitter">
     <Twitter />
   </a>
-  <a href="" target="_blank" title="Discord">
+  <a href="https://discord.gg/KSE8RaF8Ft" target="_blank" rel="noreferrer" title="Discord">
     <Discord />
   </a>
   <!-- <Github class="w-6" /> -->

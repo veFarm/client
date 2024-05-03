@@ -148,7 +148,7 @@
 </script>
 
 {#if $tradesForecast.loading}
-  <p><Spinner /> Computing an optimized strategy...</p>
+  <p class="text-sm font-normal"><Spinner /> Computing an optimized strategy...</p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
   <TradeForecastItem
     label="next trade"

@@ -1,8 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition"
-  // import { flip } from "svelte/animate"
-  // import { quintOut } from 'svelte/easing';
   import { Connex } from "@vechain/connex";
   import { wrapConnex } from "@vearnfi/wrapped-connex";
   import { chain } from "@/config/index";
@@ -121,7 +119,6 @@
                 body={`We will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits(
                   $trader.reserveBalance,
                 )} VTHO in your account.`}
-                closable={true}
                 on:close={() => {}}
               />
             </svelte:fragment>

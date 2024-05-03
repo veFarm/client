@@ -1,7 +1,6 @@
 import { writable, get } from "svelte/store";
 import { Connex } from "@vechain/connex";
 import { Certificate } from "thor-devkit";
-// import type { BigNumber } from "bignumber.js";
 import { wrapConnex } from "@vearnfi/wrapped-connex";
 import type { WrappedConnex } from "@vearnfi/wrapped-connex";
 import { chain } from "@/config";
@@ -15,7 +14,6 @@ export type State =
       connected: true;
       account: Address;
       walletId: WalletId;
-      // baseGasPrice: BigNumber;
     }
   | {
       wConnex: WrappedConnex | undefined;
@@ -24,7 +22,6 @@ export type State =
       connected: false;
       account: undefined;
       walletId: WalletId | undefined;
-      // baseGasPrice: undefined;
     };
 
 const initialState: State = {
@@ -34,7 +31,6 @@ const initialState: State = {
   connected: false,
   account: undefined,
   walletId: undefined,
-  // baseGasPrice: undefined,
 };
 
 function createStore() {
@@ -91,7 +87,7 @@ function createStore() {
         const account = cert.signer as Address;
 
         // Remember user.
-        localStorage.setItem("user", JSON.stringify({ walletId, account }));
+        localStorage.setItem("user", JSON.stringify({ walletId, cert }));
 
         store.set({
           wConnex,
@@ -100,7 +96,6 @@ function createStore() {
           connected: true,
           account,
           walletId,
-          // baseGasPrice: await wConnex.fetchBaseGasPrice(),
         });
       } catch (error: unknown) {
         store.set({
@@ -119,14 +114,22 @@ function createStore() {
       try {
         store.set({ ...initialState });
 
-        const user = localStorage.getItem("user"); // "{"walletId": "sync2", "account": "0x"}"
+        const user = localStorage.getItem("user"); // "{"walletId": "sync2", "cert": "{...}"}"
 
         if (user == null) return;
 
-        const { walletId, account } = JSON.parse(user) as {
-          walletId: WalletId;
-          account: Address;
-        };
+        const userJSON = JSON.parse(user)
+
+        if (userJSON?.walletId == null || userJSON?.cert == null) {
+          throw new Error("Invalid data");
+        }
+
+        const { walletId, cert } = userJSON;
+
+        // This should throw if cert isn't valid.
+        Certificate.verify(cert);
+
+        const account = cert.signer as Address;
 
         store.update((s) => ({
           ...s,
@@ -149,7 +152,6 @@ function createStore() {
           connected: true,
           account,
           walletId,
-          // baseGasPrice: await wConnex.fetchBaseGasPrice(),
         });
       } catch (error: unknown) {
         store.set({

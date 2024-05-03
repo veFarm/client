@@ -93,5 +93,5 @@
   })}
 >
   <slot />
-  {#if loading}<Spinner data-cy="spinner" />{/if}
+  {#if loading}<Spinner class="ml-2" data-cy="spinner" />{/if}
 </button>

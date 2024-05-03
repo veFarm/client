@@ -54,7 +54,7 @@
           size="large"
           disabled={$wallet.loading}
           loading={$wallet.walletId === id && $wallet.loading}
-          class="flex items-center justify-center"
+          class="flex items-center justify-start"
           on:click={async () => {
             await handleConnect(id);
           }}
@@ -62,7 +62,7 @@
         >
           <img
             src={icon}
-            class="inline h-7 mr-3 align-top"
+            class="inline h-8 mr-3 align-top"
             alt={`${label} icon`}
           />
           {label}

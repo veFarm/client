@@ -8,19 +8,6 @@
   export let explorerUrl: string;
 </script>
 
-<!--   <span class="text-xs">
-    Date:
-  </span>
-  <br />
-  <span class="text-base text-primary md:text-lg">
-    Amount:
-  </span>
-  <br />
-  <span class="text-xs">
-    TxID: {txId}
-  </span>
-</a> -->
-
 <table class="w-full text-xs sm:text-sm font-medium">
   <tbody>
     <tr>
