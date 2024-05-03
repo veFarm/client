@@ -18,5 +18,7 @@
   <a href="https://discord.gg/KSE8RaF8Ft" target="_blank" rel="noreferrer" title="Discord">
     <Discord />
   </a>
-  <!-- <Github class="w-6" /> -->
+  <a href="https://github.com/vearnfi" target="_blank" rel="noreferrer" title="Github">
+    <Github />
+  </a>
 </footer>

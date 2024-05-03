@@ -23,37 +23,31 @@
         primary: [
           "text-black",
           "bg-primary",
-          // "border",
-          // "border-lime-400", // TODO: add to palette
-          "hover:bg-primary-100",
-          // "hover:border-primary",
+          "hover:bg-opacity-90",
+          "disabled:bg-opacity-80"
         ],
         secondary: [
           "text-body",
           "bg-secondary",
-          // "border",
-          // "border-violet-400", // TODO: add to palette
-          "hover:bg-secondary-100",
-          // "hover:border-secondary",
+          "hover:bg-opacity-90",
+          "disabled:bg-opacity-80"
         ],
         danger: [
           "text-body",
           "border",
-          "border-muted", // TODO: add to palette
-          // "hover:border-lime-400", // TODO: add to palette
-          // "hover:bg-primary-100",
-          // "hover:border-primary",
-          "hover:border-danger-100",
+          "border-muted",
+          "hover:border-danger",
           "hover:bg-danger",
           "hover:text-body",
+          "disabled:border-danger",
+          "disabled:bg-danger",
+          "disabled:bg-opacity-80",
+          "disabled:text-body",
         ],
         outline: [
           "text-body",
           "border",
-          "border-muted", // TODO: add to palette
-          // "hover:border-lime-400", // TODO: add to palette
-          // "hover:bg-primary-100",
-          // "hover:border-primary",
+          "border-muted",
         ],
       },
       size: {
@@ -66,13 +60,7 @@
       },
       disabled: {
         true: [
-          "cursor-not-allowed",
-          "bg-disabled",
-          "border-gray-400",
-          "text-black",
-          "hover:bg-disabled",
-          "hover:text-body",
-          "hover:border-gray-400",
+          "cursor-default",
         ],
       },
     },

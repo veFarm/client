@@ -42,8 +42,9 @@
 />
 
 <Story
-  name="Disabled"
+  name="SecondaryDisabled"
   args={{
+    intent: "secondary",
     disabled: true,
   }}
 />

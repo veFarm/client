@@ -171,9 +171,9 @@
 
   $: inputsMatchStore = $trader.reserveBalance.eq(reserveBalanceWei);
 
-  let configApproveDisabled: boolean = true;
+  let insufficientBalance: boolean = false;
 
-  $: configApproveDisabled = disabled || inputsEmpty;
+  $: insufficientBalance = $balance.current != null && $balance.current.vet.eq(0) && $balance.current.vtho.eq(0);
 
   let updateConfigDisabled: boolean = true;
 
@@ -260,19 +260,19 @@
   {/if}
 
   {#if variant === "LOGIN"}
-    <ConnectWalletButton intent="primary" fullWidth />
+    <ConnectWalletButton intent="primary" variant="text" fullWidth />
   {/if}
 
   {#if variant === "CONFIG_AND_APPROVE"}
     <Button
       type="submit"
-      intent="primary"
-      disabled={configApproveDisabled}
+      intent={(insufficientBalance || inputsEmpty) ? "secondary" : "primary"}
+      disabled={disabled || inputsEmpty}
       loading={disabled}
       fullWidth
       data-cy="submit-form-button"
     >
-      {configApproveDisabled ? "ENTER RESERVE BALANCE" : "ENABLE AUTOPILOT"}
+      {insufficientBalance ? "INSUFFICIENT BALANCE" : inputsEmpty ? "ENTER RESERVE BALANCE" : "ENABLE AUTOPILOT"}
     </Button>
   {/if}
 

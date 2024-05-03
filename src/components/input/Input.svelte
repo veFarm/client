@@ -48,7 +48,7 @@
           {id}
           class="h-12 sm:h-14 bg-transparent border {hasError
             ? 'border-danger'
-            : 'border-color'} text-white text-xl font-bold rounded-lg focus:ring-primary focus:border-primary block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled"
+            : 'border-color'} text-white text-xl font-bold rounded-lg focus:ring-primary focus:border-primary block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled disabled:cursor-default"
           {...$$restProps}
           bind:value
           on:input
