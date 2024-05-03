@@ -22,7 +22,6 @@
     fixed top-0 w-full mx-auto h-16 z-20
     bg-black border-b md:border-x border-highlight
     flex flex-wrap items-center justify-between
-    text-sm text-gray-300 md:text-base
   "
   data-cy="navigation-bar"
 >
@@ -31,7 +30,7 @@
   </div>
 
     <div
-      class="flex items-center justify-between p-2 sm:px-6 sm:py-3 border-l border-muted h-full w-80"
+      class="flex-1 sm:flex-none flex items-center justify-between p-2 sm:px-6 sm:py-3 border-l space-x-2 border-highlight h-full min-w-min sm:w-80"
     >
   {#if $wallet.connected && $balance.current != null}
       <div>

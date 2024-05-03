@@ -62,10 +62,10 @@
       lg:flex-row lg:justify-around lg:space-y-0 lg:space-x-8
     "
     >
-      <section class="basis-1/2 lg:mt-20">
+      <section class="lg:basis-1/2 lg:mt-20">
         {#if show}
-        <h1 in:fade={{delay: 200}} data-cy="title">VTHO-VET Swaps on Autopilot</h1>
-        <p in:fade={{delay: 300}} class="text-accent text-base mt-4" data-cy="description">
+        <h1 in:fade={{delay: 200}} class="text-center lg:text-left" data-cy="title">VTHO-VET Swaps on Autopilot</h1>
+        <p in:fade={{delay: 300}} class="text-center lg:text-left text-accent text-base mt-4" data-cy="description">
           Vearn streamlines the process of converting VTHO to VET tokens,
           automatically executing swaps at strategic intervals. Enjoy peace of
           mind as Vearn boosts your VET balance without any manual effort
@@ -94,7 +94,7 @@
       {#if show}
       <section
         in:fly={{x:50, delay: 400}}
-        class="basis-1/2 max-w-lg bg-background border border-highlight rounded-lg text-accent"
+        class="mx-auto lg:basis-1/2 max-w-lg bg-background border border-highlight rounded-lg text-accent"
       >
         {#if view === "LOGIN"}
           <ConfigForm variant="LOGIN" />

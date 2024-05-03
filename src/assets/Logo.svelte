@@ -2,6 +2,6 @@
   // export let size: "small" | "large";
 </script>
 
-<div class="text-2xl font-bold" {...$$props}>
+<div class="text-xl sm:text-2xl font-bold" {...$$props}>
   <span class="text-slate-200">V</span><span class="text-primary">earn</span>
 </div>
