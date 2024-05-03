@@ -14,7 +14,6 @@
   import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
-  import { FundsWarning } from "@/components/funds-warning";
   import Alert from "./components/alert/Alert.svelte";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG"; // TODO: add LOADING

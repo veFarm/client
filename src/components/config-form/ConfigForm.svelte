@@ -17,7 +17,6 @@
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import { ViewHistoryButton } from "@/components/view-history-button";
-  import { FundsWarning } from "@/components/funds-warning";
   import Edit from "@/assets/Edit.svelte";
 
   type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
@@ -175,10 +174,6 @@
 
   $: insufficientBalance = $balance.current != null && $balance.current.vet.eq(0) && $balance.current.vtho.eq(0);
 
-  let updateConfigDisabled: boolean = true;
-
-  $: updateConfigDisabled = disabled || inputsEmpty || inputsMatchStore;
-
   let title: string = "";
 
   const TITLES: Record<Variant, string> = {
@@ -199,7 +194,7 @@
       {title}
     </h2>
     {#if variant === "SUMMARY"}
-      <Pill value="Active" />
+      <!-- <Pill value="Active" /> -->
     {/if}
   </div>
   {#if ["CONFIG_AND_APPROVE", "SUMMARY"].includes(variant)}
@@ -253,7 +248,6 @@
   </div>
 
   <Divider />
-  <FundsWarning />
 
   {#if !inputsEmpty && variant !== "UPDATE_CONFIG"}
     <TradesForecast reserveBalance={reserveBalanceWei} />
@@ -279,13 +273,13 @@
   {#if variant === "UPDATE_CONFIG"}
     <Button
       type="submit"
-      intent={updateConfigDisabled ? "secondary" : "primary"}
-      disabled={updateConfigDisabled}
+      intent={inputsEmpty || inputsMatchStore ? "secondary" : "primary"}
+      disabled={disabled || inputsEmpty || inputsMatchStore}
       loading={disabled}
       fullWidth
       data-cy="update-reserve-balance-button"
     >
-      {updateConfigDisabled ? "ENTER NEW AMOUNT" : "UPDATE RESERVE BALANCE"}
+      {inputsEmpty || inputsMatchStore ? "ENTER NEW AMOUNT" : "UPDATE RESERVE BALANCE"}
     </Button>
   {/if}
 

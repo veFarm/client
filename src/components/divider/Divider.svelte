@@ -1,7 +1,1 @@
-<script lang="ts">
-  export let theme: "light" | "dark" = "dark";
-</script>
-
-<hr
-  class="border-b-1 {theme === 'dark' ? 'border-highlight' : 'border-disabled'}"
-/>
+<hr class="border-b-1 border-highlight" />

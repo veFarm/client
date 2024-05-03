@@ -20,9 +20,7 @@ danger      A color for displaying error messages
     --header-height: 72px;
     --app-width: 1200px;
     --color-primary: 255 229 0;
-    --color-primary-100: 255 199 0; /* HOVER */
     --color-secondary: 28 28 28;
-    --color-secondary-100: 52 52 52; /* HOVER */
     --color-body: 255 255 255; /* BLACK */
     --color-background: 13 13 13; /* DARK GRAY */
     --color-highlight: 59 59 59; /* */
@@ -30,7 +28,6 @@ danger      A color for displaying error messages
     --color-accent: 171 171 171; /* gray-600 */
     --color-disabled: 100 100 100; /* gray-300 */
     --color-danger: 239 68 68; /* red-500 */
-    --color-danger-100: 251 113 133; /* red-400 */
     --color-success: 142 255 140;
     --color-backdrop: 0 0 0; /* transparent */
   }
@@ -75,6 +72,7 @@ body {
   min-width: 320px;
   /* min-height: 100vh; */
   @apply bg-black text-body;
+  @apply focus:ring-primary focus:border-primary;
 }
 
 #app {
@@ -84,7 +82,7 @@ body {
 
 /* Fonts */
 h1 {
-  @apply text-2xl lg:text-3xl xl:text-3xl font-bold text-white;
+  @apply text-2xl lg:text-3xl xl:text-3xl font-bold text-body;
 }
 h2 {
   @apply text-body font-bold text-lg;
@@ -94,14 +92,6 @@ h3 {
 }
 h4 {
   @apply text-base text-body font-normal md:text-xl;
-}
-
-/* Input */
-input {
-  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
-}
-input:disabled {
-  @apply cursor-not-allowed;
 }
 
 /* Dialog */

@@ -48,7 +48,7 @@
           {id}
           class="h-12 sm:h-14 bg-transparent border {hasError
             ? 'border-danger'
-            : 'border-color'} text-white text-xl font-bold rounded-lg focus:ring-primary focus:border-primary block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled disabled:cursor-default"
+            : 'border-highlight'} text-white text-xl font-bold rounded block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled disabled:cursor-default"
           {...$$restProps}
           bind:value
           on:input
@@ -75,9 +75,6 @@
 </label>
 
 <style lang="postcss">
-  .border-color {
-    border-color: rgba(91, 91, 91, 1);
-  }
   /*
    * For some reason I had to overwrite this.
    * Notice the double dash '--' in the class name.
