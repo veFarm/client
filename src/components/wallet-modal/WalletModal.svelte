@@ -62,7 +62,7 @@
         >
           <img
             src={icon}
-            class="inline h-8 mr-3 align-top"
+            class="inline h-6 sm:h-8 mr-3 align-top"
             alt={`${label} icon`}
           />
           {label}

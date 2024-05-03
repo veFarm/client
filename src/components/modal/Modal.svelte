@@ -54,7 +54,7 @@
         <slot name="header" />
       </h3>
 
-      <button class="hover:bg-transparent/20 rounded-full p-1" on:click={hide}>
+      <button class="hover:bg-transparent/20 rounded-full" on:click={hide}>
         <Close class="w-6 h-6 text-body" data-cy="close-modal-button" />
       </button>
     </div>

@@ -52,8 +52,8 @@
       },
       size: {
         small: ["text-sm", "p-2", "px-3", "rounded"],
-        medium: ["text-sm", "py-3", "px-5", "rounded"],
-        large: ["text-lg", "font-bold", "py-3", "px-5", "rounded-lg"],
+        medium: ["text-sm", "px-4", "py-2.5", "sm:px-5", "sm:py-3", "rounded"],
+        large: ["text-base", "sm:text-lg", "font-bold", "px-4", "py-1.5", "sm:px-5", "sm:py-3", "rounded", "sm:rounded-lg"],
       },
       fullWidth: {
         true: ["w-full"],

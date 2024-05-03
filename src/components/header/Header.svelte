@@ -25,12 +25,12 @@
   "
   data-cy="navigation-bar"
 >
-  <div class="p-2 sm:px-6 sm:py-3">
+  <div class="pl-2 pr-4 sm:px-6 sm:py-3">
     <Logo alt="Vearn Finance" />
   </div>
 
     <div
-      class="flex-1 sm:flex-none flex items-center justify-between p-2 sm:px-6 sm:py-3 border-l space-x-2 border-highlight h-full min-w-min sm:w-80"
+      class="flex items-center justify-between pl-4 pr-2 sm:px-6 sm:py-3 border-l space-x-8 border-highlight h-full min-w-min sm:w-80"
     >
   {#if $wallet.connected && $balance.current != null}
       <div>
@@ -74,7 +74,7 @@
         </Popover>
       </button> -->
   {:else}
-      <ConnectWalletButton variant="icon" />
+      <ConnectWalletButton variant="icon" class="ml-auto sm:ml-0" />
   {/if}
     </div>
 </nav>

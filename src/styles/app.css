@@ -72,7 +72,7 @@ body {
   min-width: 320px;
   /* min-height: 100vh; */
   @apply bg-black text-body;
-  @apply focus:ring-primary focus:border-primary;
+  /* @apply rou */
 }
 
 #app {
