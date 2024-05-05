@@ -42,7 +42,7 @@
 {#if isOpen}
   <div class="backdrop" on:click={hide} />
   <dialog
-    class="w-full max-w-sm"
+    class="w-full max-w-sm bg-highlight"
     bind:this={dialog}
     on:keydown={handleKeyDown}
     on:cancel={hide}

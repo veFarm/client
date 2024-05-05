@@ -179,24 +179,3 @@
     </svelte:fragment>
   </TradeForecastItem>
 {/if}
-
-<style lang="postcss">
-  .title {
-    @apply w-0 whitespace-nowrap;
-    @apply text-accent;
-  }
-  .value {
-    @apply w-1/2 truncate text-right;
-    max-width: 1px;
-    @apply text-body;
-  }
-  .border-style {
-    @apply border-l-2 border-highlight mx-2 pl-2;
-  }
-  .is-open {
-    @apply bg-black -mx-2 p-2;
-  }
-  tr > td {
-    @apply pb-2;
-  }
-</style>

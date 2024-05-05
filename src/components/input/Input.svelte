@@ -48,7 +48,7 @@
           {id}
           class="h-12 sm:h-14 bg-transparent border {hasError
             ? 'border-danger'
-            : 'border-highlight'} text-white text-xl font-bold rounded block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled disabled:cursor-default"
+            : 'border-muted'} text-white text-xl font-bold rounded block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled disabled:cursor-default"
           {...$$restProps}
           bind:value
           on:input

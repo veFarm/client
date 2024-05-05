@@ -21,13 +21,13 @@ danger      A color for displaying error messages
     --app-width: 1200px;
     --color-primary: 255 229 0;
     --color-secondary: 28 28 28;
-    --color-body: 255 255 255; /* BLACK */
-    --color-background: 13 13 13; /* DARK GRAY */
-    --color-highlight: 59 59 59; /* */
-    --color-muted: 49 49 49; /* gray-700 */
-    --color-accent: 171 171 171; /* gray-600 */
-    --color-disabled: 100 100 100; /* gray-300 */
-    --color-danger: 239 68 68; /* red-500 */
+    --color-body: 255 255 255;
+    --color-background: 0 0 0;
+    --color-highlight: 13 13 13;
+    --color-muted: 59 59 59;
+    --color-accent: 171 171 171;
+    --color-disabled: 100 100 100;
+    --color-danger: 239 68 68;
     --color-success: 142 255 140;
     --color-backdrop: 0 0 0; /* transparent */
   }
@@ -70,9 +70,7 @@ danger      A color for displaying error messages
 body {
   margin: 0;
   min-width: 320px;
-  /* min-height: 100vh; */
-  @apply bg-black text-body;
-  /* @apply rou */
+  @apply bg-background text-body;
 }
 
 #app {
@@ -82,7 +80,7 @@ body {
 
 /* Fonts */
 h1 {
-  @apply text-2xl lg:text-3xl xl:text-3xl font-bold text-body;
+  @apply text-xl md:text-2xl lg:text-3xl xl:text-3xl font-bold text-body;
 }
 h2 {
   @apply text-body font-bold text-lg;
@@ -96,7 +94,7 @@ h4 {
 
 /* Dialog */
 dialog {
-  @apply p-0 bg-black border border-highlight rounded-lg z-10;
+  @apply p-0 bg-black border border-muted rounded-lg z-10;
   position: fixed;
   top: 50%;
   transform: translate(0%, -50%);

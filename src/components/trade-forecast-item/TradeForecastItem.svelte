@@ -74,10 +74,10 @@
     max-width: 1px;
   }
   .border-style {
-    @apply border-l-2 border-highlight mx-3 pl-3;
+    @apply border-l-2 border-muted mx-3 pl-3;
   }
   .is-open {
-    @apply bg-black -mx-2 p-2;
+    @apply bg-background -mx-2 p-2;
     /* @apply -mt-2; */
   }
   tr > td {

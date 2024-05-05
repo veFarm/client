@@ -6,7 +6,7 @@
 <Meta title="components/Input" component={Input} />
 
 <Template let:args>
-  <div class="bg-background p-2">
+  <div class="bg-highlight p-2">
     <Input id="test" label="Reserve balance" value="18" {...args} />
   </div>
 </Template>

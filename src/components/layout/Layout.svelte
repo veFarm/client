@@ -8,7 +8,7 @@
 
 <Header />
 
-<div class="flex flex-col min-h-screen md:border-x border-highlight">
+<div class="flex flex-col min-h-screen md:border-x border-muted">
   <main class="flex-1 px-2 my-8 md:px-16 md:my-16">
     <slot />
 

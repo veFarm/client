@@ -7,7 +7,7 @@
 <Meta title="components/TradeForecastItem" component={TradeForecastItem} />
 
 <Template let:args>
-  <div class="p-4 max-w-lg mx-auto bg-background">
+  <div class="p-4 max-w-lg mx-auto bg-highlight">
     <TradeForecastItem {...args}>
       <svelte:fragment slot="icon">
         <Swap1 class="inline-block" />
