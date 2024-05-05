@@ -35,8 +35,8 @@
     >
   {#if $wallet.connected && $balance.current != null}
       <div>
-        <p class="text-xs font-normal text-accent">{shortenAddress($wallet.account)}</p>
-        <p class="text-sm font-bold">
+        <p class="text-xs font-medium">{shortenAddress($wallet.account)}</p>
+        <p class="text-xs font-medium text-accent">
           {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
         </p>
       </div>
@@ -65,8 +65,8 @@
         >
           <div class="flex flex-col space-y-2 bg-highlight border border-muted rounded-md px-4 py-3">
             <div>
-              <p class="text-xs font-normal text-accent">{shortenAddress($wallet.account)}</p>
-              <p class="text-sm font-bold">
+              <p class="text-xs font-medium">{shortenAddress($wallet.account)}</p>
+              <p class="text-xs font-medium text-accent">
                 {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
               </p>
             </div>
