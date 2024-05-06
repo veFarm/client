@@ -40,20 +40,12 @@
   /**
    * Fetch account swap transactions.
    */
-  async function fetchSwaps(account: Address): Promise<void> {
+  async function fetchSwaps(account: Address, vetBalance: BigNumber): Promise<void> {
     try {
       loading = true;
 
       const response = await fetch(
-        `${chain.getAccountSwapsEndpoint}?account=${account}`,
-        {
-          cache: "no-cache",
-          headers: {
-            "Cache-Control": "no-cache",
-            Pragma: "no-cache",
-            Expires: "0",
-          },
-        },
+        `${chain.getAccountSwapsEndpoint}?account=${account}&vet=${vetBalance.toFixed()}`,
       );
 
       if (response.status === 404) return;
@@ -80,7 +72,7 @@
 
   $: {
     if ($wallet.connected) {
-      fetchSwaps($wallet.account);
+      fetchSwaps($wallet.account, $balance.current?.vet || bn(0));
     }
   }
 
@@ -96,7 +88,7 @@
         timeout = setTimeout(res, 3_000);
       }).then(() => {
         if ($wallet.connected) {
-          fetchSwaps($wallet.account);
+          fetchSwaps($wallet.account, $balance.current?.vet || bn(0));
         }
         clearTimeout(timeout);
       });
