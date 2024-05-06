@@ -40,12 +40,14 @@ _describe("Update balance", () => {
   it("shows when the balance gets updated", () => {
     // Arrange
     cy.getByCy("navigation-bar").contains("0.00 VET");
+    cy.getByCy("submit-form-button").contains("INSUFFICIENT BALANCE");
 
     // Act
     cy.wait("@fetchBalance", { timeout: 20_000 });
 
     // Assert
     cy.getByCy("navigation-bar").contains("500.00 VET");
+    cy.getByCy("submit-form-button").contains("ENTER RESERVE BALANCE");
   });
 
   it("DOES show me the trades forecast after funding the account and entering the reserve balance", () => {
