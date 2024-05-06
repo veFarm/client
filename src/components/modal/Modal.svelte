@@ -62,7 +62,7 @@
     <Divider />
 
     <!-- Body -->
-    <div class="px-6 py-4 overflow-scroll">
+    <div class="px-6 py-4">
       <slot name="body" />
     </div>
   </dialog>

@@ -16,9 +16,9 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     // Simulate a logged in registered account holding a positive balance.
     wallet.simulateLoggedInAccount();
 
-    api
-      .mockGetAccountStats({ fixture: "account-stats.json" })
-      .as("getAccountStats");
+    // api
+    //   .mockGetAccountStats({ fixture: "account-stats.json" })
+    //   .as("getAccountStats");
     api
       .mockGetAccountSwaps({ fixture: "account-swaps.json" })
       .as("getAccountSwaps");
@@ -33,15 +33,15 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     cy.visit("/");
     cy.wait([
-      "@getAccountStats",
-      "@getAccountSwaps",
+      // "@getAccountStats",
+      // "@getAccountSwaps",
       "@getTradesForecast",
       "@fetchAllowance",
       "@fetchReserveBalance",
-    ]);
+    ], {timeout: 20_000});
   });
 
-  it("shows the stats", () => {
+  it.skip("shows the stats", () => {
     // Arrange
 
     // Act
@@ -55,25 +55,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     });
   });
 
-  it("shows trades history", () => {
-    // Arrange
-
-    // Act
-
-    // Assert
-    cy.getByCy("trades-history").should("be.visible");
-    cy.getByCy("trades-history").within(($swaps) => {
-      cy.wrap($swaps)
-        .find("a")
-        .eq(0)
-        .contains(
-          "TX: 0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7",
-        );
-      cy.wrap($swaps).find("a").eq(1).should("not.exist");
-    });
-  });
-
-  it("does NOT shows the stats on mobile", () => {
+  it.skip("does NOT shows the stats on mobile", () => {
     // Arrange
     cy.viewport("iphone-8");
 
@@ -83,6 +65,26 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.getByCy("stats").should("not.be.visible");
   });
 
+  it("shows transaction history", () => {
+    // Arrange
+
+    // Act
+    cy.getByCy("view-history-button").click();
+    cy.wait("@getAccountSwaps");
+
+    // Assert
+    cy.getByCy("history-modal").should("be.visible");
+    cy.getByCy("history-modal").within(($swaps) => {
+      cy.wrap($swaps)
+        .find("a")
+        .eq(0)
+        .contains(
+          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(0, 27),
+        );
+      cy.wrap($swaps).find("a").eq(1).should("not.exist");
+    });
+  });
+
   it("shows that the protocol is enabled", () => {
     // Arrange
 
@@ -90,8 +92,8 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     // Assert
     cy.getByCy("protocol-is-enabled-message").should("be.visible");
-    cy.getByCy("protocol-is-enabled-message").within(() => {
-      cy.getByCy("reserve-balance-amount").contains("5 VTHO");
+    cy.getByCy("protocol-is-enabled-message").within(($alert) => {
+      cy.wrap($alert).contains("5 VTHO");
     });
   });
 

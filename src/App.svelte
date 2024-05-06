@@ -131,6 +131,7 @@
                     $trader.reserveBalance,
                   )} VTHO in your account.`}
                   on:close={() => {}}
+                  data-cy="protocol-is-enabled-message"
                 />
               </svelte:fragment>
             </ConfigForm>

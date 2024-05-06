@@ -16,7 +16,7 @@ export function makeApi(account: Address) {
 
     return cy.intercept(
       "GET",
-      `**/getaccountstats?account=${account}*`,
+      `**/getaccountstats?account=${account.toLowerCase()}*`,
       (req) => {
         const res = responseHandler(response, index);
 
@@ -38,7 +38,7 @@ export function makeApi(account: Address) {
 
     return cy.intercept(
       "GET",
-      `**/getaccountswaps?account=${account}*`,
+      `**/getaccountswaps?account=${account.toLowerCase()}*`,
       (req) => {
         const res = responseHandler(response, index);
 
@@ -60,7 +60,7 @@ export function makeApi(account: Address) {
 
     return cy.intercept(
       "GET",
-      `**/gettradesforecast?account=${account}*`,
+      `**/gettradesforecast?account=${account.toLowerCase()}*`,
       (req) => {
         const res = responseHandler(response, index);
 

@@ -26,7 +26,7 @@
   <Button
     {disabled}
     on:click={handleClick}
-    data-cy="connect-wallet-button"
+    data-cy="connect-wallet-button-text"
     {...$$props}
   >
     CONNECT WALLET
@@ -37,7 +37,7 @@
     class={`flex items-center space-x-3 text-sm font-medium ${$$props.class}`}
     {disabled}
     on:click={handleClick}
-    data-cy="connect-wallet-button"
+    data-cy="connect-wallet-button-icon"
   >
     <div class="relative mr-7">
       <img src={VeWorld} class="h-6 border border-slate-800 rounded-full" />

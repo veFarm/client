@@ -1,9 +1,10 @@
 /// <reference types="cypress" />
 
 import { makeWallet } from "cypress/support/mocks/wallet";
+import { shortenAddress } from "../../src/utils/shorten-address"
 
 const walletId = "sync2";
-const account = "0x2057ca7412e6c0828501cb7b335e166f81c58d26";
+const account = "0x2057ca7412e6c0828501cb7b335e166f81c58d26" as Address;
 
 const wallet = makeWallet(walletId, account);
 
@@ -18,7 +19,7 @@ describe("Login", () => {
     cy.visit("/");
 
     // Act
-    cy.getByCy("connect-wallet-button").click();
+    cy.getByCy("connect-wallet-button-text").click();
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
@@ -38,7 +39,7 @@ describe("Login", () => {
     cy.visit("/");
 
     // Act
-    cy.getByCy("connect-wallet-button").click();
+    cy.getByCy("connect-wallet-button-text").click();
     cy.getByCy("wallet-provider-button-sync2").click();
 
     // Assert
@@ -52,12 +53,12 @@ describe("Login", () => {
     cy.visit("/");
 
     // Act
-    cy.getByCy("connect-wallet-button").click();
+    cy.getByCy("connect-wallet-button-text").click();
     cy.getByCy("wallet-provider-button-sync2").click();
     cy.wait(["@signCertRequest", "@signCertResponse"]);
 
     // Assert
-    cy.contains("Your Trades");
+    cy.contains(shortenAddress(account)!);
     // ^ Indicates that the account has been logged in successfully
   });
 
@@ -68,7 +69,7 @@ describe("Login", () => {
     cy.visit("/");
 
     // Act
-    cy.getByCy("connect-wallet-button").click();
+    cy.getByCy("connect-wallet-button-text").click();
     cy.getByCy("wallet-provider-button-sync2").click();
     cy.wait(["@signCertRequest", "@signCertResponse"]);
 

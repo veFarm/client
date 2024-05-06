@@ -81,8 +81,8 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.getByCy("disconnect-wallet-button").click();
 
     // Assert
-    cy.getByCy("connect-wallet-button").should("be.visible");
-    cy.getByCy("connect-wallet-button").should("be.enabled");
+    cy.getByCy("connect-wallet-button-text").should("be.visible");
+    cy.getByCy("connect-wallet-button-text").should("be.enabled");
   });
 
   it("does NOT show me the connect wallet button", () => {
@@ -91,7 +91,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Act
 
     // Assert
-    cy.getByCy("connect-wallet-button").should("not.exist");
+    cy.getByCy("connect-wallet-button-text").should("not.exist");
   });
 
   it("shows me 'You don't have any past trades'", () => {
@@ -100,7 +100,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Act
 
     // Assert
-    cy.getByCy("trades-history").contains("You don't have any past trades");
+    cy.getByCy("history-modal").contains("You don't have any past trades");
   });
 
   it("keeps me connected when I refresh the page", () => {

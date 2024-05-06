@@ -57,8 +57,8 @@ _describe("Update trades history", () => {
 
   it("updates trades history", () => {
     // Arrange
-    cy.getByCy("trades-history").should("be.visible");
-    cy.getByCy("trades-history").within(($swaps) => {
+    cy.getByCy("history-modal").should("be.visible");
+    cy.getByCy("history-modal").within(($swaps) => {
       cy.wrap($swaps)
         .find("a")
         .eq(0)
@@ -72,8 +72,8 @@ _describe("Update trades history", () => {
     cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 20_000 });
 
     // Assert
-    cy.getByCy("trades-history").should("be.visible");
-    cy.getByCy("trades-history").within(($swaps) => {
+    cy.getByCy("history-modal").should("be.visible");
+    cy.getByCy("history-modal").within(($swaps) => {
       cy.wrap($swaps)
         .find("a")
         .eq(0)

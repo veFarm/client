@@ -96,8 +96,8 @@ describe("Register", () => {
 
     // Assert
     cy.getByCy("protocol-is-enabled-message").should("be.visible");
-    cy.getByCy("protocol-is-enabled-message").within(() => {
-      cy.getByCy("reserve-balance-amount").contains("5 VTHO");
+    cy.getByCy("protocol-is-enabled-message").within(($alert) => {
+      cy.wrap($alert).contains("5 VTHO");
     });
   });
 

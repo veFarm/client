@@ -111,6 +111,7 @@
       {:else if swapTxs == null || swapTxs.length === 0}
         <p class="text-body">Nothing here yet!</p>
       {:else}
+      <div class="overflow-scroll">
         {#each swapTxs as tx (tx.txId)}
           <PastTrade
             withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
@@ -121,6 +122,7 @@
           />
           <Divider />
         {/each}
+      </div>
       {/if}
     </div>
   </svelte:fragment>
