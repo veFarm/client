@@ -14,7 +14,7 @@
   const dispatch = createEventDispatcher();
 
   function toggle() {
-    dispatch(isOpen ? "close" : "open");
+    dispatch("toggle");
   }
 </script>
 

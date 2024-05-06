@@ -158,8 +158,7 @@
     vthoSpent={formatUnits(firstTrade.withdrawAmount, 2)}
     vetEarned={formatUnits(firstTrade.deltaVET, 2)}
     totalFees={formatUnits(firstTrade.totalFees, 2)}
-    on:open={() => {tradesForecast.open(0)}}
-    on:close={() => {tradesForecast.close(0)}}
+    on:toggle={() => {tradesForecast.toggle(0)}}
   >
     <svelte:fragment slot="icon">
       <Swap1 class="inline-block" />
@@ -178,8 +177,7 @@
     totalFees={secondTrade != null
       ? formatUnits(secondTrade.totalFees, 2)
       : "0"}
-    on:open={() => {tradesForecast.open(1)}}
-    on:close={() => {tradesForecast.close(1)}}
+    on:toggle={() => {tradesForecast.toggle(1)}}
   >
     <svelte:fragment slot="icon">
       <Swap2 class="inline-block" />

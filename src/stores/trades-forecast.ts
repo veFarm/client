@@ -177,22 +177,12 @@ function createStore() {
 
   return {
     subscribe: store.subscribe,
-    open: function (index: number): void {
+    toggle: function (index: number): void {
       store.update((s) =>
         s.fetched
           ? {
               ...s,
-              isOpen: { ...s.isOpen, [index]: true },
-            }
-          : s,
-      );
-    },
-    close: function (index: number): void {
-      store.update((s) =>
-        s.fetched
-          ? {
-              ...s,
-              isOpen: { ...s.isOpen, [index]: false },
+              isOpen: { ...s.isOpen, [index]: !s.isOpen[index] },
             }
           : s,
       );

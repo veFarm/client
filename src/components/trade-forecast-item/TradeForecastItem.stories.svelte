@@ -5,15 +5,8 @@
 
   let isOpen: boolean = false;
 
-  function handleOpen() {
-    isOpen = true
-  }
-  function handleClose() {
-    isOpen = false
-  }
-
-  $: {
-    console.log({isOpen})
+  function handleToggle() {
+    isOpen = !isOpen
   }
 </script>
 
@@ -21,7 +14,7 @@
 
 <Template let:args>
   <div class="p-4 max-w-lg mx-auto bg-highlight">
-    <TradeForecastItem {...args} isOpen={isOpen} on:open={handleOpen} on:close={handleClose}>
+    <TradeForecastItem {...args} isOpen={isOpen} on:toggle={handleToggle}>
       <svelte:fragment slot="icon">
         <Swap1 class="inline-block" />
       </svelte:fragment>
