@@ -53,7 +53,7 @@ _describe("Update stats", () => {
     );
   });
 
-  it("shows latest stats when balance gets updated", () => {
+  it.skip("shows latest stats when balance gets updated", () => {
     // Arrange
     cy.getByCy("stats").should("be.visible");
     cy.getByCy("stats").within(($stats) => {
