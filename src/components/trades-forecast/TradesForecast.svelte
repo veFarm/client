@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { fly } from "svelte/transition";
   // import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { balance } from "@/stores/balance";
@@ -26,15 +25,15 @@
     timeLeft: number;
   };
 
-  let firstTradeOpen: boolean = true;
-  let secondTradeOpen: boolean = false;
+  // let firstTradeOpen: boolean = true;
+  // let secondTradeOpen: boolean = false;
 
-  function toggleFirstTrade() {
-    firstTradeOpen = !firstTradeOpen;
-  }
-  function toggleSecondTrade() {
-    secondTradeOpen = !secondTradeOpen;
-  }
+  // function toggleFirstTrade() {
+  //   firstTradeOpen = !firstTradeOpen;
+  // }
+  // function toggleSecondTrade() {
+  //   secondTradeOpen = !secondTradeOpen;
+  // }
 
   /**
    * Use the most significant figure to represent the time left.
@@ -148,20 +147,26 @@
 </script>
 
 {#if $tradesForecast.loading}
-  <p class="text-sm font-normal"><Spinner /> Computing an optimized strategy...</p>
+  <p class="text-sm font-normal">
+    Computing an optimized strategy...<Spinner />
+  </p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
   <TradeForecastItem
+    isOpen={$tradesForecast.isOpen[0]}
     label="next trade"
     timeLeft={formatTime(firstTrade.timeLeft)}
     vthoSpent={formatUnits(firstTrade.withdrawAmount, 2)}
     vetEarned={formatUnits(firstTrade.deltaVET, 2)}
     totalFees={formatUnits(firstTrade.totalFees, 2)}
+    on:open={() => {tradesForecast.open(0)}}
+    on:close={() => {tradesForecast.close(0)}}
   >
     <svelte:fragment slot="icon">
       <Swap1 class="inline-block" />
     </svelte:fragment>
   </TradeForecastItem>
   <TradeForecastItem
+    isOpen={$tradesForecast.isOpen[1]}
     label="trade after"
     timeLeft={secondTrade != null
       ? formatTime(firstTrade.timeLeft + secondTrade.timeLeft)
@@ -173,6 +178,8 @@
     totalFees={secondTrade != null
       ? formatUnits(secondTrade.totalFees, 2)
       : "0"}
+    on:open={() => {tradesForecast.open(1)}}
+    on:close={() => {tradesForecast.close(1)}}
   >
     <svelte:fragment slot="icon">
       <Swap2 class="inline-block" />

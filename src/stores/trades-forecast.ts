@@ -39,6 +39,7 @@ type State =
       solutions: Sol[];
       loading: boolean;
       error: string | undefined;
+      isOpen: Record<number, boolean>;
     }
   | {
       fetched: false;
@@ -49,6 +50,7 @@ type State =
       solutions: undefined;
       loading: boolean;
       error: string | undefined;
+      isOpen: undefined;
     };
 
 const initialState: State = {
@@ -60,6 +62,7 @@ const initialState: State = {
   solutions: undefined,
   loading: false,
   error: undefined,
+  isOpen: undefined,
 };
 
 /**
@@ -160,6 +163,7 @@ function createStore() {
         solutions,
         loading: false,
         error: undefined,
+        isOpen: { 0: false, 1: false },
       });
     } catch (error: unknown) {
       store.set({
@@ -173,6 +177,26 @@ function createStore() {
 
   return {
     subscribe: store.subscribe,
+    open: function (index: number): void {
+      store.update((s) =>
+        s.fetched
+          ? {
+              ...s,
+              isOpen: { ...s.isOpen, [index]: true },
+            }
+          : s,
+      );
+    },
+    close: function (index: number): void {
+      store.update((s) =>
+        s.fetched
+          ? {
+              ...s,
+              isOpen: { ...s.isOpen, [index]: false },
+            }
+          : s,
+      );
+    },
   };
 }
 

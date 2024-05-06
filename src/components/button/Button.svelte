@@ -24,13 +24,13 @@
           "text-black",
           "bg-primary",
           "hover:bg-opacity-90",
-          "disabled:bg-opacity-80"
+          "disabled:bg-opacity-80",
         ],
         secondary: [
           "text-body",
           "bg-secondary",
           "hover:bg-opacity-90",
-          "disabled:bg-opacity-80"
+          "disabled:bg-opacity-80",
         ],
         danger: [
           "text-body",
@@ -44,24 +44,28 @@
           "disabled:bg-opacity-80",
           "disabled:text-body",
         ],
-        outline: [
-          "text-body",
-          "border",
-          "border-muted",
-        ],
+        outline: ["text-body", "border", "border-muted"],
       },
       size: {
         small: ["text-sm", "p-2", "px-3", "rounded"],
         medium: ["text-sm", "px-4", "py-2.5", "sm:px-5", "sm:py-3", "rounded"],
-        large: ["text-base", "sm:text-lg", "font-bold", "px-4", "py-2.5", "sm:px-5", "sm:py-3", "rounded", "sm:rounded-lg"],
+        large: [
+          "text-base",
+          "sm:text-lg",
+          "font-bold",
+          "px-4",
+          "py-2.5",
+          "sm:px-5",
+          "sm:py-3",
+          "rounded",
+          "sm:rounded-lg",
+        ],
       },
       fullWidth: {
         true: ["w-full"],
       },
       disabled: {
-        true: [
-          "cursor-default",
-        ],
+        true: ["cursor-default"],
       },
     },
   });

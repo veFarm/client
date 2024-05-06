@@ -1,18 +1,20 @@
 <script lang="ts">
-  import { slide } from "svelte/transition"
+  import { createEventDispatcher } from "svelte";
+  import { slide } from "svelte/transition";
   import ChevronDown from "@/assets/ChevronDown.svelte";
   import ChevronUp from "@/assets/ChevronUp.svelte";
 
+  export let isOpen: boolean;
   export let label: string;
   export let timeLeft: string;
   export let vthoSpent: string;
   export let vetEarned: string;
   export let totalFees: string;
 
-  let isOpen: boolean = false;
+  const dispatch = createEventDispatcher();
 
   function toggle() {
-    isOpen = !isOpen;
+    dispatch(isOpen ? "close" : "open");
   }
 </script>
 

@@ -12,13 +12,28 @@
   "
   data-cy="footer"
 >
-  <a href="https://twitter.com/vearn_finance" target="_blank" rel="noreferrer" title="Twitter">
+  <a
+    href="https://twitter.com/vearn_finance"
+    target="_blank"
+    rel="noreferrer"
+    title="Twitter"
+  >
     <Twitter />
   </a>
-  <a href="https://discord.gg/KSE8RaF8Ft" target="_blank" rel="noreferrer" title="Discord">
+  <a
+    href="https://discord.gg/KSE8RaF8Ft"
+    target="_blank"
+    rel="noreferrer"
+    title="Discord"
+  >
     <Discord />
   </a>
-  <a href="https://github.com/vearnfi" target="_blank" rel="noreferrer" title="Github">
+  <a
+    href="https://github.com/vearnfi"
+    target="_blank"
+    rel="noreferrer"
+    title="Github"
+  >
     <Github />
   </a>
 </footer>

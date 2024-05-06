@@ -7,7 +7,7 @@
   import Logo from "@/assets/Logo.svelte";
   import ChevronDown from "@/assets/ChevronDown.svelte";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
-  import { Button } from "@/components/button"
+  import { Button } from "@/components/button";
 
   /** Popover state. */
   let isOpen = false;
@@ -30,10 +30,10 @@
     <Logo alt="Vearn Finance" />
   </div>
 
-    <div
-      class="flex items-center justify-between pl-4 pr-2 sm:px-6 sm:py-3 border-l space-x-8 border-muted h-full min-w-min sm:w-80"
-    >
-  {#if $wallet.connected && $balance.current != null}
+  <div
+    class="flex items-center justify-between pl-4 pr-2 sm:px-6 sm:py-3 border-l space-x-8 border-muted h-full min-w-min sm:w-80"
+  >
+    {#if $wallet.connected && $balance.current != null}
       <div>
         <p class="text-xs font-medium">{shortenAddress($wallet.account)}</p>
         <p class="text-xs font-medium text-accent">
@@ -63,9 +63,13 @@
             isOpen = false;
           }}
         >
-          <div class="flex flex-col space-y-2 bg-highlight border border-muted rounded-md px-4 py-3">
+          <div
+            class="flex flex-col space-y-2 bg-highlight border border-muted rounded-md px-4 py-3"
+          >
             <div>
-              <p class="text-xs font-medium">{shortenAddress($wallet.account)}</p>
+              <p class="text-xs font-medium">
+                {shortenAddress($wallet.account)}
+              </p>
               <p class="text-xs font-medium text-accent">
                 {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
               </p>
@@ -81,10 +85,10 @@
           </div>
         </Popover>
       </button>
-  {:else}
+    {:else}
       <ConnectWalletButton variant="icon" class="ml-auto sm:ml-0" />
-  {/if}
-    </div>
+    {/if}
+  </div>
 </nav>
 
 <style>

@@ -172,7 +172,10 @@
 
   let insufficientBalance: boolean = false;
 
-  $: insufficientBalance = $balance.current != null && $balance.current.vet.eq(0) && $balance.current.vtho.eq(0);
+  $: insufficientBalance =
+    $balance.current != null &&
+    $balance.current.vet.eq(0) &&
+    $balance.current.vtho.eq(0);
 
   let title: string = "";
 
@@ -194,7 +197,7 @@
       {title}
     </h2>
     {#if variant === "SUMMARY"}
-      <!-- <Pill value="Active" /> -->
+      <Pill value="Active" />
     {/if}
   </div>
   {#if ["CONFIG_AND_APPROVE", "SUMMARY"].includes(variant)}
@@ -260,13 +263,17 @@
   {#if variant === "CONFIG_AND_APPROVE"}
     <Button
       type="submit"
-      intent={(insufficientBalance || inputsEmpty) ? "secondary" : "primary"}
+      intent={insufficientBalance || inputsEmpty ? "secondary" : "primary"}
       disabled={disabled || inputsEmpty}
       loading={disabled}
       fullWidth
       data-cy="submit-form-button"
     >
-      {insufficientBalance ? "INSUFFICIENT BALANCE" : inputsEmpty ? "ENTER RESERVE BALANCE" : "ENABLE AUTOPILOT"}
+      {insufficientBalance
+        ? "INSUFFICIENT BALANCE"
+        : inputsEmpty
+          ? "ENTER RESERVE BALANCE"
+          : "ENABLE AUTOPILOT"}
     </Button>
   {/if}
 
@@ -279,7 +286,9 @@
       fullWidth
       data-cy="update-reserve-balance-button"
     >
-      {inputsEmpty || inputsMatchStore ? "ENTER NEW AMOUNT" : "UPDATE RESERVE BALANCE"}
+      {inputsEmpty || inputsMatchStore
+        ? "ENTER NEW AMOUNT"
+        : "UPDATE RESERVE BALANCE"}
     </Button>
   {/if}
 

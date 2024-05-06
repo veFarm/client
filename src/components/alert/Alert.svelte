@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import Close from "@/assets/Close.svelte"
+  import Close from "@/assets/Close.svelte";
 
   export let title: string;
   export let body: string;

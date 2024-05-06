@@ -1,5 +1,5 @@
 <script lang="ts">
-  import zap from "../../public/zap.svg"
+  import zap from "../../public/zap.svg";
 </script>
 
 <div class="text-xl sm:text-2xl font-bold" {...$$props}>

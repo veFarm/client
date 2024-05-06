@@ -118,7 +118,7 @@ function createStore() {
 
         if (user == null) return;
 
-        const userJSON = JSON.parse(user)
+        const userJSON = JSON.parse(user);
 
         if (userJSON?.walletId == null || userJSON?.cert == null) {
           throw new Error("Invalid data");
