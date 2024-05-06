@@ -41,6 +41,7 @@ _describe("Update balance", () => {
     // Arrange
     cy.getByCy("navigation-bar").contains("0.00 VET");
     cy.getByCy("submit-form-button").contains("INSUFFICIENT BALANCE");
+    cy.getByCy("submit-form-button").should("be.disabled");
 
     // Act
     cy.wait("@fetchBalance", { timeout: 20_000 });
@@ -48,6 +49,7 @@ _describe("Update balance", () => {
     // Assert
     cy.getByCy("navigation-bar").contains("500.00 VET");
     cy.getByCy("submit-form-button").contains("ENTER RESERVE BALANCE");
+    cy.getByCy("submit-form-button").should("be.disabled");
   });
 
   it("DOES show me the trades forecast after funding the account and entering the reserve balance", () => {
@@ -59,5 +61,7 @@ _describe("Update balance", () => {
 
     // Assert
     cy.getByCy("trades-forecast-table").should("exist");
+    cy.getByCy("submit-form-button").contains("ENABLE AUTOPILOT");
+    cy.getByCy("submit-form-button").should("be.enabled");
   });
 });
