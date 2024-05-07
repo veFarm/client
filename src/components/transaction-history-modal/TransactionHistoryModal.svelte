@@ -40,12 +40,17 @@
   /**
    * Fetch account swap transactions.
    */
-  async function fetchSwaps(account: Address, vetBalance: BigNumber): Promise<void> {
+  async function fetchSwaps(
+    account: Address,
+    vetBalance: BigNumber,
+  ): Promise<void> {
     try {
       loading = true;
 
       const response = await fetch(
-        `${chain.getAccountSwapsEndpoint}?account=${account}&vet=${vetBalance.toFixed()}`,
+        `${
+          chain.getAccountSwapsEndpoint
+        }?account=${account}&vet=${vetBalance.toFixed()}`,
       );
 
       if (response.status === 404) return;
@@ -111,18 +116,18 @@
       {:else if swapTxs == null || swapTxs.length === 0}
         <p class="text-body">Nothing here yet!</p>
       {:else}
-      <div class="overflow-scroll">
-        {#each swapTxs as tx (tx.txId)}
-          <PastTrade
-            withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
-            amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
-            txId={tx.txId}
-            blockTimestamp={tx.blockTimestamp}
-            explorerUrl={chain.explorers[0].url}
-          />
-          <Divider />
-        {/each}
-      </div>
+        <div class="overflow-scroll">
+          {#each swapTxs as tx (tx.txId)}
+            <PastTrade
+              withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
+              amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
+              txId={tx.txId}
+              blockTimestamp={tx.blockTimestamp}
+              explorerUrl={chain.explorers[0].url}
+            />
+            <Divider />
+          {/each}
+        </div>
       {/if}
     </div>
   </svelte:fragment>

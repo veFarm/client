@@ -1,12 +1,9 @@
 <script lang="ts">
-  // import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { balance } from "@/stores/balance";
   import type { Sol } from "@/stores/trades-forecast";
   import { tradesForecast } from "@/stores/trades-forecast";
   import { formatUnits } from "@/utils/format-units";
-  // import { calcNextTrade } from "@/utils/calc-next-trade.txt";
-  // import type { Trade } from "@/utils/calc-next-trade";
   import { secondsToDHMS } from "@/utils/seconds-to-dhms";
   import { chooseSolution } from "@/utils/choose-solution";
   import { extendSolution } from "@/utils/extend-solution";
@@ -24,16 +21,6 @@
     /** Seconds to trigger. */
     timeLeft: number;
   };
-
-  // let firstTradeOpen: boolean = true;
-  // let secondTradeOpen: boolean = false;
-
-  // function toggleFirstTrade() {
-  //   firstTradeOpen = !firstTradeOpen;
-  // }
-  // function toggleSecondTrade() {
-  //   secondTradeOpen = !secondTradeOpen;
-  // }
 
   /**
    * Use the most significant figure to represent the time left.
@@ -158,7 +145,9 @@
     vthoSpent={formatUnits(firstTrade.withdrawAmount, 2)}
     vetEarned={formatUnits(firstTrade.deltaVET, 2)}
     totalFees={formatUnits(firstTrade.totalFees, 2)}
-    on:toggle={() => {tradesForecast.toggle(0)}}
+    on:toggle={() => {
+      tradesForecast.toggle(0);
+    }}
   >
     <svelte:fragment slot="icon">
       <Swap1 class="inline-block" />
@@ -177,7 +166,40 @@
     totalFees={secondTrade != null
       ? formatUnits(secondTrade.totalFees, 2)
       : "0"}
-    on:toggle={() => {tradesForecast.toggle(1)}}
+    on:toggle={() => {
+      tradesForecast.toggle(1);
+    }}
+  >
+    <svelte:fragment slot="icon">
+      <Swap2 class="inline-block" />
+    </svelte:fragment>
+  </TradeForecastItem>
+{:else}
+  <TradeForecastItem
+    isOpen={$tradesForecast.isOpen[0]}
+    label="next trade"
+    timeLeft="-"
+    vthoSpent="-"
+    vetEarned="-"
+    totalFees="-"
+    on:toggle={() => {
+      tradesForecast.toggle(0);
+    }}
+  >
+    <svelte:fragment slot="icon">
+      <Swap1 class="inline-block" />
+    </svelte:fragment>
+  </TradeForecastItem>
+  <TradeForecastItem
+    isOpen={$tradesForecast.isOpen[1]}
+    label="trade after"
+    timeLeft="-"
+    vthoSpent="-"
+    vetEarned="-"
+    totalFees="-"
+    on:toggle={() => {
+      tradesForecast.toggle(1);
+    }}
   >
     <svelte:fragment slot="icon">
       <Swap2 class="inline-block" />

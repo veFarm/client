@@ -10,12 +10,13 @@ const CERTIFICATES: Record<Address, Certificate> = {
     purpose: "identification",
     payload: {
       type: "text",
-      content: "Sign a certificate to prove your identity."
+      content: "Sign a certificate to prove your identity.",
     },
     domain: "localhost:5173",
-    timestamp:1714963380,
+    timestamp: 1714963380,
     signer: "0x2057ca7412e6c0828501cb7b335e166f81c58d26",
-    signature: "0x73a1337fe10332b920370e5e926fae36302edf592c1a69006066b147484f7ab03560af721cc01b40fc7c2b1b21726e7dbc1d95b8ea0f19b7ca2323dfb5b49b7501",
+    signature:
+      "0x73a1337fe10332b920370e5e926fae36302edf592c1a69006066b147484f7ab03560af721cc01b40fc7c2b1b21726e7dbc1d95b8ea0f19b7ca2323dfb5b49b7501",
   },
   "0x970248543238481b2AC9144a99CF7F47e28A90e0": {
     purpose: "identification",
@@ -26,9 +27,10 @@ const CERTIFICATES: Record<Address, Certificate> = {
     domain: "localhost:5173",
     timestamp: 1714964751,
     signer: "0x970248543238481b2ac9144a99cf7f47e28a90e0",
-    signature: "0xd58a7278c7f559ce28f866f9842fb82956a5473d0f9703fcf3938e03a26530571fde8bd56f7db78ab6fc91b3cfc62e95dabdf054cc941c1bb31668efda08618d01",
+    signature:
+      "0xd58a7278c7f559ce28f866f9842fb82956a5473d0f9703fcf3938e03a26530571fde8bd56f7db78ab6fc91b3cfc62e95dabdf054cc941c1bb31668efda08618d01",
   },
-}
+};
 
 /**
  * Factory to intercept and mock API calls aimed to the wallet.
@@ -45,7 +47,10 @@ export function makeWallet(walletId: WalletId, account: Address) {
    * Simulate a logged in account.
    */
   function simulateLoggedInAccount() {
-    localStorage.setItem("user", JSON.stringify({ walletId, cert: CERTIFICATES[account] }));
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ walletId, cert: CERTIFICATES[account] }),
+    );
   }
 
   /**

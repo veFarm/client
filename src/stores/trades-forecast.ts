@@ -50,7 +50,7 @@ type State =
       solutions: undefined;
       loading: boolean;
       error: string | undefined;
-      isOpen: undefined;
+      isOpen: Record<number, boolean>;
     };
 
 const initialState: State = {
@@ -62,7 +62,7 @@ const initialState: State = {
   solutions: undefined,
   loading: false,
   error: undefined,
-  isOpen: undefined,
+  isOpen: { 0: false, 1: false },
 };
 
 /**
@@ -70,14 +70,19 @@ const initialState: State = {
  * @param {Address} account Target account.
  * @return {{txFee: BigNumber, reserveIn: BigNumber, reserveOut: BigNumber, solutions: Sol[]}}
  */
-async function fetchTradesForecast(account: Address, vetBalance: BigNumber): Promise<{
+async function fetchTradesForecast(
+  account: Address,
+  vetBalance: BigNumber,
+): Promise<{
   solutions: Sol[];
   reserveIn: BigNumber;
   reserveOut: BigNumber;
   txFee: BigNumber;
 }> {
   const response = await fetch(
-    `${chain.getTradesForecastEndpoint}?account=${account}&vet=${vetBalance.toFixed()}`,
+    `${
+      chain.getTradesForecastEndpoint
+    }?account=${account}&vet=${vetBalance.toFixed()}`,
   );
 
   const json = (await response.json()) as ApiResponse;
@@ -141,7 +146,8 @@ function createStore() {
       const { txFee, reserveIn, reserveOut, solutions } =
         await fetchTradesForecast(account, current.vet);
 
-      store.set({
+      store.update((s) => ({
+        ...s,
         fetched: true,
         account,
         txFee,
@@ -150,8 +156,7 @@ function createStore() {
         solutions,
         loading: false,
         error: undefined,
-        isOpen: { 0: false, 1: false },
-      });
+      }));
     } catch (error: unknown) {
       store.set({
         ...initialState,
@@ -165,14 +170,10 @@ function createStore() {
   return {
     subscribe: store.subscribe,
     toggle: function (index: number): void {
-      store.update((s) =>
-        s.fetched
-          ? {
-              ...s,
-              isOpen: { ...s.isOpen, [index]: !s.isOpen[index] },
-            }
-          : s,
-      );
+      store.update((s) => ({
+        ...s,
+        isOpen: { ...s.isOpen, [index]: !s.isOpen[index] },
+      }));
     },
   };
 }

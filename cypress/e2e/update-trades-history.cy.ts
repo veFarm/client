@@ -65,16 +65,22 @@ _describe("Update trades history", () => {
         .find("a")
         .eq(0)
         .contains(
-          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(0, 27),
+          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(
+            0,
+            27,
+          ),
         );
       cy.wrap($swaps).find("a").eq(1).should("not.exist");
     });
 
     // Act
-    cy.wait([
-      "@fetchBalance",
-      // "@getAccountStats"
-    ], { timeout: 20_000 });
+    cy.wait(
+      [
+        "@fetchBalance",
+        // "@getAccountStats"
+      ],
+      { timeout: 20_000 },
+    );
 
     // Assert
     cy.getByCy("history-modal").should("be.visible");
@@ -83,13 +89,19 @@ _describe("Update trades history", () => {
         .find("a")
         .eq(0)
         .contains(
-          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(0, 27),
+          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(
+            0,
+            27,
+          ),
         );
       cy.wrap($swaps)
         .find("a")
         .eq(1)
         .contains(
-          "0xbf3ecd16fd93435e9b1c913c6af345c8ac857c4c210ebdd36a3be058840b3e52".slice(0, 27),
+          "0xbf3ecd16fd93435e9b1c913c6af345c8ac857c4c210ebdd36a3be058840b3e52".slice(
+            0,
+            27,
+          ),
         );
       cy.wrap($swaps).find("a").eq(2).should("not.exist");
     });

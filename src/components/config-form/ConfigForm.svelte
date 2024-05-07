@@ -252,8 +252,8 @@
 
   <Divider />
 
-  {#if !inputsEmpty && variant !== "UPDATE_CONFIG"}
-    <TradesForecast reserveBalance={reserveBalanceWei} />
+  {#if variant !== "UPDATE_CONFIG"}
+    <TradesForecast reserveBalance={!inputsEmpty ? reserveBalanceWei : bn(0)} />
   {/if}
 
   {#if variant === "LOGIN"}

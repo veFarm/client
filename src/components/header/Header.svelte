@@ -34,7 +34,7 @@
     class="flex items-center justify-between pl-4 pr-2 sm:px-6 sm:py-3 border-l space-x-8 border-muted h-full min-w-min sm:w-80"
   >
     {#if $wallet.connected && $balance.current != null}
-      <div>
+      <div class="space-y-1">
         <p class="text-xs font-medium">{shortenAddress($wallet.account)}</p>
         <p class="text-xs font-medium text-accent">
           {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
@@ -66,7 +66,7 @@
           <div
             class="flex flex-col space-y-2 bg-highlight border border-muted rounded-md px-4 py-3"
           >
-            <div>
+            <div class="space-y-1">
               <p class="text-xs font-medium">
                 {shortenAddress($wallet.account)}
               </p>

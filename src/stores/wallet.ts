@@ -80,7 +80,7 @@ function createStore() {
         };
 
         const cert = await wConnex.signCert(message);
-        console.log({cert: JSON.stringify(cert)})
+        console.log({ cert: JSON.stringify(cert) });
 
         // This should throw if cert isn't valid.
         Certificate.verify(cert);

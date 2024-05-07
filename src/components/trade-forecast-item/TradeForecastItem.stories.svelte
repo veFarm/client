@@ -6,7 +6,7 @@
   let isOpen: boolean = false;
 
   function handleToggle() {
-    isOpen = !isOpen
+    isOpen = !isOpen;
   }
 </script>
 
@@ -14,7 +14,7 @@
 
 <Template let:args>
   <div class="p-4 max-w-lg mx-auto bg-highlight">
-    <TradeForecastItem {...args} isOpen={isOpen} on:toggle={handleToggle}>
+    <TradeForecastItem {...args} {isOpen} on:toggle={handleToggle}>
       <svelte:fragment slot="icon">
         <Swap1 class="inline-block" />
       </svelte:fragment>
