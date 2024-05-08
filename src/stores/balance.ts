@@ -59,7 +59,7 @@ function createStore() {
     subscribe: store.subscribe,
     fetchBalance: async function () {
       try {
-        const walletData = get(wallet)
+        const walletData = get(wallet);
         const balanceData = get(store);
 
         if (walletData?.wConnex == null || walletData?.account == null) {

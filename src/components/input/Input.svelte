@@ -1,14 +1,15 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from "svelte/elements";
+  import WalletFull from "@/assets/WalletFull.svelte";
 
   type $$Props = HTMLInputAttributes & {
     id: string;
     label?: string;
     value: any;
     currency?: string;
+    balance?: string;
     hint?: string;
     error?: string;
-    subtext?: string;
     "data-cy"?: string;
   };
 
@@ -16,9 +17,9 @@
   export let label = "";
   export let value: any;
   export let currency = "";
+  export let balance = "";
   export let hint = "";
   export let error = "";
-  export let subtext = "";
 
   let hasError = false;
 
@@ -27,41 +28,58 @@
 
 <label
   for={id}
-  class="{hasError ? 'text-danger' : 'text-background'} text-sm space-y-1"
+  class="{hasError ? 'text-danger' : 'text-body'} text-sm font-medium w-full"
 >
   {label}
+  <div class="h-2" />
   <div class="relative">
-    <input
-      {id}
-      class="bg-gray-50 border {hasError
-        ? 'border-danger'
-        : 'border-gray-300'} text-background text-xl font-medium rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-5 pb-7 disabled:bg-gray-200"
-      {...$$restProps}
-      bind:value
-      on:input
-    />
-    {#if currency.length > 0}
+    {#if balance != null && balance.length > 0}
       <div
-        class="absolute top-5 right-2 text-lg font-medium bg-gray-200 px-1.5 rounded-sm"
-        class:bg-gray-300={$$restProps.disabled}
-        data-cy="currency"
+        class="absolute -top-7 right-0 text-xs font-medium text-accent pl-1 flex items-end"
+        data-cy="balance"
       >
-        {currency}
+        <WalletFull class="mr-1" />
+        {balance}
       </div>
     {/if}
-    {#if subtext.length > 0}
-      <div
-        class="absolute bottom-1 right-2 text-sm text-accent px-1.5"
-        data-cy="subtext"
-      >
-        {subtext}
+    <div class="flex">
+      <div class="relative w-full">
+        <input
+          {id}
+          class="h-12 sm:h-14 bg-transparent border {hasError
+            ? 'border-danger'
+            : 'border-muted'} text-white text-xl font-bold rounded block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled disabled:cursor-default"
+          {...$$restProps}
+          bind:value
+          on:input
+        />
+        {#if currency.length > 0}
+          <div
+            class="absolute top-2.5 right-3 sm:top-3 sm:right-4 bg-zinc-900 px-3 py-1 rounded-md text-sm sm:text-base font-bold text-white"
+            class:text--disabled={$$restProps.disabled}
+            data-cy="currency"
+          >
+            {currency}
+          </div>
+        {/if}
       </div>
-    {/if}
+      <slot name="input-right" />
+    </div>
   </div>
   {#if hint.length > 0 && !hasError}
-    <legend class="text-xs text-accent">{hint}</legend>
+    <legend class="text-xs text-accent mt-2">{hint}</legend>
   {/if}
   {#if hasError}
     <legend>{error}</legend>
   {/if}
 </label>
+
+<style lang="postcss">
+  /*
+   * For some reason I had to overwrite this.
+   * Notice the double dash '--' in the class name.
+   */
+  .text--disabled {
+    @apply text-disabled;
+  }
+</style>

@@ -17,61 +17,55 @@
   export let disabled: ButtonVariantProps["disabled"] = false;
   export let loading: boolean = false;
 
-  const buttonVariants = cva(["font-bold"], {
+  const buttonVariants = cva(["font-medium"], {
     variants: {
       intent: {
         primary: [
           "text-black",
           "bg-primary",
-          "border",
-          "border-lime-400", // TODO: add to palette
-          "hover:bg-primary-100",
-          "hover:border-primary",
+          "hover:bg-opacity-90",
+          "disabled:bg-opacity-80",
         ],
         secondary: [
-          "text-background",
+          "text-body",
           "bg-secondary",
-          "border",
-          "border-violet-400", // TODO: add to palette
-          "hover:bg-secondary-100",
-          "hover:border-secondary",
+          "hover:bg-opacity-90",
+          "disabled:bg-opacity-80",
         ],
         danger: [
-          "text-danger",
-          "bg-body",
+          "text-body",
           "border",
-          "border-danger",
-          "hover:border-danger-100",
+          "border-muted",
+          "hover:border-danger",
           "hover:bg-danger",
           "hover:text-body",
+          "disabled:border-danger",
+          "disabled:bg-danger",
+          "disabled:bg-opacity-80",
+          "disabled:text-body",
         ],
-        outline: [
-          "text-background",
-          "bg-body",
-          "border",
-          "border-background", // TODO: add to palette
-          "hover:border-lime-400", // TODO: add to palette
-          "hover:bg-primary-100",
-          "hover:border-primary",
-        ],
+        outline: ["text-body", "border", "border-muted"],
       },
       size: {
-        small: ["text-sm", "p-2", "px-3", "rounded-lg"],
-        medium: ["text-base", "md:text-lg", "py-4", "px-6", "rounded-lg"],
+        small: ["text-sm", "p-2", "px-3", "rounded"],
+        medium: ["text-sm", "px-4", "py-2.5", "sm:px-5", "sm:py-3", "rounded"],
+        large: [
+          "text-base",
+          "sm:text-lg",
+          "font-bold",
+          "px-4",
+          "py-2.5",
+          "sm:px-5",
+          "sm:py-3",
+          "rounded",
+          "sm:rounded-lg",
+        ],
       },
       fullWidth: {
         true: ["w-full"],
       },
       disabled: {
-        true: [
-          "cursor-not-allowed",
-          "bg-disabled",
-          "border-gray-400",
-          "text-muted",
-          "hover:bg-disabled",
-          "hover:text-muted",
-          "hover:border-gray-400",
-        ],
+        true: ["cursor-default"],
       },
     },
   });
@@ -90,6 +84,6 @@
     class: $$props.class,
   })}
 >
-  {#if loading}<Spinner data-cy="spinner" />{/if}
   <slot />
+  {#if loading}<Spinner class="ml-2" data-cy="spinner" />{/if}
 </button>

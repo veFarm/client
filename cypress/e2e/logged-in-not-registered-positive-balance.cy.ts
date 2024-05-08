@@ -59,14 +59,13 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
     // Assert
     cy.getByCy("navigation-bar").contains("5906.63 VET");
-    cy.getByCy("open-dropdown-button").contains("0x9702…90e0");
+    cy.getByCy("navigation-bar").contains("0x9702…90e0");
   });
 
   it("shows me the disconnect wallet button as enabled", () => {
     // Arrange
 
     // Act
-    cy.getByCy("open-dropdown-button").click();
 
     // Assert
     cy.getByCy("disconnect-wallet-button").should("be.visible");
@@ -77,12 +76,11 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Arrange
 
     // Act
-    cy.getByCy("open-dropdown-button").click();
     cy.getByCy("disconnect-wallet-button").click();
 
     // Assert
-    cy.getByCy("connect-wallet-button").should("be.visible");
-    cy.getByCy("connect-wallet-button").should("be.enabled");
+    cy.getByCy("connect-wallet-button-text").should("be.visible");
+    cy.getByCy("connect-wallet-button-text").should("be.enabled");
   });
 
   it("does NOT show me the connect wallet button", () => {
@@ -91,16 +89,27 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     // Act
 
     // Assert
-    cy.getByCy("connect-wallet-button").should("not.exist");
+    cy.getByCy("connect-wallet-button-text").should("not.exist");
   });
 
-  it("shows me 'You don't have any past trades'", () => {
+  it("shows me the trades history button", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("trades-history").contains("You don't have any past trades");
+    cy.getByCy("view-history-button").should("be.visible");
+    cy.getByCy("view-history-button").should("be.enabled");
+  });
+
+  it("shows me 'no trades history' message", () => {
+    // Arrange
+
+    // Act
+    cy.getByCy("view-history-button").click();
+
+    // Assert
+    cy.getByCy("history-modal").contains("Nothing here yet!")
   });
 
   it("keeps me connected when I refresh the page", () => {
@@ -112,7 +121,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
     // Assert
     cy.getByCy("navigation-bar").contains("5906.63 VET");
-    cy.getByCy("open-dropdown-button").contains("0x9702…90e0");
+    cy.getByCy("navigation-bar").contains("0x9702…90e0");
   });
 
   it("allows me to enter a reserve balance amount", () => {
@@ -125,13 +134,13 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.getByCy("reserve-balance-input").should("be.enabled");
   });
 
-  it("shows me my VTHO balance inside the reserve balance input field", () => {
+  it("shows me my VTHO balance on top of the reserve balance input field", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("subtext").contains("Balance: 118.42");
+    cy.getByCy("balance").contains("118.42 VTHO");
   });
 
   it("does NOT allow me to submit the form if I enter 0 as the reserve balance amount", () => {

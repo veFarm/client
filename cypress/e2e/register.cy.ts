@@ -59,7 +59,7 @@ describe("Register", () => {
       expect(payload.options).to.deep.equal({
         signer: account.toLowerCase(),
         comment:
-          "Please approve the following action(s):Allow the vearn contract to spend your VTHO in exchange for VET. Save reserve balance into the vearn contract.",
+          "Please approve the following action(s):Allow the vearn contract to spend your VTHO in exchange for VET. Store reserve balance into the vearn contract.",
       });
     });
   });
@@ -96,8 +96,8 @@ describe("Register", () => {
 
     // Assert
     cy.getByCy("protocol-is-enabled-message").should("be.visible");
-    cy.getByCy("protocol-is-enabled-message").within(() => {
-      cy.getByCy("reserve-balance-amount").contains("5 VTHO");
+    cy.getByCy("protocol-is-enabled-message").within(($alert) => {
+      cy.wrap($alert).contains("5 VTHO");
     });
   });
 

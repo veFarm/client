@@ -12,7 +12,7 @@ const connex = makeConnex(account);
 const wallet = makeWallet(walletId, account);
 
 // Skip CI-failing tests
-const _describe = Cypress.env('IS_CI') === true ? describe.skip : describe
+const _describe = Cypress.env("IS_CI") === true ? describe.skip : describe;
 
 _describe("Update balance", () => {
   beforeEach(() => {
@@ -40,12 +40,16 @@ _describe("Update balance", () => {
   it("shows when the balance gets updated", () => {
     // Arrange
     cy.getByCy("navigation-bar").contains("0.00 VET");
+    cy.getByCy("submit-form-button").contains("INSUFFICIENT BALANCE");
+    cy.getByCy("submit-form-button").should("be.disabled");
 
     // Act
     cy.wait("@fetchBalance", { timeout: 20_000 });
 
     // Assert
     cy.getByCy("navigation-bar").contains("500.00 VET");
+    cy.getByCy("submit-form-button").contains("ENTER RESERVE BALANCE");
+    cy.getByCy("submit-form-button").should("be.disabled");
   });
 
   it("DOES show me the trades forecast after funding the account and entering the reserve balance", () => {
@@ -57,5 +61,7 @@ _describe("Update balance", () => {
 
     // Assert
     cy.getByCy("trades-forecast-table").should("exist");
+    cy.getByCy("submit-form-button").contains("ENABLE AUTOPILOT");
+    cy.getByCy("submit-form-button").should("be.enabled");
   });
 });

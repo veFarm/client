@@ -12,7 +12,7 @@
 <Meta title="components/PastTrade" component={PastTrade} />
 
 <Template let:args>
-  <div class="bg-background p-4">
+  <div class="bg-highlight p-4">
     {#each items as item}
       <PastTrade {...args} />
     {/each}

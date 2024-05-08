@@ -4,7 +4,10 @@
   import { balance } from "@/stores/balance";
   import { shortenAddress } from "@/utils/shorten-address";
   import { formatUnits } from "@/utils/format-units";
+  import Logo from "@/assets/Logo.svelte";
   import ChevronDown from "@/assets/ChevronDown.svelte";
+  import { ConnectWalletButton } from "@/components/connect-wallet-button";
+  import { Button } from "@/components/button";
 
   /** Popover state. */
   let isOpen = false;
@@ -18,24 +21,34 @@
 <nav
   class="
     fixed top-0 w-full mx-auto h-16 z-20
-    bg-background border-b border-muted
-    px-2 sm:px-4 py-2
+    bg-background border-b md:border-x border-muted
     flex flex-wrap items-center justify-between
-    text-sm text-gray-300 md:text-base
   "
   data-cy="navigation-bar"
 >
-  <a href="/">
-    <!-- <img src={SvelteLogo} width="32" height="32" alt="Svelte logo" /> -->
-    vearn
-  </a>
+  <div class="pl-2 pr-4 sm:px-6 sm:py-3">
+    <Logo alt="Vearn Finance" />
+  </div>
 
-  {#if $wallet.connected && $balance.current != null}
-    <div>
-      {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
+  <div
+    class="flex items-center justify-between pl-4 pr-2 sm:px-6 sm:py-3 border-l space-x-8 border-muted h-full min-w-min sm:w-80"
+  >
+    {#if $wallet.connected && $balance.current != null}
+      <div class="space-y-1">
+        <p class="text-xs font-medium">{shortenAddress($wallet.account)}</p>
+        <p class="text-xs font-medium text-accent">
+          {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
+        </p>
+      </div>
 
-      <button class="inline-block" data-cy="open-dropdown-button">
-        {shortenAddress($wallet.account)}
+      <button
+        class="hidden sm:block text-sm font-medium"
+        on:click={handleDisconnect}
+        data-cy="disconnect-wallet-button"
+      >
+        Disconnect
+      </button>
+      <button class="block sm:hidden" data-cy="open-dropdown-button">
         <ChevronDown class="inline-block text-inherit" />
 
         <Popover
@@ -50,19 +63,32 @@
             isOpen = false;
           }}
         >
-          <div class="bg-highlight border border-muted rounded-md px-4 py-3">
-            <button
-              class="text-sm md:text-base"
+          <div
+            class="flex flex-col space-y-2 bg-highlight border border-muted rounded-md px-4 py-3"
+          >
+            <div class="space-y-1">
+              <p class="text-xs font-medium">
+                {shortenAddress($wallet.account)}
+              </p>
+              <p class="text-xs font-medium text-accent">
+                {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
+              </p>
+            </div>
+            <Button
+              intent="outline"
+              size="medium"
               on:click={handleDisconnect}
               data-cy="disconnect-wallet-button"
             >
-              Disconnect Wallet
-            </button>
+              DISCONNECT
+            </Button>
           </div>
         </Popover>
       </button>
-    </div>
-  {/if}
+    {:else}
+      <ConnectWalletButton variant="icon" class="ml-auto sm:ml-0" />
+    {/if}
+  </div>
 </nav>
 
 <style>

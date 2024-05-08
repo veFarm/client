@@ -4,9 +4,12 @@
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
+  import { historyModal } from "@/stores/history-modal";
   import { formatUnits } from "@/utils/format-units";
+  import { Modal } from "@/components/modal";
   import { PastTrade } from "@/components/past-trade";
   import { Spinner } from "@/components/spinner";
+  import { Divider } from "@/components/divider";
 
   type RawSwapDoc = {
     account: Address;
@@ -37,20 +40,17 @@
   /**
    * Fetch account swap transactions.
    */
-  async function fetchSwaps(account: Address): Promise<void> {
+  async function fetchSwaps(
+    account: Address,
+    vetBalance: BigNumber,
+  ): Promise<void> {
     try {
       loading = true;
 
       const response = await fetch(
-        `${chain.getAccountSwapsEndpoint}?account=${account}`,
-        {
-          cache: "no-cache",
-          headers: {
-            "Cache-Control": "no-cache",
-            Pragma: "no-cache",
-            Expires: "0",
-          },
-        },
+        `${
+          chain.getAccountSwapsEndpoint
+        }?account=${account}&vet=${vetBalance.toFixed()}`,
       );
 
       if (response.status === 404) return;
@@ -71,9 +71,13 @@
     }
   }
 
+  function handleClose() {
+    historyModal.close();
+  }
+
   $: {
     if ($wallet.connected) {
-      fetchSwaps($wallet.account);
+      fetchSwaps($wallet.account, $balance.current?.vet || bn(0));
     }
   }
 
@@ -89,7 +93,7 @@
         timeout = setTimeout(res, 3_000);
       }).then(() => {
         if ($wallet.connected) {
-          fetchSwaps($wallet.account);
+          fetchSwaps($wallet.account, $balance.current?.vet || bn(0));
         }
         clearTimeout(timeout);
       });
@@ -97,24 +101,34 @@
   }
 </script>
 
-<section class="flex flex-col space-y-4" data-cy="trades-history">
-  <h2>Your Trades</h2>
-
-  {#if error != null && error.length > 0}
-    <p class="text-danger">{error}</p>
-  {:else if loading}
-    <p><Spinner /> Fetching transactions...</p>
-  {:else if swapTxs == null || swapTxs.length === 0}
-    <p>You don&apos;t have any past trades</p>
-  {:else}
-    {#each swapTxs as tx}
-      <PastTrade
-        withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
-        amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
-        txId={tx.txId}
-        blockTimestamp={tx.blockTimestamp}
-        explorerUrl={chain.explorers[0].url}
-      />
-    {/each}
-  {/if}
-</section>
+<Modal
+  isOpen={$historyModal.isOpen}
+  on:close={handleClose}
+  data-cy="history-modal"
+>
+  <svelte:fragment slot="header">Transaction History</svelte:fragment>
+  <svelte:fragment slot="body">
+    <div class="space-y-3">
+      {#if error != null && error.length > 0}
+        <p class="text-danger">{error}</p>
+      {:else if loading}
+        <p><Spinner /> Fetching transactions...</p>
+      {:else if swapTxs == null || swapTxs.length === 0}
+        <p class="text-body">Nothing here yet!</p>
+      {:else}
+        <div class="overflow-scroll">
+          {#each swapTxs as tx (tx.txId)}
+            <PastTrade
+              withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
+              amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
+              txId={tx.txId}
+              blockTimestamp={tx.blockTimestamp}
+              explorerUrl={chain.explorers[0].url}
+            />
+            <Divider />
+          {/each}
+        </div>
+      {/if}
+    </div>
+  </svelte:fragment>
+</Modal>

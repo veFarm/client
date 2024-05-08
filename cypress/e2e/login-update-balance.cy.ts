@@ -12,7 +12,7 @@ const connex = makeConnex(account);
 const wallet = makeWallet(walletId, account);
 
 // Skip CI-failing tests
-const _describe = Cypress.env('IS_CI') === true ? describe.skip : describe
+const _describe = Cypress.env("IS_CI") === true ? describe.skip : describe;
 
 _describe("Login and update balance", () => {
   beforeEach(() => {
@@ -37,7 +37,7 @@ _describe("Login and update balance", () => {
     wallet.spyOnSignTxRequest().as("signCertRequest");
     wallet.mockDeclineSignCertResponse().as("signCertResponse");
     cy.visit("/");
-    cy.getByCy("connect-wallet-button").click();
+    cy.getByCy("connect-wallet-button-text").click();
     cy.getByCy("wallet-provider-button-sync2").click();
     cy.wait(["@signCertRequest", "@signCertResponse"]);
 

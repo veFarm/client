@@ -55,7 +55,7 @@ describe("Update reserve balance", () => {
       expect(payload.options).to.deep.equal({
         signer: account.toLowerCase(),
         comment:
-          "Please approve the following action(s):Save reserve balance into the vearn contract.",
+          "Please approve the following action(s):Store reserve balance into the vearn contract.",
       });
     });
   });
@@ -92,8 +92,8 @@ describe("Update reserve balance", () => {
 
     // Assert
     cy.getByCy("protocol-is-enabled-message").should("be.visible");
-    cy.getByCy("protocol-is-enabled-message").within(() => {
-      cy.getByCy("reserve-balance-amount").contains("10 VTHO");
+    cy.getByCy("protocol-is-enabled-message").within(($alert) => {
+      cy.wrap($alert).contains("10 VTHO");
     });
   });
 

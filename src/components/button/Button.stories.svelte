@@ -1,12 +1,13 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+  import Sync2 from "@/assets/Sync2.svg";
   import { Button } from ".";
 </script>
 
 <Meta title="components/Button" component={Button} />
 
 <Template let:args>
-  <Button {...args}>I&apos;m the label</Button>
+  <Button {...args}>CONNECT WALLET</Button>
 </Template>
 
 <Story
@@ -35,13 +36,15 @@
 <Story
   name="FullWidth"
   args={{
+    intent: "primary",
     fullWidth: true,
   }}
 />
 
 <Story
-  name="Disabled"
+  name="SecondaryDisabled"
   args={{
+    intent: "secondary",
     disabled: true,
   }}
 />
@@ -65,7 +68,14 @@
 <Story
   name="Loading"
   args={{
+    intent: "primary",
     disabled: true,
     loading: true,
   }}
 />
+
+<Story name="Large">
+  <Button intent="secondary" size="large">
+    <img src={Sync2} class="inline h-7 mr-2 align-top" /> Sync2
+  </Button>
+</Story>

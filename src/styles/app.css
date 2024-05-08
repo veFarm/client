@@ -19,26 +19,48 @@ danger      A color for displaying error messages
   :root {
     --header-height: 72px;
     --app-width: 1200px;
-    --color-primary: 163 230 53; /* lime-400 */
-    --color-primary-100: 190 242 100; /* lime-300 */
-    --color-secondary: 196 181 253; /* violet-300 */
-    --color-secondary-100: 221 214 254; /* violet-200 */
-    --color-body: 255 255 255; /* white */
-    --color-background: 24 28 31; /*  */
-    --color-highlight: 32 38 42; /* */
-    --color-muted: 55 65 81; /* gray-700 */
-    --color-accent: 75 85 99; /* gray-600 */
-    --color-disabled: 209 213 219; /* gray-300 */
-    --color-danger: 239 68 68; /* red-500 */
-    --color-danger-100: 251 113 133; /* red-400 */
+    --color-primary: 255 229 0;
+    --color-secondary: 28 28 28;
+    --color-body: 255 255 255;
+    --color-background: 0 0 0;
+    --color-highlight: 13 13 13;
+    --color-muted: 59 59 59;
+    --color-accent: 171 171 171;
+    --color-disabled: 100 100 100;
+    --color-danger: 239 68 68;
+    --color-success: 142 255 140;
     --color-backdrop: 0 0 0; /* transparent */
   }
+}
+
+.space-grotesk-300 {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+.space-grotesk-500 {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+.space-grotesk-700 {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
 }
 
 :root {
   @apply font-mono text-lg font-normal leading-6 text-body;
 
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
   font-synthesis: none;
+
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -48,7 +70,6 @@ danger      A color for displaying error messages
 body {
   margin: 0;
   min-width: 320px;
-  /* min-height: 100vh; */
   @apply bg-background text-body;
 }
 
@@ -59,10 +80,10 @@ body {
 
 /* Fonts */
 h1 {
-  @apply text-3xl lg:text-4xl xl:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-green-400 to-lime-400;
+  @apply text-xl md:text-2xl lg:text-3xl xl:text-3xl font-bold text-body;
 }
 h2 {
-  @apply text-2xl text-body font-bold md:text-3xl;
+  @apply text-body font-bold text-lg;
 }
 h3 {
   @apply text-lg text-body font-semibold md:text-xl;
@@ -71,17 +92,9 @@ h4 {
   @apply text-base text-body font-normal md:text-xl;
 }
 
-/* Input */
-input {
-  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
-}
-input:disabled {
-  @apply cursor-not-allowed;
-}
-
 /* Dialog */
 dialog {
-  @apply p-0 bg-highlight border border-muted rounded-lg z-10;
+  @apply p-0 bg-black border border-muted rounded-lg z-10;
   position: fixed;
   top: 50%;
   transform: translate(0%, -50%);

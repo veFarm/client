@@ -6,6 +6,8 @@ import { balance } from "@/stores/balance";
 
 type ApiResponse = {
   txFee: string;
+  reserveIn: string;
+  reserveOut: string;
   solutions: {
     protocolFee: string;
     dexFee: string;
@@ -31,52 +33,56 @@ type State =
   | {
       fetched: true;
       account: Address;
-      solutions: Sol[];
       txFee: BigNumber;
+      reserveIn: BigNumber;
+      reserveOut: BigNumber;
+      solutions: Sol[];
       loading: boolean;
       error: string | undefined;
+      isOpen: Record<number, boolean>;
     }
   | {
       fetched: false;
       account: undefined;
-      solutions: undefined;
       txFee: undefined;
+      reserveIn: undefined;
+      reserveOut: undefined;
+      solutions: undefined;
       loading: boolean;
       error: string | undefined;
+      isOpen: Record<number, boolean>;
     };
 
 const initialState: State = {
   fetched: false,
   account: undefined,
-  solutions: undefined,
   txFee: undefined,
+  reserveIn: undefined,
+  reserveOut: undefined,
+  solutions: undefined,
   loading: false,
   error: undefined,
+  isOpen: { 0: false, 1: false },
 };
 
 /**
  * Fetch trades forecast for the given account.
  * @param {Address} account Target account.
- * @return {{txFee: BigNumber, solutions: Sol[]}}
+ * @return {{txFee: BigNumber, reserveIn: BigNumber, reserveOut: BigNumber, solutions: Sol[]}}
  */
 async function fetchTradesForecast(
   account: Address,
-): Promise<{ solutions: Sol[]; txFee: BigNumber }> {
+  vetBalance: BigNumber,
+): Promise<{
+  solutions: Sol[];
+  reserveIn: BigNumber;
+  reserveOut: BigNumber;
+  txFee: BigNumber;
+}> {
   const response = await fetch(
-    `${chain.getTradesForecastEndpoint}?account=${account}`,
-    {
-      cache: "no-cache",
-      headers: {
-        "Cache-Control": "no-cache",
-        Pragma: "no-cache",
-        Expires: "0",
-      },
-    },
-    // TODO: Avoid caching the response coming from the server.
-    // Ideally we should pass the balance together with the
-    // account in order to trigger a re-calculation every time
-    // there is a change in the account balance and cache that
-    // response instead.
+    `${
+      chain.getTradesForecastEndpoint
+    }?account=${account}&vet=${vetBalance.toFixed()}`,
   );
 
   const json = (await response.json()) as ApiResponse;
@@ -84,12 +90,16 @@ async function fetchTradesForecast(
   if (json == null) {
     return {
       txFee: bn(0),
+      reserveIn: bn(0),
+      reserveOut: bn(0),
       solutions: [],
     };
   }
 
   return {
     txFee: bn(json.txFee),
+    reserveIn: bn(json.reserveIn),
+    reserveOut: bn(json.reserveOut),
     solutions: json.solutions.map((s) => ({
       protocolFee: bn(s.protocolFee),
       dexFee: bn(s.dexFee),
@@ -133,16 +143,20 @@ function createStore() {
         loading: true,
       }));
 
-      const { txFee, solutions } = await fetchTradesForecast(account);
+      const { txFee, reserveIn, reserveOut, solutions } =
+        await fetchTradesForecast(account, current.vet);
 
-      store.set({
+      store.update((s) => ({
+        ...s,
         fetched: true,
         account,
         txFee,
+        reserveIn,
+        reserveOut,
         solutions,
         loading: false,
         error: undefined,
-      });
+      }));
     } catch (error: unknown) {
       store.set({
         ...initialState,
@@ -155,6 +169,12 @@ function createStore() {
 
   return {
     subscribe: store.subscribe,
+    toggle: function (index: number): void {
+      store.update((s) => ({
+        ...s,
+        isOpen: { ...s.isOpen, [index]: !s.isOpen[index] },
+      }));
+    },
   };
 }
 

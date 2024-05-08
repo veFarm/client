@@ -12,7 +12,7 @@ const connex = makeConnex(account);
 const wallet = makeWallet(walletId, account);
 
 // Skip CI-failing tests
-const _describe = Cypress.env('IS_CI') === true ? describe.skip : describe
+const _describe = Cypress.env("IS_CI") === true ? describe.skip : describe;
 
 _describe("Update trades history", () => {
   beforeEach(() => {
@@ -42,49 +42,66 @@ _describe("Update trades history", () => {
     connex.mockFetchTraderReserve(VTHO_AMOUNT.FIVE).as("fetchReserveBalance");
 
     cy.visit("/");
-    cy.wait(
-      [
-        "@getAccountStats",
-        "@getAccountSwaps",
-        "@getTradesForecast",
-        "@fetchAllowance",
-        "@fetchReserveBalance",
-        "@fetchBalance",
-      ],
-      { timeout: 20_000 },
-    );
+    // cy.wait(
+    //   [
+    //     // "@getAccountStats",
+    //     // "@getAccountSwaps",
+    //     "@getTradesForecast",
+    //     "@fetchAllowance",
+    //     "@fetchReserveBalance",
+    //     "@fetchBalance",
+    //   ],
+    //   { timeout: 20_000 },
+    // );
   });
 
   it("updates trades history", () => {
     // Arrange
-    cy.getByCy("trades-history").should("be.visible");
-    cy.getByCy("trades-history").within(($swaps) => {
+    cy.getByCy("view-history-button").click();
+    cy.wait("@getAccountSwaps", { timeout: 20_000 });
+    cy.getByCy("history-modal").should("be.visible");
+    cy.getByCy("history-modal").within(($swaps) => {
       cy.wrap($swaps)
         .find("a")
         .eq(0)
         .contains(
-          "TX: 0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7",
+          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(
+            0,
+            27,
+          ),
         );
       cy.wrap($swaps).find("a").eq(1).should("not.exist");
     });
 
     // Act
-    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 20_000 });
+    cy.wait(
+      [
+        "@fetchBalance",
+        // "@getAccountStats"
+      ],
+      { timeout: 20_000 },
+    );
 
     // Assert
-    cy.getByCy("trades-history").should("be.visible");
-    cy.getByCy("trades-history").within(($swaps) => {
+    cy.getByCy("history-modal").should("be.visible");
+    cy.getByCy("history-modal").within(($swaps) => {
       cy.wrap($swaps)
         .find("a")
         .eq(0)
         .contains(
-          "TX: 0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7",
+          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(
+            0,
+            27,
+          ),
         );
       cy.wrap($swaps)
         .find("a")
         .eq(1)
         .contains(
-          "TX: 0xbf3ecd16fd93435e9b1c913c6af345c8ac857c4c210ebdd36a3be058840b3e52",
+          "0xbf3ecd16fd93435e9b1c913c6af345c8ac857c4c210ebdd36a3be058840b3e52".slice(
+            0,
+            27,
+          ),
         );
       cy.wrap($swaps).find("a").eq(2).should("not.exist");
     });

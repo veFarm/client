@@ -1,18 +1,17 @@
 <script lang="ts">
-  import { fly } from "svelte/transition";
-  // import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { balance } from "@/stores/balance";
   import type { Sol } from "@/stores/trades-forecast";
   import { tradesForecast } from "@/stores/trades-forecast";
   import { formatUnits } from "@/utils/format-units";
-  // import { calcNextTrade } from "@/utils/calc-next-trade.txt";
-  // import type { Trade } from "@/utils/calc-next-trade";
   import { secondsToDHMS } from "@/utils/seconds-to-dhms";
   import { chooseSolution } from "@/utils/choose-solution";
+  import { extendSolution } from "@/utils/extend-solution";
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
-  import QuestionMark from "@/assets/QuestionMark.svelte";
+  import { TradeForecastItem } from "@/components/trade-forecast-item";
   import Spinner from "../spinner/Spinner.svelte";
+  import Swap1 from "@/assets/Swap1.svelte";
+  import Swap2 from "@/assets/Swap2.svelte";
 
   export let reserveBalance: BigNumber;
 
@@ -22,12 +21,6 @@
     /** Seconds to trigger. */
     timeLeft: number;
   };
-
-  let showMore: boolean = false;
-
-  function toggleFees() {
-    showMore = !showMore;
-  }
 
   /**
    * Use the most significant figure to represent the time left.
@@ -54,24 +47,33 @@
       $tradesForecast.fetched &&
       $tradesForecast.solutions.length > 0
     ) {
-      const { txFee, solutions } = $tradesForecast;
+      const { txFee, reserveIn, reserveOut, solutions } = $tradesForecast;
 
       const sol = chooseSolution(
         $balance.current.vtho,
         reserveBalance,
-        solutions,
+        solutions as [Sol, ...Sol[]],
+      );
+
+      const extSol = extendSolution(
+        sol,
+        $balance.current.vtho,
+        reserveBalance,
+        txFee,
+        reserveIn,
+        reserveOut,
       );
 
       const timeLeft = secondsToTrigger(
         $balance.current,
         reserveBalance,
-        sol.withdrawAmount,
+        extSol.withdrawAmount,
       );
 
       if (timeLeft != null) {
         firstTrade = {
-          ...sol,
-          totalFees: txFee.plus(sol.protocolFee).plus(sol.dexFee),
+          ...extSol,
+          totalFees: txFee.plus(extSol.protocolFee).plus(extSol.dexFee),
           timeLeft,
         };
       }
@@ -79,8 +81,6 @@
   }
 
   // Simulate a future trade right after the first one is executed.
-  // TODO: implement MAX_WITHDRAWAL_VTHO_AMOUNT at wallet.balance line.
-  // let secondSol: Sol | undefined;
   let secondTrade: Trade | undefined;
 
   $: {
@@ -89,7 +89,7 @@
       $tradesForecast.fetched &&
       firstTrade != null
     ) {
-      const { txFee, solutions } = $tradesForecast;
+      const { txFee, reserveIn, reserveOut, solutions } = $tradesForecast;
 
       // VTHO balance after the first trade occurred.
       const remainingBalanceVTHO = $balance.current.vtho.gte(
@@ -101,7 +101,16 @@
       const sol = chooseSolution(
         remainingBalanceVTHO,
         reserveBalance,
-        solutions,
+        solutions as [Sol, ...Sol[]],
+      );
+
+      const extSol = extendSolution(
+        sol,
+        remainingBalanceVTHO,
+        reserveBalance,
+        txFee,
+        reserveIn,
+        reserveOut,
       );
 
       const timeLeft = secondsToTrigger(
@@ -110,128 +119,90 @@
           vtho: remainingBalanceVTHO,
         },
         reserveBalance,
-        sol.withdrawAmount,
+        extSol.withdrawAmount,
       );
 
       if (timeLeft != null) {
         secondTrade = {
-          ...sol,
-          totalFees: txFee.plus(sol.protocolFee).plus(sol.dexFee),
+          ...extSol,
+          totalFees: txFee.plus(extSol.protocolFee).plus(extSol.dexFee),
           timeLeft,
         };
       }
-      // secondSol = chooseSolution(
-      //   withdrawAmounts,
-      //   remainingBalanceVTHO,
-      //   reserveBalance,
-      // );
-
-      // secondTrade = calcNextTrade({
-      //   reserveBalance,
-      //   withdrawAmount: secondSol,
-      //   balance: {
-      //     ...balance,
-      //     vtho: remainingBalanceVTHO,
-      //   },
-      //   txFee,
-      //   exchangeRate,
-      // });
     }
   }
 </script>
 
 {#if $tradesForecast.loading}
-  <p><Spinner /> Computing an optimized strategy...</p>
+  <p class="text-sm font-normal">
+    Computing an optimized strategy...<Spinner />
+  </p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
-  <div>
-    <table class="w-full text-sm md:text-base" data-cy="trades-forecast-table">
-      <!-- <caption class="text-sm">Upcoming Trades (estimated)</caption> -->
-      <thead>
-        <tr>
-          <th class="title">Next Trades</th>
-          <th class="value">First Trade</th>
-          <th class="value">Second Trade</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="title">Time</td>
-          <td class="value">{formatTime(firstTrade.timeLeft)}</td>
-          <td class="value"
-            >{secondTrade != null
-              ? formatTime(firstTrade.timeLeft + secondTrade.timeLeft)
-              : "∞ time"}</td
-          >
-        </tr>
-        <tr>
-          <td class="title">Spent</td>
-          <td class="value">{formatUnits(firstTrade.withdrawAmount, 2)} VTHO</td
-          >
-          <td class="value"
-            >{secondTrade != null
-              ? formatUnits(secondTrade.withdrawAmount, 2)
-              : "0"} VTHO</td
-          >
-        </tr>
-        <tr>
-          <td class="title">Received</td>
-          <td class="value">{formatUnits(firstTrade.deltaVET, 2)} VET</td>
-          <td class="value"
-            >{secondTrade != null ? formatUnits(secondTrade.deltaVET, 2) : "0"}
-            VET</td
-          >
-        </tr>
-        <tr class="cursor-pointer" on:click={toggleFees}>
-          <td class="title">
-            Fees<QuestionMark
-              class="inline-block w-5 h-5 text-inherit scale-75"
-            />&nbsp;&nbsp;&nbsp;
-          </td>
-          <td class="value">{formatUnits(firstTrade.totalFees, 2)} VTHO</td>
-          <td class="value"
-            >{secondTrade != null ? formatUnits(secondTrade.totalFees, 2) : "0"}
-            VTHO</td
-          >
-        </tr>
-      </tbody>
-    </table>
-    {#if showMore}
-      <table transition:fly={{ duration: 200 }}>
-        <tr>
-          <td class="title">TX Fee</td>
-          <td class="value">{formatUnits($tradesForecast.txFee, 2)} VTHO</td>
-          <td class="value"
-            >{secondTrade != null ? formatUnits($tradesForecast.txFee, 2) : "0"}
-            VTHO</td
-          >
-        </tr>
-        <tr>
-          <td class="title">vearn Fee</td>
-          <td class="value">{formatUnits(firstTrade.protocolFee, 2)} VTHO</td>
-          <td class="value"
-            >{secondTrade != null
-              ? formatUnits(secondTrade.protocolFee, 2)
-              : "0"} VTHO</td
-          >
-        </tr>
-        <tr>
-          <td class="title">DEX Fee</td>
-          <td class="value">{formatUnits(firstTrade.dexFee, 2)} VTHO</td>
-          <td class="value"
-            >{secondTrade != null ? formatUnits(secondTrade.dexFee, 2) : "0"} VTHO</td
-          >
-        </tr>
-      </table>
-    {/if}
-  </div>
+  <TradeForecastItem
+    isOpen={$tradesForecast.isOpen[0]}
+    label="next trade"
+    timeLeft={formatTime(firstTrade.timeLeft)}
+    vthoSpent={formatUnits(firstTrade.withdrawAmount, 2)}
+    vetEarned={formatUnits(firstTrade.deltaVET, 2)}
+    totalFees={formatUnits(firstTrade.totalFees, 2)}
+    on:toggle={() => {
+      tradesForecast.toggle(0);
+    }}
+  >
+    <svelte:fragment slot="icon">
+      <Swap1 class="inline-block" />
+    </svelte:fragment>
+  </TradeForecastItem>
+  <TradeForecastItem
+    isOpen={$tradesForecast.isOpen[1]}
+    label="trade after"
+    timeLeft={secondTrade != null
+      ? formatTime(firstTrade.timeLeft + secondTrade.timeLeft)
+      : "∞ time"}
+    vthoSpent={secondTrade != null
+      ? formatUnits(secondTrade.withdrawAmount, 2)
+      : "0"}
+    vetEarned={secondTrade != null ? formatUnits(secondTrade.deltaVET, 2) : "0"}
+    totalFees={secondTrade != null
+      ? formatUnits(secondTrade.totalFees, 2)
+      : "0"}
+    on:toggle={() => {
+      tradesForecast.toggle(1);
+    }}
+  >
+    <svelte:fragment slot="icon">
+      <Swap2 class="inline-block" />
+    </svelte:fragment>
+  </TradeForecastItem>
+{:else}
+  <TradeForecastItem
+    isOpen={$tradesForecast.isOpen[0]}
+    label="next trade"
+    timeLeft="-"
+    vthoSpent="-"
+    vetEarned="-"
+    totalFees="-"
+    on:toggle={() => {
+      tradesForecast.toggle(0);
+    }}
+  >
+    <svelte:fragment slot="icon">
+      <Swap1 class="inline-block" />
+    </svelte:fragment>
+  </TradeForecastItem>
+  <TradeForecastItem
+    isOpen={$tradesForecast.isOpen[1]}
+    label="trade after"
+    timeLeft="-"
+    vthoSpent="-"
+    vetEarned="-"
+    totalFees="-"
+    on:toggle={() => {
+      tradesForecast.toggle(1);
+    }}
+  >
+    <svelte:fragment slot="icon">
+      <Swap2 class="inline-block" />
+    </svelte:fragment>
+  </TradeForecastItem>
 {/if}
-
-<style lang="postcss">
-  .title {
-    @apply w-0 whitespace-nowrap;
-  }
-  .value {
-    @apply w-1/2 truncate text-right;
-    max-width: 1px;
-  }
-</style>

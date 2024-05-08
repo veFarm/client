@@ -16,7 +16,7 @@ describe("Logged out account", () => {
     cy.visit("/");
 
     cy.getByCy("reserve-balance-input").as("reserve-balance-input");
-    cy.getByCy("connect-wallet-button").as("connect-button");
+    cy.getByCy("connect-wallet-button-text").as("connect-button");
   });
 
   it("shows me the title of the app and a short description", () => {
