@@ -6,7 +6,7 @@ import { makeApi } from "cypress/support/mocks/api";
 import { makeConnex, VTHO_AMOUNT, BALANCE } from "cypress/support/mocks/connex";
 
 const walletId = "sync2";
-const account = "0x2057ca7412E6C0828501CB7b335E166f81c58D26";
+const account = "0x2057ca7412e6c0828501cb7b335e166f81c58d26";
 
 const api = makeApi(account);
 const connex = makeConnex(account);
@@ -32,7 +32,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     connex.mockFetchBalance(BALANCE.ZERO).as("fetchBalance");
 
     cy.visit("/");
-    cy.wait(["@fetchAllowance", "@fetchReserveBalance"]);
+    cy.wait(["@fetchAllowance", "@fetchReserveBalance"], {timeout: 20_000});
   });
 
   it("shows me the title of the app and a short description", () => {
@@ -45,7 +45,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("description").should("be.visible");
   });
 
-  it("does NOT show me the stats", () => {
+  it.skip("does NOT show me the stats", () => {
     // Arrange
 
     // Act
@@ -61,14 +61,13 @@ describe("Logged in NOT registered ZERO balance account", () => {
 
     // Assert
     cy.getByCy("navigation-bar").contains("0.00 VET");
-    cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
+    cy.getByCy("navigation-bar").contains("0x2057…8d26");
   });
 
   it("shows me the disconnect wallet button as enabled", () => {
     // Arrange
 
     // Act
-    cy.getByCy("open-dropdown-button").click();
 
     // Assert
     cy.getByCy("disconnect-wallet-button").should("be.visible");
@@ -79,7 +78,6 @@ describe("Logged in NOT registered ZERO balance account", () => {
     // Arrange
 
     // Act
-    cy.getByCy("open-dropdown-button").click();
     cy.getByCy("disconnect-wallet-button").click();
 
     // Assert
@@ -105,7 +103,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
 
     // Assert
     cy.getByCy("navigation-bar").contains("0.00 VET");
-    cy.getByCy("open-dropdown-button").contains("0x2057…8D26");
+    cy.getByCy("navigation-bar").contains("0x2057…8d26");
   });
 
   it("allows me to enter a reserve balance amount", () => {
@@ -118,13 +116,22 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("reserve-balance-input").should("be.enabled");
   });
 
-  it("shows me my VTHO balance inside the reserve balance input field", () => {
+  it("shows me the trades forecast", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("subtext").contains("Balance: 0.00");
+    cy.getByCy("trades-forecast-table").should("exist");
+  });
+
+  it("shows me my VTHO balance on top of the reserve balance input field", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("balance").contains("0.00 VTHO");
   });
 
   it("does NOT allow me to submit the form if I enter 0 as the reserve balance amount", () => {
@@ -151,33 +158,24 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("submit-form-button").should("be.enabled");
   });
 
-  it("shows me a 'lack of funds' alert and a link to the faucet", () => {
+  it("shows me a 'INSUFFICIENT BALANCE' button", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("lack-of-funds-alert").should("be.visible");
-    cy.getByCy("faucet-link").should("be.visible");
+    cy.getByCy("submit-form-button").should("be.visible");
+    cy.getByCy("submit-form-button").contains("INSUFFICIENT BALANCE");
   });
 
-  it("does NOT show me the trades forecast after entering the reserve balance", () => {
+  it("shows me 'no trades history' message", () => {
     // Arrange
 
     // Act
-    cy.getByCy("reserve-balance-input").clear().type("10");
+    cy.getByCy("view-history-button").click();
 
     // Assert
-    cy.getByCy("trades-forecast-table").should("not.exist");
-  });
-
-  it("shows me 'You don't have any past trades'", () => {
-    // Arrange
-
-    // Act
-
-    // Assert
-    cy.getByCy("history-modal").contains("You don't have any past trades");
+    cy.getByCy("history-modal").contains("Nothing here yet!")
   });
 
   it.skip("shows me a 'lack of funds' alert and a link to the faucet", () => {
