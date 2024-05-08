@@ -1,9 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import { Connex } from "@vechain/connex";
-  import { wrapConnex } from "@vearnfi/wrapped-connex";
-  import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
@@ -11,7 +8,6 @@
   import { formatUnits } from "@/utils/format-units";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
-  import { Stats } from "@/components/stats";
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import Alert from "./components/alert/Alert.svelte";

@@ -109,7 +109,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.getByCy("view-history-button").click();
 
     // Assert
-    cy.getByCy("history-modal").contains("Nothing here yet!")
+    cy.getByCy("history-modal").contains("Nothing here yet!");
   });
 
   it("keeps me connected when I refresh the page", () => {

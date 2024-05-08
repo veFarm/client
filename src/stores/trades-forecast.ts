@@ -129,14 +129,9 @@ function createStore() {
     try {
       const { account, current, previous } = data;
 
-      // In case VET balance is unchanged, do not fetch again.
-      if (
-        current?.vet != null &&
-        previous?.vet != null &&
-        current.vet.eq(previous.vet)
-      ) {
-        return;
-      }
+      // In case VET balance hasn't been updated, do not fetch again.
+      if (!balance.didUpdate(current, previous)) return;
+      console.log("UPDATED");
 
       store.update((s) => ({
         ...s,

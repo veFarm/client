@@ -32,7 +32,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     connex.mockFetchBalance(BALANCE.ZERO).as("fetchBalance");
 
     cy.visit("/");
-    cy.wait(["@fetchAllowance", "@fetchReserveBalance"], {timeout: 20_000});
+    cy.wait(["@fetchAllowance", "@fetchReserveBalance"], { timeout: 20_000 });
   });
 
   it("shows me the title of the app and a short description", () => {
@@ -175,7 +175,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("view-history-button").click();
 
     // Assert
-    cy.getByCy("history-modal").contains("Nothing here yet!")
+    cy.getByCy("history-modal").contains("Nothing here yet!");
   });
 
   it.skip("shows me a 'lack of funds' alert and a link to the faucet", () => {
