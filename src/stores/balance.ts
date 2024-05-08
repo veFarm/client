@@ -89,11 +89,6 @@ function createStore() {
       current: Balance | undefined,
       previous: Balance | undefined,
     ): boolean {
-      console.log({
-        current: current?.vet.toFixed(),
-        previous: previous?.vet.toFixed(),
-      });
-
       if (current?.vet != null && previous?.vet == null) {
         return true;
       }

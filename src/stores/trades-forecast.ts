@@ -131,7 +131,6 @@ function createStore() {
 
       // In case VET balance hasn't been updated, do not fetch again.
       if (!balance.didUpdate(current, previous)) return;
-      console.log("UPDATED");
 
       store.update((s) => ({
         ...s,
