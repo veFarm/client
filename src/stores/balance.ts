@@ -37,13 +37,14 @@ function createStore() {
     try {
       const { wConnex, account } = data;
 
-      const balance = await wConnex.fetchBalance(account);
+      const current = await wConnex.fetchBalance(account);
+      const previous = get(store).current;
 
       store.set({
         wConnex,
         account,
-        current: balance,
-        previous: get(store).current,
+        current,
+        previous,
       });
     } catch (error: unknown) {
       console.error(error);
@@ -68,17 +69,39 @@ function createStore() {
 
         const { wConnex, account } = walletData;
 
-        const balance = await wConnex.fetchBalance(account);
+        const current = await wConnex.fetchBalance(account);
+        const previous = balanceData.current;
 
         store.set({
           ...walletData,
           account,
-          current: balance,
-          previous: balanceData.current,
+          current,
+          previous,
         });
       } catch (error) {
         console.error(error);
       }
+    },
+    /**
+     * Checks whether or not the VET balance has been updated.
+     */
+    didUpdate: function (
+      current: Balance | undefined,
+      previous: Balance | undefined,
+    ): boolean {
+      if (current?.vet != null && previous?.vet == null) {
+        return true;
+      }
+
+      if (
+        current?.vet != null &&
+        previous?.vet != null &&
+        !current.vet.eq(previous.vet)
+      ) {
+        return true;
+      }
+
+      return false;
     },
   };
 }

@@ -41,7 +41,6 @@ export function makeApi(account: Address) {
       `**/getaccountswaps?account=${account.toLowerCase()}*`,
       (req) => {
         const res = responseHandler(response, index);
-        console.log({ swaps: res });
 
         req.reply(res);
 

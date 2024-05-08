@@ -75,26 +75,24 @@
     historyModal.close();
   }
 
+  // Fetch swaps once after the wallet has been connected
   $: {
     if ($wallet.connected) {
-      fetchSwaps($wallet.account, $balance.current?.vet || bn(0));
+      fetchSwaps($wallet.account, bn(0));
     }
   }
 
   // Refetch swaps whenever VET balance gets updated
   $: {
     if (
-      $balance.current != null &&
-      $balance.previous != null &&
-      !$balance.current.vet.eq($balance.previous.vet)
+      $wallet.connected &&
+      balance.didUpdate($balance.current, $balance.previous)
     ) {
       let timeout: NodeJS.Timeout | undefined;
-      new Promise((res, rej) => {
-        timeout = setTimeout(res, 3_000);
+      new Promise((resolve, reject) => {
+        timeout = setTimeout(resolve, 5_000);
       }).then(() => {
-        if ($wallet.connected) {
-          fetchSwaps($wallet.account, $balance.current?.vet || bn(0));
-        }
+        fetchSwaps($wallet.account!, $balance.current!.vet);
         clearTimeout(timeout);
       });
     }
@@ -116,8 +114,8 @@
       {:else if swapTxs == null || swapTxs.length === 0}
         <p class="text-body">Nothing here yet!</p>
       {:else}
-        <div class="overflow-scroll">
-          {#each swapTxs as tx (tx.txId)}
+        <div class="overflow-scroll space-y-3">
+          {#each swapTxs as tx, index (tx.txId)}
             <PastTrade
               withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
               amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
@@ -125,7 +123,9 @@
               blockTimestamp={tx.blockTimestamp}
               explorerUrl={chain.explorers[0].url}
             />
-            <Divider />
+            {#if index < swapTxs.length - 1}
+              <Divider />
+            {/if}
           {/each}
         </div>
       {/if}
