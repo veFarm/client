@@ -4,7 +4,7 @@
 
 <div class="text-xl sm:text-2xl font-bold" {...$$props}>
   <img src={zap} class="inline -mt-1" />
-  <span class="text-slate-200">V</span><span class="text-primary">earn</span>
+  <span class="text-slate-300">V</span><span class="text-primary">earn</span>
   <!-- <span>Vearn</span> -->
 </div>
 
