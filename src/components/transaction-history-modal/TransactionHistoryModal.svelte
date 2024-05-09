@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
@@ -110,25 +111,24 @@
       {#if error != null && error.length > 0}
         <p class="text-danger">{error}</p>
       {:else if loading}
-        <p><Spinner /> Fetching transactions...</p>
+        <p>Fetching transactions... <Spinner /></p>
       {:else if swapTxs == null || swapTxs.length === 0}
         <p class="text-body">Nothing here yet!</p>
-      {:else}
-        <div class="overflow-scroll space-y-3">
-          {#each swapTxs as tx, index (tx.txId)}
-            <PastTrade
-              withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
-              amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
-              txId={tx.txId}
-              blockTimestamp={tx.blockTimestamp}
-              explorerUrl={chain.explorers[0].url}
-            />
-            {#if index < swapTxs.length - 1}
-              <Divider />
-            {/if}
-          {/each}
-        </div>
       {/if}
+      {#each swapTxs as tx, index (tx.txId)}
+        <div in:fade>
+          <PastTrade
+            withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
+            amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
+            txId={tx.txId}
+            blockTimestamp={tx.blockTimestamp}
+            explorerUrl={chain.explorers[0].url}
+          />
+        </div>
+        {#if index < swapTxs.length - 1}
+          <Divider />
+        {/if}
+      {/each}
     </div>
   </svelte:fragment>
 </Modal>

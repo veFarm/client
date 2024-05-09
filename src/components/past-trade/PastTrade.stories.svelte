@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
+  import { fade } from "svelte/transition";
   import { PastTrade } from ".";
 
   let items: string[] = ["1"];
@@ -14,10 +15,12 @@
 <Template let:args>
   <div class="bg-highlight p-4">
     {#each items as item}
-      <PastTrade {...args} />
+      <div in:fade>
+        <PastTrade {...args} />
+      </div>
     {/each}
 
-    <button on:click={pushItem}> Push Item </button>
+    <button on:click={pushItem}>Push Item</button>
   </div>
 </Template>
 
