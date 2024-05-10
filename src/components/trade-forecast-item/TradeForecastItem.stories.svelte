@@ -25,7 +25,7 @@
 <Story
   name="Default"
   args={{
-    label: "next trade",
+    label: "first swap",
     timeLeft: "3 Days",
     vthoSpent: "125",
     vetEarned: "1.2",

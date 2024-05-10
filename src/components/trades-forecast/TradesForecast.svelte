@@ -44,6 +44,7 @@
   $: {
     if (
       $balance.current != null &&
+      reserveBalance.gt(0) &&
       $tradesForecast.fetched &&
       $tradesForecast.solutions.length > 0
     ) {
@@ -86,6 +87,7 @@
   $: {
     if (
       $balance.current != null &&
+      reserveBalance.gt(0) &&
       $tradesForecast.fetched &&
       firstTrade != null
     ) {
@@ -135,12 +137,12 @@
 
 {#if $tradesForecast.loading}
   <p class="text-sm font-normal">
-    Computing an optimized strategy...<Spinner />
+    Computing an optimized strategy... <Spinner />
   </p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[0]}
-    label="next trade"
+    label="first swap"
     timeLeft={formatTime(firstTrade.timeLeft)}
     vthoSpent={formatUnits(firstTrade.withdrawAmount, 2)}
     vetEarned={formatUnits(firstTrade.deltaVET, 2)}
@@ -155,17 +157,17 @@
   </TradeForecastItem>
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[1]}
-    label="trade after"
+    label="second swap"
     timeLeft={secondTrade != null
       ? formatTime(firstTrade.timeLeft + secondTrade.timeLeft)
-      : "∞ time"}
+      : "-"}
     vthoSpent={secondTrade != null
       ? formatUnits(secondTrade.withdrawAmount, 2)
-      : "0"}
-    vetEarned={secondTrade != null ? formatUnits(secondTrade.deltaVET, 2) : "0"}
+      : "-"}
+    vetEarned={secondTrade != null ? formatUnits(secondTrade.deltaVET, 2) : "-"}
     totalFees={secondTrade != null
       ? formatUnits(secondTrade.totalFees, 2)
-      : "0"}
+      : "-"}
     on:toggle={() => {
       tradesForecast.toggle(1);
     }}
@@ -177,7 +179,7 @@
 {:else}
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[0]}
-    label="next trade"
+    label="first swap"
     timeLeft="-"
     vthoSpent="-"
     vetEarned="-"
@@ -192,7 +194,7 @@
   </TradeForecastItem>
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[1]}
-    label="trade after"
+    label="second swap"
     timeLeft="-"
     vthoSpent="-"
     vetEarned="-"
