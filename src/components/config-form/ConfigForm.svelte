@@ -173,8 +173,7 @@
   let insufficientBalance: boolean = false;
 
   $: insufficientBalance =
-    $balance.current != null &&
-    $balance.current.vet.eq(0) /* &&
+    $balance.current != null && $balance.current.vet.eq(0) /* &&
     $balance.current.vtho.eq(0) */;
 
   let title: string = "";

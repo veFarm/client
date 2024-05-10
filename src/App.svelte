@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fade, fly } from "svelte/transition";
+  import { fade, fly, slide } from "svelte/transition";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
@@ -22,6 +22,7 @@
 
   let view: View = "LOGIN";
   let show: boolean = false; // animation
+  let learnMore: boolean = false;
 
   $: {
     if (!$wallet.connected) {
@@ -78,26 +79,38 @@
             data-cy="description"
           >
             {SUBTITLE}
+            {#if !learnMore}
+              <button class="underline" on:click={() => { learnMore = true; }}>Learn more</button>
+            {/if}
           </p>
+          {#if learnMore}
+          <div class="hidden lg:block  mt-3"  transition:slide>
+          <h4 class="text-body font-medium text-lg">How it Works</h4>
+          <p
+            class="text-center lg:text-left text-accent text-base mt-4"
+          >
+            VeChain operates on a 2-token model consisting of
+            VET and VTHO. While VET functions as a store of value, VTHO is the currency
+            used to pay for transaction fees on the VeChain network.
+            Notably, VTHO is generated passively by holding VET, with each VET generating .000432
+            VTHO per day.
+          </p>
+          <p
+            class="text-center lg:text-left text-accent text-base mt-4"
+          >
+            Vearn takes advantage of this model by automatically converting VTHO
+            tokens, generated from VET holdings, into additional VET tokens
+            through decentralized exchanges (DEX). By automating this process,
+            Vearn enables users to continuously increase their VET holdings over
+            time, capitalizing on the perpetual generation of VTHO within the
+            ecosystem.
+              {#if learnMore}
+              <button class="underline" on:click={() => { learnMore = false; }}>Show less</button>
+              {/if}
+          </p>
+          </div>
+          {/if}
         {/if}
-        <!-- <h1 data-cy="title">VTHO-VET Swaps on Autopilot</h1>
-        <p>
-          Holding VET tokens in your account generates VTHO, which in turn can be traded for additional VET tokens, boosting your starting balance.
-          Vearn streamlines this process by automatically executing swaps at strategic intervals, maximizing the end result.
-          Did you know? Holding VET in your account produces VTHO tokens that are used
-          to pay for transaction on the VeChain blockchain. Vearn takes care of exchanging
-          these VTHO tokens for additional VET tokens using optimized strategies.
-            VTHO Production: Holding VET tokens generates VTHO tokens continuously at a constant rate.
-            VTHO-VET Swaps: Vearn automatically exchanges the generated VTHO tokens for additional VET tokens via a decentralized exchange (DEX).
-            Increased VET Balance: As a result of the VTHO-VET swaps, the user's initial VET balance increases with the additional VET tokens acquired.
-
-            Overall, the diagram illustrates the continuous cycle of VET producing VTHO, which is then exchanged for additional VET tokens through Vearn's automated process, ultimately leading to an increased VET balance for the user.
-
-            Vearn facilitates a perpetual cycle where VET holdings produce VTHO, subsequently exchanged for additional VET tokens via a decentralized exchange, resulting in a continuous augmentation of the user's VET balance.
-        </p> -->
-        <!-- <div class="hidden lg:block">
-          <Stats />
-        </div> -->
       </section>
       {#if show}
         <section
