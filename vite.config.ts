@@ -13,6 +13,9 @@ import istanbul from "vite-plugin-istanbul";
 
 // https://vitejs.dev/config/
 const config: UserConfig & { test: VitestConfig["test"] } = {
+  build: {
+    target: "es6"
+  },
   plugins: [
     svelte(),
     istanbul({
