@@ -11,10 +11,7 @@ const api = makeApi(account);
 const connex = makeConnex(account);
 const wallet = makeWallet(walletId, account);
 
-// Skip CI-failing tests
-const _describe = Cypress.env("IS_CI") === true ? describe.skip : describe;
-
-_describe("Login and update balance", () => {
+describe("Login and update balance", () => {
   beforeEach(() => {
     // Simulate a logged out NOT registered account holding a zero balance.
     wallet.simulateLoggedOutAccount();
