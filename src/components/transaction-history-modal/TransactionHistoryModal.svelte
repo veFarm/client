@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
+  import { slide } from "svelte/transition";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
@@ -116,7 +116,7 @@
         <p class="text-body">Nothing here yet!</p>
       {/if}
       {#each swapTxs as tx, index (tx.txId)}
-        <div in:fade>
+        <div in:slide>
           <PastTrade
             withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
             amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
