@@ -30,12 +30,9 @@ export const BALANCE: Record<string, Balance> = {
   },
 };
 
-export type TxStatus = "reverted" | "mined";
+const RPC = "https://testnet.veblocks.net"; // chain.rpc[0];
 
-type Balance = {
-  vet: string;
-  vtho: string;
-};
+export type TxStatus = "reverted" | "mined";
 
 /**
  * Factory to intercept and mock API calls aimed to the VThor blockchain.
@@ -51,7 +48,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`,
+      `${RPC}/accounts/${account.toLowerCase()}*`,
       (req) => {
         const { vet, vtho } = responseHandler(balance, index);
 
@@ -80,7 +77,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "POST",
-      "https://testnet.veblocks.net/accounts/*?revision=*",
+      `${RPC}/accounts/*?revision=*`,
       (req) => {
         const to = req?.body?.clauses[0]?.to;
 
@@ -120,7 +117,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "POST",
-      "https://testnet.veblocks.net/accounts/*?revision=*",
+      `${RPC}/accounts/*?revision=*`,
       (req) => {
         const to = req?.body?.clauses[0]?.to;
 
@@ -161,7 +158,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      `${RPC}/transactions/${txId}/receipt?head=*`,
       (req) => {
         req.reply({
           gasUsed: 28938,
@@ -211,7 +208,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      `${RPC}/transactions/${txId}/receipt?head=*`,
       (req) => {
         req.reply({
           gasUsed: 26485,
@@ -262,7 +259,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      `${RPC}/transactions/${txId}/receipt?head=*`,
       (req) => {
         req.reply({
           gasUsed: 86147,
@@ -327,7 +324,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      `${RPC}/transactions/${txId}/receipt?head=*`,
       (req) => {
         req.reply({
           gasUsed: 47209,
