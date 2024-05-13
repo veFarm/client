@@ -8,9 +8,11 @@
   import { formatUnits } from "@/utils/format-units";
   import { Layout } from "@/components/layout";
   import { Button } from "@/components/button";
+  import { Alert } from "@/components/alert";
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
-  import Alert from "./components/alert/Alert.svelte";
+  import { FAQs } from "@/components/faqs";
+  import { TransactionHistoryModal } from "@/components/transaction-history-modal";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG"; // TODO: add LOADING
 
@@ -22,7 +24,6 @@
 
   let view: View = "LOGIN";
   let show: boolean = false; // animation
-  let learnMore: boolean = false;
 
   $: {
     if (!$wallet.connected) {
@@ -59,12 +60,12 @@
 
 <Layout>
   <div class="flex flex-col space-y-8 md:space-y-16">
-    <div
+    <section
       class="
       flex flex-col items-start space-y-4 lg:space-y-0 lg:space-x-8
       lg:flex-row lg:justify-around"
     >
-      <section class="w-full lg:basis-1/2 lg:mt-20">
+      <div class="w-full max-w-lg mx-auto lg:basis-1/2 lg:mt-20">
         {#if show}
           <h1
             in:fade={{ delay: 200 }}
@@ -75,47 +76,17 @@
           </h1>
           <p
             in:fade={{ delay: 300 }}
-            class="hidden lg:block text-center lg:text-left text-accent text-base mt-4"
+            class="text-center lg:text-left text-accent text-base mt-3"
             data-cy="description"
           >
             {SUBTITLE}
-            {#if !learnMore}
-              <button class="underline" on:click={() => { learnMore = true; }}>Learn more</button>
-            {/if}
           </p>
-          {#if learnMore}
-          <div class="hidden lg:block  mt-3"  transition:slide>
-          <h4 class="text-body font-medium text-lg">How it Works</h4>
-          <p
-            class="text-center lg:text-left text-accent text-base mt-4"
-          >
-            VeChain operates on a 2-token model consisting of
-            VET and VTHO. While VET functions as a store of value, VTHO is the currency
-            used to pay for transaction fees on the VeChain network.
-            Notably, VTHO is generated passively by holding VET, with each VET generating .000432
-            VTHO per day.
-          </p>
-          <p
-            class="text-center lg:text-left text-accent text-base mt-4"
-          >
-            Vearn takes advantage of this model by automatically converting VTHO
-            tokens, generated from VET holdings, into additional VET tokens
-            through decentralized exchanges (DEX). By automating this process,
-            Vearn enables users to continuously increase their VET holdings over
-            time, capitalizing on the perpetual generation of VTHO within the
-            ecosystem.
-              {#if learnMore}
-              <button class="underline" on:click={() => { learnMore = false; }}>Show less</button>
-              {/if}
-          </p>
-          </div>
-          {/if}
         {/if}
-      </section>
+      </div>
       {#if show}
-        <section
+        <div
           in:fly={{ x: 50, delay: 400 }}
-          class="mx-auto lg:basis-1/2 max-w-lg bg-highlight border border-muted rounded-lg text-accent"
+          class="mx-auto lg:basis-1/2 max-w-lg"
         >
           {#if view === "LOGIN"}
             <ConfigForm variant="LOGIN" />
@@ -164,9 +135,7 @@
           {/if}
 
           <!-- <p class="text-center text-accent">Chain: {chain.name}</p> -->
-        </section>
-      {/if}
-      <section class="block lg:hidden">
+          <!-- <div class="block lg:hidden mt-3">
         {#if show}
           <p
             in:fade={{ delay: 300 }}
@@ -176,7 +145,20 @@
             {SUBTITLE}
           </p>
         {/if}
+        </div> -->
+        </div>
+      {/if}
+    </section>
+    {#if view === "SUMMARY"}
+      <section class="w-full max-w-lg mx-auto lg:max-w-full">
+        <h2 class="text-body mb-3 text-xl">Transaction History</h2>
+        <TransactionHistoryModal />
       </section>
-    </div>
+    {/if}
+
+    <section class="w-full max-w-lg mx-auto lg:max-w-full space-y-3">
+      <h2>Your Questions</h2>
+      <FAQs />
+    </section>
   </div>
 </Layout>

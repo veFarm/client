@@ -7,6 +7,7 @@
   import { balance } from "@/stores/balance";
   import { historyModal } from "@/stores/history-modal";
   import { formatUnits } from "@/utils/format-units";
+  import { shortenAddress } from "@/utils/shorten-address";
   import { Modal } from "@/components/modal";
   import { PastTrade } from "@/components/past-trade";
   import { Spinner } from "@/components/spinner";
@@ -100,7 +101,61 @@
   }
 </script>
 
-<Modal
+  {#if error != null && error.length > 0}
+    <p class="text-danger">{error}</p>
+  {:else if loading}
+    <p>Fetching transactions... <Spinner /></p>
+  {:else if swapTxs == null || swapTxs.length === 0}
+    <p class="text-body">Nothing here yet!</p>
+  {/if}
+<div class="space-y-3 border border-muted rounded">
+  <table width="100%">
+    <thead>
+      <tr>
+      <th scope="col" >Date</th>
+      <th scope="col">VTHO Spent</th>
+      <th scope="col">VET Earned</th>
+      <th scope="col">TxID</th>
+    </tr>
+    </thead>
+    <tbody>
+  {#each swapTxs as tx (tx.txId)}
+  <tr in:slide>
+      <td width="25%">{new Date(tx.blockTimestamp * 1000)
+        .toLocaleString()
+        .replace(",", " ")}</td>
+      <td width="25%">{formatUnits(tx.withdrawAmount, 3)} VTHO</td>
+      <td width="25%" class="primary">{formatUnits(tx.amountOutReceived, 5)} VET</td>
+      <td width="25%">        <a
+        href={`${chain.explorers[0].url}/transactions/${tx.txId}`}
+        target="_blank"
+        rel="noreferrer"
+        title={tx.txId}
+      >
+        {shortenAddress(tx.txId)}
+      </a></td>
+    </tr>
+  {/each}
+    </tbody>
+  </table>
+</div>
+
+  <!-- {#each swapTxs as tx, index (tx.txId)}
+    <div in:slide>
+      <PastTrade
+        withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
+        amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
+        txId={tx.txId}
+        blockTimestamp={tx.blockTimestamp}
+        explorerUrl={chain.explorers[0].url}
+      />
+    </div>
+    {#if index < swapTxs.length - 1}
+      <Divider />
+    {/if}
+  {/each} -->
+
+<!-- <Modal
   isOpen={$historyModal.isOpen}
   on:close={handleClose}
   data-cy="history-modal"
@@ -131,4 +186,19 @@
       {/each}
     </div>
   </svelte:fragment>
-</Modal>
+</Modal> -->
+
+<style lang="postcss">
+  thead {
+    @apply bg-highlight border-b border-muted text-center text-sm;
+  }
+  th, td {
+    @apply text-accent font-light text-center px-4 py-3;
+  }
+  tr > td {
+    @apply text-sm text-accent font-normal border-b border-muted;
+  }
+  .primary {
+    @apply text-primary;
+  }
+</style>

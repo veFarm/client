@@ -13,7 +13,7 @@
     <slot />
 
     <WalletModal />
-    <TransactionHistoryModal />
+    <!-- <TransactionHistoryModal /> -->
   </main>
 
   <Footer />

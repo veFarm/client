@@ -93,12 +93,12 @@ describe("Update trades history", () => {
         );
       cy.wrap($swaps)
         .find("a")
-        .eq(1, {timeout: 10_000})
+        .eq(1, { timeout: 10_000 })
         .contains(
           "0xbf3ecd16fd93435e9b1c913c6af345c8ac857c4c210ebdd36a3be058840b3e52".slice(
             0,
             27,
-          )
+          ),
         );
       cy.wrap($swaps).find("a").eq(2).should("not.exist");
     });

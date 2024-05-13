@@ -75,36 +75,32 @@ export function makeConnex(account: Address) {
   function mockFetchVTHOAllowance(allowance: string | [string, string]) {
     let index = 0;
 
-    return cy.intercept(
-      "POST",
-      `${RPC}/accounts/*?revision=*`,
-      (req) => {
-        const to = req?.body?.clauses[0]?.to;
+    return cy.intercept("POST", `${RPC}/accounts/*?revision=*`, (req) => {
+      const to = req?.body?.clauses[0]?.to;
 
-        if (to.toLowerCase() === chain.vtho.toLowerCase()) {
-          const data = responseHandler(allowance, index);
+      if (to.toLowerCase() === chain.vtho.toLowerCase()) {
+        const data = responseHandler(allowance, index);
 
-          req.reply({
-            statusCode: 200,
-            body: [
-              {
-                data,
-                events: [],
-                transfers: [],
-                gasUsed: 904,
-                reverted: false,
-                vmError: "",
-              },
-            ],
-          });
+        req.reply({
+          statusCode: 200,
+          body: [
+            {
+              data,
+              events: [],
+              transfers: [],
+              gasUsed: 904,
+              reverted: false,
+              vmError: "",
+            },
+          ],
+        });
 
-          index++;
-          return;
-        }
+        index++;
+        return;
+      }
 
-        // Forward all other requests down the pipe.
-      },
-    );
+      // Forward all other requests down the pipe.
+    });
   }
 
   /**
@@ -115,36 +111,32 @@ export function makeConnex(account: Address) {
   function mockFetchTraderReserve(reserveBalance: string | [string, string]) {
     let index = 0;
 
-    return cy.intercept(
-      "POST",
-      `${RPC}/accounts/*?revision=*`,
-      (req) => {
-        const to = req?.body?.clauses[0]?.to;
+    return cy.intercept("POST", `${RPC}/accounts/*?revision=*`, (req) => {
+      const to = req?.body?.clauses[0]?.to;
 
-        if (to.toLowerCase() === chain.trader.toLowerCase()) {
-          const data = responseHandler(reserveBalance, index);
+      if (to.toLowerCase() === chain.trader.toLowerCase()) {
+        const data = responseHandler(reserveBalance, index);
 
-          req.reply({
-            statusCode: 200,
-            body: [
-              {
-                data,
-                events: [],
-                transfers: [],
-                gasUsed: 936,
-                reverted: false,
-                vmError: "",
-              },
-            ],
-          });
+        req.reply({
+          statusCode: 200,
+          body: [
+            {
+              data,
+              events: [],
+              transfers: [],
+              gasUsed: 936,
+              reverted: false,
+              vmError: "",
+            },
+          ],
+        });
 
-          index++;
-          return;
-        }
+        index++;
+        return;
+      }
 
-        // Forward all other requests down the pipe.
-      },
-    );
+      // Forward all other requests down the pipe.
+    });
   }
 
   /**

@@ -83,10 +83,10 @@ h1 {
   @apply text-xl md:text-2xl lg:text-3xl xl:text-3xl font-bold text-body;
 }
 h2 {
-  @apply text-body font-bold text-lg;
+  @apply text-body font-bold text-xl;
 }
 h3 {
-  @apply text-lg text-body font-semibold md:text-xl;
+  @apply text-lg text-body font-bold;
 }
 h4 {
   @apply text-base text-body font-normal md:text-xl;

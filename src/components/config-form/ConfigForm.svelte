@@ -16,7 +16,6 @@
   import { Pill } from "@/components/pill";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
-  import { ViewHistoryButton } from "@/components/view-history-button";
   import Edit from "@/assets/Edit.svelte";
 
   type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
@@ -190,118 +189,119 @@
   }
 </script>
 
-<div class="flex items-center justify-between px-3 py-3 lg:px-6 lg:py-4">
-  <div class="flex items-center space-x-2">
-    <h2>
-      {title}
-    </h2>
-    {#if variant === "SUMMARY"}
-      <Pill value="Active" />
-    {/if}
-  </div>
-  {#if ["CONFIG_AND_APPROVE", "SUMMARY"].includes(variant)}
-    <ViewHistoryButton />
-  {/if}
-</div>
-
-<Divider />
-
-<form
-  on:submit|preventDefault={handleSubmit}
-  class="p-3 lg:p-6 flex flex-col space-y-4"
->
-  <div class="flex">
-    <Input
-      type="text"
-      id="reserveBalance"
-      label="Reserve Balance"
-      placeholder={formatUnits($trader.reserveBalance)}
-      autocomplete="off"
-      autofocus
-      currency="VTHO"
-      balance={$balance.current != null
-        ? `${formatUnits($balance.current.vtho, 2)} VTHO`
-        : ""}
-      hint="Minimum VTHO balance to be maintained in your account at all times"
-      disabled={disabled || !$wallet.connected || variant === "SUMMARY"}
-      error={errors.reserveBalance[0]}
-      bind:value={reserveBalance}
-      on:input={() => {
-        clearFieldErrors("reserveBalance");
-      }}
-      data-cy="reserve-balance-input"
-    >
-      <svelte:fragment slot="input-right">
-        {#if variant === "SUMMARY"}
-          <Button
-            intent="secondary"
-            fullWidth
-            class="ml-2 max-w-min"
-            on:click={handleEdit}
-            data-cy="goto-update-reserve-balance-button"
-          >
-            <div class="flex">
-              <Edit class="inline-block mr-2" /> EDIT
-            </div>
-          </Button>
-        {/if}
-      </svelte:fragment>
-    </Input>
+<div class="bg-highlight border border-muted rounded-lg text-accent">
+  <div class="flex items-center justify-between px-3 py-3 lg:px-6 lg:py-4">
+    <div class="flex items-center space-x-2">
+      <h3>
+        {title}
+      </h3>
+      {#if variant === "SUMMARY"}
+        <Pill value="Active" />
+      {/if}
+    </div>
   </div>
 
   <Divider />
 
-  {#if variant !== "UPDATE_CONFIG"}
-    <TradesForecast reserveBalance={!inputsEmpty ? reserveBalanceWei : bn(0)} />
-  {/if}
+  <form
+    on:submit|preventDefault={handleSubmit}
+    class="p-3 lg:p-6 flex flex-col space-y-4"
+  >
+    <div class="flex">
+      <Input
+        type="text"
+        id="reserveBalance"
+        label="Reserve Balance"
+        placeholder={formatUnits($trader.reserveBalance)}
+        autocomplete="off"
+        autofocus
+        currency="VTHO"
+        balance={$balance.current != null
+          ? `${formatUnits($balance.current.vtho, 2)} VTHO`
+          : ""}
+        hint="Minimum VTHO balance to be maintained in your account at all times"
+        disabled={disabled || !$wallet.connected || variant === "SUMMARY"}
+        error={errors.reserveBalance[0]}
+        bind:value={reserveBalance}
+        on:input={() => {
+          clearFieldErrors("reserveBalance");
+        }}
+        data-cy="reserve-balance-input"
+      >
+        <svelte:fragment slot="input-right">
+          {#if variant === "SUMMARY"}
+            <Button
+              intent="secondary"
+              fullWidth
+              class="ml-2 max-w-min"
+              on:click={handleEdit}
+              data-cy="goto-update-reserve-balance-button"
+            >
+              <div class="flex">
+                <Edit class="inline-block mr-2" /> EDIT
+              </div>
+            </Button>
+          {/if}
+        </svelte:fragment>
+      </Input>
+    </div>
 
-  {#if variant === "LOGIN"}
-    <ConnectWalletButton intent="primary" variant="text" fullWidth />
-  {/if}
+    <Divider />
 
-  {#if variant === "CONFIG_AND_APPROVE"}
-    <Button
-      type="submit"
-      intent={insufficientBalance || inputsEmpty ? "secondary" : "primary"}
-      disabled={disabled || inputsEmpty}
-      loading={disabled}
-      fullWidth
-      data-cy="submit-form-button"
-    >
-      {insufficientBalance
-        ? "INSUFFICIENT BALANCE"
-        : inputsEmpty
-          ? "ENTER RESERVE BALANCE"
-          : "ENABLE AUTOPILOT"}
-    </Button>
-  {/if}
+    {#if variant !== "UPDATE_CONFIG"}
+      <TradesForecast
+        reserveBalance={!inputsEmpty ? reserveBalanceWei : bn(0)}
+      />
+    {/if}
 
-  {#if variant === "UPDATE_CONFIG"}
-    <Button
-      type="submit"
-      intent={inputsEmpty || inputsMatchStore ? "secondary" : "primary"}
-      disabled={disabled || inputsEmpty || inputsMatchStore}
-      loading={disabled}
-      fullWidth
-      data-cy="update-reserve-balance-button"
-    >
-      {inputsEmpty || inputsMatchStore
-        ? "ENTER NEW AMOUNT"
-        : "UPDATE RESERVE BALANCE"}
-    </Button>
-  {/if}
+    {#if variant === "LOGIN"}
+      <ConnectWalletButton intent="primary" variant="text" fullWidth />
+    {/if}
 
-  <slot name="form-bottom" />
+    {#if variant === "CONFIG_AND_APPROVE"}
+      <Button
+        type="submit"
+        intent={insufficientBalance || inputsEmpty ? "secondary" : "primary"}
+        disabled={disabled || inputsEmpty}
+        loading={disabled}
+        fullWidth
+        data-cy="submit-form-button"
+      >
+        {insufficientBalance
+          ? "INSUFFICIENT BALANCE"
+          : inputsEmpty
+            ? "ENTER RESERVE BALANCE"
+            : "ENABLE AUTOPILOT"}
+      </Button>
+    {/if}
 
-  {#if $wallet.error != null && $wallet.error.length > 0}
-    <p class="text-danger">ERROR: {$wallet.error}</p>
-  {/if}
-  {#if $trader.error != null && $trader.error.length > 0}
-    <p class="text-danger">ERROR: {$trader.error}</p>
-  {/if}
-  {#if errors.network != null && errors.network.length > 0}
-    <p class="text-danger" data-cy="network-error">
-      ERROR: {errors.network[0]}
-    </p>
-  {/if}
-</form>
+    {#if variant === "UPDATE_CONFIG"}
+      <Button
+        type="submit"
+        intent={inputsEmpty || inputsMatchStore ? "secondary" : "primary"}
+        disabled={disabled || inputsEmpty || inputsMatchStore}
+        loading={disabled}
+        fullWidth
+        data-cy="update-reserve-balance-button"
+      >
+        {inputsEmpty || inputsMatchStore
+          ? "ENTER NEW AMOUNT"
+          : "UPDATE RESERVE BALANCE"}
+      </Button>
+    {/if}
+
+    <slot name="form-bottom" />
+
+    {#if $wallet.error != null && $wallet.error.length > 0}
+      <p class="text-danger">ERROR: {$wallet.error}</p>
+    {/if}
+    {#if $trader.error != null && $trader.error.length > 0}
+      <p class="text-danger">ERROR: {$trader.error}</p>
+    {/if}
+    {#if errors.network != null && errors.network.length > 0}
+      <p class="text-danger" data-cy="network-error">
+        ERROR: {errors.network[0]}
+      </p>
+    {/if}
+  </form>
+</div>
