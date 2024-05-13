@@ -149,7 +149,7 @@
         </div>
       {/if}
     </section>
-    {#if view === "SUMMARY"}
+    {#if view !== "LOGIN"}
       <section class="w-full max-w-lg mx-auto lg:max-w-full">
         <h2 class="text-body mb-3 text-xl">Transaction History</h2>
         <TransactionHistoryModal />
