@@ -76,7 +76,7 @@
           </h1>
           <p
             in:fade={{ delay: 300 }}
-            class="text-center lg:text-left text-accent text-base mt-3"
+            class="text-center lg:text-left text-accent text-base mt-2 lg:mt-3"
             data-cy="description"
           >
             {SUBTITLE}
