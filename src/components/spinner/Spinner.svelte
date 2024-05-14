@@ -4,5 +4,5 @@
 
 <Loading
   {...$$restProps}
-  class={`inline animate-spin w-6 h-6 ${$$props.class}`}
+  class={`inline animate-spin w-5 h-5 ${$$props.class}`}
 />

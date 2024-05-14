@@ -23,5 +23,5 @@
       <button on:click={handleClose} class="-mt-2"><Close /></button>
     {/if}
   </div>
-  <p class="text-sm font-normal text-body">{body}</p>
+  <p class="text-sm font-normal text-accent">{body}</p>
 </div>

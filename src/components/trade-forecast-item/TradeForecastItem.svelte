@@ -20,7 +20,7 @@
 
 <div class:is-open={isOpen}>
   <table
-    class="w-full text-xs sm:text-sm font-medium"
+    class="w-full text-sm font-medium"
     data-cy="trades-forecast-table"
   >
     <tbody>
@@ -45,7 +45,7 @@
   {#if isOpen}
     <div transition:slide class="border-style">
       <table
-        class="w-full text-xs sm:text-sm font-medium"
+        class="w-full text-sm"
         data-cy="trades-forecast-table"
       >
         <tbody>
@@ -69,10 +69,10 @@
 
 <style lang="postcss">
   .title {
-    @apply w-0 whitespace-nowrap text-accent;
+    @apply w-0 whitespace-nowrap font-normal;
   }
   .value {
-    @apply w-1/2 truncate text-right text-body;
+    @apply w-1/2 truncate text-right text-accent;
     max-width: 1px;
   }
   .border-style {

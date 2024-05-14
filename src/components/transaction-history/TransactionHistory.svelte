@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
+  import { slide } from "svelte/transition";
   import bn from "bignumber.js";
   import type { BigNumber } from "bignumber.js";
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
-  import { historyModal } from "@/stores/history-modal";
   import { formatUnits } from "@/utils/format-units";
-  import { Modal } from "@/components/modal";
+  import { shortenAddress } from "@/utils/shorten-address";
   import { PastTrade } from "@/components/past-trade";
   import { Spinner } from "@/components/spinner";
   import { Divider } from "@/components/divider";
+  import NewTab from "@/assets/NewTab.svelte";
 
   type RawSwapDoc = {
     account: Address;
@@ -72,10 +72,6 @@
     }
   }
 
-  function handleClose() {
-    historyModal.close();
-  }
-
   // Fetch swaps once after the wallet has been connected
   $: {
     if ($wallet.connected) {
@@ -100,35 +96,87 @@
   }
 </script>
 
-<Modal
-  isOpen={$historyModal.isOpen}
-  on:close={handleClose}
-  data-cy="history-modal"
->
-  <svelte:fragment slot="header">Transaction History</svelte:fragment>
-  <svelte:fragment slot="body">
-    <div class="space-y-3">
-      {#if error != null && error.length > 0}
-        <p class="text-danger">{error}</p>
-      {:else if loading}
-        <p>Fetching transactions... <Spinner /></p>
-      {:else if swapTxs == null || swapTxs.length === 0}
-        <p class="text-body">Nothing here yet!</p>
-      {/if}
-      {#each swapTxs as tx, index (tx.txId)}
-        <div in:fade>
-          <PastTrade
-            withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
-            amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
-            txId={tx.txId}
-            blockTimestamp={tx.blockTimestamp}
-            explorerUrl={chain.explorers[0].url}
-          />
-        </div>
-        {#if index < swapTxs.length - 1}
-          <Divider />
-        {/if}
-      {/each}
+{#if error != null && error.length > 0}
+  <p class="text-danger">{error}</p>
+{:else if loading}
+  <p>Fetching transactions... <Spinner /></p>
+{:else if swapTxs == null || swapTxs.length === 0}
+  <p>Nothing here yet!</p>
+{/if}
+
+{#if swapTxs.length > 0}
+  <div class="hidden lg:block space-y-3 border border-muted rounded">
+    <table width="100%">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Spent</th>
+          <th scope="col">Earned</th>
+          <th scope="col">TxID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each swapTxs as tx (tx.txId)}
+          <tr in:slide>
+            <td width="25%"
+              >{new Date(tx.blockTimestamp * 1000)
+                .toLocaleString()
+                .replace(",", " ")}</td
+            >
+            <td width="25%">{formatUnits(tx.withdrawAmount, 3)} VTHO</td>
+            <td width="25%" class="primary"
+              >{formatUnits(tx.amountOutReceived, 5)} VET</td
+            >
+            <td width="25%">
+              <a
+                href={`${chain.explorers[0].url}/transactions/${tx.txId}`}
+                target="_blank"
+                rel="noreferrer"
+                title={tx.txId}
+              >
+                {shortenAddress(tx.txId)}
+                <NewTab class="h-4 inline" />
+              </a></td
+            >
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+{/if}
+
+<div class="block lg:hidden space-y-3">
+  {#each swapTxs as tx, index (tx.txId)}
+    <div in:slide>
+      <PastTrade
+        withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
+        amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
+        txId={tx.txId}
+        blockTimestamp={tx.blockTimestamp}
+        explorerUrl={chain.explorers[0].url}
+      />
     </div>
-  </svelte:fragment>
-</Modal>
+    {#if index < swapTxs.length - 1}
+      <Divider />
+    {/if}
+  {/each}
+</div>
+
+<style lang="postcss">
+  thead {
+    @apply bg-highlight border-b border-muted text-center;
+  }
+  th,
+  td {
+    @apply text-center px-2 py-1.5 lg:px-4 lg:py-3;
+  }
+  th {
+    @apply text-sm font-normal;
+  }
+  tr {
+    @apply text-sm border-b border-muted last:border-b-0;
+  }
+  .primary {
+    @apply text-primary;
+  }
+</style>

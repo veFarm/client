@@ -27,24 +27,24 @@
           "disabled:bg-opacity-80",
         ],
         secondary: [
-          "text-body",
+          "text-accent",
           "bg-secondary",
           "hover:bg-opacity-90",
           "disabled:bg-opacity-80",
         ],
         danger: [
-          "text-body",
+          "text-accent",
           "border",
           "border-muted",
           "hover:border-danger",
           "hover:bg-danger",
-          "hover:text-body",
+          "hover:text-accent",
           "disabled:border-danger",
           "disabled:bg-danger",
           "disabled:bg-opacity-80",
-          "disabled:text-body",
+          "disabled:text-accent",
         ],
-        outline: ["text-body", "border", "border-muted"],
+        outline: ["text-accent", "border", "border-muted"],
       },
       size: {
         small: ["text-sm", "p-2", "px-3", "rounded"],
@@ -84,6 +84,6 @@
     class: $$props.class,
   })}
 >
-  <slot />
-  {#if loading}<Spinner class="ml-2" data-cy="spinner" />{/if}
+  <slot />&nbsp;
+  {#if loading}<Spinner data-cy="spinner" />{/if}
 </button>

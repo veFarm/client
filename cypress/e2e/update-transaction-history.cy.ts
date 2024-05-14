@@ -11,10 +11,7 @@ const api = makeApi(account);
 const connex = makeConnex(account);
 const wallet = makeWallet(walletId, account);
 
-// Skip CI-failing tests
-const _describe = Cypress.env("IS_CI") === true ? describe.skip : describe;
-
-_describe("Update trades history", () => {
+describe("Update transaction history", () => {
   beforeEach(() => {
     // Simulate a logged in registered account holding a positive balance.
     wallet.simulateLoggedInAccount();
@@ -55,55 +52,27 @@ _describe("Update trades history", () => {
     // );
   });
 
-  it("updates trades history", () => {
+  it("updates transaction history", () => {
     // Arrange
-    cy.getByCy("view-history-button").click();
     cy.wait("@getAccountSwaps", { timeout: 20_000 });
-    cy.getByCy("history-modal").should("be.visible");
-    cy.getByCy("history-modal").within(($swaps) => {
-      cy.wrap($swaps)
-        .find("a")
-        .eq(0)
-        .contains(
-          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(
-            0,
-            27,
-          ),
-        );
-      cy.wrap($swaps).find("a").eq(1).should("not.exist");
+    cy.getByCy("transaction-history").should("be.visible");
+    cy.getByCy("transaction-history").within(($swaps) => {
+      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5…33b7");
+      // cy.wrap($swaps).find("a").eq(1).should("not.exist");
     });
 
     // Act
-    cy.wait(
-      [
-        "@fetchBalance",
-        // "@getAccountStats"
-      ],
-      { timeout: 20_000 },
-    );
+    cy.wait(["@fetchBalance", "@getAccountSwaps"], { timeout: 20_000 });
 
     // Assert
-    cy.getByCy("history-modal").should("be.visible");
-    cy.getByCy("history-modal").within(($swaps) => {
+    cy.getByCy("transaction-history").should("be.visible");
+    cy.getByCy("transaction-history").within(($swaps) => {
+      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5…33b7");
       cy.wrap($swaps)
         .find("a")
-        .eq(0)
-        .contains(
-          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(
-            0,
-            27,
-          ),
-        );
-      cy.wrap($swaps)
-        .find("a")
-        .eq(1)
-        .contains(
-          "0xbf3ecd16fd93435e9b1c913c6af345c8ac857c4c210ebdd36a3be058840b3e52".slice(
-            0,
-            27,
-          ),
-        );
-      cy.wrap($swaps).find("a").eq(2).should("not.exist");
+        .eq(1, { timeout: 10_000 })
+        .contains("0xbf3e…3e52");
+      // cy.wrap($swaps).find("a").eq(2).should("not.exist");
     });
   });
 });

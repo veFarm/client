@@ -44,7 +44,7 @@
 >
   <svelte:fragment slot="header">Connect Wallet</svelte:fragment>
   <svelte:fragment slot="body">
-    <!-- <p class="text-sm text-accent">
+    <!-- <p class="text-sm ">
       Connect with one of our available wallet providers.
     </p> -->
     <div class="flex flex-col space-y-3 my-4">

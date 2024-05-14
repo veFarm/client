@@ -134,6 +134,17 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("balance").contains("0.00 VTHO");
   });
 
+  it("shows me 'INSUFFICIENT BALANCE' button", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("submit-form-button").should("be.visible");
+    cy.getByCy("submit-form-button").should("be.disabled");
+    cy.getByCy("submit-form-button").contains("INSUFFICIENT BALANCE");
+  });
+
   it("does NOT allow me to submit the form if I enter 0 as the reserve balance amount", () => {
     // Arrange
     cy.getByCy("submit-form-button").should("be.visible");
@@ -146,7 +157,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("submit-form-button").should("be.disabled");
   });
 
-  it("does NOT allow me to submit the form until I enter a positive reserve balance amount", () => {
+  it("does NOT allow me to submit the form even if I enter a positive reserve balance amount", () => {
     // Arrange
     cy.getByCy("submit-form-button").should("be.visible");
     cy.getByCy("submit-form-button").should("be.disabled");
@@ -155,27 +166,16 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("reserve-balance-input").clear().type("10");
 
     // Assert
-    cy.getByCy("submit-form-button").should("be.enabled");
+    cy.getByCy("submit-form-button").should("be.disabled");
   });
 
-  it("shows me a 'INSUFFICIENT BALANCE' button", () => {
+  it("shows me 'empty transaction history' message", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("submit-form-button").should("be.visible");
-    cy.getByCy("submit-form-button").contains("INSUFFICIENT BALANCE");
-  });
-
-  it("shows me 'no trades history' message", () => {
-    // Arrange
-
-    // Act
-    cy.getByCy("view-history-button").click();
-
-    // Assert
-    cy.getByCy("history-modal").contains("Nothing here yet!");
+    cy.getByCy("transaction-history").contains("Nothing here yet!");
   });
 
   it.skip("shows me a 'lack of funds' alert and a link to the faucet", () => {

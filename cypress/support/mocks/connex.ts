@@ -30,12 +30,9 @@ export const BALANCE: Record<string, Balance> = {
   },
 };
 
-export type TxStatus = "reverted" | "mined";
+const RPC = "https://testnet.veblocks.net"; // chain.rpc[0];
 
-type Balance = {
-  vet: string;
-  vtho: string;
-};
+export type TxStatus = "reverted" | "mined";
 
 /**
  * Factory to intercept and mock API calls aimed to the VThor blockchain.
@@ -51,7 +48,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/accounts/${account.toLowerCase()}*`,
+      `${RPC}/accounts/${account.toLowerCase()}*`,
       (req) => {
         const { vet, vtho } = responseHandler(balance, index);
 
@@ -78,36 +75,32 @@ export function makeConnex(account: Address) {
   function mockFetchVTHOAllowance(allowance: string | [string, string]) {
     let index = 0;
 
-    return cy.intercept(
-      "POST",
-      "https://testnet.veblocks.net/accounts/*?revision=*",
-      (req) => {
-        const to = req?.body?.clauses[0]?.to;
+    return cy.intercept("POST", `${RPC}/accounts/*?revision=*`, (req) => {
+      const to = req?.body?.clauses[0]?.to;
 
-        if (to.toLowerCase() === chain.vtho.toLowerCase()) {
-          const data = responseHandler(allowance, index);
+      if (to.toLowerCase() === chain.vtho.toLowerCase()) {
+        const data = responseHandler(allowance, index);
 
-          req.reply({
-            statusCode: 200,
-            body: [
-              {
-                data,
-                events: [],
-                transfers: [],
-                gasUsed: 904,
-                reverted: false,
-                vmError: "",
-              },
-            ],
-          });
+        req.reply({
+          statusCode: 200,
+          body: [
+            {
+              data,
+              events: [],
+              transfers: [],
+              gasUsed: 904,
+              reverted: false,
+              vmError: "",
+            },
+          ],
+        });
 
-          index++;
-          return;
-        }
+        index++;
+        return;
+      }
 
-        // Forward all other requests down the pipe.
-      },
-    );
+      // Forward all other requests down the pipe.
+    });
   }
 
   /**
@@ -118,36 +111,32 @@ export function makeConnex(account: Address) {
   function mockFetchTraderReserve(reserveBalance: string | [string, string]) {
     let index = 0;
 
-    return cy.intercept(
-      "POST",
-      "https://testnet.veblocks.net/accounts/*?revision=*",
-      (req) => {
-        const to = req?.body?.clauses[0]?.to;
+    return cy.intercept("POST", `${RPC}/accounts/*?revision=*`, (req) => {
+      const to = req?.body?.clauses[0]?.to;
 
-        if (to.toLowerCase() === chain.trader.toLowerCase()) {
-          const data = responseHandler(reserveBalance, index);
+      if (to.toLowerCase() === chain.trader.toLowerCase()) {
+        const data = responseHandler(reserveBalance, index);
 
-          req.reply({
-            statusCode: 200,
-            body: [
-              {
-                data,
-                events: [],
-                transfers: [],
-                gasUsed: 936,
-                reverted: false,
-                vmError: "",
-              },
-            ],
-          });
+        req.reply({
+          statusCode: 200,
+          body: [
+            {
+              data,
+              events: [],
+              transfers: [],
+              gasUsed: 936,
+              reverted: false,
+              vmError: "",
+            },
+          ],
+        });
 
-          index++;
-          return;
-        }
+        index++;
+        return;
+      }
 
-        // Forward all other requests down the pipe.
-      },
-    );
+      // Forward all other requests down the pipe.
+    });
   }
 
   /**
@@ -161,7 +150,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      `${RPC}/transactions/${txId}/receipt?head=*`,
       (req) => {
         req.reply({
           gasUsed: 28938,
@@ -211,7 +200,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      `${RPC}/transactions/${txId}/receipt?head=*`,
       (req) => {
         req.reply({
           gasUsed: 26485,
@@ -262,7 +251,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      `${RPC}/transactions/${txId}/receipt?head=*`,
       (req) => {
         req.reply({
           gasUsed: 86147,
@@ -327,7 +316,7 @@ export function makeConnex(account: Address) {
 
     return cy.intercept(
       "GET",
-      `https://testnet.veblocks.net/transactions/${txId}/receipt?head=*`,
+      `${RPC}/transactions/${txId}/receipt?head=*`,
       (req) => {
         req.reply({
           gasUsed: 47209,

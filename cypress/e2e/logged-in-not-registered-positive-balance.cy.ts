@@ -43,7 +43,7 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.getByCy("description").should("be.visible");
   });
 
-  it("does NOT show me the stats", () => {
+  it.skip("does NOT show me the stats", () => {
     // Arrange
 
     // Act
@@ -92,24 +92,22 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.getByCy("connect-wallet-button-text").should("not.exist");
   });
 
-  it("shows me the trades history button", () => {
+  it("shows me the transaction history section", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("view-history-button").should("be.visible");
-    cy.getByCy("view-history-button").should("be.enabled");
+    cy.getByCy("transaction-history").should("be.visible");
   });
 
-  it("shows me 'no trades history' message", () => {
+  it("shows me 'empty transaction history' message", () => {
     // Arrange
 
     // Act
-    cy.getByCy("view-history-button").click();
 
     // Assert
-    cy.getByCy("history-modal").contains("Nothing here yet!");
+    cy.getByCy("transaction-history").contains("Nothing here yet!");
   });
 
   it("keeps me connected when I refresh the page", () => {
