@@ -54,7 +54,7 @@ describe("Login", () => {
     // Act
     cy.getByCy("connect-wallet-button-text").click();
     cy.getByCy("wallet-provider-button-sync2").click();
-    cy.wait(["@signCertRequest", "@signCertResponse"], {timeout: 10_000});
+    cy.wait(["@signCertRequest", "@signCertResponse"], { timeout: 10_000 });
 
     // Assert
     cy.contains("0x2057…8d26");

@@ -21,13 +21,12 @@
     By automating this process, Vearn enables users to continuously increase
     their VET holdings over time, capitalizing on the perpetual generation of
     VTHO within the ecosystem.
-    <br><br>
-    In addition, Vearn employs a mathematical model
-    to compute optimized strategies for timing the swaps based on factors such
-    as account balance and current market conditions. By utilizing this
-    sophisticated approach, Vearn ensures that the conversion process is
-    executed at the most opportune moments, thereby optimizing the increment of
-    VET holdings for users.
+    <br /><br />
+    In addition, Vearn employs a mathematical model to compute optimized strategies
+    for timing the swaps based on factors such as account balance and current market
+    conditions. By utilizing this sophisticated approach, Vearn ensures that the
+    conversion process is executed at the most opportune moments, thereby optimizing
+    the increment of VET holdings for users.
   </svelte:fragment>
 </Accordion>
 

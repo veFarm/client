@@ -12,10 +12,15 @@
   }
 </script>
 
-<div class="border border-muted rounded px-4 py-2 lg:py-3 space-y-2" class:bg-highlight={isOpen}>
-  <button on:click={toggle} class="w-full" >
+<div
+  class="border border-muted rounded px-4 py-2 lg:py-3 space-y-2"
+  class:bg-highlight={isOpen}
+>
+  <button on:click={toggle} class="w-full">
     <div class="flex items-center justify-between space-x-2">
-      <h4 class={`${isOpen ? "text-accent" : "text-body"} text-base text-left`}>{title}</h4>
+      <h4 class={`${isOpen ? "text-accent" : "text-body"} text-base text-left`}>
+        {title}
+      </h4>
       {#if isOpen}
         <ChevronUp class="flex-shrink-0" />
       {:else}
