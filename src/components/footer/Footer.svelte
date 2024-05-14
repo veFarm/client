@@ -1,6 +1,6 @@
 <script lang="ts">
   import Twitter from "@/assets/Twitter.svelte";
-  import Discord from "@/assets/Discord.svelte";
+  import Discord from "@/assets/Discord.svg";
   import Github from "@/assets/Github.svelte";
 </script>
 
@@ -26,7 +26,7 @@
     rel="noreferrer"
     title="Discord"
   >
-    <Discord />
+    <img src={Discord} alt="Discord" height="32" width="32" />
   </a>
   <a
     href="https://github.com/vearnfi"

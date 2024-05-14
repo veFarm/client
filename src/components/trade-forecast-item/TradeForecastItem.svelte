@@ -19,10 +19,7 @@
 </script>
 
 <div class:is-open={isOpen}>
-  <table
-    class="w-full text-sm font-medium"
-    data-cy="trades-forecast-table"
-  >
+  <table class="w-full text-sm font-medium" data-cy="trades-forecast-table">
     <tbody>
       <tr class="cursor-pointer" on:click={toggle}>
         <td class="title">
@@ -44,10 +41,7 @@
   </table>
   {#if isOpen}
     <div transition:slide class="border-style">
-      <table
-        class="w-full text-sm"
-        data-cy="trades-forecast-table"
-      >
+      <table class="w-full text-sm" data-cy="trades-forecast-table">
         <tbody>
           <tr>
             <td class="title">VTHO to be spent:</td>
