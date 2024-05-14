@@ -43,10 +43,10 @@
 
 <style lang="postcss">
   .title {
-    @apply w-0 whitespace-nowrap text-xs font-normal text-accent;
+    @apply w-0 whitespace-nowrap text-xs font-normal ;
   }
   .value {
-    @apply truncate text-sm font-normal text-body;
+    @apply truncate text-sm font-normal text-accent;
     max-width: 1px; /* Required for truncate to work :S */
   }
   tr > td {

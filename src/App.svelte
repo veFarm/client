@@ -13,6 +13,7 @@
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { FAQs } from "@/components/faqs";
   import { TransactionHistoryModal } from "@/components/transaction-history-modal";
+  import { LearnMore } from "@/components/learn-more";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG"; // TODO: add LOADING
 
@@ -65,7 +66,7 @@
       flex flex-col items-start space-y-4 lg:space-y-0 lg:space-x-8
       lg:flex-row lg:justify-around"
     >
-      <div class="w-full max-w-lg mx-auto lg:basis-1/2 lg:mt-20">
+      <div class="w-full max-w-lg mx-auto lg:basis-1/2 lg:mt-20 space-y-2 lg:space-y-3">
         {#if show}
           <h1
             in:fade={{ delay: 200 }}
@@ -76,7 +77,7 @@
           </h1>
           <p
             in:fade={{ delay: 300 }}
-            class="text-center lg:text-left text-accent text-base mt-2 lg:mt-3"
+            class="text-center lg:text-left text-base"
             data-cy="description"
           >
             {SUBTITLE}
@@ -134,12 +135,12 @@
             </ConfigForm>
           {/if}
 
-          <!-- <p class="text-center text-accent">Chain: {chain.name}</p> -->
+          <!-- <p class="text-center ">Chain: {chain.name}</p> -->
           <!-- <div class="block lg:hidden mt-3">
         {#if show}
           <p
             in:fade={{ delay: 300 }}
-            class="text-center text-accent text-sm md:text-base"
+            class="text-center  text-sm md:text-base"
             data-cy="description"
           >
             {SUBTITLE}
@@ -149,9 +150,16 @@
         </div>
       {/if}
     </section>
+
+    {#if view === "LOGIN"}
+      <div class="block lg:hidden">
+        <LearnMore />
+      </div>
+    {/if}
+
     {#if view !== "LOGIN"}
-      <section class="w-full max-w-lg mx-auto lg:max-w-full">
-        <h2 class="text-body mb-3 text-xl">Transaction History</h2>
+      <section class="w-full max-w-lg mx-auto lg:max-w-full space-y-3">
+        <h2>Transaction History</h2>
         <TransactionHistoryModal />
       </section>
     {/if}

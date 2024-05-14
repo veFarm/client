@@ -100,7 +100,7 @@
 {:else if loading}
   <p>Fetching transactions... <Spinner /></p>
 {:else if swapTxs == null || swapTxs.length === 0}
-  <p class="text-body">Nothing here yet!</p>
+  <p class="text-accent">Nothing here yet!</p>
 {/if}
 <div class="hidden lg:block space-y-3 border border-muted rounded">
   <table width="100%">
@@ -163,10 +163,10 @@
   }
   th,
   td {
-    @apply text-accent font-light text-center px-2 py-1.5 lg:px-4 lg:py-3;
+    @apply  font-light text-center px-2 py-1.5 lg:px-4 lg:py-3;
   }
   tr {
-    @apply text-sm text-accent font-normal border-b border-muted last:border-b-0;
+    @apply text-sm  font-normal border-b border-muted last:border-b-0;
   }
   .primary {
     @apply text-primary;

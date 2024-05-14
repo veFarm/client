@@ -69,10 +69,10 @@
 
 <style lang="postcss">
   .title {
-    @apply w-0 whitespace-nowrap text-accent;
+    @apply w-0 whitespace-nowrap ;
   }
   .value {
-    @apply w-1/2 truncate text-right text-body;
+    @apply w-1/2 truncate text-right text-accent;
     max-width: 1px;
   }
   .border-style {

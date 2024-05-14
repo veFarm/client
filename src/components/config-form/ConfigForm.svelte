@@ -189,7 +189,7 @@
   }
 </script>
 
-<div class="bg-highlight border border-muted rounded-lg text-accent">
+<div class="bg-highlight border border-muted rounded-lg ">
   <div class="flex items-center justify-between px-3 py-3 lg:px-6 lg:py-4">
     <div class="flex items-center space-x-2">
       <h3>

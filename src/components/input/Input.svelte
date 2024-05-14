@@ -28,14 +28,14 @@
 
 <label
   for={id}
-  class="{hasError ? 'text-danger' : 'text-body'} text-sm font-medium w-full"
+  class="{hasError ? 'text-danger' : 'text-accent'} text-sm font-medium w-full"
 >
   {label}
   <div class="h-2" />
   <div class="relative">
     {#if balance != null && balance.length > 0}
       <div
-        class="absolute -top-7 right-0 text-xs font-medium text-accent pl-1 flex items-end"
+        class="absolute -top-7 right-0 text-xs font-medium text-body pl-1 flex items-end"
         data-cy="balance"
       >
         <WalletFull class="mr-1" />
@@ -48,14 +48,14 @@
           {id}
           class="h-12 sm:h-14 bg-transparent border {hasError
             ? 'border-danger'
-            : 'border-muted'} text-white text-xl font-bold rounded block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled disabled:cursor-default"
+            : 'border-muted'} text-accent text-xl font-bold rounded block w-full p-2 pr-1 sm:pr-2 pl-4 disabled:text-disabled disabled:cursor-default"
           {...$$restProps}
           bind:value
           on:input
         />
         {#if currency.length > 0}
           <div
-            class="absolute top-2.5 right-3 sm:top-3 sm:right-4 bg-zinc-900 px-3 py-1 rounded-md text-sm sm:text-base font-bold text-white"
+            class="absolute top-2.5 right-3 sm:top-3 sm:right-4 bg-zinc-900 px-3 py-1 rounded-md text-sm sm:text-base font-bold text-accent"
             class:text--disabled={$$restProps.disabled}
             data-cy="currency"
           >
@@ -67,7 +67,7 @@
     </div>
   </div>
   {#if hint.length > 0 && !hasError}
-    <legend class="text-xs text-accent mt-2">{hint}</legend>
+    <legend class="text-xs text-body mt-2">{hint}</legend>
   {/if}
   {#if hasError}
     <legend>{error}</legend>

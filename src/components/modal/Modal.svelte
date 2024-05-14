@@ -50,12 +50,12 @@
   >
     <!-- Header -->
     <div class="flex items-end justify-between px-6 py-4">
-      <h3 class="text-body flex-1">
+      <h3 class="text-accent flex-1">
         <slot name="header" />
       </h3>
 
       <button class="hover:bg-transparent/20 rounded-full" on:click={hide}>
-        <Close class="w-6 h-6 text-body" data-cy="close-modal-button" />
+        <Close class="w-6 h-6 text-accent" data-cy="close-modal-button" />
       </button>
     </div>
 
