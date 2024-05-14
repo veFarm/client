@@ -44,7 +44,7 @@
   $: {
     if (
       $balance.current != null &&
-      reserveBalance.gt(0) &&
+      // reserveBalance.gt(0) &&
       $tradesForecast.fetched &&
       $tradesForecast.solutions.length > 0
     ) {
@@ -87,7 +87,7 @@
   $: {
     if (
       $balance.current != null &&
-      reserveBalance.gt(0) &&
+      // reserveBalance.gt(0) &&
       $tradesForecast.fetched &&
       firstTrade != null
     ) {

@@ -135,7 +135,7 @@
                 title={tx.txId}
               >
                 {shortenAddress(tx.txId)}
-                <NewTab class="h-5 inline" />
+                <NewTab class="h-4 inline" />
               </a></td
             >
           </tr>
@@ -164,14 +164,17 @@
 
 <style lang="postcss">
   thead {
-    @apply bg-highlight border-b border-muted text-center text-sm;
+    @apply bg-highlight border-b border-muted text-center;
   }
   th,
   td {
-    @apply font-light text-center px-2 py-1.5 lg:px-4 lg:py-3;
+    @apply text-center px-2 py-1.5 lg:px-4 lg:py-3;
+  }
+  th {
+    @apply text-sm font-normal;
   }
   tr {
-    @apply text-sm  font-normal border-b border-muted last:border-b-0;
+    @apply text-sm border-b border-muted last:border-b-0;
   }
   .primary {
     @apply text-primary;

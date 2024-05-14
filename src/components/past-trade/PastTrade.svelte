@@ -1,7 +1,7 @@
 <script lang="ts">
   import {shortenAddress} from "@/utils/shorten-address"
   import ChevronRight from "@/assets/ChevronRight.svelte";
-    import NewTab from "@/assets/NewTab.svelte";
+  import NewTab from "@/assets/NewTab.svelte";
 
   export let withdrawAmount: string;
   export let amountOutReceived: string;
@@ -10,7 +10,7 @@
   export let explorerUrl: string;
 </script>
 
-<table class="w-full text-xs sm:text-sm font-medium">
+<table class="w-full text-sm font-medium">
   <tbody>
     <tr>
       <td class="title">Date:</td>
@@ -45,10 +45,10 @@
 
 <style lang="postcss">
   .title {
-    @apply w-0 whitespace-nowrap text-xs font-normal;
+    @apply w-0 whitespace-nowrap text-sm;
   }
   .value {
-    @apply truncate text-sm font-normal text-accent;
+    @apply truncate text-sm;
     max-width: 1px; /* Required for truncate to work :S */
   }
   tr > td {

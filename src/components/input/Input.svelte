@@ -28,7 +28,7 @@
 
 <label
   for={id}
-  class="{hasError ? 'text-danger' : 'text-accent'} text-sm font-medium w-full"
+  class="{hasError ? 'text-danger' : 'text-accent'} text-sm font-normal w-full"
 >
   {label}
   <div class="h-2" />

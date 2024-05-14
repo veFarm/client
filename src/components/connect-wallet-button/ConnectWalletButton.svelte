@@ -34,7 +34,7 @@
 {:else}
   <button
     {...$$props}
-    class={`flex items-center space-x-3 text-sm font-medium text-accent ${$$props.class}`}
+    class={`flex items-center space-x-3 text-sm md:text-base font-medium text-accent ${$$props.class}`}
     {disabled}
     on:click={handleClick}
     data-cy="connect-wallet-button-icon"

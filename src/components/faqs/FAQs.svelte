@@ -20,7 +20,9 @@
     holdings, into additional VET tokens through decentralized exchanges (DEX).
     By automating this process, Vearn enables users to continuously increase
     their VET holdings over time, capitalizing on the perpetual generation of
-    VTHO within the ecosystem. In addition, Vearn employs a mathematical model
+    VTHO within the ecosystem.
+    <br><br>
+    In addition, Vearn employs a mathematical model
     to compute optimized strategies for timing the swaps based on factors such
     as account balance and current market conditions. By utilizing this
     sophisticated approach, Vearn ensures that the conversion process is

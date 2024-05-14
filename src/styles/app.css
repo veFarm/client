@@ -37,7 +37,7 @@ danger      A color for displaying error messages
   @apply font-mono text-lg font-normal leading-6 text-body;
 
   font-family: "Space Grotesk", sans-serif;
-  font-optical-sizing: auto;
+  /* font-optical-sizing: auto; */
   font-weight: 300;
   font-style: normal;
   font-synthesis: none;
@@ -51,7 +51,7 @@ danger      A color for displaying error messages
 body {
   margin: 0;
   min-width: 320px;
-  @apply bg-background text-body;
+  @apply bg-background text-body text-base font-normal;
 }
 
 #app {
@@ -64,10 +64,10 @@ h1 {
   @apply text-xl md:text-2xl lg:text-3xl xl:text-3xl font-bold text-accent;
 }
 h2 {
-  @apply text-accent font-bold text-xl;
+  @apply text-accent font-medium text-xl;
 }
 h3 {
-  @apply text-lg text-accent font-bold;
+  @apply text-lg text-accent font-medium;
 }
 h4 {
   @apply text-base text-accent font-normal md:text-xl;
