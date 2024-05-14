@@ -22,9 +22,9 @@
 </script>
 
 <div class="box" style="transform: translateY({{ translateY }}px)">
-  <div class="flex flex-col text-center text-accent opacity-70">
-    <p>Scroll to learn more</p>
-    <ChevronDown class="self-center" />
+  <div class="text-sm text-accent opacity-70">
+    <p class="text-center">Scroll to learn more</p>
+    <ChevronDown class="mx-auto" />
   </div>
 </div>
 

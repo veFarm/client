@@ -14,7 +14,7 @@
 
 <div class="border border-muted rounded px-4 py-2 space-y-2">
   <button on:click={toggle} class="w-full">
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between space-x-2">
       <h4 class="text-base text-left text-body">{title}</h4>
       {#if isOpen}
         <ChevronUp class="flex-shrink-0" />
