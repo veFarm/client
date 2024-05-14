@@ -1,5 +1,7 @@
 <script lang="ts">
+  import {shortenAddress} from "@/utils/shorten-address"
   import ChevronRight from "@/assets/ChevronRight.svelte";
+    import NewTab from "@/assets/NewTab.svelte";
 
   export let withdrawAmount: string;
   export let amountOutReceived: string;
@@ -34,7 +36,7 @@
           rel="noreferrer"
           title={txId}
         >
-          {txId}
+          {shortenAddress(txId)} <NewTab class="h-4 inline" />
         </a>
       </td>
     </tr>

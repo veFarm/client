@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 import { makeWallet } from "cypress/support/mocks/wallet";
-import { shortenAddress } from "../../src/utils/shorten-address";
 
 const walletId = "sync2";
 const account = "0x2057ca7412e6c0828501cb7b335e166f81c58d26" as Address;
@@ -58,7 +57,7 @@ describe("Login", () => {
     cy.wait(["@signCertRequest", "@signCertResponse"]);
 
     // Assert
-    cy.contains(shortenAddress(account)!);
+    cy.contains("0x2057…8d26");
     // ^ Indicates that the account has been logged in successfully
   });
 

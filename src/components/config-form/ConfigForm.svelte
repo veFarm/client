@@ -14,6 +14,8 @@
   import { Input } from "@/components/input";
   import { Divider } from "@/components/divider";
   import { Pill } from "@/components/pill";
+  import { Alert } from "@/components/alert";
+  import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
   import Edit from "@/assets/Edit.svelte";
@@ -141,6 +143,10 @@
 
   function handleEdit() {
     dispatch("editReserveBalance");
+  }
+
+  function handleCancelEdit() {
+    dispatch("cancelEditReserveBalance");
   }
 
   // Set stored config values on login.
@@ -287,7 +293,28 @@
       </Button>
     {/if}
 
-    <slot name="form-bottom" />
+    {#if variant === "SUMMARY"}
+      <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
+      <Alert
+        title="Autopilot Enabled"
+        body={`We will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits(
+          $trader.reserveBalance,
+        )} VTHO in your account.`}
+        on:close={() => {}}
+        data-cy="protocol-is-enabled-message"
+      />
+    {/if}
+
+    {#if variant === "UPDATE_CONFIG"}
+      <Button
+        intent="outline"
+        fullWidth
+        on:click={handleCancelEdit}
+        data-cy="cancel-reserve-balance-update-button"
+      >
+        CANCEL
+      </Button>
+    {/if}
 
     {#if $wallet.error != null && $wallet.error.length > 0}
       <p class="text-danger">ERROR: {$wallet.error}</p>

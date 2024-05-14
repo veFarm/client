@@ -64,7 +64,8 @@ function createStore() {
         const balanceData = get(store);
 
         if (walletData?.wConnex == null || walletData?.account == null) {
-          throw new Error("Wallet is not connected.");
+          // throw new Error("Wallet is not connected.");
+          return;
         }
 
         const { wConnex, account } = walletData;

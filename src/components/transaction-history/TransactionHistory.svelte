@@ -10,6 +10,7 @@
   import { PastTrade } from "@/components/past-trade";
   import { Spinner } from "@/components/spinner";
   import { Divider } from "@/components/divider";
+  import NewTab from "@/assets/NewTab.svelte";
 
   type RawSwapDoc = {
     account: Address;
@@ -134,6 +135,7 @@
                 title={tx.txId}
               >
                 {shortenAddress(tx.txId)}
+                <NewTab class="h-5 inline" />
               </a></td
             >
           </tr>
