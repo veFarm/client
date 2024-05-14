@@ -1,1 +1,2 @@
-<hr class="border-b-1 border-muted" />
+<hr class="h-px bg-muted border-0" />
+
