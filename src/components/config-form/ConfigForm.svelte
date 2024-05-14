@@ -219,7 +219,7 @@
         balance={$balance.current != null
           ? `${formatUnits($balance.current.vtho, 2)} VTHO`
           : ""}
-        hint="Minimum VTHO balance to be maintained in your account at all times"
+        hint="Minimum VTHO balance to be maintained in your account at all times. Anything above that amount will be swapped overtime."
         disabled={disabled || !$wallet.connected || variant === "SUMMARY"}
         error={errors.reserveBalance[0]}
         bind:value={reserveBalance}

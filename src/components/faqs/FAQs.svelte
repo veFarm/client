@@ -21,11 +21,20 @@
   </svelte:fragment>
 </Accordion>
 
+<Accordion title="What is the Reserve Balance and why we need it?">
+  <svelte:fragment slot="body">
+  The Reserve Balance is the minimum amount of VTHO tokens that you would like to keep in
+  your account at all times and prevent Vearn to spend it. VTHO is the currency used to
+  pay for transaction fees, so it's always a good idea to leave a small reserve to pay for some
+  daily tasks.
+  </svelte:fragment>
+</Accordion>
+
 <Accordion title="Are my VET tokens at risk?">
   <svelte:fragment slot="body">
-    No, Vearn requests permission to spend your VTHO token in exchange for VET
-    token. As with any decentralize application there exist risk at the smart
-    contract level but your VET tokens are never at risk.
+    No. Vearn doesn't have access to your VET tokens. Vearn requests permission to spend
+    your VTHO token in exchange for VET. As with any decentralize application there exist
+    risk at the smart contract level but these risks could never affect your VET tokens.
   </svelte:fragment>
 </Accordion>
 
@@ -38,12 +47,14 @@
 
 <Accordion title="Is the Vearn smart contract upgradable?">
   <svelte:fragment slot="body">
-    No, once deployed, the smart contract cannot be altered to modify its logic.
+    No. Once deployed, the smart contract cannot be altered to modify its logic. The only way to upgrade it is to deploy a new contract and ask
+    all the users to migrate to the new contract.
   </svelte:fragment>
 </Accordion>
 
-<Accordion title="What's the address of the Vearn contract?">
+<Accordion title="What is the address of the Vearn contract?">
   <svelte:fragment slot="body">
-    No, once deployed, the smart contract cannot be altered to modify its logic.
+  0x000...
   </svelte:fragment>
 </Accordion>
+

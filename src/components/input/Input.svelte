@@ -67,7 +67,7 @@
     </div>
   </div>
   {#if hint.length > 0 && !hasError}
-    <legend class="text-xs text-body mt-2">{hint}</legend>
+    <legend class="text-xs text-body font-normal mt-2">{hint}</legend>
   {/if}
   {#if hasError}
     <legend>{error}</legend>
