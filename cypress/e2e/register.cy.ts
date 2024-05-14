@@ -59,7 +59,7 @@ describe("Register", () => {
       expect(payload.options).to.deep.equal({
         signer: account.toLowerCase(),
         comment:
-          "Please approve the following action(s):Allow the vearn contract to spend your VTHO in exchange for VET. Store reserve balance into the vearn contract.",
+          "Store Reserve Balance into the Vearn contract.  Additionally, allow the Vearn contract to spend your VTHO in exchange for VET.",
       });
     });
   });

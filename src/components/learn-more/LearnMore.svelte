@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import ChevronDown from '@/assets/ChevronDown.svelte';
+  import { onMount } from "svelte";
+  import ChevronDown from "@/assets/ChevronDown.svelte";
 
   let translateY = 0;
   let direction = 1;
@@ -21,6 +21,13 @@
   });
 </script>
 
+<div class="box" style="transform: translateY({{ translateY }}px)">
+  <div class="flex flex-col text-center text-accent opacity-70">
+    <p>Scroll to learn more</p>
+    <ChevronDown class="self-center" />
+  </div>
+</div>
+
 <style>
   .box {
     position: relative;
@@ -36,12 +43,3 @@
     }
   }
 </style>
-
-<div class="box" style="transform: translateY({{ translateY }}px)">
-      <div class="flex flex-col text-center text-accent opacity-70">
-        <p>Scroll to learn more</p>
-        <ChevronDown class="self-center"/>
-      </div>
-</div>
-
-

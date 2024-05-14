@@ -17,9 +17,9 @@
     <div class="flex items-center justify-between">
       <h4 class="text-base text-left text-body">{title}</h4>
       {#if isOpen}
-        <ChevronUp />
+        <ChevronUp class="flex-shrink-0" />
       {:else}
-        <ChevronDown />
+        <ChevronDown class="flex-shrink-0" />
       {/if}
     </div>
   </button>

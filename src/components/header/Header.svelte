@@ -26,17 +26,19 @@
   "
   data-cy="navigation-bar"
 >
-    <div class="pl-2 pr-4 sm:px-6 sm:py-3">
-      <img src={vearn} class="h-4 lg:h-5" alt="Vearn Finance" />
-    </div>
+  <div class="pl-2 pr-4 sm:px-6 sm:py-3">
+    <img src={vearn} class="h-4 lg:h-5" alt="Vearn Finance" />
+  </div>
 
   <div
     class="flex items-center justify-between pl-4 pr-2 sm:px-6 sm:py-3 border-l space-x-2 md:space-x-8 border-muted h-full min-w-min sm:w-80"
   >
     {#if $wallet.connected && $balance.current != null}
       <div class="space-y-1">
-        <p class="text-xs font-medium text-accent">{shortenAddress($wallet.account)}</p>
-        <p class="text-xs font-medium ">
+        <p class="text-xs font-medium text-accent">
+          {shortenAddress($wallet.account)}
+        </p>
+        <p class="text-xs font-medium">
           {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
         </p>
       </div>
@@ -70,7 +72,7 @@
               <p class="text-xs font-medium text-accent">
                 {shortenAddress($wallet.account)}
               </p>
-              <p class="text-xs font-medium ">
+              <p class="text-xs font-medium">
                 {formatUnits($balance.current.vet, 2)}&nbsp;VET&nbsp;
               </p>
             </div>

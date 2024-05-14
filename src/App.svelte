@@ -12,7 +12,7 @@
   import { ConfigForm } from "@/components/config-form";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { FAQs } from "@/components/faqs";
-  import { TransactionHistoryModal } from "@/components/transaction-history-modal";
+  import { TransactionHistory } from "@/components/transaction-history";
   import { LearnMore } from "@/components/learn-more";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG"; // TODO: add LOADING
@@ -66,7 +66,9 @@
       flex flex-col items-start space-y-4 lg:space-y-0 lg:space-x-8
       lg:flex-row lg:justify-around"
     >
-      <div class="w-full max-w-lg mx-auto lg:basis-1/2 lg:mt-20 space-y-2 lg:space-y-3">
+      <div
+        class="w-full max-w-lg mx-auto lg:basis-1/2 lg:mt-20 space-y-2 lg:space-y-3"
+      >
         {#if show}
           <h1
             in:fade={{ delay: 200 }}
@@ -77,7 +79,7 @@
           </h1>
           <p
             in:fade={{ delay: 300 }}
-            class="text-center lg:text-left text-base"
+            class="text-center lg:text-left text-sm md:text-base"
             data-cy="description"
           >
             {SUBTITLE}
@@ -158,9 +160,12 @@
     {/if}
 
     {#if view !== "LOGIN"}
-      <section class="w-full max-w-lg mx-auto lg:max-w-full space-y-3">
+      <section
+        class="w-full max-w-lg mx-auto lg:max-w-full space-y-3"
+        data-cy="transaction-history"
+      >
         <h2>Transaction History</h2>
-        <TransactionHistoryModal />
+        <TransactionHistory />
       </section>
     {/if}
 

@@ -43,7 +43,7 @@
 
 <style lang="postcss">
   .title {
-    @apply w-0 whitespace-nowrap text-xs font-normal ;
+    @apply w-0 whitespace-nowrap text-xs font-normal;
   }
   .value {
     @apply truncate text-sm font-normal text-accent;

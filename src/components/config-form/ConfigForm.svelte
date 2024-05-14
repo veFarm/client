@@ -107,28 +107,25 @@
       const clauses: Connex.VM.Clause[] = [];
       const comments: string[] = [];
 
-      // TODO: get clause and comment from store
       if (!inputsMatchStore) {
         clauses.push(
           trader.getClause("saveConfig")!(reserveBalanceWei.toFixed()),
         );
 
-        comments.push("Store reserve balance into the vearn contract.");
+        comments.push("Store Reserve Balance into the Vearn contract. ");
       }
 
       if (variant === "CONFIG_AND_APPROVE") {
         clauses.push(vtho.getClause("approve")!(chain.trader, MAX_UINT256));
 
         comments.push(
-          "Allow the vearn contract to spend your VTHO in exchange for VET.",
+          `${
+            clauses.length === 1 ? "Allow" : "Additionally, allow"
+          } the Vearn contract to spend your VTHO in exchange for VET.`,
         );
       }
 
-      const response = await wallet.signTx(
-        clauses,
-        "Please approve the following action(s):" +
-          comments.reverse().join(" "),
-      );
+      const response = await wallet.signTx(clauses, comments.join(" "));
       await wallet.waitForReceipt(response!.txid);
       await trader.fetchConfig();
       await vtho.fetchAllowance();
@@ -189,7 +186,7 @@
   }
 </script>
 
-<div class="bg-highlight border border-muted rounded-lg ">
+<div class="bg-highlight border border-muted rounded-lg">
   <div class="flex items-center justify-between px-3 py-3 lg:px-6 lg:py-4">
     <div class="flex items-center space-x-2">
       <h3>
@@ -262,7 +259,7 @@
       <Button
         type="submit"
         intent={insufficientBalance || inputsEmpty ? "secondary" : "primary"}
-        disabled={disabled || inputsEmpty}
+        disabled={disabled || inputsEmpty || insufficientBalance}
         loading={disabled}
         fullWidth
         data-cy="submit-form-button"

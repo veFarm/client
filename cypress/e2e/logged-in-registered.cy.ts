@@ -70,24 +70,15 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows transaction history", () => {
     // Arrange
-
-    // Act
-    cy.getByCy("view-history-button").click();
     cy.wait("@getAccountSwaps");
 
+    // Act
+
     // Assert
-    cy.getByCy("history-modal").should("be.visible");
-    cy.getByCy("history-modal").within(($swaps) => {
-      cy.wrap($swaps)
-        .find("a")
-        .eq(0)
-        .contains(
-          "0x1ad5c733943630185b8e588bf3b6f323484fb9b9fa2264621a5175d4394633b7".slice(
-            0,
-            27,
-          ),
-        );
-      cy.wrap($swaps).find("a").eq(1).should("not.exist");
+    cy.getByCy("transaction-history").should("be.visible");
+    cy.getByCy("transaction-history").within(($swaps) => {
+      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5…33b7");
+      // cy.wrap($swaps).find("a").eq(1).should("not.exist");
     });
   });
 

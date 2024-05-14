@@ -1,16 +1,13 @@
 <script lang="ts">
   import { Meta, Story, Template } from "@storybook/addon-svelte-csf";
-  import { TransactionHistoryModal } from ".";
+  import { TransactionHistory } from ".";
 </script>
 
-<Meta
-  title="components/TransactionHistoryModal"
-  component={TransactionHistoryModal}
-/>
+<Meta title="components/TransactionHistory" component={TransactionHistory} />
 
 <Template let:args>
   <div class="bg-background p-4">
-    <TransactionHistoryModal {...args} />
+    <TransactionHistory {...args} />
   </div>
 </Template>
 

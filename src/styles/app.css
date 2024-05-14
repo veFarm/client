@@ -25,32 +25,13 @@ danger      A color for displaying error messages
     --color-background: 0 0 0;
     --color-highlight: 13 13 13;
     --color-muted: 59 59 59;
-    --color-accent:255 255 255 ;
+    --color-accent: 255 255 255;
     --color-disabled: 100 100 100;
     --color-danger: 239 68 68;
     --color-success: 142 255 140;
     --color-backdrop: 0 0 0; /* transparent */
   }
 }
-
-/* .space-grotesk-300 {
-  font-family: "Space Grotesk", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
-}
-.space-grotesk-500 {
-  font-family: "Space Grotesk", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-}
-.space-grotesk-700 {
-  font-family: "Space Grotesk", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-} */
 
 :root {
   @apply font-mono text-lg font-normal leading-6 text-body;

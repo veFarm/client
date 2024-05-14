@@ -100,45 +100,48 @@
 {:else if loading}
   <p>Fetching transactions... <Spinner /></p>
 {:else if swapTxs == null || swapTxs.length === 0}
-  <p class="text-accent">Nothing here yet!</p>
+  <p>Nothing here yet!</p>
 {/if}
-<div class="hidden lg:block space-y-3 border border-muted rounded">
-  <table width="100%">
-    <thead>
-      <tr>
-        <th scope="col">Date</th>
-        <th scope="col">Spent</th>
-        <th scope="col">Earned</th>
-        <th scope="col">TxID</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each swapTxs as tx (tx.txId)}
-        <tr in:slide>
-          <td width="25%"
-            >{new Date(tx.blockTimestamp * 1000)
-              .toLocaleString()
-              .replace(",", " ")}</td
-          >
-          <td width="25%">{formatUnits(tx.withdrawAmount, 3)} VTHO</td>
-          <td width="25%" class="primary"
-            >{formatUnits(tx.amountOutReceived, 5)} VET</td
-          >
-          <td width="25%">
-            <a
-              href={`${chain.explorers[0].url}/transactions/${tx.txId}`}
-              target="_blank"
-              rel="noreferrer"
-              title={tx.txId}
-            >
-              {shortenAddress(tx.txId)}
-            </a></td
-          >
+
+{#if swapTxs.length > 0}
+  <div class="hidden lg:block space-y-3 border border-muted rounded">
+    <table width="100%">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Spent</th>
+          <th scope="col">Earned</th>
+          <th scope="col">TxID</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
-</div>
+      </thead>
+      <tbody>
+        {#each swapTxs as tx (tx.txId)}
+          <tr in:slide>
+            <td width="25%"
+              >{new Date(tx.blockTimestamp * 1000)
+                .toLocaleString()
+                .replace(",", " ")}</td
+            >
+            <td width="25%">{formatUnits(tx.withdrawAmount, 3)} VTHO</td>
+            <td width="25%" class="primary"
+              >{formatUnits(tx.amountOutReceived, 5)} VET</td
+            >
+            <td width="25%">
+              <a
+                href={`${chain.explorers[0].url}/transactions/${tx.txId}`}
+                target="_blank"
+                rel="noreferrer"
+                title={tx.txId}
+              >
+                {shortenAddress(tx.txId)}
+              </a></td
+            >
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+{/if}
 
 <div class="block lg:hidden space-y-3">
   {#each swapTxs as tx, index (tx.txId)}
@@ -163,7 +166,7 @@
   }
   th,
   td {
-    @apply  font-light text-center px-2 py-1.5 lg:px-4 lg:py-3;
+    @apply font-light text-center px-2 py-1.5 lg:px-4 lg:py-3;
   }
   tr {
     @apply text-sm  font-normal border-b border-muted last:border-b-0;

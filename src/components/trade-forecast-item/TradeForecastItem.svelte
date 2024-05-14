@@ -69,7 +69,7 @@
 
 <style lang="postcss">
   .title {
-    @apply w-0 whitespace-nowrap ;
+    @apply w-0 whitespace-nowrap;
   }
   .value {
     @apply w-1/2 truncate text-right text-accent;

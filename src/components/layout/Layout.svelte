@@ -3,7 +3,7 @@
   import { Header } from "@/components/header";
   import { Footer } from "@/components/footer";
   import { WalletModal } from "@/components/wallet-modal";
-  import { TransactionHistoryModal } from "@/components/transaction-history-modal";
+  import { TransactionHistory } from "@/components/transaction-history";
 </script>
 
 <Header />
@@ -13,7 +13,7 @@
     <slot />
 
     <WalletModal />
-    <!-- <TransactionHistoryModal /> -->
+    <!-- <TransactionHistory /> -->
   </main>
 
   <Footer />
