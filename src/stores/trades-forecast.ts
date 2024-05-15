@@ -29,6 +29,13 @@ export type Sol = {
   totalProfitVET: BigNumber;
 };
 
+type TradesForecast = {
+  txFee: BigNumber;
+  reserveIn: BigNumber;
+  reserveOut: BigNumber;
+  solutions: Sol[];
+};
+
 type State =
   | {
       fetched: true;
@@ -73,12 +80,7 @@ const initialState: State = {
 async function fetchTradesForecast(
   account: Address,
   vetBalance: BigNumber,
-): Promise<{
-  solutions: Sol[];
-  reserveIn: BigNumber;
-  reserveOut: BigNumber;
-  txFee: BigNumber;
-}> {
+): Promise<TradesForecast> {
   const response = await fetch(
     `${
       chain.getTradesForecastEndpoint
@@ -137,17 +139,29 @@ function createStore() {
         loading: true,
       }));
 
-      const { txFee, reserveIn, reserveOut, solutions } =
-        await fetchTradesForecast(account, current.vet);
+      let tradesForecast: TradesForecast;
+
+      tradesForecast = await fetchTradesForecast(account, current.vet);
+
+      // Force a refetch in case no solutions were found.
+      if (current.vet.gt(bn(0)) && tradesForecast.solutions.length === 0) {
+        tradesForecast = await fetchTradesForecast(account, current.vet);
+      }
+
+      if (current.vet.gt(bn(0)) && tradesForecast.solutions.length === 0) {
+        throw new Error(
+          "Could not calculate optimized strategy. Please refresh.",
+        );
+      }
 
       store.update((s) => ({
         ...s,
         fetched: true,
         account,
-        txFee,
-        reserveIn,
-        reserveOut,
-        solutions,
+        txFee: tradesForecast.txFee,
+        reserveIn: tradesForecast.reserveIn,
+        reserveOut: tradesForecast.reserveOut,
+        solutions: tradesForecast.solutions,
         loading: false,
         error: undefined,
       }));

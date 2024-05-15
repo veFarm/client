@@ -139,6 +139,10 @@
   <p class="text-sm font-normal">
     Computing an optimized strategy... <Spinner />
   </p>
+{:else if $tradesForecast.error != null && $tradesForecast.error.length > 0}
+  <p class="text-danger" data-cy="trades-forecast-error">
+    ERROR: {$tradesForecast.error}
+  </p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[0]}
