@@ -236,7 +236,7 @@
             <Button
               intent="secondary"
               fullWidth
-              class="ml-2 max-w-min max-h-min"
+              class="ml-2 max-w-min"
               on:click={handleEdit}
               data-cy="goto-update-reserve-balance-button"
             >
