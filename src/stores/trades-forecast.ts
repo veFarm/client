@@ -148,12 +148,6 @@ function createStore() {
         tradesForecast = await fetchTradesForecast(account, current.vet);
       }
 
-      console.log({
-        tradesForecast,
-        vet: current.vet.toFixed(),
-        sols: tradesForecast.solutions.length,
-      });
-
       if (current.vet.gt(bn(0)) && tradesForecast.solutions.length === 0) {
         throw new Error(
           "Could not calculate optimized strategy. Please refresh.",
