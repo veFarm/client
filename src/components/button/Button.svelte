@@ -84,6 +84,6 @@
     class: $$props.class,
   })}
 >
-  <slot />&nbsp;
+  <slot />
   {#if loading}<Spinner data-cy="spinner" />{/if}
 </button>
