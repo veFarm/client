@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { chain } from "@/config/index";
   import { Accordion } from "@/components/accordion";
+  import NewTab from "@/assets/NewTab.svelte";
 </script>
 
 <Accordion
@@ -13,31 +15,32 @@
   </svelte:fragment>
 </Accordion>
 
+<Accordion title="What does Vearn do?">
+  <svelte:fragment slot="body">
+    Vearn continuously increase your VET balance by automatically converting
+    VTHO tokens, generated from VET holdings, into additional VET tokens through
+    decentralized exchanges (DEX).
+  </svelte:fragment>
+</Accordion>
+
 <Accordion title="How does Vearn work?">
   <svelte:fragment slot="body">
-    Vearn takes advantage of the synergy between VET and VTHO within the VeChain
-    ecosystem by automatically converting VTHO tokens, generated from VET
-    holdings, into additional VET tokens through decentralized exchanges (DEX).
-    By automating this process, Vearn enables users to continuously increase
-    their VET holdings over time, capitalizing on the perpetual generation of
-    VTHO within the ecosystem.
-    <br /><br />
-    In addition, Vearn employs a mathematical model to compute optimized strategies
-    for timing the swaps based on factors such as account balance and current market
-    conditions. By utilizing this sophisticated approach, Vearn ensures that the
-    conversion process is executed at the most opportune moments, thereby optimizing
-    the increment of VET holdings for users.
+    Vearn employs a mathematical model to compute optimized strategies for
+    timing the swaps based on factors such as account balance and current market
+    conditions. By utilizing this approach, Vearn ensures that the conversion
+    process is executed at the most opportune moments, thereby optimizing the
+    increment of VET holdings for users.
   </svelte:fragment>
 </Accordion>
 
 <Accordion title="What is the Reserve Balance and why is it necessary?">
   <svelte:fragment slot="body">
-    The Reserve Balance refers to the minimum amount of VTHO tokens that users
-    choose to retain in their accounts. This reserve serves the purpose of
-    ensuring that a portion of VTHO remains untouched, preventing Vearn from
-    utilizing it. Since VTHO is used to cover transaction fees within the
-    VeChain ecosystem, maintaining a Reserve Balance ensures that users always
-    have a small amount of VTHO readily available to facilitate daily tasks.
+    The Reserve Balance refers to the minimum amount of VTHO that users choose
+    to retain in their accounts. This reserve serves the purpose of ensuring
+    that a portion of VTHO remains untouched, preventing Vearn from utilizing
+    it. Since VTHO is used to cover transaction fees within the VeChain
+    ecosystem, maintaining a Reserve Balance ensures that users always have a
+    small amount of VTHO readily available to facilitate daily tasks.
   </svelte:fragment>
 </Accordion>
 
@@ -46,8 +49,7 @@
     No, your VET tokens are not at risk when using Vearn. Vearn does not have
     access to your VET tokens. Instead, Vearn requests permission to spend your
     VTHO tokens in exchange for VET. While there may be risks associated with
-    decentralized applications at the smart contract level, these risks do not
-    extend to your VET tokens.
+    decentralized applications, these risks do not extend to your VET tokens.
   </svelte:fragment>
 </Accordion>
 
@@ -55,8 +57,7 @@
   <svelte:fragment slot="body">
     Yes, the majority of the code for Vearn is open source. We firmly believe
     that open source development is essential within the blockchain environment,
-    fostering transparency, collaboration, and trust among users and developers
-    alike.
+    fostering transparency, collaboration, and trust among users and developers.
   </svelte:fragment>
 </Accordion>
 
@@ -70,5 +71,15 @@
 </Accordion>
 
 <Accordion title="What is the address of the Vearn contract?">
-  <svelte:fragment slot="body">0x000...</svelte:fragment>
+  <svelte:fragment slot="body">
+    <a
+      href={`${chain.explorers[0].url}/accounts/${chain.trader}`}
+      target="_blank"
+      rel="noreferrer"
+      title="Vearn contract address"
+    >
+      {chain.trader}
+      <NewTab class="h-6 inline" />
+    </a>
+  </svelte:fragment>
 </Accordion>
