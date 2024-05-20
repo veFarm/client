@@ -15,15 +15,24 @@
   </svelte:fragment>
 </Accordion>
 
-<Accordion title="What does Vearn do?">
+<Accordion title="What problem does Vearn solve?">
   <svelte:fragment slot="body">
-    Vearn continuously increase your VET balance by automatically converting
-    VTHO tokens, generated from VET holdings, into additional VET tokens through
-    decentralized exchanges (DEX).
+    When holding VET in an account or smart contract, it produces VTHO at a rate
+    of .000432 VTHO per VET per day. Then, once enough VTHO has accumulated, you
+    can trade it for more VET using a decentralized exchange. This creates a
+    positive cycle that slowly grows your VET balance over time.
+    <br /><br />
+    Now the problem is, given an initial VET balance and the current VTHO-VET exchange
+    rate, what's the optimal strategy for swapping VTHO for VET to maximize your
+    VET holdings over a long period of time?
+    <br /><br />
+    The solution: Vearn. We developed a mathematical algorithm that considers current
+    market conditions and determines an optimized strategy for timing the swaps,
+    thus optimizing the increase in VET holdings for users.
   </svelte:fragment>
 </Accordion>
 
-<Accordion title="How does Vearn work?">
+<!-- <Accordion title="How does Vearn work?">
   <svelte:fragment slot="body">
     Vearn employs a mathematical model to compute optimized strategies for
     timing the swaps based on factors such as account balance and current market
@@ -31,7 +40,7 @@
     process is executed at the most opportune moments, thereby optimizing the
     increment of VET holdings for users.
   </svelte:fragment>
-</Accordion>
+</Accordion> -->
 
 <Accordion title="What is the Reserve Balance and why is it necessary?">
   <svelte:fragment slot="body">

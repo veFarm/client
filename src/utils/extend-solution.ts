@@ -37,6 +37,7 @@ export function extendSolution(
 ): Sol {
   const extSol: Sol = { ...sol };
 
+  // TODO: max out amount as long as slippage stays low.
   if (vthoBalance.gt(sol.withdrawAmount.plus(reserveBalance))) {
     // Max out withdraw amount for the given solution (strategy).
     let withdrawAmount = vthoBalance.minus(reserveBalance);
