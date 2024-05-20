@@ -85,9 +85,12 @@
   })}
 >
   <div class="flex items-center justify-center">
-  <slot />
-  <div class="relative ml-1">
-    {#if loading}<Spinner class="absolute w-0 -top-2.5" data-cy="spinner" />{/if}
-  </div>
+    <slot />
+    <div class="relative ml-1">
+      {#if loading}<Spinner
+          class="absolute w-0 -top-2.5"
+          data-cy="spinner"
+        />{/if}
+    </div>
   </div>
 </button>

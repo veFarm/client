@@ -27,8 +27,8 @@
     VET holdings over a long period of time?
     <br /><br />
     The solution: Vearn. We developed a mathematical algorithm that considers current
-    market conditions and determines an optimized strategy for timing the swaps, thus optimizing the increase
-    in VET holdings for users.
+    market conditions and determines an optimized strategy for timing the swaps,
+    thus optimizing the increase in VET holdings for users.
   </svelte:fragment>
 </Accordion>
 
