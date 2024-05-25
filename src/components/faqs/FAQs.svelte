@@ -22,9 +22,10 @@
     can trade it for more VET using a decentralized exchange. This creates a
     positive cycle that slowly grows your VET balance over time.
     <br /><br />
-    Now the problem is, given an initial VET balance and the current VTHO-VET exchange
-    rate, what's the optimal strategy for swapping VTHO for VET to maximize your
-    VET holdings over a long period of time?
+    Now, given an initial VET balance and the current VTHO-VET exchange rate, what's
+    the optimal strategy for swapping VTHO for VET to maximize your VET holdings
+    over a long period of time? In other words, how often should you exchange your
+    VTHO for VET to maximize your VET balance?
     <br /><br />
     The solution: Vearn. We developed a mathematical algorithm that considers current
     market conditions and determines an optimized strategy for timing the swaps,
@@ -85,10 +86,12 @@
       href={`${chain.explorers[0].url}/accounts/${chain.trader}`}
       target="_blank"
       rel="noreferrer"
-      title="Vearn contract address"
+      title={chain.trader}
     >
-      {chain.trader}
-      <NewTab class="h-6 inline" />
+      <div class="flex items-center">
+        <span class="truncate">{chain.trader}</span>
+        <NewTab class="h-6 inline" />
+      </div>
     </a>
   </svelte:fragment>
 </Accordion>

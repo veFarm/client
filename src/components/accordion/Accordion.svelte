@@ -13,7 +13,7 @@
 </script>
 
 <div
-  class="border border-muted rounded px-2 sm:px-4 py-2 lg:py-3 space-y-2"
+  class="border border-muted rounded px-2 lg:px-4 py-2 lg:py-3 space-y-2"
   class:bg-highlight={isOpen}
 >
   <button on:click={toggle} class="w-full">
