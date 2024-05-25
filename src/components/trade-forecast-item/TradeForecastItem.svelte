@@ -3,6 +3,7 @@
   import { slide } from "svelte/transition";
   import ChevronDown from "@/assets/ChevronDown.svelte";
   import ChevronUp from "@/assets/ChevronUp.svelte";
+  import Info from "@/assets/Info.svelte";
 
   export let isOpen: boolean;
   export let label: string;
@@ -44,7 +45,11 @@
       <table class="w-full text-sm" data-cy="trades-forecast-table">
         <tbody>
           <tr>
-            <td class="title">VTHO to be spent:</td>
+            <td class="title"
+              >VTHO to be spent:
+              <!-- <Info class="inline h-4 w-4 text-body" /> -->
+            </td
+            >
             <td class="value">{vthoSpent} VTHO</td>
           </tr>
           <tr>

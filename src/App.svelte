@@ -8,7 +8,7 @@
   import { Layout } from "@/components/layout";
   import { Hero } from "@/components/hero";
   import { ConfigForm } from "@/components/config-form";
-  import { LearnMore } from "@/components/learn-more";
+  // import { LearnMore } from "@/components/learn-more";
   import { TransactionHistory } from "@/components/transaction-history";
   import { FAQs } from "@/components/faqs";
 
@@ -84,11 +84,11 @@
       {/if}
     </section>
 
-    {#if view === "LOGIN"}
+    <!-- {#if view === "LOGIN"}
       <div class="block lg:hidden">
         <LearnMore />
       </div>
-    {/if}
+    {/if} -->
 
     {#if view !== "LOGIN"}
       <section

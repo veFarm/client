@@ -20,7 +20,7 @@ danger      A color for displaying error messages
     --header-height: 72px;
     --app-width: 1200px;
     --color-primary: 255 229 0;
-    --color-secondary: 40 40 40;
+    --color-secondary: 38 38 38;
     --color-body: 171 171 171;
     --color-background: 0 0 0;
     --color-highlight: 20 20 20;
@@ -90,4 +90,9 @@ dialog {
   height: 100%;
   z-index: 9998;
   @apply bg-backdrop;
+}
+
+/* Anchor */
+a {
+  @apply hover:underline;
 }
