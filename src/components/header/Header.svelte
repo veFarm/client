@@ -31,7 +31,7 @@
   </div>
 
   <div
-    class="flex items-center justify-between pl-4 pr-2 sm:px-6 sm:py-3 border-l space-x-2 md:space-x-8 border-muted h-full min-w-min sm:w-80"
+    class="flex items-center justify-between pl-4 pr-2 sm:px-6 sm:py-3 sm:border-l space-x-2 md:space-x-8 border-muted h-full min-w-min sm:w-80"
   >
     {#if $wallet.connected && $balance.current != null}
       <div class="space-y-1">

@@ -19,7 +19,7 @@ module.exports = {
         danger: "rgb(var(--color-danger) / <alpha-value>)",
         success: "rgb(var(--color-success) / <alpha-value>)",
         disabled: "rgb(var(--color-disabled) / <alpha-value>)",
-        backdrop: "rgb(var(--color-backdrop) / 0.7)",
+        backdrop: "rgb(var(--color-backdrop) / 0.85)",
       },
     },
   },

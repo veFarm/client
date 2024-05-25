@@ -70,11 +70,10 @@
     max-width: 1px;
   }
   .border-style {
-    @apply border-l-2 border-muted mx-3 pl-3;
+    @apply border-l-2 border-muted ml-2.5 mr-1 pl-3;
   }
   .is-open {
     @apply bg-background -mx-2 p-2;
-    /* @apply -mt-2; */
   }
   tr > td {
     @apply pb-2;

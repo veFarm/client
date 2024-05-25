@@ -20,10 +20,10 @@ danger      A color for displaying error messages
     --header-height: 72px;
     --app-width: 1200px;
     --color-primary: 255 229 0;
-    --color-secondary: 28 28 28;
+    --color-secondary: 40 40 40;
     --color-body: 171 171 171;
     --color-background: 0 0 0;
-    --color-highlight: 13 13 13;
+    --color-highlight: 20 20 20;
     --color-muted: 59 59 59;
     --color-accent: 255 255 255;
     --color-disabled: 100 100 100;

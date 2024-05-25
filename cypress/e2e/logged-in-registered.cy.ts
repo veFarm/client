@@ -77,7 +77,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     // Assert
     cy.getByCy("transaction-history").should("be.visible");
     cy.getByCy("transaction-history").within(($swaps) => {
-      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5…33b7");
+      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5");
       // cy.wrap($swaps).find("a").eq(1).should("not.exist");
     });
   });

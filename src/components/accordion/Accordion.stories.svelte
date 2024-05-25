@@ -10,11 +10,11 @@
     <Accordion title="How does it work?">
       <svelte:fragment slot="body">
         <p>
-          We will periodically exchange VTHO for VET while keeping a balance of
+          Vearn will periodically exchange VTHO for VET while keeping a balance of
           15 VTHO in your account.
         </p>
         <p>
-          We will periodically exchange VTHO for VET while keeping a balance of
+          Vearn will periodically exchange VTHO for VET while keeping a balance of
           15 VTHO in your account.
         </p>
       </svelte:fragment>

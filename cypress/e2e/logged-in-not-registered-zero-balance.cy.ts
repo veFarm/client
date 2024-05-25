@@ -23,7 +23,7 @@ describe("Logged in NOT registered ZERO balance account", () => {
     api
       .mockGetTradesForecast({
         statusCode: 200,
-        body: { txFee: "2688830000000000000", solutions: [] },
+        body: {},
       })
       .as("getTradesForecast");
 
@@ -123,6 +123,15 @@ describe("Logged in NOT registered ZERO balance account", () => {
 
     // Assert
     cy.getByCy("trades-forecast-table").should("exist");
+  });
+
+  it("does NOT show me any errors when fetching trades forecast with no solutions", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("trades-forecast-error").should("not.exist");
   });
 
   it("shows me my VTHO balance on top of the reserve balance input field", () => {

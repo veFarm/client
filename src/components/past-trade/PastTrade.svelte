@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { shortenAddress } from "@/utils/shorten-address";
   import ChevronRight from "@/assets/ChevronRight.svelte";
   import NewTab from "@/assets/NewTab.svelte";
 
@@ -36,8 +35,10 @@
           rel="noreferrer"
           title={txId}
         >
-          {shortenAddress(txId)}
-          <NewTab class="h-4 inline" />
+          <div class="flex items-center">
+            <span class="truncate">{txId}</span>
+            <NewTab class="h-4 shrink-0" />
+          </div>
         </a>
       </td>
     </tr>

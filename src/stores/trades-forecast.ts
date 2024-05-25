@@ -89,7 +89,7 @@ async function fetchTradesForecast(
 
   const json = (await response.json()) as ApiResponse;
 
-  if (json == null) {
+  if (json == null || json?.solutions == null) {
     return {
       txFee: bn(0),
       reserveIn: bn(0),

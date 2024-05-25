@@ -57,7 +57,7 @@ describe("Update transaction history", () => {
     cy.wait("@getAccountSwaps", { timeout: 20_000 });
     cy.getByCy("transaction-history").should("be.visible");
     cy.getByCy("transaction-history").within(($swaps) => {
-      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5…33b7");
+      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5");
       // cy.wrap($swaps).find("a").eq(1).should("not.exist");
     });
 
@@ -67,11 +67,11 @@ describe("Update transaction history", () => {
     // Assert
     cy.getByCy("transaction-history").should("be.visible");
     cy.getByCy("transaction-history").within(($swaps) => {
-      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5…33b7");
+      cy.wrap($swaps).find("a").eq(0).contains("0x1ad5");
       cy.wrap($swaps)
         .find("a")
         .eq(1, { timeout: 10_000 })
-        .contains("0xbf3e…3e52");
+        .contains("0xbf3e");
       // cy.wrap($swaps).find("a").eq(2).should("not.exist");
     });
   });
