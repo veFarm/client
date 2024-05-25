@@ -15,7 +15,7 @@
   name="Success"
   args={{
     title: "Autopilot Enabled",
-    body: "We will periodically exchange VTHO for VET while keeping a balance of 15 VTHO in your account.",
+    body: "Vearn will periodically exchange VTHO for VET while keeping a balance of 15 VTHO in your account.",
   }}
 />
 
@@ -23,7 +23,7 @@
   name="Closable"
   args={{
     title: "Autopilot Enabled",
-    body: "We will periodically exchange VTHO for VET while keeping a balance of 15 VTHO in your account.",
+    body: "Vearn will periodically exchange VTHO for VET while keeping a balance of 15 VTHO in your account.",
     closable: true,
   }}
 />

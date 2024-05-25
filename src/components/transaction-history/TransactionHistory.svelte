@@ -106,7 +106,7 @@
 
 {#if swapTxs.length > 0}
   <div class="hidden lg:block space-y-3 border border-muted rounded">
-    <table width="100%">
+    <table width="100%" class="table-fixed">
       <thead>
         <tr>
           <th scope="col">Date</th>
@@ -134,8 +134,10 @@
                 rel="noreferrer"
                 title={tx.txId}
               >
-                {shortenAddress(tx.txId)}
-                <NewTab class="h-4 inline" />
+                <div class="flex items-center">
+                  <span class="truncate">{tx.txId}</span>
+                  <NewTab class="h-4 shrink-0" />
+                </div>
               </a></td
             >
           </tr>
@@ -145,7 +147,7 @@
   </div>
 {/if}
 
-<div class="block lg:hidden space-y-3">
+<div class="block lg:hidden px-2 space-y-3">
   {#each swapTxs as tx, index (tx.txId)}
     <div in:slide>
       <PastTrade

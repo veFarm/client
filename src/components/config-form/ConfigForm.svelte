@@ -13,7 +13,6 @@
   import { Button } from "@/components/button";
   import { Input } from "@/components/input";
   import { Divider } from "@/components/divider";
-  import { Pill } from "@/components/pill";
   import { Alert } from "@/components/alert";
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { TradesForecast } from "@/components/trades-forecast";
@@ -195,12 +194,9 @@
 <div class="bg-highlight border border-muted rounded-lg">
   <div class="flex items-center justify-between px-3 py-3 lg:px-6 lg:py-4">
     <div class="flex items-center space-x-2">
-      <h3>
+      <h3 class:text-success={variant === "SUMMARY"}>
         {title}
       </h3>
-      {#if variant === "SUMMARY"}
-        <Pill value="Active" />
-      {/if}
     </div>
   </div>
 
@@ -297,7 +293,7 @@
       <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
       <Alert
         title="Autopilot Enabled"
-        body={`We will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits(
+        body={`Vearn will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits(
           $trader.reserveBalance,
         )} VTHO in your account.`}
         on:close={() => {}}
