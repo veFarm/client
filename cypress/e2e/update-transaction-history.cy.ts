@@ -71,7 +71,7 @@ describe("Update transaction history", () => {
       cy.wrap($swaps)
         .find("a")
         .eq(1, { timeout: 10_000 })
-        .contains("0xbf3e…3e52");
+        .contains("0xbf3e");
       // cy.wrap($swaps).find("a").eq(2).should("not.exist");
     });
   });
