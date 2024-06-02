@@ -39,7 +39,7 @@
   let loading: boolean = false;
 
   /**
-   * Fetch account swap transactions.
+   * Fetch user swap transactions.
    */
   async function fetchSwaps(
     account: Address,
@@ -50,7 +50,7 @@
 
       const response = await fetch(
         `${
-          chain.getAccountSwapsEndpoint
+          chain.getUserSwapsEndpoint
         }?account=${account}&vet=${vetBalance.toFixed()}`,
       );
 

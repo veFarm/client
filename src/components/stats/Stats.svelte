@@ -31,14 +31,14 @@
   let error: string | undefined;
 
   /**
-   * Fetch account stats for the given account.
-   * @param {Address} account Target account
+   * Fetch user stats for the given account.
+   * @param {Address} account Target user account
    * @return {Promise<void>}
    */
   async function fetchStats(account: Address): Promise<void> {
     try {
       const response = await fetch(
-        `${chain.getAccountStatsEndpoint}?account=${account}`,
+        `${chain.getUserStatsEndpoint}?account=${account}`,
       );
 
       const json = (await response.json()) as RawStats;

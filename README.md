@@ -4,9 +4,9 @@
 
 # @vearnfi/client
 
-Interface for the **vearn** protocol supporting Connex instances for VeWorld and Sync2.
+Interface for the **Vearn** protocol supporting Connex instances for VeWorld and Sync2.
 
-Live version (testnet): [https://vearn.finance](https://vearn.finance)
+Live version (testnet): [https://Vearn.finance](https://Vearn.finance)
 
 This DApp was built with Svelte.
 
@@ -15,11 +15,11 @@ This DApp was built with Svelte.
 1. Users can log in using either Sync2 or VeWorld wallet providers.
 2. Users have the option to set a reserve balance via the UI, indicating the minimum balance that will be retained in their account after swaps.
 3. If the logged-in account holds a positive VET balance, users can view a list of upcoming trades (swaps).
-4. Users can authorize the **vearn** protocol to spend their VTHO tokens in exchange for VET.
+4. Users can authorize the **Vearn** protocol to spend their VTHO tokens in exchange for VET.
 5. Upon authorization, the backend service will monitor the user's account and initiate a swap once the VTHO balance reaches a certain threshold.
 6. After a trade is executed, users can view a list of past trades and updated statistics associated with their account.
 7. Users have the flexibility to adjust their reserve balance at any time.
-8. Users can revoke authorization for the **vearn** protocol at any time.
+8. Users can revoke authorization for the **Vearn** protocol at any time.
 
 ## Getting started
 

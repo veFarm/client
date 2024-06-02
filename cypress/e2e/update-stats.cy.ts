@@ -17,13 +17,13 @@ describe("Update stats", () => {
     wallet.simulateLoggedInAccount();
 
     api
-      .mockGetAccountStats([
-        { fixture: "account-stats.json" },
-        { fixture: "account-stats-updated.json" },
+      .mockGetUserStats([
+        { fixture: "user-stats.json" },
+        { fixture: "user-stats-updated.json" },
       ])
-      .as("getAccountStats");
+      .as("getUserStats");
     // ^ Simulate a stats update.
-    api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
+    api.mockGetUserSwaps({ statusCode: 404 }).as("getUserSwaps");
     api
       .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
@@ -39,8 +39,8 @@ describe("Update stats", () => {
     cy.visit("/");
     cy.wait(
       [
-        "@getAccountStats",
-        "@getAccountSwaps",
+        "@getUserStats",
+        "@getUserSwaps",
         "@getTradesForecast",
         "@fetchAllowance",
         "@fetchReserveBalance",
@@ -60,7 +60,7 @@ describe("Update stats", () => {
     });
 
     // Act
-    cy.wait(["@fetchBalance", "@getAccountStats"], { timeout: 20_000 });
+    cy.wait(["@fetchBalance", "@getUserStats"], { timeout: 20_000 });
 
     // Assert
     cy.getByCy("stats").should("be.visible");

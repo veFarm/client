@@ -7,16 +7,16 @@ import { responseHandler } from "cypress/support/utils";
  */
 export function makeApi(account: Address) {
   /**
-   * Mock getaccountstats api call.
+   * Mock getuserstats api call.
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  function mockGetAccountStats(response: Object | [Object, Object]) {
+  function mockGetUserStats(response: Object | [Object, Object]) {
     let index = 0;
 
     return cy.intercept(
       "GET",
-      `**/getaccountstats?account=${account.toLowerCase()}*`,
+      `**/getuserstats?account=${account.toLowerCase()}*`,
       (req) => {
         const res = responseHandler(response, index);
 
@@ -29,16 +29,16 @@ export function makeApi(account: Address) {
   }
 
   /**
-   * Mock getaccountswaps api call.
+   * Mock getuserswaps api call.
    * @param {Object | [Object, Object]} response. Response or array of responses to be returned by the mock.
    * @returns
    */
-  function mockGetAccountSwaps(response: Object | [Object, Object]) {
+  function mockGetUserSwaps(response: Object | [Object, Object]) {
     let index = 0;
 
     return cy.intercept(
       "GET",
-      `**/getaccountswaps?account=${account.toLowerCase()}*`,
+      `**/getuserswaps?account=${account.toLowerCase()}*`,
       (req) => {
         const res = responseHandler(response, index);
 
@@ -73,8 +73,8 @@ export function makeApi(account: Address) {
   }
 
   return Object.freeze({
-    mockGetAccountStats,
-    mockGetAccountSwaps,
+    mockGetUserStats,
+    mockGetUserSwaps,
     mockGetTradesForecast,
   });
 }
