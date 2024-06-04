@@ -3,8 +3,8 @@ import type { Sol } from "./solver";
 import { expandTo18Decimals } from "./expand-to-18-decimals";
 
 export const MAX_WITHDRAW_AMOUNT = 5_000;
-export const PROTOCOL_FEE_MULTIPLIER = 3;
-export const DEX_FEE_MULTIPLIER = 3;
+export const PROTOCOL_FEE_MULTIPLIER = 3; // TODO: this should be pulled from contract
+export const DEX_FEE_MULTIPLIER = 3; // TODO: idem
 // TODO: read constants from config file
 
 export type ExtendSolution = (

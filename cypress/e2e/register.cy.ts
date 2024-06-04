@@ -21,8 +21,8 @@ describe("Register", () => {
     wallet.simulateLoggedInAccount();
 
     // TODO: stats should be visible
-    api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
-    api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
+    api.mockGetUserStats({ statusCode: 404 }).as("getUserStats");
+    api.mockGetUserSwaps({ statusCode: 404 }).as("getUserSwaps");
     api
       .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
@@ -54,7 +54,7 @@ describe("Register", () => {
       expect(payload.message[1]).to.deep.equal({
         to: chain.vtho.toLowerCase(),
         value: "0",
-        data: "0x095ea7b300000000000000000000000018558ae54e703390c39f4aa936659701d8da4b84ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        data: "0x095ea7b3000000000000000000000000abb2556c9bbdd9d34e6fe2537fcbadf37c8865e2ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
       });
       expect(payload.options).to.deep.equal({
         signer: account.toLowerCase(),

@@ -21,8 +21,8 @@ describe("Update reserve balance", () => {
     wallet.simulateLoggedInAccount();
 
     // TODO: stats should be visible
-    api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
-    api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
+    api.mockGetUserStats({ statusCode: 404 }).as("getUserStats");
+    api.mockGetUserSwaps({ statusCode: 404 }).as("getUserSwaps");
     api
       .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");

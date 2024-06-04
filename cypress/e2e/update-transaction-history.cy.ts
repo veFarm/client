@@ -17,15 +17,15 @@ describe("Update transaction history", () => {
     wallet.simulateLoggedInAccount();
 
     api
-      .mockGetAccountStats({ fixture: "account-stats.json" })
-      .as("getAccountStats");
+      .mockGetUserStats({ fixture: "user-stats.json" })
+      .as("getUserStats");
     // ^ Simulate a stats update.
     api
-      .mockGetAccountSwaps([
-        { fixture: "account-swaps.json" },
-        { fixture: "account-swaps-updated.json" },
+      .mockGetUserSwaps([
+        { fixture: "user-swaps.json" },
+        { fixture: "user-swaps-updated.json" },
       ])
-      .as("getAccountSwaps");
+      .as("getUserSwaps");
     api
       .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
@@ -41,8 +41,8 @@ describe("Update transaction history", () => {
     cy.visit("/");
     // cy.wait(
     //   [
-    //     // "@getAccountStats",
-    //     // "@getAccountSwaps",
+    //     // "@getUserStats",
+    //     // "@getUserSwaps",
     //     "@getTradesForecast",
     //     "@fetchAllowance",
     //     "@fetchReserveBalance",
@@ -54,7 +54,7 @@ describe("Update transaction history", () => {
 
   it("updates transaction history", () => {
     // Arrange
-    cy.wait("@getAccountSwaps", { timeout: 20_000 });
+    cy.wait("@getUserSwaps", { timeout: 20_000 });
     cy.getByCy("transaction-history").should("be.visible");
     cy.getByCy("transaction-history").within(($swaps) => {
       cy.wrap($swaps).find("a").eq(0).contains("0x1ad5");
@@ -62,7 +62,7 @@ describe("Update transaction history", () => {
     });
 
     // Act
-    cy.wait(["@fetchBalance", "@getAccountSwaps"], { timeout: 20_000 });
+    cy.wait(["@fetchBalance", "@getUserSwaps"], { timeout: 20_000 });
 
     // Assert
     cy.getByCy("transaction-history").should("be.visible");

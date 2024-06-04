@@ -17,11 +17,11 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     wallet.simulateLoggedInAccount();
 
     // api
-    //   .mockGetAccountStats({ fixture: "account-stats.json" })
-    //   .as("getAccountStats");
+    //   .mockGetUserStats({ fixture: "user-stats.json" })
+    //   .as("getUserStats");
     api
-      .mockGetAccountSwaps({ fixture: "account-swaps.json" })
-      .as("getAccountSwaps");
+      .mockGetUserSwaps({ fixture: "user-swaps.json" })
+      .as("getUserSwaps");
     api
       .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");
@@ -34,8 +34,8 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     cy.visit("/");
     cy.wait(
       [
-        // "@getAccountStats",
-        // "@getAccountSwaps",
+        // "@getUserStats",
+        // "@getUserSwaps",
         "@getTradesForecast",
         "@fetchAllowance",
         "@fetchReserveBalance",
@@ -70,7 +70,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
   it("shows transaction history", () => {
     // Arrange
-    cy.wait("@getAccountSwaps");
+    cy.wait("@getUserSwaps");
 
     // Act
 

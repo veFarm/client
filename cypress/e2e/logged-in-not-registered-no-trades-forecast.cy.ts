@@ -17,8 +17,8 @@ describe("Logged in NOT registered NO trades forecast", () => {
     wallet.simulateLoggedInAccount();
 
     // TODO: stats should be visible
-    api.mockGetAccountStats({ statusCode: 404 }).as("getAccountStats");
-    api.mockGetAccountSwaps({ statusCode: 404 }).as("getAccountSwaps");
+    api.mockGetUserStats({ statusCode: 404 }).as("getUserStats");
+    api.mockGetUserSwaps({ statusCode: 404 }).as("getUserSwaps");
     api
       .mockGetTradesForecast({ fixture: "trades-forecast-no-solutions.json" })
       .as("getTradesForecast");
