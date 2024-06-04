@@ -49,7 +49,7 @@ describe("Revoke allowance", () => {
       expect(payload.message[0]).to.deep.equal({
         to: chain.vtho.toLowerCase(),
         value: "0",
-        data: "0x095ea7b300000000000000000000000018558ae54e703390c39f4aa936659701d8da4b840000000000000000000000000000000000000000000000000000000000000000",
+        data: "0x095ea7b3000000000000000000000000abb2556c9bbdd9d34e6fe2537fcbadf37c8865e20000000000000000000000000000000000000000000000000000000000000000",
       });
       expect(payload.options).to.deep.equal({
         comment:
