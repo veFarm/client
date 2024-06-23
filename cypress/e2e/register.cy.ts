@@ -54,7 +54,7 @@ describe("Register", () => {
       expect(payload.message[1]).to.deep.equal({
         to: chain.vtho.toLowerCase(),
         value: "0",
-        data: "0x095ea7b3000000000000000000000000abb2556c9bbdd9d34e6fe2537fcbadf37c8865e2ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        data: "0x095ea7b30000000000000000000000003147e73faddf17c186bde71e8b4c19a462aa85c7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
       });
       expect(payload.options).to.deep.equal({
         signer: account.toLowerCase(),
