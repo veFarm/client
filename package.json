@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@vearnfi/config": "^4.0.4",
-    "@vearnfi/wrapped-connex": "^3.0.0",
+    "@vearnfi/wrapped-connex": "^3.0.1",
     "@vechain/connex": "^2.0.14",
     "bignumber.js": "^9.1.1",
     "class-variance-authority": "^0.7.0",
