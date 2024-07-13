@@ -150,7 +150,7 @@ function createStore() {
 
       if (current.vet.gt(bn(0)) && tradesForecast.solutions.length === 0) {
         throw new Error(
-          "Could not calculate optimized strategy. Please refresh.",
+          "An optimized strategy could not be calculated. Your VET balance is likely too low.",
         );
       }
 
