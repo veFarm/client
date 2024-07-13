@@ -6,7 +6,11 @@
 
 Interface for the **Vearn** protocol supporting Connex instances for VeWorld and Sync2.
 
-Live version (testnet): [https://Vearn.finance](https://Vearn.finance)
+Live versions:
+| Network  | URL                                   |
+|----------|---------------------------------------|
+| Testnet  | [https://testnet.vearn.finance](https://testnet.vearn.finance) |
+| Mainnet  | [https://vearn.finance](https://vearn.finance)                 |
 
 This DApp was built with Svelte.
 
