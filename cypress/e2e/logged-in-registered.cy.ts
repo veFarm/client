@@ -19,9 +19,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
     // api
     //   .mockGetUserStats({ fixture: "user-stats.json" })
     //   .as("getUserStats");
-    api
-      .mockGetUserSwaps({ fixture: "user-swaps.json" })
-      .as("getUserSwaps");
+    api.mockGetUserSwaps({ fixture: "user-swaps.json" }).as("getUserSwaps");
     api
       .mockGetTradesForecast({ fixture: "trades-forecast.json" })
       .as("getTradesForecast");

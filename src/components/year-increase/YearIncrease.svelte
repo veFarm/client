@@ -1,19 +1,24 @@
 <script lang="ts">
+  import Trend from "@/assets/Trend.svelte";
+
   export let value: string;
 </script>
 
-  <table class="w-full text-sm font-medium" data-cy="year-increase">
-    <tbody>
-      <tr >
-        <td class="title">
-          Est. yearly increase:
-        </td>
-        <td class="value">
-          {value} VET
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<table class="w-full text-sm font-medium" data-cy="year-increase">
+  <tbody>
+    <tr>
+      <td class="title flex items-center">
+        <div class="bg-zinc-900 rounded inline-block mr-2">
+          <Trend class="text-accent h-4" />
+        </div>
+        Est. yearly increase:
+      </td>
+      <td class="value">
+        {value}&nbsp;&nbsp;VET
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <style lang="postcss">
   .title {
