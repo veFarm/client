@@ -95,3 +95,33 @@
     </a>
   </svelte:fragment>
 </Accordion>
+
+<Accordion title="Is Vearn available on the testnet?">
+  <svelte:fragment slot="body">
+    Yes, you can try Vearn on the testnet without using real assets by visiting:
+    <a
+      href="https://testnet.vearn.finance"
+      target="_blank"
+      rel="noreferrer"
+      title="https://testnet.vearn.finance"
+    >
+      <div class="flex items-center">
+        <span class="truncate">https://testnet.vearn.finance</span>
+        <NewTab class="h-6 inline" />
+      </div>
+    </a>
+    <br />
+    Also, don’t forget to grab some tokens from the faucet:
+    <a
+      href="https://faucet.vecha.in"
+      target="_blank"
+      rel="noreferrer"
+      title="https://faucet.vecha.in"
+    >
+      <div class="flex items-center">
+        <span class="truncate">https://faucet.vecha.in</span>
+        <NewTab class="h-6 inline" />
+      </div>
+    </a>
+  </svelte:fragment>
+</Accordion>
