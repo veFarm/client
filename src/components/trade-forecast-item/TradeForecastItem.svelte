@@ -48,8 +48,7 @@
             <td class="title"
               >VTHO to be spent:
               <!-- <Info class="inline h-4 w-4 text-body" /> -->
-            </td
-            >
+            </td>
             <td class="value">{vthoSpent} VTHO</td>
           </tr>
           <tr>

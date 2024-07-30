@@ -17,9 +17,10 @@
   import { RevokeAllowanceButton } from "@/components/revoke-allowance-button";
   import { TradesForecast } from "@/components/trades-forecast";
   import { ConnectWalletButton } from "@/components/connect-wallet-button";
+  import Checkmark from "@/assets/Checkmark.svelte";
   import Edit from "@/assets/Edit.svelte";
 
-  type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG";
+  type Variant = "LOGIN" | "CONFIG_AND_APPROVE" | "ACTIVE" | "UPDATE_CONFIG";
 
   export let variant: Variant;
 
@@ -182,7 +183,7 @@
   const TITLES: Record<Variant, string> = {
     LOGIN: "Activate Vearn",
     CONFIG_AND_APPROVE: "Activate Vearn",
-    SUMMARY: "Vearn Activated",
+    ACTIVE: "Vearn Activated",
     UPDATE_CONFIG: "Update Reserve Balance",
   };
 
@@ -194,9 +195,12 @@
 <div class="bg-highlight border border-muted rounded-lg">
   <div class="flex items-center justify-between px-3 py-3 lg:px-6 lg:py-4">
     <div class="flex items-center space-x-2">
-      <h3 class:text-success={variant === "SUMMARY"}>
+      <h3 class:text-success={variant === "ACTIVE"}>
         {title}
       </h3>
+      {#if variant === "ACTIVE"}
+        <Checkmark class="text-success" />
+      {/if}
     </div>
   </div>
 
@@ -219,7 +223,7 @@
           ? `${formatUnits($balance.current.vtho, 2)} VTHO`
           : ""}
         hint="Minimum VTHO balance to be maintained in your account at all times. Anything above that amount will be swapped overtime."
-        disabled={disabled || !$wallet.connected || variant === "SUMMARY"}
+        disabled={disabled || !$wallet.connected || variant === "ACTIVE"}
         error={errors.reserveBalance[0]}
         bind:value={reserveBalance}
         on:input={() => {
@@ -228,7 +232,7 @@
         data-cy="reserve-balance-input"
       >
         <svelte:fragment slot="input-right">
-          {#if variant === "SUMMARY"}
+          {#if variant === "ACTIVE"}
             <Button
               intent="secondary"
               fullWidth
@@ -289,7 +293,7 @@
       </Button>
     {/if}
 
-    {#if variant === "SUMMARY"}
+    {#if variant === "ACTIVE"}
       <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
       <Alert
         title="Autopilot Enabled"
