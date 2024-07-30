@@ -87,6 +87,7 @@ describe("Logged in REGISTERED POSITIVE balance account", () => {
 
     // Assert
     cy.getByCy("protocol-is-enabled-message").should("be.visible");
+    cy.getByCy("protocol-is-active-icon").should("be.visible");
     cy.getByCy("protocol-is-enabled-message").within(($alert) => {
       cy.wrap($alert).contains("5 VTHO");
     });

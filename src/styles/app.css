@@ -29,6 +29,8 @@ danger      A color for displaying error messages
     --color-disabled: 100 100 100;
     --color-danger: 239 68 68;
     --color-success: 142 255 140;
+    --color-info: 56 189 248;
+    --color-warning: 252 211 77;
     --color-backdrop: 0 0 0; /* transparent */
   }
 }

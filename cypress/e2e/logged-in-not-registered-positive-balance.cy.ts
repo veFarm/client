@@ -141,6 +141,15 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
     cy.getByCy("balance").contains("118.42 VTHO");
   });
 
+  it("shows me an alert message asking me to enter a reserve balance amount", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("protocol-enter-reserve-balance-message").should("be.visible");
+  });
+
   it("does NOT allow me to submit the form if I enter 0 as the reserve balance amount", () => {
     // Arrange
     cy.getByCy("submit-form-button").should("be.visible");
@@ -183,6 +192,16 @@ describe("Logged in NOT registered POSITIVE balance account", () => {
 
     // Assert
     cy.getByCy("trades-forecast-table").should("be.visible");
+  });
+
+  it("shows me an alert message to prompt me to enable the protocol after I enter a reserve balance", () => {
+    // Arrange
+
+    // Act
+    cy.getByCy("reserve-balance-input").clear().type("10");
+
+    // Assert
+    cy.getByCy("protocol-enable-autopilot-message").should("be.visible");
   });
 
   it("disables the submit button and shows a spinner after submitting the form", () => {

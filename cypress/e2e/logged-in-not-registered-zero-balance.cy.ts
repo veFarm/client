@@ -154,6 +154,15 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("submit-form-button").contains("INSUFFICIENT BALANCE");
   });
 
+  it("shows me an alert message", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("protocol-insufficient-balance-message").should("be.visible");
+  });
+
   it("does NOT allow me to submit the form if I enter 0 as the reserve balance amount", () => {
     // Arrange
     cy.getByCy("submit-form-button").should("be.visible");

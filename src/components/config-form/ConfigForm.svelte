@@ -194,12 +194,12 @@
 
 <div class="bg-highlight border border-muted rounded-lg">
   <div class="flex items-center justify-between px-3 py-3 lg:px-6 lg:py-4">
-    <div class="flex items-center space-x-2">
+    <div class="flex items-center space-x-1">
       <h3 class:text-success={variant === "ACTIVE"}>
         {title}
       </h3>
       {#if variant === "ACTIVE"}
-        <Checkmark class="text-success" />
+        <Checkmark class="text-success" data-cy="protocol-is-active-icon" />
       {/if}
     </div>
   </div>
@@ -259,6 +259,13 @@
 
     {#if variant === "LOGIN"}
       <ConnectWalletButton intent="primary" variant="text" fullWidth />
+      <Alert
+        variant="info"
+        title="Connect your Wallet"
+        body="Based on your account balance and market conditions, Vearn will calculate an optimized strategy to exchange VTHO for VET at key intervals."
+        on:close={() => {}}
+        data-cy="protocol-connect-wallet-message"
+      />
     {/if}
 
     {#if variant === "CONFIG_AND_APPROVE"}
@@ -276,6 +283,31 @@
             ? "ENTER RESERVE BALANCE"
             : "ENABLE AUTOPILOT"}
       </Button>
+      {#if insufficientBalance}
+        <Alert
+          variant="warning"
+          title="Insufficient VET Balance"
+          body="Vearn cannot compute an optimized strategy as your current VET balance is zero."
+          on:close={() => {}}
+          data-cy="protocol-insufficient-balance-message"
+        />
+      {:else if inputsEmpty}
+        <Alert
+          variant="info"
+          title="Enter Reserve Balance"
+          body="Specify the amount of VTHO you wish to keep in your account and prevent it from being converted to VET."
+          on:close={() => {}}
+          data-cy="protocol-enter-reserve-balance-message"
+        />
+      {:else}
+        <Alert
+          variant="info"
+          title="Enable Autopilot"
+          body="Vearn will boost your VET balance by periodically converting VTHO into VET at strategically chosen intervals."
+          on:close={() => {}}
+          data-cy="protocol-enable-autopilot-message"
+        />
+      {/if}
     {/if}
 
     {#if variant === "UPDATE_CONFIG"}
@@ -296,6 +328,7 @@
     {#if variant === "ACTIVE"}
       <RevokeAllowanceButton disabled={!$trader.swapConfigSet} />
       <Alert
+        variant="success"
         title="Autopilot Enabled"
         body={`Vearn will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits(
           $trader.reserveBalance,

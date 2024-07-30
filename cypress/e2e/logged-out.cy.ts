@@ -49,6 +49,15 @@ describe("Logged out account", () => {
     cy.get("@connect-button").should("be.enabled");
   });
 
+  it("shows me an alert message explaining why I should connect the wallet", () => {
+    // Arrange
+
+    // Act
+
+    // Assert
+    cy.getByCy("protocol-connect-wallet-message").should("be.visible");
+  });
+
   it("opens up the connect wallet modal when I click the connect button", () => {
     // Arrange
 
