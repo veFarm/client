@@ -263,7 +263,6 @@
         variant="info"
         title="Connect your Wallet"
         body="Based on your account balance and market conditions, Vearn will calculate an optimized strategy to exchange VTHO for VET at key intervals."
-        on:close={() => {}}
         data-cy="protocol-connect-wallet-message"
       />
     {/if}
@@ -288,7 +287,6 @@
           variant="warning"
           title="Insufficient VET Balance"
           body="Vearn cannot compute an optimized strategy as your current VET balance is zero."
-          on:close={() => {}}
           data-cy="protocol-insufficient-balance-message"
         />
       {:else if inputsEmpty}
@@ -296,7 +294,6 @@
           variant="info"
           title="Enter Reserve Balance"
           body="Specify the amount of VTHO you wish to keep in your account and prevent it from being converted to VET."
-          on:close={() => {}}
           data-cy="protocol-enter-reserve-balance-message"
         />
       {:else}
@@ -304,7 +301,6 @@
           variant="info"
           title="Enable Autopilot"
           body="Vearn will boost your VET balance by periodically converting VTHO into VET at strategically chosen intervals."
-          on:close={() => {}}
           data-cy="protocol-enable-autopilot-message"
         />
       {/if}
@@ -333,7 +329,6 @@
         body={`Vearn will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits(
           $trader.reserveBalance,
         )} VTHO in your account.`}
-        on:close={() => {}}
         data-cy="protocol-is-enabled-message"
       />
     {/if}
