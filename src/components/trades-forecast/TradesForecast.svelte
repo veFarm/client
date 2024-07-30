@@ -32,7 +32,7 @@
     const { d, h, m } = secondsToDHMS(seconds);
 
     return d + h + m === 0
-      ? "within 5 mins"
+      ? "within 10 mins"
       : d > 0
         ? `${d} days`
         : h > 0
