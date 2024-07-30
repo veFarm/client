@@ -16,9 +16,7 @@ describe("Update transaction history", () => {
     // Simulate a logged in registered account holding a positive balance.
     wallet.simulateLoggedInAccount();
 
-    api
-      .mockGetUserStats({ fixture: "user-stats.json" })
-      .as("getUserStats");
+    api.mockGetUserStats({ fixture: "user-stats.json" }).as("getUserStats");
     // ^ Simulate a stats update.
     api
       .mockGetUserSwaps([

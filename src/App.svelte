@@ -12,7 +12,7 @@
   import { TransactionHistory } from "@/components/transaction-history";
   import { FAQs } from "@/components/faqs";
 
-  type View = "LOGIN" | "CONFIG_AND_APPROVE" | "SUMMARY" | "UPDATE_CONFIG"; // TODO: add LOADING
+  type View = "LOGIN" | "CONFIG_AND_APPROVE" | "ACTIVE" | "UPDATE_CONFIG"; // TODO: add LOADING
 
   let view: View = "LOGIN";
   let show: boolean = false; // animation
@@ -23,7 +23,7 @@
     } else if (!$trader.swapConfigSet || !$vtho.allowed) {
       view = "CONFIG_AND_APPROVE";
     } else if ($trader.swapConfigSet && $vtho.allowed) {
-      view = "SUMMARY";
+      view = "ACTIVE";
     }
   }
 
@@ -77,7 +77,7 @@
               view = "UPDATE_CONFIG";
             }}
             on:cancelEditReserveBalance={() => {
-              view = "SUMMARY";
+              view = "ACTIVE";
             }}
           />
         </div>
