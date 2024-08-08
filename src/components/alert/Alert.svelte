@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import Close from "@/assets/Close.svelte";
 
-  type Variant = "success" | "info" | "warning"
+  type Variant = "success" | "info" | "warning";
 
   export let variant: Variant;
   export let title: string;
@@ -16,20 +16,20 @@
   }
 
   const mapBg: Record<Variant, string> = {
-    "success": "bg-success",
-    "info": "bg-info",
-    "warning": "bg-warning",
-  }
+    success: "bg-success",
+    info: "bg-info",
+    warning: "bg-warning",
+  };
   const mapBorder: Record<Variant, string> = {
-    "success": "border-success",
-    "info": "border-info",
-    "warning": "border-warning",
-  }
+    success: "border-success",
+    info: "border-info",
+    warning: "border-warning",
+  };
   const mapText: Record<Variant, string> = {
-    "success": "text-success",
-    "info": "text-info",
-    "warning": "text-warning",
-  }
+    success: "text-success",
+    info: "text-info",
+    warning: "text-warning",
+  };
 
   const bg = mapBg[variant];
   const border = mapBorder[variant];
