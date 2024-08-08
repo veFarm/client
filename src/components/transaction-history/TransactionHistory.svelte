@@ -104,6 +104,25 @@
   <p>Nothing here yet!</p>
 {/if}
 
+<!-- Mobile -->
+<div class="block lg:hidden px-2 space-y-3">
+  {#each swapTxs as tx, index (tx.txId)}
+    <div in:slide>
+      <PastTrade
+        withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
+        amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
+        txId={tx.txId}
+        blockTimestamp={tx.blockTimestamp}
+        explorerUrl={chain.explorers[0].url}
+      />
+    </div>
+    {#if index < swapTxs.length - 1}
+      <Divider />
+    {/if}
+  {/each}
+</div>
+
+<!-- Desktop -->
 {#if swapTxs.length > 0}
   <div class="hidden lg:block space-y-3 border border-muted rounded">
     <table width="100%" class="table-fixed">
@@ -147,22 +166,22 @@
   </div>
 {/if}
 
-<div class="block lg:hidden px-2 space-y-3">
-  {#each swapTxs as tx, index (tx.txId)}
-    <div in:slide>
-      <PastTrade
-        withdrawAmount={formatUnits(tx.withdrawAmount, 3)}
-        amountOutReceived={formatUnits(tx.amountOutReceived, 5)}
-        txId={tx.txId}
-        blockTimestamp={tx.blockTimestamp}
-        explorerUrl={chain.explorers[0].url}
-      />
-    </div>
-    {#if index < swapTxs.length - 1}
-      <Divider />
-    {/if}
-  {/each}
-</div>
+{#if $wallet.account != null && swapTxs.length > 0}
+  <p class="text-sm text-disabled mt-3">
+    Only the last 5 transactions are shown. Click
+    <a
+      href={chain.chainId === 100009 /* mainnet */
+        ? `${chain.explorers[0].url}/account/${$wallet.account}/#transactions-internal`
+        : `${chain.explorers[0].url}/accounts/${$wallet.account}/transfer`}
+      target="_blank"
+      rel="noreferrer"
+      class="underline"
+    >
+      here
+    </a>
+    to view all transactions.
+  </p>
+{/if}
 
 <style lang="postcss">
   thead {
