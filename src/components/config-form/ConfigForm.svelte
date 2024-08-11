@@ -300,7 +300,7 @@
         <Alert
           variant="info"
           title="Enable Autopilot"
-          body="Vearn will boost your VET balance by periodically converting VTHO into VET at strategically chosen intervals."
+          body={`Vearn will boost your VET balance by periodically converting VTHO into VET at strategically chosen intervals, while maintaining a reserve balance of ${formatUnits(reserveBalanceWei)} VTHO in your account.`}
           data-cy="protocol-enable-autopilot-message"
         />
       {/if}
