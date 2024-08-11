@@ -11,7 +11,7 @@
         <div class="bg-zinc-900 rounded inline-block mr-2">
           <Trend class="text-accent h-4" />
         </div>
-        Est. yearly increase:
+        Estimated annual gains:
       </td>
       <td class="value">
         {value}&nbsp;&nbsp;VET
