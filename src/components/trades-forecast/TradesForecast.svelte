@@ -8,6 +8,7 @@
   import { chooseSolution } from "@/utils/choose-solution";
   import { extendSolution } from "@/utils/extend-solution";
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
+  import { TradesForecastHeader } from "@/components/trades-forecast-header";
   import { YearIncrease } from "@/components/year-increase";
   import { TradeForecastItem } from "@/components/trade-forecast-item";
   import Spinner from "../spinner/Spinner.svelte";
@@ -145,6 +146,9 @@
     ERROR: {$tradesForecast.error}
   </p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
+  <TradesForecastHeader
+    value={formatUnits($tradesForecast.solutions[0].withdrawAmount, 2)}
+  />
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[0]}
     label="first swap"
@@ -182,7 +186,8 @@
     </svelte:fragment>
   </TradeForecastItem>
   <YearIncrease value={formatUnits(firstTrade.totalProfitVET, 1)} />
-{:else}
+  <!-- {:else}
+  <TradesForecastHeader value="-" />
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[0]}
     label="first swap"
@@ -213,5 +218,5 @@
       <Swap2 class="inline-block" />
     </svelte:fragment>
   </TradeForecastItem>
-  <YearIncrease value="-" />
+  <YearIncrease value="-" /> -->
 {/if}
