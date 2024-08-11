@@ -116,13 +116,13 @@ describe("Logged in NOT registered ZERO balance account", () => {
     cy.getByCy("reserve-balance-input").should("be.enabled");
   });
 
-  it("shows me the trades forecast", () => {
+  it("does NOT show the trades forecast", () => {
     // Arrange
 
     // Act
 
     // Assert
-    cy.getByCy("trades-forecast-table").should("exist");
+    cy.getByCy("trades-forecast-table").should("not.exist");
   });
 
   it("does NOT show me any errors when fetching trades forecast with no solutions", () => {
