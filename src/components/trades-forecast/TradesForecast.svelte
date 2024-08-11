@@ -146,7 +146,9 @@
     ERROR: {$tradesForecast.error}
   </p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
-  <TradesForecastHeader value={formatUnits($tradesForecast.solutions[0].withdrawAmount, 2)} />
+  <TradesForecastHeader
+    value={formatUnits($tradesForecast.solutions[0].withdrawAmount, 2)}
+  />
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[0]}
     label="first swap"
@@ -184,7 +186,7 @@
     </svelte:fragment>
   </TradeForecastItem>
   <YearIncrease value={formatUnits(firstTrade.totalProfitVET, 1)} />
-<!-- {:else}
+  <!-- {:else}
   <TradesForecastHeader value="-" />
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[0]}
