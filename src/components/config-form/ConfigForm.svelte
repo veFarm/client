@@ -265,11 +265,9 @@
         data-cy="protocol-connect-wallet-message"
       >
         <svelte:fragment slot="body">
-          <p>
-            Based on your account balance and market conditions, Vearn will
-            calculate an optimized strategy to exchange VTHO for VET at key
-            intervals.
-          </p>
+          Based on your account balance and market conditions, Vearn will
+          calculate an optimized strategy to exchange VTHO for VET at key
+          intervals.
         </svelte:fragment>
       </Alert>
     {/if}
@@ -296,13 +294,11 @@
           data-cy="protocol-insufficient-balance-message"
         >
           <svelte:fragment slot="body">
-            <p>
-              Vearn cannot compute an optimized strategy as your VET balance is
-              either zero or close to zero.
-              <br /><br />
-              If you wish to explore the app without engaging real assets, use the
-              testnet. For details and links, see the FAQ.
-            </p>
+            Vearn cannot compute an optimized strategy as your VET balance is
+            either zero or close to zero.
+            <br /><br />
+            If you wish to explore the app without engaging real assets, use the
+            testnet. For details and links, see the FAQ.
           </svelte:fragment>
         </Alert>
       {:else if inputsEmpty}
@@ -312,10 +308,8 @@
           data-cy="protocol-enter-reserve-balance-message"
         >
           <svelte:fragment slot="body">
-            <p>
-              Specify the amount of VTHO you wish to keep in your account and
-              prevent it from being converted to VET.
-            </p>
+            Specify the amount of VTHO you wish to keep in your account and
+            prevent it from being converted to VET.
           </svelte:fragment>
         </Alert>
       {:else}
@@ -325,11 +319,9 @@
           data-cy="protocol-enable-autopilot-message"
         >
           <svelte:fragment slot="body">
-            <p>
-              Vearn will boost your VET balance by periodically converting VTHO
-              into VET at strategically chosen intervals, while maintaining a
-              reserve balance of {formatUnits(reserveBalanceWei)} VTHO in your account.
-            </p>
+            Vearn will boost your VET balance by periodically converting VTHO
+            into VET at strategically chosen intervals, while maintaining a
+            reserve balance of {formatUnits(reserveBalanceWei)} VTHO in your account.
           </svelte:fragment>
         </Alert>
       {/if}
@@ -358,11 +350,8 @@
         data-cy="protocol-is-enabled-message"
       >
         <svelte:fragment slot="body">
-          <p>
-            Vearn will periodically exchange VTHO for VET while keeping a
-            reserve balance of {formatUnits($trader.reserveBalance)} VTHO in your
-            account.
-          </p>
+          Vearn will periodically exchange VTHO for VET while keeping a reserve
+          balance of {formatUnits($trader.reserveBalance)} VTHO in your account.
         </svelte:fragment>
       </Alert>
     {/if}

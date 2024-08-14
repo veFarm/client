@@ -9,10 +9,8 @@
   <div>
     <Alert variant="success" title="Autopilot Enabled">
       <svelte:fragment slot="body">
-        <p>
-          Vearn will periodically exchange VTHO for VET while keeping a balance
-          of 15 VTHO in your account.
-        </p>
+        Vearn will periodically exchange VTHO for VET while keeping a balance of
+        15 VTHO in your account.
       </svelte:fragment>
     </Alert>
   </div>
@@ -22,10 +20,8 @@
   <div>
     <Alert variant="info" title="Autopilot Enabled">
       <svelte:fragment slot="body">
-        <p>
-          Vearn will periodically exchange VTHO for VET while keeping a balance
-          of 15 VTHO in your account.
-        </p>
+        Vearn will periodically exchange VTHO for VET while keeping a balance of
+        15 VTHO in your account.
       </svelte:fragment>
     </Alert>
   </div>
@@ -35,10 +31,8 @@
   <div>
     <Alert variant="warning" title="Autopilot Enabled">
       <svelte:fragment slot="body">
-        <p>
-          Vearn will periodically exchange VTHO for VET while keeping a balance
-          of 15 VTHO in your account.
-        </p>
+        Vearn will periodically exchange VTHO for VET while keeping a balance of
+        15 VTHO in your account.
       </svelte:fragment>
     </Alert>
   </div>
@@ -48,10 +42,8 @@
   <div>
     <Alert variant="success" title="Autopilot Enabled" closable={true}>
       <svelte:fragment slot="body">
-        <p>
-          Vearn will periodically exchange VTHO for VET while keeping a balance
-          of 15 VTHO in your account.
-        </p>
+        Vearn will periodically exchange VTHO for VET while keeping a balance of
+        15 VTHO in your account.
       </svelte:fragment>
     </Alert>
   </div>
