@@ -6,7 +6,6 @@
 
   export let variant: Variant;
   export let title: string;
-  export let body: string;
   export let closable: boolean = false;
 
   const dispatch = createEventDispatcher();
@@ -46,5 +45,7 @@
       <button on:click={handleClose} class="-mt-2"><Close /></button>
     {/if}
   </div>
-  <p class="text-sm font-normal text-accent">{body}</p>
+  <p class="text-sm font-normal text-accent">
+    <slot name="body" />
+  </p>
 </div>
