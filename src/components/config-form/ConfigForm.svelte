@@ -6,6 +6,7 @@
   import { balance } from "@/stores/balance";
   import { vtho } from "@/stores/vtho";
   import { trader } from "@/stores/trader";
+  import { tradesForecast } from "@/stores/trades-forecast";
   import { isNumeric } from "@/utils/is-numeric/is-numeric";
   import { formatUnits } from "@/utils/format-units";
   import { expandTo18Decimals } from "@/utils/expand-to-18-decimals";
@@ -175,10 +176,9 @@
   let insufficientBalance: boolean = false;
 
   $: insufficientBalance =
-    $balance.current != null && $balance.current.vet.eq(0) /* &&
-    $balance.current.vtho.eq(0) */;
-
-  let title: string = "";
+    $balance.current != null &&
+    ($balance.current.vet.eq(0) ||
+      ($tradesForecast.error != null && $tradesForecast.error.length > 0));
 
   const TITLES: Record<Variant, string> = {
     LOGIN: "Activate Vearn",
@@ -187,9 +187,9 @@
     UPDATE_CONFIG: "Update Reserve Balance",
   };
 
-  $: {
-    title = TITLES[variant] || "";
-  }
+  let title: string = "";
+
+  $: title = TITLES[variant] || "";
 </script>
 
 <div class="bg-highlight border border-muted rounded-lg">
@@ -262,9 +262,16 @@
       <Alert
         variant="info"
         title="Connect your Wallet"
-        body="Based on your account balance and market conditions, Vearn will calculate an optimized strategy to exchange VTHO for VET at key intervals."
         data-cy="protocol-connect-wallet-message"
-      />
+      >
+        <svelte:fragment slot="body">
+          <p>
+            Based on your account balance and market conditions, Vearn will
+            calculate an optimized strategy to exchange VTHO for VET at key
+            intervals.
+          </p>
+        </svelte:fragment>
+      </Alert>
     {/if}
 
     {#if variant === "CONFIG_AND_APPROVE"}
@@ -286,25 +293,45 @@
         <Alert
           variant="warning"
           title="Insufficient VET Balance"
-          body="Vearn cannot compute an optimized strategy as your current VET balance is zero."
           data-cy="protocol-insufficient-balance-message"
-        />
+        >
+          <svelte:fragment slot="body">
+            <p>
+              Vearn cannot compute an optimized strategy as your VET balance is
+              either zero or close to zero.
+              <br /><br />
+              If you wish to explore the app without engaging real assets, use the
+              testnet. For details and links, see the FAQ.
+            </p>
+          </svelte:fragment>
+        </Alert>
       {:else if inputsEmpty}
         <Alert
           variant="info"
           title="Enter Reserve Balance"
-          body="Specify the amount of VTHO you wish to keep in your account and prevent it from being converted to VET."
           data-cy="protocol-enter-reserve-balance-message"
-        />
+        >
+          <svelte:fragment slot="body">
+            <p>
+              Specify the amount of VTHO you wish to keep in your account and
+              prevent it from being converted to VET.
+            </p>
+          </svelte:fragment>
+        </Alert>
       {:else}
         <Alert
           variant="info"
           title="Enable Autopilot"
-          body={`Vearn will boost your VET balance by periodically converting VTHO into VET at strategically chosen intervals, while maintaining a reserve balance of ${formatUnits(
-            reserveBalanceWei,
-          )} VTHO in your account.`}
           data-cy="protocol-enable-autopilot-message"
-        />
+        >
+          <svelte:fragment slot="body">
+            <p>
+              Vearn will boost your VET balance by periodically converting VTHO
+              into VET at strategically chosen intervals, while maintaining a
+              reserve balance of {formatUnits(reserveBalanceWei)} VTHO in your account.
+            </p>
+          </svelte:fragment>
+        </Alert>
       {/if}
     {/if}
 
@@ -328,11 +355,16 @@
       <Alert
         variant="success"
         title="Autopilot Enabled"
-        body={`Vearn will periodically exchange VTHO for VET while keeping a reserve balance of ${formatUnits(
-          $trader.reserveBalance,
-        )} VTHO in your account.`}
         data-cy="protocol-is-enabled-message"
-      />
+      >
+        <svelte:fragment slot="body">
+          <p>
+            Vearn will periodically exchange VTHO for VET while keeping a
+            reserve balance of {formatUnits($trader.reserveBalance)} VTHO in your
+            account.
+          </p>
+        </svelte:fragment>
+      </Alert>
     {/if}
 
     {#if variant === "UPDATE_CONFIG"}

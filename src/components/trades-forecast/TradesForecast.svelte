@@ -8,7 +8,6 @@
   import { chooseSolution } from "@/utils/choose-solution";
   import { extendSolution } from "@/utils/extend-solution";
   import { secondsToTrigger } from "@/utils/seconds-to-trigger";
-  import { TradesForecastHeader } from "@/components/trades-forecast-header";
   import { YearIncrease } from "@/components/year-increase";
   import { TradeForecastItem } from "@/components/trade-forecast-item";
   import Spinner from "../spinner/Spinner.svelte";
@@ -146,9 +145,13 @@
     ERROR: {$tradesForecast.error}
   </p>
 {:else if firstTrade != null && $tradesForecast.txFee != null}
-  <TradesForecastHeader
-    value={formatUnits($tradesForecast.solutions[0].withdrawAmount, 2)}
-  />
+  <p class="text-sm">
+    Given your current balance and market conditions, the recommended strategy
+    is to perform a swap each time your VTHO balance exceeds {formatUnits(
+      $tradesForecast.solutions[0].withdrawAmount,
+      2,
+    )} VTHO above your reserve balance.
+  </p>
   <TradeForecastItem
     isOpen={$tradesForecast.isOpen[0]}
     label="first swap"
@@ -186,37 +189,4 @@
     </svelte:fragment>
   </TradeForecastItem>
   <YearIncrease value={formatUnits(firstTrade.totalProfitVET, 1)} />
-  <!-- {:else}
-  <TradesForecastHeader value="-" />
-  <TradeForecastItem
-    isOpen={$tradesForecast.isOpen[0]}
-    label="first swap"
-    timeLeft="-"
-    vthoSpent="-"
-    vetEarned="-"
-    totalFees="-"
-    on:toggle={() => {
-      tradesForecast.toggle(0);
-    }}
-  >
-    <svelte:fragment slot="icon">
-      <Swap1 class="inline-block" />
-    </svelte:fragment>
-  </TradeForecastItem>
-  <TradeForecastItem
-    isOpen={$tradesForecast.isOpen[1]}
-    label="second swap"
-    timeLeft="-"
-    vthoSpent="-"
-    vetEarned="-"
-    totalFees="-"
-    on:toggle={() => {
-      tradesForecast.toggle(1);
-    }}
-  >
-    <svelte:fragment slot="icon">
-      <Swap2 class="inline-block" />
-    </svelte:fragment>
-  </TradeForecastItem>
-  <YearIncrease value="-" /> -->
 {/if}
