@@ -78,7 +78,7 @@
 
 {#if stats != null}
   <div
-    class="space-y-2 lg:flex lg:flex-row lg:justify-center lg:space-x-16 lg:mt-10 ml-2"
+    class="space-y-2 lg:flex lg:flex-row lg:justify-center lg:space-x-16 lg:mt-10 ml-2 lg:ml-0"
     data-cy="stats"
   >
     <StatItem value={stats.swapsCount} label="Swaps" />
