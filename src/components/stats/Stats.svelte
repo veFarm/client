@@ -97,5 +97,5 @@
   </div>
 {/if}
 {#if error != null}
-  <p class="text-danger">ERROR: {error}</p>
+  <p class="text-sm text-danger">ERROR: {error}</p>
 {/if}
