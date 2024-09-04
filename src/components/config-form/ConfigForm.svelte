@@ -368,13 +368,13 @@
     {/if}
 
     {#if $wallet.error != null && $wallet.error.length > 0}
-      <p class="text-danger">ERROR: {$wallet.error}</p>
+      <p class="text-sm text-danger">ERROR: {$wallet.error}</p>
     {/if}
     {#if $trader.error != null && $trader.error.length > 0}
-      <p class="text-danger">ERROR: {$trader.error}</p>
+      <p class="text-sm text-danger">ERROR: {$trader.error}</p>
     {/if}
     {#if errors.network != null && errors.network.length > 0}
-      <p class="text-danger" data-cy="network-error">
+      <p class="text-sm text-danger" data-cy="network-error">
         ERROR: {errors.network[0]}
       </p>
     {/if}
