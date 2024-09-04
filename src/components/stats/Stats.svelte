@@ -4,13 +4,10 @@
   import { chain } from "@/config/index";
   import { wallet } from "@/stores/wallet";
   import { balance } from "@/stores/balance";
-  import { tradesForecast } from "@/stores/trades-forecast";
   import { formatUnits } from "@/utils/format-units";
   import { StatItem } from "@/components/stat-item";
 
   type RawStats = {
-    /** Target account. */
-    // account: string;
     /** Number of swap operations performed by the target account. */
     swapsCount: number;
     /** Total VET amount transacted by the target account. */
@@ -79,23 +76,23 @@
   }
 </script>
 
-{#if stats != null && $tradesForecast.fetched}
+{#if stats != null}
   <div
-    class="lg:flex lg:flex-row lg:justify-center lg:space-x-16 lg:mt-10"
+    class="space-y-2 lg:flex lg:flex-row lg:justify-center lg:space-x-16 lg:mt-10 ml-2"
     data-cy="stats"
   >
-    <StatItem value={stats.swapsCount} label="Trades" />
-    <StatItem value={formatUnits(stats.vetTotal, 2)} label="VET volume" />
+    <StatItem value={stats.swapsCount} label="Swaps" />
     <StatItem
-      value={formatUnits(
-        $tradesForecast.solutions[$tradesForecast.solutions.length - 1]
-          .totalProfitVET,
-        2,
-      )}
-      label="VET yearly profit"
+      primary
+      value={`${formatUnits(stats.vetTotal, 2)} VET`}
+      label="Total Earned"
+    />
+    <StatItem
+      value={`${formatUnits(stats.vthoTotal, 2)} VTHO`}
+      label="Total Spent"
     />
   </div>
 {/if}
 {#if error != null}
-  <p class="text-danger">ERROR: {error}</p>
+  <p class="text-sm text-danger">ERROR: {error}</p>
 {/if}
