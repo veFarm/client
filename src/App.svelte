@@ -8,8 +8,8 @@
   import { Layout } from "@/components/layout";
   import { Hero } from "@/components/hero";
   import { ConfigForm } from "@/components/config-form";
-  // import { LearnMore } from "@/components/learn-more";
   import { TransactionHistory } from "@/components/transaction-history";
+  import { Stats } from "@/components/stats";
   import { FAQs } from "@/components/faqs";
 
   type View = "LOGIN" | "CONFIG_AND_APPROVE" | "ACTIVE" | "UPDATE_CONFIG"; // TODO: add LOADING
@@ -84,12 +84,6 @@
       {/if}
     </section>
 
-    <!-- {#if view === "LOGIN"}
-      <div class="block lg:hidden">
-        <LearnMore />
-      </div>
-    {/if} -->
-
     {#if view !== "LOGIN"}
       <section
         class="w-full max-w-lg mx-auto lg:max-w-full space-y-3"
@@ -97,6 +91,16 @@
       >
         <h2>Transaction History</h2>
         <TransactionHistory />
+      </section>
+    {/if}
+
+    {#if view !== "LOGIN"}
+      <section
+        class="w-full max-w-lg mx-auto lg:max-w-full space-y-3"
+        data-cy="stats"
+      >
+        <h2>Your Stats</h2>
+        <Stats />
       </section>
     {/if}
 
