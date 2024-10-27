@@ -64,7 +64,7 @@ function createStore() {
         }
 
         const connex = new Connex({
-          node: chain.rpc[0],
+          node: chain.rpc[1],
           network: chain.network,
           noExtension: walletId === "sync2",
         });
@@ -138,7 +138,7 @@ function createStore() {
         }));
 
         const connex = new Connex({
-          node: chain.rpc[0],
+          node: chain.rpc[1],
           network: chain.network,
           noExtension: walletId === "sync2",
         });
